@@ -6,6 +6,8 @@ import java.math.BigInteger;
  * Common integer properties.
  */
 public abstract class IntType extends NumericType {
+	
+	private int bitSize;
 
     public IntType(String typePrefix, int bitSize, BigInteger value) {
         super(typePrefix + bitSize, value);
@@ -13,6 +15,7 @@ public abstract class IntType extends NumericType {
             throw new UnsupportedOperationException(
                     "Bitsize must be 8 bit aligned, and in range 0 < bitSize <= 256");
         }
+        this.bitSize = bitSize;
     }
 
     boolean valid(int bitSize, BigInteger value) {
@@ -29,4 +32,8 @@ public abstract class IntType extends NumericType {
     private static boolean isValidBitCount(int bitSize, BigInteger value) {
         return value.bitLength() <= bitSize;
     }
+    
+	public int getBitSize() {
+		return bitSize;
+	}
 }

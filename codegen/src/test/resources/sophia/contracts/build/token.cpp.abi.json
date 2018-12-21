@@ -1,0 +1,75 @@
+[
+    {
+        "name": "create",
+        "inputs": [
+            {
+                "name": "addr",
+                "type": "string"
+            },
+            {
+                "name": "asset",
+                "type": "uint64"
+            }
+        ],
+        "outputs": [],
+        "constant": "false",
+        "type": "function"
+    },
+    {
+        "name": "getAsset",
+        "inputs": [
+            {
+                "name": "addr",
+                "type": "string"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint64"
+            }
+        ],
+        "constant": "true",
+        "type": "function"
+    },
+    {
+        "name": "transfer",
+        "inputs": [
+            {
+                "name": "addr",
+                "type": "string"
+            },
+            {
+                "name": "asset",
+                "type": "uint64"
+            }
+        ],
+        "outputs": [],
+        "constant": "false",
+        "type": "function"
+    },
+    {
+        "name": "create",
+        "inputs": [
+            {
+                "type": "string"
+            },
+            {
+                "type": "uint64"
+            }
+        ],
+        "type": "event"
+    },
+    {
+        "name": "transfer",
+        "inputs": [
+            {
+                "type": "string"
+            },
+            {
+                "type": "uint64"
+            }
+        ],
+        "type": "event"
+    }
+]
