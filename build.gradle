@@ -26,7 +26,7 @@ buildscript {
 }
 
 plugins {
-    id "com.jfrog.bintray" version "1.7.3"
+    // id "com.jfrog.bintray" version "1.7.3"
     id "net.researchgate.release" version "2.7.0"
 }
 
@@ -46,7 +46,7 @@ allprojects {
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
+//    apply plugin: 'checkstyle'
 
     repositories {
         mavenCentral()
@@ -78,10 +78,10 @@ allprojects {
         reports.html.destination = file("${reporting.baseDir}/${name}")
     }
 
-    checkstyle {
-        toolVersion = "7.7"
-        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-    }
+//    checkstyle {
+//        toolVersion = "7.7"
+//        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+//    }
 }
 
 subprojects {
@@ -100,7 +100,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
 
     // Required for JFrog Artifactory repository
     apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
+    // apply plugin: 'com.jfrog.bintray'
 
     task javadocJar(type: Jar) {
         classifier = 'javadoc'
@@ -120,15 +120,15 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     artifacts {
         archives sourcesJar, javadocJar, testJar
     }
-
+    
     ext {
-        ossrhUsername = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : ''
-        ossrhPassword = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : ''
-        bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-        bintrayKey = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+        ossrhUsername = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : System.getenv("ossrhUsername")
+        ossrhPassword = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : System.getenv("ossrhPassword")
+        //bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+        //bintrayKey = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
         isSnapshotVersion = project.version.endsWith("-SNAPSHOT")
     }
-
+    
     publishing {
         publications {
             mavenJava(MavenPublication) {
@@ -154,7 +154,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
                     ossrhUsername != '' && ossrhPassword != ''
                 }
 
-                String repoUrl = isSnapshotVersion ? "http://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                String repoUrl = isSnapshotVersion ? "http://sdk.juzix.net/content/repositories/releases/" : "http://sdk.juzix.net/content/repositories/releases/"
                 repository(url: repoUrl) {
                     authentication(
                             userName: ossrhUsername,
@@ -196,7 +196,9 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
         required { gradle.taskGraph.hasTask('uploadArchives') }  // only execute as part of this task
         sign configurations.archives
     }
+    
 
+/*  
     bintray {
         user = bintrayUser
         key = bintrayKey
@@ -214,16 +216,18 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
             publicDownloadNumbers = true
         }
     }
+*/
 
-    task release {
+    
+task release {
         //TODO run clean & closeAndPromoteRepository once
         dependsOn 'build'
         dependsOn 'uploadArchives'
 
-        if (!isSnapshotVersion && bintrayUser != '' && bintrayKey != '') {
+        /*if (!isSnapshotVersion && bintrayUser != '' && bintrayKey != '') {
             dependsOn 'bintrayUpload'
             tasks.findByName('bintrayUpload').mustRunAfter 'build'
-        }
+        }*/
         tasks.findByName('uploadArchives').mustRunAfter 'build'
     }
 }
