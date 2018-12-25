@@ -13,7 +13,7 @@ import static org.web3j.utils.Collection.tail;
  */
 public class Runner {
 
-    private static String USAGE = "Usage: web3j version|wallet|solidity|truffle|sophia ...";
+    private static String USAGE = "Usage: client-sdk version|wallet|solidity|truffle|wasm ...";
 
     private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
             + "              _      _____ _     _        \n"
@@ -41,7 +41,7 @@ public class Runner {
                 case "truffle":
                     TruffleJsonFunctionWrapperGenerator.run(tail(args));
                     break;
-                case "sophia":
+                case "wasm":
                 	SophiaFunctionWrapperGenerator.run(tail(args));
                     break;
                 case "version":
