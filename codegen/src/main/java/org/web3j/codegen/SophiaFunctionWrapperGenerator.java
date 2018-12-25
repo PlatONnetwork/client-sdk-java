@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
 
-    private static final String USAGE = "sophia generate "
+    private static final String USAGE = "wasm generate "
             + "[--javaTypes|--solidityTypes] "
             + "<input binary file>.bin <input abi file>.abi "
             + "-p|--package <base package name> "
