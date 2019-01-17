@@ -1,52 +1,34 @@
 package org.web3j.tx;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.bouncycastle.util.encoders.Hex;
 import org.web3j.abi.EventValues;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.PlatOnEventEncoder;
-import org.web3j.abi.PlatOnTypeDecoder;
-import org.web3j.abi.PlatOnTypeEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
-import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.EthGetCode;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
-import org.web3j.rlp.RlpDecoder;
-import org.web3j.rlp.RlpEncoder;
-import org.web3j.rlp.RlpList;
-import org.web3j.rlp.RlpString;
-import org.web3j.rlp.RlpType;
 import org.web3j.tx.exceptions.ContractCallException;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Numeric;
-import org.web3j.utils.Strings;
+import org.web3j.utils.PlatOnUtil;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -63,8 +45,6 @@ public abstract class PlatOnContract extends ManagedTransaction {
     public static final BigInteger GAS_LIMIT = BigInteger.valueOf(4_300_000);
 
     public static final String FUNC_DEPLOY = "deploy";
-
-    private static final String DEFAULT_ESTIMATE_GAS_TO = "0x0000000000000000000000000000000000000000";
 
     protected final String contractBinary;
     protected String contractAddress;
@@ -145,6 +125,13 @@ public abstract class PlatOnContract extends ManagedTransaction {
     }
 
     /**
+     * Should be implemented by sub contract.
+     * @param function contract function
+     * @return contract type
+     */
+    abstract protected long getTransactionType(Function function);
+
+    /**
      * Allow {@code gasPrice} to be set.
      * @param newPrice gas price to use for subsequent transactions
      * @deprecated use ContractGasProvider
@@ -221,9 +208,8 @@ public abstract class PlatOnContract extends ManagedTransaction {
      * @param function to call
      * @return {@link List} of values returned by function call
      */
-    private List<Type> executeCall(
-            Function function) throws IOException {
-        String encodedFunction = invokeEncode(function);
+    private List<Type> executeCall(Function function) throws IOException {
+        String encodedFunction = PlatOnUtil.invokeEncode(function,getTransactionType(function));
         org.web3j.protocol.core.methods.response.EthCall ethCall = web3j.ethCall(
                 Transaction.createEthCallTransaction(
                         transactionManager.getFromAddress(), contractAddress, encodedFunction),
@@ -233,6 +219,26 @@ public abstract class PlatOnContract extends ManagedTransaction {
         String value = ethCall.getValue();
         return FunctionReturnDecoder.decode(value, function.getOutputParameters());
     }
+    
+    /**
+     * Execute constant function call - i.e. a call that does not change state of the contract
+     *
+     * @param function to call
+     * @return {@link List} of values returned by function call
+     */
+    private List<Type> executeCall(Function function,BigInteger number) throws IOException {
+        String encodedFunction = PlatOnUtil.invokeEncode(function,getTransactionType(function));
+        org.web3j.protocol.core.methods.response.EthCall ethCall = web3j.ethCall(
+                Transaction.createEthCallTransaction(
+                        transactionManager.getFromAddress(), contractAddress, encodedFunction),
+                DefaultBlockParameter.valueOf(number))
+                .send();
+
+        String value = ethCall.getValue();
+        return FunctionReturnDecoder.decode(value, function.getOutputParameters());
+    }
+    
+    
 
     @SuppressWarnings("unchecked")
     protected <T extends Type> T executeCallSingleValueReturn(
@@ -244,6 +250,19 @@ public abstract class PlatOnContract extends ManagedTransaction {
             return null;
         }
     }
+    
+    @SuppressWarnings("unchecked")
+    protected <T extends Type> T executeCallSingleValueReturn(
+            Function function,  BigInteger number) throws IOException {
+        List<Type> values = executeCall(function,number);
+        if (!values.isEmpty()) {
+            return (T) values.get(0);
+        } else {
+            return null;
+        }
+    }
+    
+
 
     @SuppressWarnings("unchecked")
     protected <T extends Type, R> R executeCallSingleValueReturn(
@@ -264,6 +283,30 @@ public abstract class PlatOnContract extends ManagedTransaction {
                             + " to expected type: " + returnType.getSimpleName());
         }
     }
+    
+    @SuppressWarnings("unchecked")
+    protected <T extends Type, R> R executeCallSingleValueReturn(
+            Function function, Class<R> returnType,  BigInteger number) throws IOException {
+        T result = executeCallSingleValueReturn(function,number);
+        if (result == null) {
+            throw new ContractCallException("Empty value (0x) returned from contract");
+        }
+
+        Object value = result.getValue();
+        if (returnType.isAssignableFrom(value.getClass())) {
+            return (R) value;
+        } else if (result.getClass().equals(Address.class) && returnType.equals(String.class)) {
+            return (R) result.toString();  // cast isn't necessary
+        } else {
+            throw new ContractCallException(
+                    "Unable to convert response: " + value
+                            + " to expected type: " + returnType.getSimpleName());
+        }
+    }
+    
+    
+  
+    
 
     protected List<Type> executeCallMultipleValueReturn(
             Function function) throws IOException {
@@ -276,10 +319,8 @@ public abstract class PlatOnContract extends ManagedTransaction {
         return executeTransaction(function, BigInteger.ZERO);
     }
 
-    private TransactionReceipt executeTransaction(
-            Function function, BigInteger weiValue)
-            throws IOException, TransactionException {
-        return executeTransaction(invokeEncode(function) , weiValue, function.getName());
+    private TransactionReceipt executeTransaction(Function function, BigInteger weiValue) throws IOException, TransactionException {
+        return executeTransaction(PlatOnUtil.invokeEncode(function,getTransactionType(function)) , weiValue, function.getName());
     }
 
     /**
@@ -319,6 +360,12 @@ public abstract class PlatOnContract extends ManagedTransaction {
             Function function, Class<T> returnType) {
         return new RemoteCall<>(() -> executeCallSingleValueReturn(function, returnType));
     }
+    
+    protected <T> RemoteCall<T> executeRemoteCallSingleValueReturn(
+            Function function, Class<T> returnType, BigInteger number) {
+        return new RemoteCall<>(() -> executeCallSingleValueReturn(function, returnType, number));
+    }
+ 
 
     protected RemoteCall<List<Type>> executeRemoteCallMultipleValueReturn(Function function) {
         return new RemoteCall<>(() -> executeCallMultipleValueReturn(function));
@@ -337,7 +384,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
             T contract, String binary, String abi, String encodedConstructor, BigInteger value)
             throws IOException, TransactionException {
 
-    	String data = deployEncode(binary, abi);
+    	String data = PlatOnUtil.deployEncode(binary, abi);
 
         TransactionReceipt transactionReceipt =
                 contract.executeTransaction(data, value, FUNC_DEPLOY);
@@ -519,7 +566,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
         }
 
         List<Type> indexedValues = new ArrayList<>();
-        List<Type> nonIndexedValues =  eventDecode(log.getData(), event.getNonIndexedParameters());
+        List<Type> nonIndexedValues = PlatOnUtil.eventDecode(log.getData(), event.getNonIndexedParameters());
         
         List<TypeReference<Type>> indexedParameters = event.getIndexedParameters();
         for (int i = 0; i < indexedParameters.size(); i++) {
@@ -614,75 +661,5 @@ public abstract class PlatOnContract extends ManagedTransaction {
             out.add((T)it.next().getValue());
         }
         return out;
-    }
-
-    protected static String getInvokeData(Function function){
-        return invokeEncode(function);
-    }
-
-    protected static BigInteger estimateGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, String encodedData) throws IOException {
-        if(Strings.isEmpty(estimateGasTo)){
-            estimateGasTo = DEFAULT_ESTIMATE_GAS_TO;
-        }
-        Transaction transaction = Transaction.createEthCallTransaction(estimateGasFrom,estimateGasTo, encodedData);
-        Request<?, EthEstimateGas> ethEstimateGasReq = web3j.ethEstimateGas(transaction);
-        EthEstimateGas ethEstimateGasRes = ethEstimateGasReq.send();
-        BigInteger ethEstimateGasLimit = ethEstimateGasRes.getAmountUsed();
-        return ethEstimateGasLimit;
-    }
-
-    private static String invokeEncode(Function function) {
-        List<RlpType> result = new ArrayList<>();
-        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Int64(2)))));
-        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Utf8String(function.getName())))));
-        
-        List<Type> parameters = function.getInputParameters();
-        for (Type parameter:parameters) {
-            String encodedValue = PlatOnTypeEncoder.encode(parameter);
-            result.add(RlpString.create(Numeric.hexStringToByteArray(encodedValue)));
-        }
-        String data = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
-        return data;
-    }
-
-    protected static String getDeployData(String contractBinary,String abi) {
-        return deployEncode(contractBinary,abi);
-    }
-
-    protected static BigInteger getDeployGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, String contractBinary,String abi) throws IOException {
-        return estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,getDeployData(contractBinary,abi));
-    }
-
-    private static String deployEncode(String contractBinary,String abi) {
-        // txType + bin + abi
-        List<RlpType> result = new ArrayList<>();
-        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Int64(1)))));
-        result.add(RlpString.create(Numeric.hexStringToByteArray(contractBinary)));
-        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Utf8String(abi)))));
-        String data = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
-        return data;
-    }
-    
-    private static List<Type> eventDecode(String data, List<TypeReference<Type>> outputParameters) {
-        RlpList rlpList = RlpDecoder.decode(Numeric.hexStringToByteArray(data));
-        List<RlpType> rlpTypeList = rlpList.getValues();
-        RlpList rlpList2 = (RlpList)rlpTypeList.get(0);
-        List<Type> results = new ArrayList<>();
-
-        for (int i = 0; i < outputParameters.size(); i++) {
-            RlpString rlpString = (RlpString) rlpList2.getValues().get(i);
-            byte[] rlpBytes = rlpString.getBytes();
-            TypeReference<Type> typeReference = outputParameters.get(i);
-            Class<Type> type;
-			try {
-				type = typeReference.getClassType();
-			} catch (ClassNotFoundException e) {
-				throw new UnsupportedOperationException("class not found:",e );
-			}
-            Type result = PlatOnTypeDecoder.decode(rlpBytes, type);
-            results.add(result);
-        }
-
-        return results;
     }
 }

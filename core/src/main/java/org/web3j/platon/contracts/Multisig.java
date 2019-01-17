@@ -1,11 +1,5 @@
-package org.web3j.codegen;
+package org.web3j.platon.contracts;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Event;
@@ -25,8 +19,17 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.PlatOnContract;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.utils.PlatOnUtil;
+import org.web3j.utils.TXTypeEnum;
 import rx.Observable;
 import rx.functions.Func1;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * <p>Auto generated code.
@@ -135,21 +138,21 @@ public class Multisig extends PlatOnContract {
 
     public static String initWalletData(String owner, BigInteger required) {
         final Function function = new Function(
-                FUNC_INITWALLET, 
+                FUNC_INITWALLET,
                 Arrays.<Type>asList(new Utf8String(owner),
                 new Uint64(required)),
                 Collections.<TypeReference<?>>emptyList());
-        return getInvokeData(function);
+        return PlatOnUtil.invokeEncode(function,customTransactionType(function));
     }
 
     public static BigInteger initWalletGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, String owner, BigInteger required) throws IOException {
         String ethEstimateGasData = initWalletData(owner, required);
-        return estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
+        return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
     public RemoteCall<TransactionReceipt> submitTransaction(String destination, String from, String vs, String data, BigInteger len, BigInteger time, String fs) {
         final Function function = new Function(
-                FUNC_SUBMITTRANSACTION, 
+                FUNC_SUBMITTRANSACTION,
                 Arrays.<Type>asList(new Utf8String(destination),
                 new Utf8String(from),
                 new Utf8String(vs),
@@ -163,7 +166,7 @@ public class Multisig extends PlatOnContract {
 
     public static String submitTransactionData(String destination, String from, String vs, String data, BigInteger len, BigInteger time, String fs) {
         final Function function = new Function(
-                FUNC_SUBMITTRANSACTION, 
+                FUNC_SUBMITTRANSACTION,
                 Arrays.<Type>asList(new Utf8String(destination),
                 new Utf8String(from),
                 new Utf8String(vs),
@@ -172,17 +175,17 @@ public class Multisig extends PlatOnContract {
                 new Uint64(time),
                 new Utf8String(fs)),
                 Collections.<TypeReference<?>>emptyList());
-        return getInvokeData(function);
+        return PlatOnUtil.invokeEncode(function,customTransactionType(function));
     }
 
     public static BigInteger submitTransactionGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, String destination, String from, String vs, String data, BigInteger len, BigInteger time, String fs) throws IOException {
         String ethEstimateGasData = submitTransactionData(destination, from, vs, data, len, time, fs);
-        return estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
+        return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
     public RemoteCall<TransactionReceipt> confirmTransaction(BigInteger transactionId) {
         final Function function = new Function(
-                FUNC_CONFIRMTRANSACTION, 
+                FUNC_CONFIRMTRANSACTION,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -190,20 +193,20 @@ public class Multisig extends PlatOnContract {
 
     public static String confirmTransactionData(BigInteger transactionId) {
         final Function function = new Function(
-                FUNC_CONFIRMTRANSACTION, 
+                FUNC_CONFIRMTRANSACTION,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Collections.<TypeReference<?>>emptyList());
-        return getInvokeData(function);
+        return PlatOnUtil.invokeEncode(function,customTransactionType(function));
     }
 
     public static BigInteger confirmTransactionGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, BigInteger transactionId) throws IOException {
         String ethEstimateGasData = confirmTransactionData(transactionId);
-        return estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
+        return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
     public RemoteCall<TransactionReceipt> revokeConfirmation(BigInteger transactionId) {
         final Function function = new Function(
-                FUNC_REVOKECONFIRMATION, 
+                FUNC_REVOKECONFIRMATION,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -211,20 +214,20 @@ public class Multisig extends PlatOnContract {
 
     public static String revokeConfirmationData(BigInteger transactionId) {
         final Function function = new Function(
-                FUNC_REVOKECONFIRMATION, 
+                FUNC_REVOKECONFIRMATION,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Collections.<TypeReference<?>>emptyList());
-        return getInvokeData(function);
+        return PlatOnUtil.invokeEncode(function,customTransactionType(function));
     }
 
     public static BigInteger revokeConfirmationGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, BigInteger transactionId) throws IOException {
         String ethEstimateGasData = revokeConfirmationData(transactionId);
-        return estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
+        return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
     public RemoteCall<TransactionReceipt> executeTransaction(BigInteger transactionId) {
         final Function function = new Function(
-                FUNC_EXECUTETRANSACTION, 
+                FUNC_EXECUTETRANSACTION,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
@@ -232,47 +235,47 @@ public class Multisig extends PlatOnContract {
 
     public static String executeTransactionData(BigInteger transactionId) {
         final Function function = new Function(
-                FUNC_EXECUTETRANSACTION, 
+                FUNC_EXECUTETRANSACTION,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Collections.<TypeReference<?>>emptyList());
-        return getInvokeData(function);
+        return PlatOnUtil.invokeEncode(function,customTransactionType(function));
     }
 
     public static BigInteger executeTransactionGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, BigInteger transactionId) throws IOException {
         String ethEstimateGasData = executeTransactionData(transactionId);
-        return estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
+        return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
     public RemoteCall<BigInteger> isConfirmed(BigInteger transactionId) {
-        final Function function = new Function(FUNC_ISCONFIRMED, 
+        final Function function = new Function(FUNC_ISCONFIRMED,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Int32>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<BigInteger> getRequired() {
-        final Function function = new Function(FUNC_GETREQUIRED, 
-                Arrays.<Type>asList(), 
+        final Function function = new Function(FUNC_GETREQUIRED,
+                Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint64>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<BigInteger> getListSize() {
-        final Function function = new Function(FUNC_GETLISTSIZE, 
-                Arrays.<Type>asList(), 
+        final Function function = new Function(FUNC_GETLISTSIZE,
+                Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint64>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<BigInteger> getConfirmationCount(BigInteger transactionId) {
-        final Function function = new Function(FUNC_GETCONFIRMATIONCOUNT, 
+        final Function function = new Function(FUNC_GETCONFIRMATIONCOUNT,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint64>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<BigInteger> getTransactionCount(BigInteger pending, BigInteger executed) {
-        final Function function = new Function(FUNC_GETTRANSACTIONCOUNT, 
+        final Function function = new Function(FUNC_GETTRANSACTIONCOUNT,
                 Arrays.<Type>asList(new Int32(pending),
                 new Int32(executed)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint64>() {}));
@@ -280,7 +283,7 @@ public class Multisig extends PlatOnContract {
     }
 
     public RemoteCall<String> getTransactionList(BigInteger from, BigInteger to) {
-        final Function function = new Function(FUNC_GETTRANSACTIONLIST, 
+        final Function function = new Function(FUNC_GETTRANSACTIONLIST,
                 Arrays.<Type>asList(new Uint64(from),
                 new Uint64(to)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
@@ -288,21 +291,21 @@ public class Multisig extends PlatOnContract {
     }
 
     public RemoteCall<String> getOwners() {
-        final Function function = new Function(FUNC_GETOWNERS, 
-                Arrays.<Type>asList(), 
+        final Function function = new Function(FUNC_GETOWNERS,
+                Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     public RemoteCall<String> getConfirmations(BigInteger transactionId) {
-        final Function function = new Function(FUNC_GETCONFIRMATIONS, 
+        final Function function = new Function(FUNC_GETCONFIRMATIONS,
                 Arrays.<Type>asList(new Uint64(transactionId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     public RemoteCall<String> getTransactionIds(BigInteger from, BigInteger to, BigInteger pending, BigInteger executed) {
-        final Function function = new Function(FUNC_GETTRANSACTIONIDS, 
+        final Function function = new Function(FUNC_GETTRANSACTIONIDS,
                 Arrays.<Type>asList(new Uint64(from),
                 new Uint64(to),
                 new Int32(pending),
@@ -312,7 +315,7 @@ public class Multisig extends PlatOnContract {
     }
 
     public RemoteCall<String> getMultiSigList(String transactionIds) {
-        final Function function = new Function(FUNC_GETMULTISIGLIST, 
+        final Function function = new Function(FUNC_GETMULTISIGLIST,
                 Arrays.<Type>asList(new Utf8String(transactionIds)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
@@ -640,11 +643,19 @@ public class Multisig extends PlatOnContract {
     }
 
     public static String getDeployData(String contractBinary) {
-        return getDeployData(contractBinary, ABI);
+        return PlatOnUtil.deployEncode(contractBinary, ABI);
     }
 
     public static BigInteger getDeployGasLimit(Web3j web3j, String estimateGasFrom, String estimateGasTo, String contractBinary) throws IOException {
-        return getDeployGasLimit(web3j, estimateGasFrom, estimateGasTo, contractBinary, ABI);
+        return PlatOnUtil.estimateGasLimit(web3j, estimateGasFrom, estimateGasTo, getDeployData(contractBinary));
+    }
+
+    private static long customTransactionType(Function function) {
+        return TXTypeEnum.WASM.type;
+    }
+
+    protected long getTransactionType(Function function) {
+        return customTransactionType(function);
     }
 
     public static class ConfirmationEventResponse {

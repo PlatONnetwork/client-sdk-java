@@ -1,0 +1,209 @@
+[
+	{
+			"name": "CandidateDeposit",
+			"inputs": [
+				{
+					"name": "nodeId",
+					"type": "string"
+				},
+				{
+					"name": "owner",
+					"type": "string"
+				},
+				{
+					"name": "fee",
+					"type": "uint64"
+				},
+				{
+					"name": "host",
+					"type": "string"
+				},
+				{
+					"name": "port",
+					"type": "string"
+				},
+				{
+					"name": "extra",
+					"type": "string"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "false",
+			"type": "function"
+	},
+	{
+			"name": "CandidateApplyWithdraw",
+			"inputs": [
+				{
+					"name": "nodeId",
+					"type": "string"
+				},
+				{
+					"name": "withdraw",
+					"type": "uint256"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "false",
+			"type": "function"
+	},
+	{
+			"name": "CandidateWithdraw",
+			"inputs": [
+				{
+					"name": "nodeId",
+					"type": "string"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "false",
+			"type": "function"
+	},
+	{
+			"name": "SetCandidateExtra",
+			"inputs": [
+				{
+					"name": "nodeId",
+					"type": "string"
+				},
+				{
+					"name": "extra",
+					"type": "string"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "false",
+			"type": "function"
+	},
+	{
+			"name": "CandidateWithdrawInfos",
+			"inputs": [
+				{
+					"name": "nodeId",
+					"type": "string"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "true",
+			"type": "function"
+	},
+	{
+			"name": "CandidateDetails",
+			"inputs": [
+				{
+					"name": "nodeId",
+					"type": "string"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "true",
+			"type": "function"
+	},
+	{
+			"name": "GetBatchCandidateDetail",
+			"inputs": [
+				{
+					"name": "nodeIds",
+					"type": "string"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "true",
+			"type": "function"
+	},
+	{
+			"name": "CandidateList",
+			"inputs": [],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "true",
+			"type": "function"
+	},
+	{
+			"name": "VerifiersList",
+			"inputs": [],
+			"outputs": [
+				{
+					"name": "",
+					"type": "string"
+				}
+			],
+			"constant": "true",
+			"type": "function"
+	},
+	{
+        "name": "CandidateDepositEvent",
+        "inputs": [
+            {
+                "type": "string"
+            }
+        ],
+        "type": "event"
+    },
+	{
+        "name": "CandidateApplyWithdrawEvent",
+        "inputs": [
+            {
+                "type": "string"
+            }
+        ],
+        "type": "event"
+    },
+	{
+        "name": "CandidateWithdrawEvent",
+        "inputs": [
+            {
+                "type": "string"
+            }
+        ],
+        "type": "event"
+    },
+	{
+        "name": "SetCandidateExtraEvent",
+        "inputs": [
+            {
+                "type": "string"
+            }
+        ],
+        "type": "event"
+    }
+]
