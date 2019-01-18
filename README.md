@@ -12,21 +12,21 @@
 
 # Use
 
-* config maven repository:  http://sdk.platon.network/content/groups/public/
+* config maven repository:  https://sdk.platon.network/nexus/content/groups/public/
 * config maven or gradle in project
 
 ```
 <dependency>
     <groupId>com.platon.client</groupId>
     <artifactId>core</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.client:core:0.2.0"
+compile "com.platon.client:core:0.3.0"
 ```
 
 * use in project

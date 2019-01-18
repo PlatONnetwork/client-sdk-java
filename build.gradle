@@ -154,7 +154,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
                     ossrhUsername != '' && ossrhPassword != ''
                 }
 
-                String repoUrl = isSnapshotVersion ? "http://sdk.juzix.net/content/repositories/releases/" : "http://sdk.juzix.net/content/repositories/releases/"
+                String repoUrl = isSnapshotVersion ? "$mavenReleases" : "$mavenSnapshots";
                 repository(url: repoUrl) {
                     authentication(
                             userName: ossrhUsername,

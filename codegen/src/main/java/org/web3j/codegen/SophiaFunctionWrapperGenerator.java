@@ -15,6 +15,7 @@ import org.web3j.utils.Files;
 import org.web3j.utils.Strings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.web3j.utils.TXTypeEnum;
 
 /**
  * Java wrapper source code generator for Solidity ABI format.
@@ -25,21 +26,26 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
             + "[--javaTypes|--solidityTypes] "
             + "<input binary file>.bin <input abi file>.abi "
             + "-p|--package <base package name> "
-            + "-o|--output <destination base directory>";
+            + "-o|--output <destination base directory>"
+            + "-t|--txType <Transaction Type: [wasm|mpc|default]>"
+            ;
 
     private final String binaryFileLocation;
     private final String absFileLocation;
+    private final String txType;
 
     private SophiaFunctionWrapperGenerator(
             String binaryFileLocation,
             String absFileLocation,
             String destinationDirLocation,
             String basePackageName,
+            String txType,
             boolean useJavaNativeTypes) {
 
         super(destinationDirLocation, basePackageName, useJavaNativeTypes);
         this.binaryFileLocation = binaryFileLocation;
         this.absFileLocation = absFileLocation;
+        this.txType = txType;
     }
 
     public static void run(String[] args) throws Exception {
@@ -53,7 +59,7 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
     public static void main(String[] args) throws Exception {
 
         String[] fullArgs;
-        if (args.length == 6) {
+        if (args.length == 7) {
             fullArgs = new String[args.length + 1];
             fullArgs[0] = JAVA_TYPES_ARG;
             System.arraycopy(args, 0, fullArgs, 1, args.length);
@@ -61,7 +67,7 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
             fullArgs = args;
         }
 
-        if (fullArgs.length != 7) {
+        if (fullArgs.length != 9) {
             exitError(USAGE);
         }
 
@@ -71,11 +77,14 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
         String absFileLocation = parsePositionalArg(fullArgs, 2);
         String destinationDirLocation = parseParameterArgument(fullArgs, "-o", "--outputDir");
         String basePackageName = parseParameterArgument(fullArgs, "-p", "--package");
+        String txType = parseParameterArgument(fullArgs, "-t", "--txType");
 
         if (binaryFileLocation.equals("")
                 || absFileLocation.equals("")
                 || destinationDirLocation.equals("")
-                || basePackageName.equals("")) {
+                || basePackageName.equals("")
+                || txType.equals("")
+        ) {
             exitError(USAGE);
         }
 
@@ -84,6 +93,7 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
                 absFileLocation,
                 destinationDirLocation,
                 basePackageName,
+                txType,
                 useJavaNativeTypes)
                 .generate();
     }
@@ -106,6 +116,7 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
         if (!absFile.exists() || !absFile.canRead()) {
             exitError("Invalid input ABI file specified: " + absFileLocation);
         }
+
         String fileName = binaryFile.getName();
         String contractName = getFileNameNoExtension(fileName);
         byte [] bytes = Files.readBytes(new File(absFile.toURI()));
@@ -122,8 +133,8 @@ public class SophiaFunctionWrapperGenerator extends FunctionWrapperGenerator {
         } else {
             String className = Strings.capitaliseFirstLetter(contractName);
             System.out.printf("Generating " + basePackageName + "." + className + " ... ");
-            new SophiaFunctionWrapper(useJavaNativeTypes).generateJavaFiles(
-                    contractName, binaryFile, abi, destinationDirLocation.toString(), basePackageName);
+
+            new SophiaFunctionWrapper(useJavaNativeTypes, TXTypeEnum.valueOf(txType.toUpperCase())).generateJavaFiles(contractName, binaryFile, abi, destinationDirLocation.toString(), basePackageName);
             System.out.println("File written to " + destinationDirLocation.toString() + "\n");
         }
     }

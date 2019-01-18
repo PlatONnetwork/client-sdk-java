@@ -22,9 +22,8 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.PlatOnContract;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.utils.*;
 import org.web3j.utils.Collection;
-import org.web3j.utils.Strings;
-import org.web3j.utils.Version;
 import rx.functions.Func1;
 
 import javax.lang.model.element.Modifier;
@@ -75,14 +74,16 @@ public class SophiaFunctionWrapper extends Generator {
     private static final String regex = "(\\w+)(?:\\[(.*?)\\])(?:\\[(.*?)\\])?";
     private static final Pattern pattern = Pattern.compile(regex);
     private final GenerationReporter reporter;
+    private final TXTypeEnum txType;
 
-    public SophiaFunctionWrapper(boolean useNativeJavaTypes) {
-        this(useNativeJavaTypes, new LogGenerationReporter(LOGGER));
+    public SophiaFunctionWrapper(boolean useNativeJavaTypes,TXTypeEnum txType) {
+        this(useNativeJavaTypes, new LogGenerationReporter(LOGGER),txType);
     }
 
-    SophiaFunctionWrapper(boolean useNativeJavaTypes, GenerationReporter reporter) {
+    SophiaFunctionWrapper(boolean useNativeJavaTypes, GenerationReporter reporter,TXTypeEnum txType) {
         this.useNativeJavaTypes = useNativeJavaTypes;
         this.reporter = reporter;
+        this.txType = txType;
     }
 
     @SuppressWarnings("unchecked")
@@ -128,12 +129,16 @@ public class SophiaFunctionWrapper extends Generator {
         classBuilder.addMethod(buildLoad(className, TransactionManager.class,
                 TRANSACTION_MANAGER, true));
 
+        addAddressesSupport(classBuilder, addresses);
+
         // 添加获取合约部署数据的方法
         classBuilder.addMethod(buildGetDeployData());
         // 添加估算合约部署Gas的方法
         classBuilder.addMethod(buildGetDeployGasLimit());
-
-        addAddressesSupport(classBuilder, addresses);
+        // 添加自定义交易类型方法
+        classBuilder.addMethod(buildCustomTransactionType(txType));
+        // 添加获取交易类型的方法实现
+        classBuilder.addMethod(buildGetTransactionType());
 
         write(basePackageName, classBuilder.build(), destinationDir);
     }
@@ -506,7 +511,7 @@ public class SophiaFunctionWrapper extends Generator {
                 .addParameter(Function.class,functionName)
                 .returns(String.class);
 
-        toReturn.addStatement("return getInvokeData($L)",functionName);
+        toReturn.addStatement("return $T.invokeEncode($L,getTransactionType($L))", PlatOnUtil.class,functionName,functionName);
         return toReturn.build();
     }
 
@@ -520,7 +525,7 @@ public class SophiaFunctionWrapper extends Generator {
                 .addParameter(String.class,CONTRACT_BINARY)
                 .returns(String.class);
 
-        toReturn.addStatement("return getDeployData($L, $L)",CONTRACT_BINARY,ABI);
+        toReturn.addStatement("return $T.deployEncode($L, $L)",PlatOnUtil.class,CONTRACT_BINARY,ABI);
         return toReturn.build();
     }
 
@@ -537,7 +542,33 @@ public class SophiaFunctionWrapper extends Generator {
                 .addParameter(String.class,CONTRACT_BINARY)
                 .returns(BigInteger.class)
                 .addException(IOException.class);
-        toReturn.addStatement("return getDeployGasLimit($L, $L, $L, $L, $L)",WEB3J,ESTIMATE_GAS_FROM,ESTIMATE_GAS_TO,CONTRACT_BINARY,ABI);
+        toReturn.addStatement("return $T.estimateGasLimit($L, $L, $L, getDeployData($L))",PlatOnUtil.class,WEB3J,ESTIMATE_GAS_FROM,ESTIMATE_GAS_TO,CONTRACT_BINARY);
+        return toReturn.build();
+    }
+
+    /**
+     * 构建获取交易类型的方法
+     * @return
+     */
+    private static MethodSpec buildGetTransactionType() {
+        MethodSpec.Builder toReturn = MethodSpec.methodBuilder("getTransactionType")
+                .addModifiers(Modifier.PROTECTED)
+                .addParameter(Function.class,"function")
+                .addStatement("return customTransactionType(function)")
+                .returns(long.class);
+        return toReturn.build();
+    }
+
+    /**
+     * 构建获取自定义交易类型的方法
+     * @return
+     */
+    private static MethodSpec buildCustomTransactionType(TXTypeEnum txType) {
+        MethodSpec.Builder toReturn = MethodSpec.methodBuilder("customTransactionType")
+                .returns(long.class);
+        toReturn.addModifiers(Modifier.PRIVATE, Modifier.STATIC)
+                .addParameter(Function.class,"function");
+        toReturn.addStatement("return $T.$L.type", TXTypeEnum.class,txType.name());
         return toReturn.build();
     }
 
@@ -894,8 +925,7 @@ public class SophiaFunctionWrapper extends Generator {
 
         String functionName = functionDefinition.getName()+"Data";
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(functionName)
-                .addModifiers(Modifier.STATIC)
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC,Modifier.STATIC);
         String inputParams = addParameters(methodBuilder, functionDefinition.getInputs());
 
         if (!functionDefinition.isConstant()) {
@@ -906,7 +936,7 @@ public class SophiaFunctionWrapper extends Generator {
                     Function.class, Function.class, funcNameToConst(functionName),
                     Arrays.class, Type.class, inputParams, Collections.class,
                     TypeReference.class);
-            methodBuilder.addStatement("return getInvokeData(function)");
+            methodBuilder.addStatement("return $T.invokeEncode(function,customTransactionType(function))",PlatOnUtil.class);
             return methodBuilder.build();
         }
         return null;
@@ -925,8 +955,7 @@ public class SophiaFunctionWrapper extends Generator {
         if (!functionDefinition.isConstant()) {
             String functionName = functionDefinition.getName()+"GasLimit";
             MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(functionName)
-                    .addModifiers(Modifier.STATIC)
-                    .addModifiers(Modifier.PUBLIC)
+                    .addModifiers(Modifier.PUBLIC,Modifier.STATIC)
                     .addParameter(Web3j.class,WEB3J)
                     .addParameter(String.class,ESTIMATE_GAS_FROM)
                     .addParameter(String.class,ESTIMATE_GAS_TO)
@@ -935,7 +964,7 @@ public class SophiaFunctionWrapper extends Generator {
 
             methodBuilder.returns(BigInteger.class);
             methodBuilder.addStatement("String ethEstimateGasData = $N($L)",functionDefinition.getName()+"Data",getParameterNames(functionDefinition.getInputs()));
-            methodBuilder.addStatement("return estimateGasLimit($L,$L,$L,ethEstimateGasData)", WEB3J,ESTIMATE_GAS_FROM,ESTIMATE_GAS_TO);
+            methodBuilder.addStatement("return $T.estimateGasLimit($L,$L,$L,ethEstimateGasData)",PlatOnUtil.class,WEB3J,ESTIMATE_GAS_FROM,ESTIMATE_GAS_TO);
             return methodBuilder.build();
         }
         return null;
