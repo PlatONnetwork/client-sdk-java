@@ -12,7 +12,7 @@
 
 # Use
 
-* config maven repository:  http://sdk.platon.network/content/groups/public/
+* config maven repository:  https://sdk.platon.network/nexus/content/groups/public/
 * config maven or gradle in project
 
 ```
