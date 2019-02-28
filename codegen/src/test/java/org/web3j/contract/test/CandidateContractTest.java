@@ -30,14 +30,9 @@ public class CandidateContractTest {
 
     private Logger logger = LoggerFactory.getLogger(CandidateContractTest.class);
 
-    private static final Credentials CREDENTIALS = loadCredentials("sophia/contracts/build/admin.json");
-    
-    private static final Credentials OWNER_CREDENTIALS = loadCredentials("sophia/contracts/build/owner.json");
+    private static final Credentials CREDENTIALS = loadCredentials("wallet/admin.json");
     
     private  CandidateContract contract;
-    
-    private  CandidateContract ownerContract;
-
 
     private static Credentials loadCredentials(String walletPath) {
         Credentials credentials = null;
@@ -63,12 +58,6 @@ public class CandidateContractTest {
                 CREDENTIALS,
                 new DefaultWasmGasProvider()
         );
-    	
-    	ownerContract = CandidateContract.load(
-    			web3j, 
-    			OWNER_CREDENTIALS, 
-    			 new DefaultWasmGasProvider()
-    	);
     }
 
     /**
@@ -191,7 +180,7 @@ public class CandidateContractTest {
       	//节点名称
       	extra.put("nodeName", "xxxx-noedeName");
       	//节点logo
-      	extra.put("nodePortrait", "group2/M00/00/12/wKgJVlw0XSyAY78cAAH3BKJzz9Y83.jpeg");
+      	extra.put("nodePortrait", "1");
       	//机构简介
       	extra.put("nodeDiscription", "xxxx-nodeDiscription1");
       	//机构名称
@@ -201,7 +190,7 @@ public class CandidateContractTest {
       	
         
       	//调用接口
-        TransactionReceipt receipt = ownerContract.SetCandidateExtra(nodeId,extra.toJSONString()).send();
+        TransactionReceipt receipt = contract.SetCandidateExtra(nodeId,extra.toJSONString()).send();
         logger.debug("TransactionReceipt:{}", JSON.toJSONString(receipt));
         
         //查看返回event
@@ -244,14 +233,14 @@ public class CandidateContractTest {
     	String nodeId = "0xaafbc9c699270bd33c77f1b2a5c3653eaf756f1860891327dfd8c29960a51c9aebb6c081cbfe2499db71e9f4c19e609f44cbd9514e59b6066e5e895b8b592abf"; 
      	//退款金额, 单位 wei
     	                                 //4400000000000000000000
-    	BigInteger value = new BigInteger("10 000000000000000000".replaceAll(" ", ""));      
+    	BigInteger value = new BigInteger("3000000000002000000000002".replaceAll(" ", ""));      
     	
       	//调用接口
-        TransactionReceipt receipt = ownerContract.CandidateApplyWithdraw(nodeId,value).send();
+        TransactionReceipt receipt = contract.CandidateApplyWithdraw(nodeId,value).send();
         logger.debug("TransactionReceipt:{}", JSON.toJSONString(receipt));
         
         //查看返回event
-        List<CandidateApplyWithdrawEventEventResponse>  events = ownerContract.getCandidateApplyWithdrawEventEvents(receipt);
+        List<CandidateApplyWithdrawEventEventResponse>  events = contract.getCandidateApplyWithdrawEventEvents(receipt);
         for (CandidateApplyWithdrawEventEventResponse event : events) {
         	 logger.debug("event:{}", JSON.toJSONString(event.param1));
 		}
@@ -268,23 +257,27 @@ public class CandidateContractTest {
     	//节点id
     	String nodeId = "0xaafbc9c699270bd33c77f1b2a5c3653eaf756f1860891327dfd8c29960a51c9aebb6c081cbfe2499db71e9f4c19e609f44cbd9514e59b6066e5e895b8b592abf"; 
     	//质押金退款地址
-    	String owner = "0xf8f3978c14f585c920718c27853e2380d6f5db36";
+    	String owner = "0x493301712671ada506ba6ca7891f436d29185821";
     	//出块奖励佣金比，以10000为基数(eg：5%，则fee=500)
     	BigInteger fee =  BigInteger.valueOf(500L);
     	//节点IP
     	String host = "192.168.9.76";
     	//节点P2P端口号
     	String port = "38789";
+    	
+    	nodeId = "0xe0b6af6cc2e10b2b74540b87098083d48343805a3ff09c655eab0b20dba2b2851aea79ee75b6e150bde58ead0be03ee4a8619ea1dfaf529cbb8ff55ca23531ed";
+        port = "26789";
+    	
     	//附加数据
       	JSONObject extra = new JSONObject();
       	//节点名称
-      	extra.put("nodeName", "xxxx-noedeName");
+      	extra.put("nodeName", "chendai-noedeName");
       	//节点logo
-      	extra.put("nodePortrait", "http://192.168.9.86:8082/group2/M00/00/00/wKgJVlr0KDyAGSddAAYKKe2rswE261.png");
+      	extra.put("nodePortrait", "1");
       	//机构简介
-      	extra.put("nodeDiscription", "xxxx-nodeDiscription中国人");
+      	extra.put("nodeDiscription", "chendai-nodeDiscription");
       	//机构名称
-      	extra.put("nodeDepartment", "xxxx-nodeDepartment");  
+      	extra.put("nodeDepartment", "chendai-nodeDepartment");  
       	//官网
       	extra.put("officialWebsite", "https://www.platon.network/");  
       	
