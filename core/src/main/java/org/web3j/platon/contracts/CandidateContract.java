@@ -51,15 +51,15 @@ public class CandidateContract extends PlatOnContract {
 
     public static final String FUNC_SETCANDIDATEEXTRA = "SetCandidateExtra";
 
-    public static final String FUNC_CANDIDATEWITHDRAWINFOS = "CandidateWithdrawInfos";
+    public static final String FUNC_GETCANDIDATEWITHDRAWINFOS = "GetCandidateWithdrawInfos";
 
-    public static final String FUNC_CANDIDATEDETAILS = "CandidateDetails";
+    public static final String FUNC_GETCANDIDATEDETAILS = "GetCandidateDetails";
 
     public static final String FUNC_GETBATCHCANDIDATEDETAIL = "GetBatchCandidateDetail";
 
-    public static final String FUNC_CANDIDATELIST = "CandidateList";
+    public static final String FUNC_GETCANDIDATELIST = "GetCandidateList";
 
-    public static final String FUNC_VERIFIERSLIST = "VerifiersList";
+    public static final String FUNC_GETVERIFIERSLIST = "GetVerifiersList";
 
     public static final Event CANDIDATEDEPOSITEVENT_EVENT = new Event("CandidateDepositEvent", 
             Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
@@ -100,7 +100,7 @@ public class CandidateContract extends PlatOnContract {
                 FUNC_CANDIDATEDEPOSIT, 
                 Arrays.<Type>asList(new Utf8String(nodeId),
                 new Utf8String(owner),
-                new org.web3j.abi.datatypes.generated.Uint64(fee),
+                new org.web3j.abi.datatypes.generated.Uint32(fee),
                 new Utf8String(host),
                 new Utf8String(port),
                 new Utf8String(extra)),
@@ -113,7 +113,7 @@ public class CandidateContract extends PlatOnContract {
                 FUNC_CANDIDATEDEPOSIT,
                 Arrays.<Type>asList(new Utf8String(nodeId),
                 new Utf8String(owner),
-                new org.web3j.abi.datatypes.generated.Uint64(fee),
+                new org.web3j.abi.datatypes.generated.Uint32(fee),
                 new Utf8String(host),
                 new Utf8String(port),
                 new Utf8String(extra)),
@@ -194,14 +194,21 @@ public class CandidateContract extends PlatOnContract {
     }
 
     public RemoteCall<String> CandidateWithdrawInfos(String nodeId) {
-        final Function function = new Function(FUNC_CANDIDATEWITHDRAWINFOS,
+        final Function function = new Function(FUNC_GETCANDIDATEWITHDRAWINFOS,
                 Arrays.<Type>asList(new Utf8String(nodeId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
+    public RemoteCall<String> CandidateDetails(String nodeId,BigInteger number) {
+        final Function function = new Function(FUNC_GETCANDIDATEDETAILS,
+                Arrays.<Type>asList(new Utf8String(nodeId)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class,number);
+    }
+
     public RemoteCall<String> CandidateDetails(String nodeId) {
-        final Function function = new Function(FUNC_CANDIDATEDETAILS,
+        final Function function = new Function(FUNC_GETCANDIDATEDETAILS,
                 Arrays.<Type>asList(new Utf8String(nodeId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
@@ -215,28 +222,28 @@ public class CandidateContract extends PlatOnContract {
     }
 
     public RemoteCall<String> CandidateList() {
-        final Function function = new Function(FUNC_CANDIDATELIST,
+        final Function function = new Function(FUNC_GETCANDIDATELIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
     
     public RemoteCall<String> CandidateList( BigInteger number) {
-        final Function function = new Function(FUNC_CANDIDATELIST,
+        final Function function = new Function(FUNC_GETCANDIDATELIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class, number);
     }
 
     public RemoteCall<String> VerifiersList() {
-        final Function function = new Function(FUNC_VERIFIERSLIST,
+        final Function function = new Function(FUNC_GETVERIFIERSLIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
     
     public RemoteCall<String> VerifiersList(BigInteger number) {
-        final Function function = new Function(FUNC_VERIFIERSLIST,
+        final Function function = new Function(FUNC_GETVERIFIERSLIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class, number);

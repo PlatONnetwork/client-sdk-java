@@ -42,24 +42,20 @@ import java.util.List;
 public class TicketContract extends PlatOnContract {
 	
 	public static final String CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000002";
-	
-    private static final String ABI = "[\t{\t\t\t\"name\":\"VoteTicket\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"count\",\t\t\t\t\t\"type\":\"uint64\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"price\",\t\t\t\t\t\"type\":\"uint256\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"false\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetTicketDetail\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"ticketId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetBatchTicketDetail\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"ticketIds\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetCandidateTicketIds\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetBatchCandidateTicketIds\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeIds\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetCandidateEpoch\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t\t\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetPoolRemainder\",\t\t\t\"inputs\":[],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetTicketPrice\",\t\t\t\"inputs\":[],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\"name\":\"VoteTicketEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"}]";
+
+    private static final String ABI = "[\t{\t\t\"name\":\"VoteTicket\",\t\t\"inputs\":[\t\t\t{\t\t\t\t\"name\":\"count\",\t\t\t\t\"type\":\"uint32\"\t\t\t},\t\t\t{\t\t\t\t\"name\":\"price\",\t\t\t\t\"type\":\"uint256\"\t\t\t},\t\t\t{\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"outputs\":[\t\t\t{\t\t\t\t\"name\":\"\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"constant\":\"false\",\t\t\"type\":\"function\"\t},\t{\t\t\"name\":\"GetCandidateTicketCount\",\t\t\"inputs\":[\t\t\t{\t\t\t\t\"name\":\"nodeIds\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"outputs\":[\t\t\t{\t\t\t\t\"name\":\"\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"constant\":\"true\",\t\t\"type\":\"function\"\t},\t{\t\t\"name\":\"GetTicketCountByTxHash\",\t\t\"inputs\":[\t\t\t{\t\t\t\t\"name\":\"txHashs\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"outputs\":[\t\t\t{\t\t\t\t\"name\":\"\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"constant\":\"true\",\t\t\"type\":\"function\"\t},\t{\t\t\"name\":\"GetCandidateEpoch\",\t\t\"inputs\":[\t\t\t{\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"outputs\":[\t\t\t{\t\t\t\t\"name\":\"\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"constant\":\"true\",\t\t\"type\":\"function\"\t},\t{\t\t\"name\":\"GetPoolRemainder\",\t\t\"inputs\":[],\t\t\"outputs\":[\t\t\t{\t\t\t\t\"name\":\"\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"constant\":\"true\",\t\t\"type\":\"function\"\t},\t{\t\t\"name\":\"GetTicketPrice\",\t\t\"inputs\":[],\t\t\"outputs\":[\t\t\t{\t\t\t\t\"name\":\"\",\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"constant\":\"true\",\t\t\"type\":\"function\"\t},\t{\t\t\"name\":\"VoteTicketEvent\",\t\t\"inputs\":[\t\t\t{\t\t\t\t\"type\":\"string\"\t\t\t}\t\t],\t\t\"type\":\"event\"\t}]";
 
     public static final String FUNC_VOTETICKET = "VoteTicket";
 
-    public static final String FUNC_GETTICKETDETAIL = "GetTicketDetail";
-
-    public static final String FUNC_GETBATCHTICKETDETAIL = "GetBatchTicketDetail";
-
-    public static final String FUNC_GETCANDIDATETICKETIDS = "GetCandidateTicketIds";
-
-    public static final String FUNC_GETBATCHCANDIDATETICKETIDS = "GetBatchCandidateTicketIds";
+    public static final String FUNC_GETCANDIDATETICKETCOUNT = "GetCandidateTicketCount";
 
     public static final String FUNC_GETCANDIDATEEPOCH = "GetCandidateEpoch";
 
     public static final String FUNC_GETPOOLREMAINDER = "GetPoolRemainder";
 
     public static final String FUNC_GETTICKETPRICE = "GetTicketPrice";
+
+    public static final String FUNC_GETTICKETCOUNTBYTXHASH = "GetTicketCountByTxHash";
 
     public static final Event VOTETICKETEVENT_EVENT = new Event("VoteTicketEvent", 
             Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
@@ -86,7 +82,7 @@ public class TicketContract extends PlatOnContract {
     public RemoteCall<TransactionReceipt> VoteTicket(BigInteger count, BigInteger price, String nodeId) {
         final Function function = new Function(
                 FUNC_VOTETICKET, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint64(count), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint32(count),
                 new org.web3j.abi.datatypes.generated.Uint256(price), 
                 new Utf8String(nodeId)),
                 Collections.<TypeReference<?>>emptyList());
@@ -131,29 +127,9 @@ public class TicketContract extends PlatOnContract {
         return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
-    public RemoteCall<String> GetTicketDetail(String ticketId) {
-        final Function function = new Function(FUNC_GETTICKETDETAIL,
-                Arrays.<Type>asList(new Utf8String(ticketId)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
 
-    public RemoteCall<String> GetBatchTicketDetail(String ticketIds) {
-        final Function function = new Function(FUNC_GETBATCHTICKETDETAIL,
-                Arrays.<Type>asList(new Utf8String(ticketIds)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
-    public RemoteCall<String> GetCandidateTicketIds(String nodeId) {
-        final Function function = new Function(FUNC_GETCANDIDATETICKETIDS,
-                Arrays.<Type>asList(new Utf8String(nodeId)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
-    public RemoteCall<String> GetBatchCandidateTicketIds(String nodeIds) {
-        final Function function = new Function(FUNC_GETBATCHCANDIDATETICKETIDS,
+    public RemoteCall<String> GetCandidateTicketCount(String nodeIds) {
+        final Function function = new Function(FUNC_GETCANDIDATETICKETCOUNT,
                 Arrays.<Type>asList(new Utf8String(nodeIds)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
@@ -176,6 +152,13 @@ public class TicketContract extends PlatOnContract {
     public RemoteCall<String> GetTicketPrice() {
         final Function function = new Function(FUNC_GETTICKETPRICE,
                 Arrays.<Type>asList(),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
+    }
+
+    public RemoteCall<String> GetTicketCountByTxHash(String txHashs) {
+        final Function function = new Function(FUNC_GETTICKETCOUNTBYTXHASH,
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Utf8String(txHashs)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }

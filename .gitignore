@@ -1,0 +1,72 @@
+
+# Eclipse project files
+.project
+.classpath
+.settings
+
+# IntelliJ IDEA project files and directories
+*.iml
+*.ipr
+*.iws
+.idea/
+.gradle/
+*.txt
+*.log
+
+# Geany project file
+.geany
+
+# KDevelop project file and directory
+.kdev4/
+*.kdev4
+
+# Build targets
+/target
+*/target
+build/
+*/build/
+*/out/
+
+# Report directories
+/reports
+*/reports
+
+# Mac-specific directory that no other operating system needs.
+.DS_Store
+
+# JVM crash logs
+hs_err_pid*.log
+dependency-reduced-pom.xml
+manager/log
+manager/target/
+*.class
+dao/target/
+task/target/
+task/bin/
+pojo/target/
+*.prefs
+dao/bin/
+canal/target/
+*.project
+*.classpath
+canal/bin/
+common/bin/
+canal/.settings/
+server/target/
+task/.settings/
+server/bin/
+common/target/
+manager/bin/
+common/.settings/
+dao/.settings/
+manager/.settings/
+pojo/bin/
+
+server/apidoc/doc/
+serverdoc/
+logs/
+codegen/out/
+console/out/
+core/out/
+crypto/out/
+integration-tests/out/
