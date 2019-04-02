@@ -48,8 +48,8 @@ public class CandidateContractTest {
         return credentials;
     }
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.76:8789"));
-    //private Web3j web3j = Web3j.build(new HttpService("https://syde.platon.network/test"));
+
+    private Web3j web3j = Web3j.build(new HttpService("http://0.0.0.0:0000"));
     
     @Before
     public void init() {
