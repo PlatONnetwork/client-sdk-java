@@ -75,6 +75,11 @@ public class RawTransactionManager extends TransactionManager {
         EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
+        if(ethGetTransactionCount.getTransactionCount().intValue()==0){
+            ethGetTransactionCount = web3j.ethGetTransactionCount(
+                    credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
+        }
+
         return ethGetTransactionCount.getTransactionCount();
     }
 

@@ -19,6 +19,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings({"deprecation","unchecked"})
 public class PollingTransactionReceiptProcessorTest {
     private static final String TRANSACTION_HASH = "0x00";
     private Web3j web3j;

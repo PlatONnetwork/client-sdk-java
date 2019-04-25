@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.web3j.abi.Utils.typeMap;
 
+@SuppressWarnings("unchecked")
 public class UtilsTest {
 
     @Test

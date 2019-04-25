@@ -14,6 +14,9 @@ dependencies {
     testCompile project(path: ':crypto', configuration: 'testArtifacts'),
             "nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion",
             "ch.qos.logback:logback-classic:$logbackVersion"
+    testCompile group: 'com.alibaba', name: 'fastjson', version: '1.2.54'
+    testCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
+
 }
 
 task createProperties(dependsOn: processResources) doLast {
