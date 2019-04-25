@@ -40,8 +40,8 @@ import java.util.List;
 public class CandidateContract extends PlatOnContract {
     
 	public static final String CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000001";
-	
-	private static final String ABI = "[\t{\t\t\t\"name\":\"CandidateDeposit\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"owner\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"fee\",\t\t\t\t\t\"type\":\"uint64\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"host\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"port\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"extra\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"false\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"CandidateApplyWithdraw\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"withdraw\",\t\t\t\t\t\"type\":\"uint256\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"false\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"CandidateWithdraw\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"false\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"SetCandidateExtra\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t},\t\t\t\t{\t\t\t\t\t\"name\":\"extra\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"false\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"CandidateWithdrawInfos\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"CandidateDetails\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeId\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"GetBatchCandidateDetail\",\t\t\t\"inputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"nodeIds\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"CandidateList\",\t\t\t\"inputs\":[],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\t\t\t\"name\":\"VerifiersList\",\t\t\t\"inputs\":[],\t\t\t\"outputs\":[\t\t\t\t{\t\t\t\t\t\"name\":\"\",\t\t\t\t\t\"type\":\"string\"\t\t\t\t}\t\t\t],\t\t\t\"constant\":\"true\",\t\t\t\"type\":\"function\"\t},\t{\"name\":\"CandidateDepositEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"},\t{\"name\":\"CandidateApplyWithdrawEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"},\t{\"name\":\"CandidateWithdrawEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"},\t{\"name\":\"SetCandidateExtraEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"}]";
+
+    private static final String ABI = "[{\"name\":\"CandidateDeposit\",\"inputs\":[{\"name\":\"nodeId\",\"type\":\"string\"},{\"name\":\"owner\",\"type\":\"string\"},{\"name\":\"fee\",\"type\":\"uint32\"},{\"name\":\"host\",\"type\":\"string\"},{\"name\":\"port\",\"type\":\"string\"},{\"name\":\"extra\",\"type\":\"string\"}],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"false\",\"type\":\"function\"},{\"name\":\"CandidateApplyWithdraw\",\"inputs\":[{\"name\":\"nodeId\",\"type\":\"string\"},{\"name\":\"withdraw\",\"type\":\"uint256\"}],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"false\",\"type\":\"function\"},{\"name\":\"CandidateWithdraw\",\"inputs\":[{\"name\":\"nodeId\",\"type\":\"string\"}],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"false\",\"type\":\"function\"},{\"name\":\"SetCandidateExtra\",\"inputs\":[{\"name\":\"nodeId\",\"type\":\"string\"},{\"name\":\"extra\",\"type\":\"string\"}],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"false\",\"type\":\"function\"},{\"name\":\"GetCandidateWithdrawInfos\",\"inputs\":[{\"name\":\"nodeId\",\"type\":\"string\"}],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"true\",\"type\":\"function\"},{\"name\":\"GetCandidateDetails\",\"inputs\":[{\"name\":\"nodeIds\",\"type\":\"string\"}],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"true\",\"type\":\"function\"},{\"name\":\"GetCandidateList\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"true\",\"type\":\"function\"},{\"name\":\"GetVerifiersList\",\"inputs\":[],\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"constant\":\"true\",\"type\":\"function\"},{\"name\":\"CandidateDepositEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"},{\"name\":\"CandidateApplyWithdrawEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"},{\"name\":\"CandidateWithdrawEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"},{\"name\":\"SetCandidateExtraEvent\",\"inputs\":[{\"type\":\"string\"}],\"type\":\"event\"}]";
 
     public static final String FUNC_CANDIDATEDEPOSIT = "CandidateDeposit";
 
@@ -54,8 +54,6 @@ public class CandidateContract extends PlatOnContract {
     public static final String FUNC_GETCANDIDATEWITHDRAWINFOS = "GetCandidateWithdrawInfos";
 
     public static final String FUNC_GETCANDIDATEDETAILS = "GetCandidateDetails";
-
-    public static final String FUNC_GETBATCHCANDIDATEDETAIL = "GetBatchCandidateDetail";
 
     public static final String FUNC_GETCANDIDATELIST = "GetCandidateList";
 
@@ -97,13 +95,13 @@ public class CandidateContract extends PlatOnContract {
 
     public RemoteCall<TransactionReceipt> CandidateDeposit(String nodeId, String owner, BigInteger fee, String host, String port, String extra, BigInteger weiValue) {
         final Function function = new Function(
-                FUNC_CANDIDATEDEPOSIT, 
+                FUNC_CANDIDATEDEPOSIT,
                 Arrays.<Type>asList(new Utf8String(nodeId),
-                new Utf8String(owner),
-                new org.web3j.abi.datatypes.generated.Uint32(fee),
-                new Utf8String(host),
-                new Utf8String(port),
-                new Utf8String(extra)),
+                        new Utf8String(owner),
+                        new org.web3j.abi.datatypes.generated.Uint32(fee),
+                        new Utf8String(host),
+                        new Utf8String(port),
+                        new Utf8String(extra)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function, weiValue);
     }
@@ -193,56 +191,49 @@ public class CandidateContract extends PlatOnContract {
         return PlatOnUtil.estimateGasLimit(web3j,estimateGasFrom,estimateGasTo,ethEstimateGasData);
     }
 
-    public RemoteCall<String> CandidateWithdrawInfos(String nodeId) {
+    public RemoteCall<String> GetCandidateWithdrawInfos(String nodeId) {
         final Function function = new Function(FUNC_GETCANDIDATEWITHDRAWINFOS,
                 Arrays.<Type>asList(new Utf8String(nodeId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
-    public RemoteCall<String> CandidateDetails(String nodeId,BigInteger number) {
+    public RemoteCall<String> GetCandidateDetails(String nodeId,BigInteger number) {
         final Function function = new Function(FUNC_GETCANDIDATEDETAILS,
                 Arrays.<Type>asList(new Utf8String(nodeId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class,number);
     }
 
-    public RemoteCall<String> CandidateDetails(String nodeId) {
+    public RemoteCall<String> GetCandidateDetails(String nodeId) {
         final Function function = new Function(FUNC_GETCANDIDATEDETAILS,
                 Arrays.<Type>asList(new Utf8String(nodeId)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
-    public RemoteCall<String> GetBatchCandidateDetail(String nodeIds) {
-        final Function function = new Function(FUNC_GETBATCHCANDIDATEDETAIL,
-                Arrays.<Type>asList(new Utf8String(nodeIds)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
-        return executeRemoteCallSingleValueReturn(function, String.class);
-    }
-
-    public RemoteCall<String> CandidateList() {
+    public RemoteCall<String> GetCandidateList() {
         final Function function = new Function(FUNC_GETCANDIDATELIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
     
-    public RemoteCall<String> CandidateList( BigInteger number) {
+    public RemoteCall<String> GetCandidateList( BigInteger number) {
         final Function function = new Function(FUNC_GETCANDIDATELIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class, number);
     }
 
-    public RemoteCall<String> VerifiersList() {
+    public RemoteCall<String> GetVerifiersList() {
         final Function function = new Function(FUNC_GETVERIFIERSLIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
         return executeRemoteCallSingleValueReturn(function, String.class);
     }
     
-    public RemoteCall<String> VerifiersList(BigInteger number) {
+    public RemoteCall<String> GetVerifiersList(BigInteger number) {
         final Function function = new Function(FUNC_GETVERIFIERSLIST,
                 Arrays.<Type>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));

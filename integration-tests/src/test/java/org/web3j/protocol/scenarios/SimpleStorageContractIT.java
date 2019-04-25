@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("deprecation")
 public class SimpleStorageContractIT extends Scenario {
 
     @Test

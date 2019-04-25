@@ -35,11 +35,13 @@ public class SophiaFunctionWrapperGeneratorTest extends TempFileProvider {
 
     @Test
     public void testHumanStandardTokenGeneration() throws Exception {
+//        testCodeGenerationJvmTypes("contracts", "token");
+//        testCodeGenerationSolidityTypes("contracts", "token");
 
-
-        testCodeGenerationJvmTypes("contracts", "multisig", TXTypeEnum.WASM.name());
+        //testCodeGenerationJvmTypes("contracts", "multisig", TXTypeEnum.WASM.name());
         testCodeGenerationJvmTypes("contracts", "candidateContract", TXTypeEnum.WASM.name());
-
+        //testCodeGenerationJvmTypes("contracts", "ticketContract", TXTypeEnum.WASM.name());
+        //testCodeGenerationSolidityTypes("contracts", "multisig");
     }
 
     private void testCodeGenerationJvmTypes(String contractName, String inputFileName, String txType) throws Exception {
@@ -53,6 +55,7 @@ public class SophiaFunctionWrapperGeneratorTest extends TempFileProvider {
     private void testCodeGeneration(String contractName, String inputFileName, String packageName, String types, String txType)
             throws Exception {
 
+        //tempDirPath = "D:\\Workspace\\client-sdk-java\\codegen\\src\\test\\java";
         SophiaFunctionWrapperGenerator.main(Arrays.asList(
                 types,
                 solidityBaseDir + File.separator + contractName + File.separator
@@ -62,7 +65,7 @@ public class SophiaFunctionWrapperGeneratorTest extends TempFileProvider {
                 "-p", packageName,
                 "-o", tempDirPath,
                 "-t", txType
-        ).toArray(new String[0]));
+        ).toArray(new String[0])); // https://shipilev.net/blog/2016/arrays-wisdom-ancients/
 
         verifyGeneratedCode(tempDirPath + File.separator
                 + packageName.replace('.', File.separatorChar) + File.separator
