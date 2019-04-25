@@ -1,45 +1,72 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Java template
-*.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Eclipse project files
+.project
+.classpath
+.settings
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-### Gradle template
-.gradle
-/build
-/out
-*/build/
-*/out/
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-# Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
-
-.idea
+# IntelliJ IDEA project files and directories
 *.iml
 *.ipr
 *.iws
+.idea/
+.gradle/
+*.txt
+*.log
 
-geth.sh
+# Geany project file
+.geany
 
-# Sphinx generated docs
-docs/build
+# KDevelop project file and directory
+.kdev4/
+*.kdev4
 
-# OS X
+# Build targets
+/target
+*/target
+build/
+*/build/
+*/out/
+
+# Report directories
+/reports
+*/reports
+
+# Mac-specific directory that no other operating system needs.
 .DS_Store
+
+# JVM crash logs
+hs_err_pid*.log
+dependency-reduced-pom.xml
+manager/log
+manager/target/
+*.class
+dao/target/
+task/target/
+task/bin/
+pojo/target/
+*.prefs
+dao/bin/
+canal/target/
+*.project
+*.classpath
+canal/bin/
+common/bin/
+canal/.settings/
+server/target/
+task/.settings/
+server/bin/
+common/target/
+manager/bin/
+common/.settings/
+dao/.settings/
+manager/.settings/
+pojo/bin/
+
+server/apidoc/doc/
+serverdoc/
+logs/
+codegen/out/
+console/out/
+core/out/
+crypto/out/
+integration-tests/out/
