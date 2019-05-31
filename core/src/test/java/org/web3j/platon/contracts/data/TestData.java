@@ -18,7 +18,7 @@ import java.util.List;
 public class TestData {
     private static Logger logger = LoggerFactory.getLogger(TestData.class);
 
-    public static final String web3jTestAddress = "http://192.168.9.76:6789";
+    public static final String web3jTestAddress = "http://10.10.8.21:6789";
     public static final String web3jDockerAddress = "http://192.168.99.100:6789";
     public static final String adminWalletPassword = "88888888";
     public static final String adminTestWalletAddress = "0x493301712671ada506ba6ca7891f436d29185821";

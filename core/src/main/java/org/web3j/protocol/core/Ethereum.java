@@ -22,13 +22,7 @@ public interface Ethereum {
 
     Request<?, EthProtocolVersion> ethProtocolVersion();
 
-    Request<?, EthCoinbase> ethCoinbase();
-
     Request<?, EthSyncing> ethSyncing();
-
-    Request<?, EthMining> ethMining();
-
-    Request<?, EthHashrate> ethHashrate();
 
     Request<?, EthGasPrice> ethGasPrice();
 
@@ -50,11 +44,6 @@ public interface Ethereum {
             String blockHash);
 
     Request<?, EthGetBlockTransactionCountByNumber> ethGetBlockTransactionCountByNumber(
-            DefaultBlockParameter defaultBlockParameter);
-
-    Request<?, EthGetUncleCountByBlockHash> ethGetUncleCountByBlockHash(String blockHash);
-
-    Request<?, EthGetUncleCountByBlockNumber> ethGetUncleCountByBlockNumber(
             DefaultBlockParameter defaultBlockParameter);
 
     Request<?, EthGetCode> ethGetCode(String address, DefaultBlockParameter defaultBlockParameter);
@@ -90,20 +79,6 @@ public interface Ethereum {
 
     Request<?, EthGetTransactionReceipt> ethGetTransactionReceipt(String transactionHash);
 
-    Request<?, EthBlock> ethGetUncleByBlockHashAndIndex(
-            String blockHash, BigInteger transactionIndex);
-
-    Request<?, EthBlock> ethGetUncleByBlockNumberAndIndex(
-            DefaultBlockParameter defaultBlockParameter, BigInteger transactionIndex);
-
-    Request<?, EthGetCompilers> ethGetCompilers();
-
-    Request<?, EthCompileLLL> ethCompileLLL(String sourceCode);
-
-    Request<?, EthCompileSolidity> ethCompileSolidity(String sourceCode);
-
-    Request<?, EthCompileSerpent> ethCompileSerpent(String sourceCode);
-
     Request<?, EthFilter> ethNewFilter(org.web3j.protocol.core.methods.request.EthFilter ethFilter);
 
     Request<?, EthFilter> ethNewBlockFilter();
@@ -118,13 +93,7 @@ public interface Ethereum {
 
     Request<?, EthLog> ethGetLogs(org.web3j.protocol.core.methods.request.EthFilter ethFilter);
 
-    Request<?, EthGetWork> ethGetWork();
-
     Request<?, EthPendingTransactions> ethPendingTx();
-
-    Request<?, EthSubmitWork> ethSubmitWork(String nonce, String headerPowHash, String mixDigest);
-
-    Request<?, EthSubmitHashrate> ethSubmitHashrate(String hashrate, String clientId);
 
     Request<?, DbPutString> dbPutString(String databaseName, String keyName, String stringToStore);
 
@@ -154,4 +123,6 @@ public interface Ethereum {
     Request<?, ShhMessages> shhGetFilterChanges(BigInteger filterId);
 
     Request<?, ShhMessages> shhGetMessages(BigInteger filterId);
+
+    Request<?, PlatonEvidences> platonEvidences();
 }

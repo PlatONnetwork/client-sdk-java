@@ -8,7 +8,7 @@ import org.web3j.protocol.core.methods.request.Transaction;
  * Common values used by integration tests.
  */
 public interface IntegrationTestConfig {
-    
+
     String validBlockHash();
 
     BigInteger validBlock();
@@ -28,10 +28,6 @@ public interface IntegrationTestConfig {
     Transaction buildTransaction();
 
     String validTransactionHash();
-
-    String validUncleBlockHash();
-
-    BigInteger validUncleBlock();
 
     String encodedEvent();
 }

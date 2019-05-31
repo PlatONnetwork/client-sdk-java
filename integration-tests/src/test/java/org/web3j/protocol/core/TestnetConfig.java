@@ -74,16 +74,6 @@ public class TestnetConfig implements IntegrationTestConfig {
     }
 
     @Override
-    public String validUncleBlockHash() {
-        return "0x9d512dd0cad173dd3e7ec568794db03541c4a98448cc5940b695da604d118754";
-    }
-
-    @Override
-    public BigInteger validUncleBlock() {
-        return BigInteger.valueOf(1640092);
-    }
-
-    @Override
     public String encodedEvent() {
         Event event = new Event("Notify",
                 Arrays.asList(
