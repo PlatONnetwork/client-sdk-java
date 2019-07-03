@@ -91,8 +91,8 @@ public class WebSocketService implements Web3jService {
      */
     public void connect() throws ConnectException {
         try {
-            connectToWebSocket();
             setWebSocketListener();
+            connectToWebSocket();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.warn("Interrupted while connecting via WebSocket protocol");
