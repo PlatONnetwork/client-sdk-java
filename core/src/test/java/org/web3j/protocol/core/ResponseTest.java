@@ -1,78 +1,19 @@
 package org.web3j.protocol.core;
 
+import org.junit.Test;
+import org.web3j.protocol.ResponseTester;
+import org.web3j.protocol.core.methods.response.*;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import org.junit.Test;
-
-import org.web3j.protocol.ResponseTester;
-import org.web3j.protocol.core.methods.response.AbiDefinition;
-import org.web3j.protocol.core.methods.response.DbGetHex;
-import org.web3j.protocol.core.methods.response.DbGetString;
-import org.web3j.protocol.core.methods.response.DbPutHex;
-import org.web3j.protocol.core.methods.response.DbPutString;
-import org.web3j.protocol.core.methods.response.EthAccounts;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthBlockNumber;
-import org.web3j.protocol.core.methods.response.EthCall;
-import org.web3j.protocol.core.methods.response.EthCompileLLL;
-import org.web3j.protocol.core.methods.response.EthCompileSerpent;
-import org.web3j.protocol.core.methods.response.EthCompileSolidity;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
-import org.web3j.protocol.core.methods.response.EthFilter;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByHash;
-import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByNumber;
-import org.web3j.protocol.core.methods.response.EthGetCode;
-import org.web3j.protocol.core.methods.response.EthGetCompilers;
-import org.web3j.protocol.core.methods.response.EthGetStorageAt;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockHash;
-import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockNumber;
-import org.web3j.protocol.core.methods.response.EthGetWork;
-import org.web3j.protocol.core.methods.response.EthHashrate;
-import org.web3j.protocol.core.methods.response.EthLog;
-import org.web3j.protocol.core.methods.response.EthMining;
-import org.web3j.protocol.core.methods.response.EthProtocolVersion;
-import org.web3j.protocol.core.methods.response.EthSendRawTransaction;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.protocol.core.methods.response.EthSign;
-import org.web3j.protocol.core.methods.response.EthSubmitHashrate;
-import org.web3j.protocol.core.methods.response.EthSubmitWork;
-import org.web3j.protocol.core.methods.response.EthSyncing;
-import org.web3j.protocol.core.methods.response.EthTransaction;
-import org.web3j.protocol.core.methods.response.EthUninstallFilter;
-import org.web3j.protocol.core.methods.response.Log;
-import org.web3j.protocol.core.methods.response.NetListening;
-import org.web3j.protocol.core.methods.response.NetPeerCount;
-import org.web3j.protocol.core.methods.response.NetVersion;
-import org.web3j.protocol.core.methods.response.ShhAddToGroup;
-import org.web3j.protocol.core.methods.response.ShhHasIdentity;
-import org.web3j.protocol.core.methods.response.ShhMessages;
-import org.web3j.protocol.core.methods.response.ShhNewFilter;
-import org.web3j.protocol.core.methods.response.ShhNewGroup;
-import org.web3j.protocol.core.methods.response.ShhNewIdentity;
-import org.web3j.protocol.core.methods.response.ShhPost;
-import org.web3j.protocol.core.methods.response.ShhUninstallFilter;
-import org.web3j.protocol.core.methods.response.ShhVersion;
-import org.web3j.protocol.core.methods.response.Transaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.core.methods.response.Web3ClientVersion;
-import org.web3j.protocol.core.methods.response.Web3Sha3;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Core Protocol Response tests.
@@ -245,34 +186,6 @@ public class ResponseTest extends ResponseTester {
     }
 
     @Test
-    public void testEthMining() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":71,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": true\n"
-                        + "}"
-        );
-
-        EthMining ethMining = deserialiseResponse(EthMining.class);
-        assertThat(ethMining.isMining(), is(true));
-    }
-
-    @Test
-    public void testEthHashrate() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":71,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": \"0x38a\"\n"
-                        + "}"
-        );
-
-        EthHashrate ethHashrate = deserialiseResponse(EthHashrate.class);
-        assertThat(ethHashrate.getHashrate(), equalTo(BigInteger.valueOf(906L)));
-    }
-
-    @Test
     public void testEthGasPrice() {
         buildResponse(
                 "{\n"
@@ -390,38 +303,6 @@ public class ResponseTest extends ResponseTester {
                 deserialiseResponse(EthGetBlockTransactionCountByNumber.class);
         assertThat(ethGetBlockTransactionCountByNumber.getTransactionCount(),
                 equalTo(BigInteger.valueOf(10)));
-    }
-
-    @Test
-    public void testEthGetUncleCountByBlockHash() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": \"0x1\"\n"
-                        + "}"
-        );
-
-        EthGetUncleCountByBlockHash ethGetUncleCountByBlockHash = deserialiseResponse(
-                EthGetUncleCountByBlockHash.class);
-        assertThat(ethGetUncleCountByBlockHash.getUncleCount(),
-                equalTo(BigInteger.valueOf(1)));
-    }
-
-    @Test
-    public void testEthGetUncleCountByBlockNumber() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": \"0x1\"\n"
-                        + "}"
-        );
-
-        EthGetUncleCountByBlockNumber ethGetUncleCountByBlockNumber = deserialiseResponse(
-                EthGetUncleCountByBlockNumber.class);
-        assertThat(ethGetUncleCountByBlockNumber.getUncleCount(),
-                equalTo(BigInteger.valueOf(1)));
     }
 
     @Test
@@ -1090,138 +971,6 @@ public class ResponseTest extends ResponseTester {
     }
 
     @Test
-    public void testEthGetCompilers() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": [\"solidity\", \"lll\", \"serpent\"]\n"
-                        + "}"
-        );
-
-        EthGetCompilers ethGetCompilers = deserialiseResponse(EthGetCompilers.class);
-        assertThat(ethGetCompilers.getCompilers(), equalTo(Arrays.asList(
-                "solidity", "lll", "serpent"
-        )));
-    }
-
-    @Test
-    public void testEthCompileSolidity() {
-        //CHECKSTYLE:OFF
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": {\n"
-                        + "    \"test\": {\n"
-                        + "      \"code\": \"0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056\",\n"
-                        + "      \"info\": {\n"
-                        + "        \"source\": \"contract test {\\n\\tfunction multiply(uint a) returns(uint d) {\\n\\t\\treturn a * 7;\\n\\t}\\n}\\n\",\n"
-                        + "        \"language\": \"Solidity\",\n"
-                        + "        \"languageVersion\": \"0\",\n"
-                        + "        \"compilerVersion\": \"0.8.2\",\n"
-                        + "        \"compilerOptions\": \"--bin --abi --userdoc --devdoc --add-std --optimize -o /var/folders/3m/_6gnl12n1tj_5kf7sc3d72dw0000gn/T/solc498936951\",\n"
-                        + "        \"abiDefinition\": [\n"
-                        + "          {\n"
-                        + "            \"constant\": false,\n"
-                        + "            \"inputs\": [\n"
-                        + "              {\n"
-                        + "                \"name\": \"a\",\n"
-                        + "                \"type\": \"uint256\"\n"
-                        + "              }\n"
-                        + "            ],\n"
-                        + "            \"name\": \"multiply\",\n"
-                        + "            \"outputs\": [\n"
-                        + "              {\n"
-                        + "                \"name\": \"d\",\n"
-                        + "                \"type\": \"uint256\"\n"
-                        + "              }\n"
-                        + "            ],\n"
-                        + "            \"type\": \"function\",\n"
-                        + "            \"payable\": false\n"
-                        + "          }\n"
-                        + "        ],\n"
-                        + "        \"userDoc\": {\n"
-                        + "          \"methods\": {}\n"
-                        + "        },\n"
-                        + "        \"developerDoc\": {\n"
-                        + "          \"methods\": {}\n"
-                        + "        }\n"
-                        + "      }\n"
-                        + "    }\n"
-                        + "    }"
-                        + "  }\n"
-                        + "}"
-        );
-        //CHECKSTYLE:OFF
-
-        Map<String, EthCompileSolidity.Code> compiledSolidity = new HashMap<>(1);
-        compiledSolidity.put("test", new EthCompileSolidity.Code(
-                //CHECKSTYLE:OFF
-                "0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056",
-                //CHECKSTYLE:ON
-                new EthCompileSolidity.SolidityInfo(
-                        "contract test {\n\tfunction multiply(uint a) returns(uint d) {\n"
-                                + "\t\treturn a * 7;\n\t}\n}\n",
-                        "Solidity",
-                        "0",
-                        "0.8.2",
-                        "--bin --abi --userdoc --devdoc --add-std --optimize -o "
-                                + "/var/folders/3m/_6gnl12n1tj_5kf7sc3d72dw0000gn/T/solc498936951",
-                        Arrays.asList(new AbiDefinition(
-                                false,
-                                Arrays.asList(new AbiDefinition.NamedType("a", "uint256")),
-                                "multiply",
-                                Arrays.asList(new AbiDefinition.NamedType("d", "uint256")),
-                                "function",
-                                false
-                        )),
-                        new EthCompileSolidity.Documentation(),
-                        new EthCompileSolidity.Documentation()
-                )
-        ));
-
-        EthCompileSolidity ethCompileSolidity = deserialiseResponse(EthCompileSolidity.class);
-        assertThat(ethCompileSolidity.getCompiledSolidity(), equalTo(compiledSolidity));
-    }
-
-    @Test
-    public void testEthCompileLLL() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": \"0x603880600c6000396000f3006001600060e060020a60003504806"
-                        + "3c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702"
-                        + "905091905056\"\n"
-                        + "}"
-        );
-
-        EthCompileLLL ethCompileLLL = deserialiseResponse(EthCompileLLL.class);
-        assertThat(ethCompileLLL.getCompiledSourceCode(),
-                is("0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b60"
-                        + "21600435602b565b8060005260206000f35b600081600702905091905056"));
-    }
-
-    @Test
-    public void testEthCompileSerpent() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\": \"2.0\",\n"
-                        + "  \"result\": \"0x603880600c6000396000f3006001600060e060020a60003504806"
-                        + "3c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702"
-                        + "905091905056\"\n"
-                        + "}"
-        );
-
-        EthCompileSerpent ethCompileSerpent = deserialiseResponse(EthCompileSerpent.class);
-        assertThat(ethCompileSerpent.getCompiledSourceCode(),
-                is("0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b60"
-                        + "21600435602b565b8060005260206000f35b600081600702905091905056"));
-    }
-
-    @Test
     public void testEthFilter() {
         buildResponse(
                 "{\n"
@@ -1291,59 +1040,6 @@ public class ResponseTest extends ResponseTester {
 
         EthLog ethLog = deserialiseResponse(EthLog.class);
         assertThat(ethLog.getLogs(), is(logs));
-    }
-
-    @Test
-    public void testEthGetWork() {
-        //CHECKSTYLE:OFF
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\":\"2.0\",\n"
-                        + "  \"result\": [\n"
-                        + "      \"0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef\",\n"
-                        + "      \"0x5EED00000000000000000000000000005EED0000000000000000000000000000\",\n"
-                        + "      \"0xd1ff1c01710000000000000000000000d1ff1c01710000000000000000000000\"\n"
-                        + "    ]\n"
-                        + "}"
-        );
-        //CHECKSTYLE:ON
-
-        EthGetWork ethGetWork = deserialiseResponse(EthGetWork.class);
-        assertThat(ethGetWork.getCurrentBlockHeaderPowHash(),
-                is("0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"));
-        assertThat(ethGetWork.getSeedHashForDag(),
-                is("0x5EED00000000000000000000000000005EED0000000000000000000000000000"));
-        assertThat(ethGetWork.getBoundaryCondition(),
-                is("0xd1ff1c01710000000000000000000000d1ff1c01710000000000000000000000"));
-    }
-
-    @Test
-    public void testEthSubmitWork() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\":\"2.0\",\n"
-                        + "  \"result\": true\n"
-                        + "}"
-        );
-
-        EthSubmitWork ethSubmitWork = deserialiseResponse(EthSubmitWork.class);
-        assertThat(ethSubmitWork.solutionValid(), is(true));
-    }
-
-    @Test
-    public void testEthSubmitHashrate() {
-        buildResponse(
-                "{\n"
-                        + "  \"id\":1,\n"
-                        + "  \"jsonrpc\":\"2.0\",\n"
-                        + "  \"result\": true\n"
-                        + "}"
-        );
-
-        EthSubmitHashrate ethSubmitHashrate = deserialiseResponse(EthSubmitHashrate.class);
-        assertThat(ethSubmitHashrate.submissionSuccessful(), is(true));
     }
 
     @Test
