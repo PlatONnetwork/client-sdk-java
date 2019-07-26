@@ -24,7 +24,7 @@ import rx.Subscription;
 
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
-import org.web3j.protocol.core.methods.response.EthSubscribe;
+import org.web3j.protocol.core.methods.response.PlatonSubscribe;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.websocket.events.NewHeadsNotification;
 
@@ -58,7 +58,7 @@ public class WebSocketServiceTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    private Request<Object, EthSubscribe> subscribeRequest;
+    private Request<Object, PlatonSubscribe> subscribeRequest;
 
     @Before
     public void before() throws InterruptedException {
@@ -423,7 +423,7 @@ public class WebSocketServiceTest {
                 "eth_subscribe",
                 Arrays.asList("newHeads", Collections.emptyMap()),
                 service,
-                EthSubscribe.class);
+                PlatonSubscribe.class);
         subscribeRequest.setId(1);
 
         return service.subscribe(

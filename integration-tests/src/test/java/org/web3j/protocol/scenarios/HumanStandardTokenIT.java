@@ -24,7 +24,8 @@ import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonCall;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Numeric;
@@ -167,7 +168,7 @@ public class HumanStandardTokenIT extends Scenario {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
         String hexValue = Numeric.toHexString(signedMessage);
 
-        EthSendTransaction transactionResponse = web3j.ethSendRawTransaction(hexValue)
+        PlatonSendTransaction transactionResponse = web3j.platonSendRawTransaction(hexValue)
                 .sendAsync().get();
 
         return transactionResponse.getTransactionHash();
@@ -288,7 +289,7 @@ public class HumanStandardTokenIT extends Scenario {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
         String hexValue = Numeric.toHexString(signedMessage);
 
-        EthSendTransaction transactionResponse = web3j.ethSendRawTransaction(hexValue)
+        PlatonSendTransaction transactionResponse = web3j.platonSendRawTransaction(hexValue)
                 .sendAsync().get();
 
         return transactionResponse.getTransactionHash();
@@ -298,7 +299,7 @@ public class HumanStandardTokenIT extends Scenario {
             Function function, String contractAddress) throws Exception {
         String encodedFunction = FunctionEncoder.encode(function);
 
-        org.web3j.protocol.core.methods.response.EthCall response = web3j.ethCall(
+        PlatonCall response = web3j.platonCall(
                 Transaction.createEthCallTransaction(
                         ALICE.getAddress(), contractAddress, encodedFunction),
                 DefaultBlockParameterName.LATEST)

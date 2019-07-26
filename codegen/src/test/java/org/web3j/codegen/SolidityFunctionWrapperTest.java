@@ -391,7 +391,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                         + "  }\n"
                         + "\n"
                         + "  public rx.Observable<TransferEventResponse> transferEventObservable(org.web3j.protocol.core.methods.request.EthFilter filter) {\n"
-                        + "    return web3j.ethLogObservable(filter).map(new rx.functions.Func1<org.web3j.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
+                        + "    return web3j.platonLogObservable(filter).map(new rx.functions.Func1<org.web3j.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
                         + "      @java.lang.Override\n"
                         + "      public TransferEventResponse call(org.web3j.protocol.core.methods.response.Log log) {\n"
                         + "        org.web3j.tx.Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(TRANSFER_EVENT, log);\n"

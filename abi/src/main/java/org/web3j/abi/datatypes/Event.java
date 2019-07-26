@@ -1,41 +1,68 @@
 package org.web3j.abi.datatypes;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.web3j.abi.TypeReference;
 
-import static org.web3j.abi.Utils.convert;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Event wrapper type.
  */
 public class Event {
     private String name;
-    private List<TypeReference<Type>> parameters;
+    private int functionType;
+    private List<TypeReference<Type>> indexedParameters = new ArrayList<TypeReference<Type>>();
+    ;
+    private List<TypeReference<Type>> nonIndexedParameters = new ArrayList<TypeReference<Type>>();
 
     public Event(String name, List<TypeReference<?>> parameters) {
         this.name = name;
-        this.parameters = convert(parameters);
+        this.nonIndexedParameters = convert(parameters);
+    }
+
+    public Event(int functionType, List<TypeReference<?>> parameters) {
+        this.functionType = functionType;
+        this.nonIndexedParameters = convert(parameters);
+    }
+
+    public Event(String name, List<TypeReference<?>> indexedParameters,
+                 List<TypeReference<?>> nonIndexedParameters) {
+        this.name = name;
+        this.indexedParameters = convert(indexedParameters);
+        this.nonIndexedParameters = convert(nonIndexedParameters);
+    }
+
+    public Event(int functionType, List<TypeReference<?>> indexedParameters,
+                 List<TypeReference<?>> nonIndexedParameters) {
+        this.functionType = functionType;
+        this.indexedParameters = convert(indexedParameters);
+        this.nonIndexedParameters = convert(nonIndexedParameters);
     }
 
     public String getName() {
         return name;
     }
 
-    public List<TypeReference<Type>> getParameters() {
-        return parameters;
+    public int getFunctionType() {
+        return functionType;
     }
 
     public List<TypeReference<Type>> getIndexedParameters() {
-        return parameters.stream()
-                .filter(TypeReference::isIndexed)
-                .collect(Collectors.toList());
+        return indexedParameters;
     }
 
     public List<TypeReference<Type>> getNonIndexedParameters() {
-        return parameters.stream()
-                .filter(p -> !p.isIndexed())
-                .collect(Collectors.toList());
+        return nonIndexedParameters;
+    }
+
+    private List<TypeReference<Type>> convert(List<TypeReference<?>> parameters) {
+        List<TypeReference<Type>> typeReferenceList = new ArrayList<TypeReference<Type>>();
+        for (TypeReference<?> typeReference : parameters) {
+            if (typeReference.isIndexed()) {
+                continue;
+            }
+            typeReferenceList.add((TypeReference<Type>) typeReference);
+        }
+        return typeReferenceList;
     }
 }

@@ -3,7 +3,7 @@ package org.web3j.protocol.core;
 import org.junit.Test;
 
 import org.web3j.protocol.ResponseTester;
-import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.PlatonBlock;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -38,7 +38,7 @@ public class RawResponseTest extends ResponseTester {
 
         buildResponse(LARGE_RAW_RESPONSE);
 
-        EthBlock ethBlock = deserialiseResponse(EthBlock.class);
+        PlatonBlock ethBlock = deserialiseResponse(PlatonBlock.class);
 
         assertThat(ethBlock.getRawResponse(), is(LARGE_RAW_RESPONSE));
     }

@@ -14,7 +14,7 @@ import org.web3j.protocol.ObjectMapperFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.RemoteCall;
-import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.request.PlatonFilter;
 import org.web3j.protocol.core.methods.response.AbiDefinition;
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType;
 import org.web3j.protocol.core.methods.response.Log;
@@ -1009,7 +1009,7 @@ public class SophiaFunctionWrapper extends Generator {
         MethodSpec.Builder observableMethodBuilder =
                 MethodSpec.methodBuilder(generatedFunctionName)
                         .addModifiers(Modifier.PUBLIC)
-                        .addParameter(EthFilter.class, FILTER)
+                        .addParameter(PlatonFilter.class, FILTER)
                         .returns(parameterizedTypeName);
 
         TypeSpec converter = TypeSpec.anonymousClassBuilder("")
@@ -1034,7 +1034,7 @@ public class SophiaFunctionWrapper extends Generator {
                 .build();
 
         observableMethodBuilder
-                .addStatement("return web3j.ethLogObservable(filter).map($L)", converter);
+                .addStatement("return web3j.platonLogObservable(filter).map($L)", converter);
 
         return observableMethodBuilder
                 .build();
@@ -1057,7 +1057,7 @@ public class SophiaFunctionWrapper extends Generator {
                         .returns(parameterizedTypeName);
 
         observableMethodBuilder.addStatement("$1T filter = new $1T($2L, $3L, "
-                + "getContractAddress())", EthFilter.class, START_BLOCK, END_BLOCK)
+                + "getContractAddress())", PlatonFilter.class, START_BLOCK, END_BLOCK)
                 .addStatement("filter.addSingleTopic($T.encode("
                         + buildEventDefinitionName(functionName) + "))", EventEncoder.class)
                 .addStatement("return " + generatedFunctionName + "(filter)");

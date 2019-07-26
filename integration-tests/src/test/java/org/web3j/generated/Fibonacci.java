@@ -15,7 +15,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.RemoteCall;
-import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.request.PlatonFilter;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
@@ -90,8 +90,8 @@ public class Fibonacci extends Contract {
         return responses;
     }
 
-    public Observable<NotifyEventResponse> notifyEventObservable(EthFilter filter) {
-        return web3j.ethLogObservable(filter).map(new Func1<Log, NotifyEventResponse>() {
+    public Observable<NotifyEventResponse> notifyEventObservable(PlatonFilter filter) {
+        return web3j.platonLogObservable(filter).map(new Func1<Log, NotifyEventResponse>() {
             @Override
             public NotifyEventResponse call(Log log) {
                 Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(NOTIFY_EVENT, log);
@@ -105,7 +105,7 @@ public class Fibonacci extends Contract {
     }
 
     public Observable<NotifyEventResponse> notifyEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
+        PlatonFilter filter = new PlatonFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(NOTIFY_EVENT));
         return notifyEventObservable(filter);
     }

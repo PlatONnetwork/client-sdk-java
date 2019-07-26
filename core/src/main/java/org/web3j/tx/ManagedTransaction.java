@@ -5,7 +5,8 @@ import java.math.BigInteger;
 
 import org.web3j.ens.EnsResolver;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
+import org.web3j.protocol.core.methods.response.PlatonGasPrice;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
 
@@ -75,7 +76,7 @@ public abstract class ManagedTransaction {
      * @throws IOException if there's a problem communicating with the ethereum node
      */
     public BigInteger requestCurrentGasPrice() throws IOException {
-        EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
+        PlatonGasPrice ethGasPrice = web3j.platonGasPrice().send();
 
         return ethGasPrice.getGasPrice();
     }
@@ -86,5 +87,14 @@ public abstract class ManagedTransaction {
 
         return transactionManager.executeTransaction(
                 gasPrice, gasLimit, to, data, value);
+    }
+
+    protected TransactionReceipt getTransactionReceipt(PlatonSendTransaction ethSendTransaction) throws IOException, TransactionException {
+        return transactionManager.getTransactionReceipt(ethSendTransaction);
+    }
+
+    protected PlatonSendTransaction sendPlatonRawTransaction(String to, String data, BigInteger value, BigInteger gasPrice, BigInteger gasLimit)
+            throws IOException {
+        return transactionManager.sendTransaction(gasPrice, gasLimit, to, data, value);
     }
 }

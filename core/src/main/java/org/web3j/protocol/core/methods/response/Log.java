@@ -6,7 +6,7 @@ import java.util.List;
 import org.web3j.utils.Numeric;
 
 /**
- * <p>Log object used by {@link EthLog} and {@link EthGetTransactionReceipt}.</p>
+ * <p>Log object used by {@link PlatonLog} and {@link PlatonGetTransactionReceipt}.</p>
  * <p>It's not clear in the
  * <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter">docs</a>
  * If only a list of hashes are returned for filters created with eth_newBlockFilter or

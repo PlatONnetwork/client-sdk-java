@@ -48,14 +48,14 @@
 //
 //    @Test
 //    public void getBalance() throws IOException {
-//        BigInteger balance = web3j.ethGetBalance(walletAddr, DefaultBlockParameterName.LATEST).send().getBalance();
+//        BigInteger balance = web3j.platonGetBalance(walletAddr, DefaultBlockParameterName.LATEST).send().getBalance();
 //        logger.info("Balance:{}",balance);
 //    }
 //
 //    @Test
 //    public void blockNumber() throws IOException, InterruptedException {
 //        while (true){
-//            BigInteger number = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST,true).send().getBlock().getNumber();
+//            BigInteger number = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST,true).send().getBlock().getNumber();
 //            logger.info("Block Number:{}",number);
 //            TimeUnit.SECONDS.sleep(1);
 //        }
@@ -68,10 +68,10 @@
 //            String json = JSON.toJSONString(block,true);
 //            logger.info("tx: {}",json);
 //        });
-//        //web3j.ethGetTransactionReceipt();
+//        //web3j.platonGetTransactionReceipt();
 //
 //        Optional<TransactionReceipt> receipt = web3j
-//                .ethGetTransactionReceipt("0x06f324c40e82fe70dd4573a0fcb744998bc45cb6550ba7bec966e1778dadd376")
+//                .platonGetTransactionReceipt("0x06f324c40e82fe70dd4573a0fcb744998bc45cb6550ba7bec966e1778dadd376")
 //                .send().getTransactionReceipt();
 //
 //        logger.info("Block Receipt:{}",receipt);

@@ -9,8 +9,8 @@ import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.exceptions.TxHashMismatchException;
 import org.web3j.tx.response.TransactionReceiptProcessor;
 import org.web3j.utils.Numeric;
@@ -72,7 +72,7 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     protected BigInteger getNonce() throws IOException {
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        PlatonGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
         if(ethGetTransactionCount.getTransactionCount().intValue()==0){
@@ -92,7 +92,7 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     @Override
-    public EthSendTransaction sendTransaction(
+    public PlatonSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, BigInteger value) throws IOException {
 
@@ -109,7 +109,7 @@ public class RawTransactionManager extends TransactionManager {
         return signAndSend(rawTransaction);
     }
 
-    public EthSendTransaction signAndSend(RawTransaction rawTransaction)
+    public PlatonSendTransaction signAndSend(RawTransaction rawTransaction)
             throws IOException {
 
         byte[] signedMessage;
@@ -121,7 +121,7 @@ public class RawTransactionManager extends TransactionManager {
         }
 
         String hexValue = Numeric.toHexString(signedMessage);
-        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
+        PlatonSendTransaction ethSendTransaction = web3j.platonSendRawTransaction(hexValue).send();
 
         if (ethSendTransaction != null && !ethSendTransaction.hasError()) {
             String txHashLocal = Hash.sha3(hexValue);

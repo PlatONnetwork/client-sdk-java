@@ -6,18 +6,15 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.web3j.abi.TypeDecoder;
 import org.web3j.abi.TypeEncoder;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
-import org.web3j.protocol.core.JsonRpc2_0Web3j;
 import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthCall;
-import org.web3j.protocol.core.methods.response.EthSyncing;
+import org.web3j.protocol.core.methods.response.PlatonBlock;
+import org.web3j.protocol.core.methods.response.PlatonCall;
+import org.web3j.protocol.core.methods.response.PlatonSyncing;
 import org.web3j.protocol.core.methods.response.NetVersion;
-import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.ChainId;
 import org.web3j.utils.Numeric;
 
@@ -58,17 +55,17 @@ public class EnsResolverTest {
         String contractAddress =
                 "0x00000000000000000000000019e03255f667bdfd50a32722df860b1eeaf4d635";
 
-        EthCall resolverAddressResponse = new EthCall();
+        PlatonCall resolverAddressResponse = new PlatonCall();
         resolverAddressResponse.setResult(resolverAddress);
 
-        EthCall contractAddressResponse = new EthCall();
+        PlatonCall contractAddressResponse = new PlatonCall();
         contractAddressResponse.setResult(contractAddress);
 
         when(web3jService.send(any(Request.class), eq(NetVersion.class)))
                 .thenReturn(netVersion);
-        when(web3jService.send(any(Request.class), eq(EthCall.class)))
+        when(web3jService.send(any(Request.class), eq(PlatonCall.class)))
                 .thenReturn(resolverAddressResponse);
-        when(web3jService.send(any(Request.class), eq(EthCall.class)))
+        when(web3jService.send(any(Request.class), eq(PlatonCall.class)))
                 .thenReturn(contractAddressResponse);
 
         assertThat(ensResolver.resolve("web3j.eth"),
@@ -90,17 +87,17 @@ public class EnsResolverTest {
                 + TypeEncoder.encode(new Utf8String("web3j.eth"));
         System.err.println(contractName);
 
-        EthCall resolverAddressResponse = new EthCall();
+        PlatonCall resolverAddressResponse = new PlatonCall();
         resolverAddressResponse.setResult(resolverAddress);
 
-        EthCall contractNameResponse = new EthCall();
+        PlatonCall contractNameResponse = new PlatonCall();
         contractNameResponse.setResult(contractName);
 
         when(web3jService.send(any(Request.class), eq(NetVersion.class)))
                 .thenReturn(netVersion);
-        when(web3jService.send(any(Request.class), eq(EthCall.class)))
+        when(web3jService.send(any(Request.class), eq(PlatonCall.class)))
                 .thenReturn(resolverAddressResponse);
-        when(web3jService.send(any(Request.class), eq(EthCall.class)))
+        when(web3jService.send(any(Request.class), eq(PlatonCall.class)))
                 .thenReturn(contractNameResponse);
 
         assertThat(ensResolver.reverseResolve("0x19e03255f667bdfd50a32722df860b1eeaf4d635"),
@@ -131,22 +128,22 @@ public class EnsResolverTest {
     }
 
     private void configureSyncing(boolean isSyncing) throws IOException {
-        EthSyncing ethSyncing = new EthSyncing();
-        EthSyncing.Result result = new EthSyncing.Result();
+        PlatonSyncing ethSyncing = new PlatonSyncing();
+        PlatonSyncing.Result result = new PlatonSyncing.Result();
         result.setSyncing(isSyncing);
         ethSyncing.setResult(result);
 
-        when(web3jService.send(any(Request.class), eq(EthSyncing.class)))
+        when(web3jService.send(any(Request.class), eq(PlatonSyncing.class)))
                 .thenReturn(ethSyncing);
     }
 
     private void configureLatestBlock(long timestamp) throws IOException {
-        EthBlock.Block block = new EthBlock.Block();
+        PlatonBlock.Block block = new PlatonBlock.Block();
         block.setTimestamp(Numeric.encodeQuantity(BigInteger.valueOf(timestamp)));
-        EthBlock ethBlock = new EthBlock();
+        PlatonBlock ethBlock = new PlatonBlock();
         ethBlock.setResult(block);
 
-        when(web3jService.send(any(Request.class), eq(EthBlock.class)))
+        when(web3jService.send(any(Request.class), eq(PlatonBlock.class)))
                 .thenReturn(ethBlock);
     }
 

@@ -2,7 +2,6 @@ package org.web3j.protocol.scenarios;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -17,11 +16,12 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.request.PlatonFilter;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
-import org.web3j.protocol.core.methods.response.EthLog;
+import org.web3j.protocol.core.methods.response.PlatonEstimateGas;
+import org.web3j.protocol.core.methods.response.PlatonLog;
 import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import static junit.framework.TestCase.assertFalse;
@@ -77,13 +77,13 @@ public class EventFilterIT extends Scenario {
                 new Uint256(BigInteger.valueOf(7)), new Uint256(BigInteger.valueOf(13)))));
 
         // finally check it shows up in the event filter
-        List<EthLog.LogResult> filterLogs = createFilterForEvent(
+        List<PlatonLog.LogResult> filterLogs = createFilterForEvent(
                 encodedEventSignature, CONTRACT_ADDRESS);
         assertFalse(filterLogs.isEmpty());
     }
 
     private BigInteger estimateGas(String encodedFunction) throws Exception {
-        EthEstimateGas ethEstimateGas = web3j.ethEstimateGas(
+        PlatonEstimateGas ethEstimateGas = web3j.platonEstimateGas(
                 Transaction.createEthCallTransaction(ALICE.getAddress(), null, encodedFunction))
                 .sendAsync().get();
         // this was coming back as 50,000,000 which is > the block gas limit of 4,712,388
@@ -99,7 +99,7 @@ public class EventFilterIT extends Scenario {
                 credentials.getAddress(), nonce, Transaction.DEFAULT_GAS, gas, contractAddress,
                 encodedFunction);
 
-        org.web3j.protocol.core.methods.response.EthSendTransaction transactionResponse =
+        PlatonSendTransaction transactionResponse =
                 web3j.ethSendTransaction(transaction).sendAsync().get();
 
         assertFalse(transactionResponse.hasError());
@@ -107,9 +107,9 @@ public class EventFilterIT extends Scenario {
         return transactionResponse.getTransactionHash();
     }
 
-    private List<EthLog.LogResult> createFilterForEvent(
+    private List<PlatonLog.LogResult> createFilterForEvent(
             String encodedEventSignature, String contractAddress) throws Exception {
-        EthFilter ethFilter = new EthFilter(
+        PlatonFilter ethFilter = new PlatonFilter(
                 DefaultBlockParameterName.EARLIEST,
                 DefaultBlockParameterName.LATEST,
                 contractAddress
@@ -117,7 +117,7 @@ public class EventFilterIT extends Scenario {
 
         ethFilter.addSingleTopic(encodedEventSignature);
 
-        EthLog ethLog = web3j.ethGetLogs(ethFilter).send();
+        PlatonLog ethLog = web3j.platonGetLogs(ethFilter).send();
         return ethLog.getLogs();
     }
 }

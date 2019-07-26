@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
 
@@ -39,7 +39,7 @@ public class PollingTransactionReceiptProcessorTest {
     public void returnsTransactionReceiptWhenItIsAvailableInstantly() throws Exception {
         TransactionReceipt transactionReceipt = new TransactionReceipt();
         doReturn(requestReturning(response(transactionReceipt)))
-                .when(web3j).ethGetTransactionReceipt(TRANSACTION_HASH);
+                .when(web3j).platonGetTransactionReceipt(TRANSACTION_HASH);
 
         TransactionReceipt receipt = processor.waitForTransactionReceipt(TRANSACTION_HASH);
 
@@ -49,7 +49,7 @@ public class PollingTransactionReceiptProcessorTest {
     @Test
     public void throwsTransactionExceptionWhenReceiptIsNotAvailableInTime() throws Exception {
         doReturn(requestReturning(response(null)))
-                .when(web3j).ethGetTransactionReceipt(TRANSACTION_HASH);
+                .when(web3j).platonGetTransactionReceipt(TRANSACTION_HASH);
 
         try {
             processor.waitForTransactionReceipt(TRANSACTION_HASH);
@@ -69,8 +69,8 @@ public class PollingTransactionReceiptProcessorTest {
         return request;
     }
 
-    private static EthGetTransactionReceipt response(TransactionReceipt transactionReceipt) {
-        EthGetTransactionReceipt response = new EthGetTransactionReceipt();
+    private static PlatonGetTransactionReceipt response(TransactionReceipt transactionReceipt) {
+        PlatonGetTransactionReceipt response = new PlatonGetTransactionReceipt();
         response.setResult(transactionReceipt);
         return response;
     }
