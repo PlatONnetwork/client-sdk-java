@@ -10,7 +10,7 @@ public class EqualsVerifierResponseTest {
 
     @Test
     public void testBlock() {
-        EqualsVerifier.forClass(EthBlock.Block.class)
+        EqualsVerifier.forClass(PlatonBlock.Block.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .suppress(Warning.STRICT_INHERITANCE)
                 .verify();
@@ -50,7 +50,7 @@ public class EqualsVerifierResponseTest {
 
     @Test
     public void testSyncing() {
-        EqualsVerifier.forClass(EthSyncing.Syncing.class)
+        EqualsVerifier.forClass(PlatonSyncing.Syncing.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .suppress(Warning.STRICT_INHERITANCE)
                 .verify();
@@ -74,7 +74,7 @@ public class EqualsVerifierResponseTest {
 
     @Test
     public void testHash() {
-        EqualsVerifier.forClass(EthLog.Hash.class)
+        EqualsVerifier.forClass(PlatonLog.Hash.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .suppress(Warning.STRICT_INHERITANCE)
                 .verify();
@@ -82,7 +82,7 @@ public class EqualsVerifierResponseTest {
 
     @Test
     public void testTransactionHash() {
-        EqualsVerifier.forClass(EthBlock.TransactionHash.class)
+        EqualsVerifier.forClass(PlatonBlock.TransactionHash.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .suppress(Warning.STRICT_INHERITANCE)
                 .verify();

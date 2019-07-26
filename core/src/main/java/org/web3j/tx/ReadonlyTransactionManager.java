@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 
 /**
  * Transaction manager implementation for read-only operations on smart contracts.
@@ -16,7 +16,7 @@ public class ReadonlyTransactionManager extends TransactionManager {
     }
 
     @Override
-    public EthSendTransaction sendTransaction(
+    public PlatonSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to, String data, BigInteger value)
             throws IOException {
         throw new UnsupportedOperationException(

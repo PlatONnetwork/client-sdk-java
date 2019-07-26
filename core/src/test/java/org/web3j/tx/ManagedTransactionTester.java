@@ -9,10 +9,10 @@ import org.web3j.crypto.SampleKeys;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonGasPrice;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.TxHashVerifier;
 
@@ -57,10 +57,10 @@ public abstract class ManagedTransactionTester {
 
     @SuppressWarnings("unchecked")
     void prepareNonceRequest() throws IOException {
-        EthGetTransactionCount ethGetTransactionCount = new EthGetTransactionCount();
+        PlatonGetTransactionCount ethGetTransactionCount = new PlatonGetTransactionCount();
         ethGetTransactionCount.setResult("0x1");
 
-        Request<?, EthGetTransactionCount> transactionCountRequest = mock(Request.class);
+        Request<?, PlatonGetTransactionCount> transactionCountRequest = mock(Request.class);
         when(transactionCountRequest.send())
                 .thenReturn(ethGetTransactionCount);
         when(web3j.ethGetTransactionCount(SampleKeys.ADDRESS, DefaultBlockParameterName.PENDING))
@@ -69,24 +69,24 @@ public abstract class ManagedTransactionTester {
 
     @SuppressWarnings("unchecked")
     void prepareTransactionRequest() throws IOException {
-        EthSendTransaction ethSendTransaction = new EthSendTransaction();
+        PlatonSendTransaction ethSendTransaction = new PlatonSendTransaction();
         ethSendTransaction.setResult(TRANSACTION_HASH);
 
-        Request<?, EthSendTransaction> rawTransactionRequest = mock(Request.class);
+        Request<?, PlatonSendTransaction> rawTransactionRequest = mock(Request.class);
         when(rawTransactionRequest.send()).thenReturn(ethSendTransaction);
-        when(web3j.ethSendRawTransaction(any(String.class)))
+        when(web3j.platonSendRawTransaction(any(String.class)))
                 .thenReturn((Request) rawTransactionRequest);
     }
 
     @SuppressWarnings("unchecked")
     void prepareTransactionReceipt(TransactionReceipt transactionReceipt) throws IOException {
-        EthGetTransactionReceipt ethGetTransactionReceipt = new EthGetTransactionReceipt();
+        PlatonGetTransactionReceipt ethGetTransactionReceipt = new PlatonGetTransactionReceipt();
         ethGetTransactionReceipt.setResult(transactionReceipt);
 
-        Request<?, EthGetTransactionReceipt> getTransactionReceiptRequest = mock(Request.class);
+        Request<?, PlatonGetTransactionReceipt> getTransactionReceiptRequest = mock(Request.class);
         when(getTransactionReceiptRequest.send())
                 .thenReturn(ethGetTransactionReceipt);
-        when(web3j.ethGetTransactionReceipt(TRANSACTION_HASH))
+        when(web3j.platonGetTransactionReceipt(TRANSACTION_HASH))
                 .thenReturn((Request) getTransactionReceiptRequest);
     }
 
@@ -97,12 +97,12 @@ public abstract class ManagedTransactionTester {
         transactionReceipt.setStatus("0x1");
         prepareTransaction(transactionReceipt);
 
-        EthGasPrice ethGasPrice = new EthGasPrice();
+        PlatonGasPrice ethGasPrice = new PlatonGasPrice();
         ethGasPrice.setResult("0x1");
 
-        Request<?, EthGasPrice> gasPriceRequest = mock(Request.class);
+        Request<?, PlatonGasPrice> gasPriceRequest = mock(Request.class);
         when(gasPriceRequest.send()).thenReturn(ethGasPrice);
-        when(web3j.ethGasPrice()).thenReturn((Request) gasPriceRequest);
+        when(web3j.platonGasPrice()).thenReturn((Request) gasPriceRequest);
 
         return transactionReceipt;
     }

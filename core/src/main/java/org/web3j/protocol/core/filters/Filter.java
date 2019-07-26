@@ -18,9 +18,9 @@ import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.Response.Error;
 import org.web3j.protocol.core.RpcErrors;
-import org.web3j.protocol.core.methods.response.EthFilter;
-import org.web3j.protocol.core.methods.response.EthLog;
-import org.web3j.protocol.core.methods.response.EthUninstallFilter;
+import org.web3j.protocol.core.methods.response.PlatonFilter;
+import org.web3j.protocol.core.methods.response.PlatonLog;
+import org.web3j.protocol.core.methods.response.PlatonUninstallFilter;
 
 
 /**
@@ -48,7 +48,7 @@ public abstract class Filter<T> {
 
     public void run(ScheduledExecutorService scheduledExecutorService, long blockTime) {
         try {
-            EthFilter ethFilter = sendRequest();
+            PlatonFilter ethFilter = sendRequest();
             if (ethFilter.hasError()) {
                 throwException(ethFilter.getError());
             }
@@ -95,12 +95,12 @@ public abstract class Filter<T> {
 
     private void getInitialFilterLogs() {
         try {
-            Optional<Request<?, EthLog>> maybeRequest = this.getFilterLogs(this.filterId);
-            EthLog ethLog = null;
+            Optional<Request<?, PlatonLog>> maybeRequest = this.getFilterLogs(this.filterId);
+            PlatonLog ethLog = null;
             if (maybeRequest.isPresent()) {
                 ethLog = maybeRequest.get().send();
             } else {
-                ethLog = new EthLog();
+                ethLog = new PlatonLog();
                 ethLog.setResult(Collections.emptyList());
             }
             process(ethLog.getLogs());
@@ -110,10 +110,10 @@ public abstract class Filter<T> {
         }
     }
 
-    private void pollFilter(EthFilter ethFilter) {
-        EthLog ethLog = null;
+    private void pollFilter(PlatonFilter ethFilter) {
+        PlatonLog ethLog = null;
         try {
-            ethLog = web3j.ethGetFilterChanges(filterId).send();
+            ethLog = web3j.platonGetFilterChanges(filterId).send();
         } catch (IOException e) {
             throwException(e);
         }
@@ -130,9 +130,9 @@ public abstract class Filter<T> {
         }
     }
 
-    abstract EthFilter sendRequest() throws IOException;
+    abstract PlatonFilter sendRequest() throws IOException;
 
-    abstract void process(List<EthLog.LogResult> logResults);
+    abstract void process(List<PlatonLog.LogResult> logResults);
     
     private void reinstallFilter() {
         log.warn("The filter has not been found. Filter id: " + filterId);
@@ -144,7 +144,7 @@ public abstract class Filter<T> {
         schedule.cancel(false);
 
         try {
-            EthUninstallFilter ethUninstallFilter = web3j.ethUninstallFilter(filterId).send();
+            PlatonUninstallFilter ethUninstallFilter = web3j.platonUninstallFilter(filterId).send();
             if (ethUninstallFilter.hasError()) {
                 throwException(ethUninstallFilter.getError());
             }
@@ -165,7 +165,7 @@ public abstract class Filter<T> {
      * @param filterId Id of the filter for which the historic log should be retrieved
      * @return Historic logs, or an empty optional if the filter cannot retrieve historic logs
      */
-    protected abstract Optional<Request<?, EthLog>> getFilterLogs(BigInteger filterId);
+    protected abstract Optional<Request<?, PlatonLog>> getFilterLogs(BigInteger filterId);
 
     void throwException(Response.Error error) {
         throw new FilterException("Invalid request: "

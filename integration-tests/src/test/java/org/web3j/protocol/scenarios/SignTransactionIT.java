@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.web3j.crypto.Hash;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
-import org.web3j.protocol.core.methods.response.EthSign;
+import org.web3j.protocol.core.methods.response.PlatonSign;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
@@ -30,7 +30,7 @@ public class SignTransactionIT extends Scenario {
         byte[] encoded = TransactionEncoder.encode(rawTransaction);
         byte[] hashed = Hash.sha3(encoded);
 
-        EthSign ethSign = web3j.ethSign(ALICE.getAddress(), Numeric.toHexString(hashed))
+        PlatonSign ethSign = web3j.platonSign(ALICE.getAddress(), Numeric.toHexString(hashed))
                 .sendAsync().get();
 
         String signature = ethSign.getSignature();

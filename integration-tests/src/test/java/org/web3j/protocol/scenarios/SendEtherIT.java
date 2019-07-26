@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import org.junit.Test;
 
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
@@ -30,7 +30,7 @@ public class SendEtherIT extends Scenario {
         Transaction transaction = Transaction.createEtherTransaction(
                 ALICE.getAddress(), nonce, GAS_PRICE, GAS_LIMIT, BOB.getAddress(), value);
 
-        EthSendTransaction ethSendTransaction =
+        PlatonSendTransaction ethSendTransaction =
                 web3j.ethSendTransaction(transaction).sendAsync().get();
 
         String transactionHash = ethSendTransaction.getTransactionHash();

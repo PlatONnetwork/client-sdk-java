@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
@@ -31,8 +31,8 @@ public class CreateRawTransactionIT extends Scenario {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, ALICE);
         String hexValue = Numeric.toHexString(signedMessage);
 
-        EthSendTransaction ethSendTransaction =
-                web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        PlatonSendTransaction ethSendTransaction =
+                web3j.platonSendRawTransaction(hexValue).sendAsync().get();
         String transactionHash = ethSendTransaction.getTransactionHash();
 
         assertFalse(transactionHash.isEmpty());
@@ -51,8 +51,8 @@ public class CreateRawTransactionIT extends Scenario {
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, ALICE);
         String hexValue = Numeric.toHexString(signedMessage);
 
-        EthSendTransaction ethSendTransaction =
-                web3j.ethSendRawTransaction(hexValue).sendAsync().get();
+        PlatonSendTransaction ethSendTransaction =
+                web3j.platonSendRawTransaction(hexValue).sendAsync().get();
         String transactionHash = ethSendTransaction.getTransactionHash();
 
         assertFalse(transactionHash.isEmpty());
@@ -80,7 +80,7 @@ public class CreateRawTransactionIT extends Scenario {
     }
 
     BigInteger getNonce(String address) throws Exception {
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        PlatonGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
                 address, DefaultBlockParameterName.LATEST).sendAsync().get();
 
         return ethGetTransactionCount.getTransactionCount();

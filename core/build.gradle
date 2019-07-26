@@ -10,11 +10,11 @@ dependencies {
             "com.squareup.okhttp3:okhttp:$okhttpVersion",
             "com.squareup.okhttp3:logging-interceptor:$okhttpVersion",
             "io.reactivex:rxjava:$rxjavaVersion",
+            "com.alibaba:fastjson:1.2.54",
             "org.java-websocket:Java-WebSocket:$javaWebSocketVersion"
     testCompile project(path: ':crypto', configuration: 'testArtifacts'),
             "nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion",
             "ch.qos.logback:logback-classic:$logbackVersion"
-    testCompile group: 'com.alibaba', name: 'fastjson', version: '1.2.54'
     testCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
 
 }

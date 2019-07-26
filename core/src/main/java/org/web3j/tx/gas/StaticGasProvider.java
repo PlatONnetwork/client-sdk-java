@@ -17,12 +17,22 @@ public class StaticGasProvider implements ContractGasProvider {
     }
 
     @Override
+    public BigInteger getGasPrice(int functionType) {
+        return gasPrice;
+    }
+
+    @Override
     public BigInteger getGasPrice() {
         return gasPrice;
     }
 
     @Override
     public BigInteger getGasLimit(String contractFunc) {
+        return gasLimit;
+    }
+
+    @Override
+    public BigInteger getGasLimit(int functionType) {
         return gasLimit;
     }
 

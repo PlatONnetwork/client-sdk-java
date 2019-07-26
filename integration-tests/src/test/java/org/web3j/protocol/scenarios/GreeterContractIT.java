@@ -14,6 +14,8 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.PlatonCall;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import static junit.framework.TestCase.assertFalse;
@@ -77,7 +79,7 @@ public class GreeterContractIT extends Scenario {
                 BigInteger.ZERO,
                 getGreeterSolidityBinary() + encodedConstructor);
 
-        org.web3j.protocol.core.methods.response.EthSendTransaction
+        PlatonSendTransaction
                 transactionResponse = web3j.ethSendTransaction(transaction)
                 .sendAsync().get();
 
@@ -89,7 +91,7 @@ public class GreeterContractIT extends Scenario {
 
         String encodedFunction = FunctionEncoder.encode(function);
 
-        org.web3j.protocol.core.methods.response.EthCall response = web3j.ethCall(
+        PlatonCall response = web3j.platonCall(
                 Transaction.createEthCallTransaction(
                         ALICE.getAddress(), contractAddress, encodedFunction),
                 DefaultBlockParameterName.LATEST)

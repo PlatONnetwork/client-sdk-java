@@ -10,7 +10,7 @@ import org.web3j.protocol.admin.JsonRpc2_0Admin;
 import org.web3j.protocol.admin.methods.response.BooleanResponse;
 import org.web3j.protocol.admin.methods.response.PersonalSign;
 import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthSubscribe;
+import org.web3j.protocol.core.methods.response.PlatonSubscribe;
 import org.web3j.protocol.core.methods.response.MinerStartResponse;
 import org.web3j.protocol.geth.response.PersonalEcRecover;
 import org.web3j.protocol.geth.response.PersonalImportRawKey;
@@ -89,7 +89,7 @@ public class JsonRpc2_0Geth extends JsonRpc2_0Admin implements Geth {
                         "eth_subscribe",
                         Arrays.asList("newPendingTransactions"),
                         web3jService,
-                        EthSubscribe.class),
+                        PlatonSubscribe.class),
                 "eth_unsubscribe",
                 PendingTransactionNotification.class
         );
@@ -102,7 +102,7 @@ public class JsonRpc2_0Geth extends JsonRpc2_0Admin implements Geth {
                         "eth_subscribe",
                         Arrays.asList("syncing"),
                         web3jService,
-                        EthSubscribe.class),
+                        PlatonSubscribe.class),
                 "eth_unsubscribe",
                 SyncingNotfication.class
         );

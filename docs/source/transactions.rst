@@ -184,7 +184,7 @@ with the `Transaction <https://github.com/web3j/web3j/blob/master/core/src/main/
                 "0x...<smart contract code to execute>"
         );
 
-        org.web3j.protocol.core.methods.response.EthSendTransaction
+        org.web3j.protocol.core.methods.response.PlatonSendTransaction
                 transactionResponse = parity.ethSendTransaction(ethSendTransaction)
                 .send();
 
@@ -471,7 +471,7 @@ to the :doc:`abi` section.
    Transaction transaction = Transaction.createFunctionCallTransaction(
                 <from>, <gasPrice>, <gasLimit>, contractAddress, <funds>, encodedFunction);
 
-   org.web3j.protocol.core.methods.response.EthSendTransaction transactionResponse =
+   org.web3j.protocol.core.methods.response.PlatonSendTransaction transactionResponse =
                 web3j.ethSendTransaction(transaction).sendAsync().get();
 
    String transactionHash = transactionResponse.getTransactionHash();
@@ -501,7 +501,7 @@ contract method's called, it simply returns the value from them::
                 Arrays.asList(new TypeReference<Type>() {}, ...));
 
    String encodedFunction = FunctionEncoder.encode(function)
-   org.web3j.protocol.core.methods.response.EthCall response = web3j.ethCall(
+   org.web3j.protocol.core.methods.response.PlatonCall response = web3j.ethCall(
                 Transaction.createEthCallTransaction(<from>, contractAddress, encodedFunction),
                 DefaultBlockParameterName.LATEST)
                 .sendAsync().get();

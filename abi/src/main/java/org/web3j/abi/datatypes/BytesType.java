@@ -7,12 +7,19 @@ import java.util.Arrays;
  */
 public class BytesType implements Type<byte[]> {
 
+    public static final String TYPE_NAME = "bytes";
+
     private byte[] value;
     private String type;
 
     public BytesType(byte[] src, String type) {
         this.value = src;
         this.type = type;
+    }
+
+    public BytesType(byte[] src) {
+        this.value = src;
+        this.type = TYPE_NAME + src.length;
     }
 
     @Override
