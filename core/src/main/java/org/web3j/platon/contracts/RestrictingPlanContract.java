@@ -16,6 +16,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.ReadonlyTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.utils.JSONUtil;
@@ -37,8 +38,16 @@ public class RestrictingPlanContract extends PlatOnContract {
         return new RestrictingPlanContract("", RESTRICTING_PLAN_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
     }
 
+    public static RestrictingPlanContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
+        return new RestrictingPlanContract("", RESTRICTING_PLAN_CONTRACT_ADDRESS, web3j, contractGasProvider);
+    }
+
     public static RestrictingPlanContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
         return new RestrictingPlanContract("", RESTRICTING_PLAN_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
+    }
+
+    protected RestrictingPlanContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
+        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j, contractAddress), gasProvider);
     }
 
     protected RestrictingPlanContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {

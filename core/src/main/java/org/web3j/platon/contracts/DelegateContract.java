@@ -16,6 +16,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.ReadonlyTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.utils.JSONUtil;
@@ -38,19 +39,27 @@ public class DelegateContract extends PlatOnContract {
         return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
     }
 
+    public static DelegateContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
+        return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, web3j, contractGasProvider);
+    }
+
     public static DelegateContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
         return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
     }
 
-    public DelegateContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
+    protected DelegateContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
         super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
     }
 
-    public DelegateContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
+    protected DelegateContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
+        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j, contractAddress), gasProvider);
+    }
+
+    protected DelegateContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
         super(contractBinary, contractAddress, web3j, credentials, gasProvider);
     }
 
-    public DelegateContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
+    protected DelegateContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
         super(contractBinary, contractAddress, chainId, web3j, credentials, gasProvider);
     }
 
