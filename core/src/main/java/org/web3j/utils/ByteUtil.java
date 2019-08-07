@@ -78,7 +78,7 @@ public class ByteUtil {
     /**
      * Omitting sign indication byte.
      * <br><br>
-     * Instead of {@link org.spongycastle.util.BigIntegers#asUnsignedByteArray(BigInteger)}
+     * Instead of
      * <br>we use this custom method to avoid an empty array in case of BigInteger.ZERO
      *
      * @param value - any big integer number. A <code>null</code>-value will return <code>null</code>
@@ -633,7 +633,7 @@ public class ByteUtil {
      * Converts string hex representation to data bytes
      * Accepts following hex:
      * - with or without 0x prefix
-     * - with no leading 0, like 0xabc -> 0x0abc
+     * - with no leading 0
      *
      * @param data String like '0xa5e..' or just 'a5e..'
      * @return decoded bytes array

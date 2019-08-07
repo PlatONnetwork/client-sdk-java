@@ -11,6 +11,7 @@ import org.web3j.platon.bean.Node;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.ReadonlyTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.utils.JSONUtil;
@@ -29,6 +30,10 @@ public class NodeContract extends PlatOnContract {
         return new NodeContract("", NODE_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
     }
 
+    public static NodeContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
+        return new NodeContract("", NODE_CONTRACT_ADDRESS, web3j, contractGasProvider);
+    }
+
     public static NodeContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
         return new NodeContract("", NODE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
     }
@@ -37,11 +42,15 @@ public class NodeContract extends PlatOnContract {
         super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
     }
 
-    public NodeContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
+    protected NodeContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
+        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j, contractAddress), gasProvider);
+    }
+
+    protected NodeContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
         super(contractBinary, contractAddress, web3j, credentials, gasProvider);
     }
 
-    public NodeContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
+    protected NodeContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
         super(contractBinary, contractAddress, chainId, web3j, credentials, gasProvider);
     }
 
