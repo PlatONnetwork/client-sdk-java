@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.SampleKeys;
+import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -24,6 +26,13 @@ public class TransferTest extends ManagedTransactionTester {
     public void setUp() throws Exception {
         super.setUp();
         transactionReceipt = prepareTransfer();
+    }
+
+    @Test
+    public void transfer() throws Exception {
+        Web3j web3j = Web3j.build(new HttpService("http://10.10.8.200:6789"));
+        Credentials credentials = Credentials.create("0xa7f1d33a30c1e8b332443825f2209755c52086d0a88b084301a6727d9f84bf32");
+        Transfer.sendFunds(web3j,credentials,"0x8b77ac9fabb6fe247ee91ca07ea4f62c6761e79b", BigDecimal.valueOf(100), Convert.Unit.ETHER).send();
     }
 
     @Test

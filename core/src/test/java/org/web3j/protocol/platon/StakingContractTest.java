@@ -19,7 +19,7 @@ public class StakingContractTest {
     private static final int OFFSET_LONG_ITEM = 0xb7;
     private static final int SIZE_THRESHOLD = 56;
 
-    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.157:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.56:6789"));
 
     private StakingContract stakingContract;
 
@@ -41,15 +41,25 @@ public class StakingContractTest {
         stakingContract = StakingContract.load(
                 web3j,
                 credentials,
-                new DefaultWasmGasProvider(), "102");
+                new DefaultWasmGasProvider(), "100");
     }
 
 
     @Test
     public void staking() {
 
+        String nodeId = "7dd1e2474a49aa19cd2ef7f806f28d97595674723fc73c38602df12c758126e9eee4e25d44d700ea06aad0eacf3990d7f8f7a4f41350eebbf644cc406305943c";
+        String stakingAmount = "1000000000000000000000000000";
+        StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
+        String benifitAddress = "0x5e57ae97e714abe990c882377aaf9c57f4ea363b";
+        String externalId = "liyf-test-id";
+        String nodeName = "liyf-test";
+        String webSite = "www.baidu.com";
+        String details = "details";
+        String nodeVersion = "10";
+
         try {
-            BaseResponse baseResponse = stakingContract.staking(nodeId, new BigInteger("1000000000000000000000000"), StakingAmountType.FREE_AMOUNT_TYPE, benifitAddress, externalId, nodeName, websites, details, BigInteger.valueOf(1792)).send();
+            BaseResponse baseResponse = stakingContract.staking(nodeId, new BigInteger(stakingAmount), stakingAmountType, benifitAddress, externalId, nodeName, webSite, details, BigInteger.valueOf(10)).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
