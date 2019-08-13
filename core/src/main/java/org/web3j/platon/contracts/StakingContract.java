@@ -201,7 +201,6 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> updateStakingInfoReturnTransaction(String nodeId, String benifitAddress, String externalId, String nodeName, String webSite, String details) {
-
         Function function = new Function(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(benifitAddress)),
                         new BytesType(Numeric.hexStringToByteArray(nodeId)),

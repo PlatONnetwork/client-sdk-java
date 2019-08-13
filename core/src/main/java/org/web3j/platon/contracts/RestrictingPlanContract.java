@@ -89,7 +89,7 @@ public class RestrictingPlanContract extends PlatOnContract {
     public RemoteCall<PlatonSendTransaction> createRestrictingPlanReturnTransaction(String account, List<RestrictingPlan> restrictingPlanList) {
         final Function function = new Function(
                 FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                Arrays.<Type>asList(new Utf8String(account), new StaticArray(restrictingPlanList)),
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallPlatonTransaction(function);
     }

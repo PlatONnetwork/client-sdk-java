@@ -147,8 +147,8 @@ public class ProposalContract extends PlatOnContract {
      */
     public RemoteCall<PlatonSendTransaction> voteReturnTransaction(String proposalID, String verifier, VoteOption voteOption) {
         Function function = new Function(FunctionType.VOTE_FUNC_TYPE,
-                Arrays.<Type>asList(new Utf8String(verifier),
-                        new Utf8String(proposalID), new Uint16(voteOption.getValue())),
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
+                        new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue())),
                 Collections.emptyList());
         return executeRemoteCallPlatonTransaction(function);
     }
@@ -186,8 +186,8 @@ public class ProposalContract extends PlatOnContract {
      */
     public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(String activeNode, BigInteger version) {
         Function function = new Function(FunctionType.DECLARE_VERSION_FUNC_TYPE,
-                Arrays.<Type>asList(new Utf8String(activeNode),
-                        new Uint16(version)),
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
+                        new Uint32(version)),
                 Collections.emptyList());
         return executeRemoteCallPlatonTransaction(function);
     }
