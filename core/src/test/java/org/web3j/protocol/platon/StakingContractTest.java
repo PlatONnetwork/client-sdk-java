@@ -59,7 +59,7 @@ public class StakingContractTest {
         String nodeVersion = "10";
 
         try {
-            BaseResponse baseResponse = stakingContract.staking(nodeId, new BigInteger(stakingAmount), stakingAmountType, benifitAddress, externalId, nodeName, webSite, details, BigInteger.valueOf(10)).send();
+            BaseResponse baseResponse = stakingContract.staking(nodeId, new BigInteger(stakingAmount), stakingAmountType, benifitAddress, externalId, nodeName, webSite, details, BigInteger.valueOf(1792)).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
