@@ -90,7 +90,7 @@ public class DelegateContract extends PlatOnContract {
     public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
         Function function = new Function(FunctionType.DELEGATE_FUNC_TYPE,
                 Arrays.asList(new Uint16(stakingAmountType.getValue())
-                        , new Utf8String(nodeId)
+                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint256(amount)), Collections.EMPTY_LIST);
         return executeRemoteCallPlatonTransaction(function);
     }
@@ -132,7 +132,7 @@ public class DelegateContract extends PlatOnContract {
     public RemoteCall<PlatonSendTransaction> unDelegateReturnTransaction(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
         Function function = new Function(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
                 Arrays.asList(new Uint64(stakingBlockNum)
-                        , new Utf8String(nodeId)
+                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint256(amount)), Collections.EMPTY_LIST);
         return executeRemoteCallPlatonTransaction(function, amount);
     }

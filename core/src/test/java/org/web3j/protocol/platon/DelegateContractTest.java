@@ -8,6 +8,7 @@ import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Delegation;
 import org.web3j.platon.bean.DelegationIdInfo;
 import org.web3j.platon.contracts.DelegateContract;
+import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultWasmGasProvider;
@@ -20,7 +21,7 @@ public class DelegateContractTest {
     private String nodeId = "1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429";
     private String delegateAddress = "0x493301712671Ada506ba6Ca7891F436D29185821";
 
-    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.157:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.56:6789"));
 
     private Credentials credentials;
 
@@ -28,11 +29,12 @@ public class DelegateContractTest {
 
     @Before
     public void init() {
+
         credentials = Credentials.create("0xa11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7");
 
         delegateContract = DelegateContract.load(web3j,
                 credentials,
-                new DefaultWasmGasProvider(), "102");
+                new DefaultWasmGasProvider(), "100");
     }
 
     @Test

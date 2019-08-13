@@ -119,8 +119,8 @@ public class SlashContract extends PlatOnContract {
      */
     public RemoteCall<PlatonSendTransaction> checkDoubleSignReturnTransaction(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
         Function function = new Function(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint16(doubleSignType.getValue())
-                        , new Utf8String(address)
+                Arrays.asList(new Uint32(doubleSignType.getValue())
+                        , new BytesType(Numeric.hexStringToByteArray(address))
                         , new Uint64(blockNumber))
                 , Collections.emptyList());
         return executeRemoteCallPlatonTransaction(function);
