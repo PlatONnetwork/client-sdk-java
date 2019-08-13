@@ -8,6 +8,7 @@ import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Node;
 import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultWasmGasProvider;
 
@@ -59,7 +60,8 @@ public class StakingContractTest {
         String nodeVersion = "10";
 
         try {
-            BaseResponse baseResponse = stakingContract.staking(nodeId, new BigInteger(stakingAmount), stakingAmountType, benifitAddress, externalId, nodeName, webSite, details, BigInteger.valueOf(1792)).send();
+            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(nodeId, new BigInteger(stakingAmount), stakingAmountType, benifitAddress, externalId, nodeName, webSite, details, BigInteger.valueOf(1792)).send();
+           BaseResponse baseResponse =  stakingContract.getStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

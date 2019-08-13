@@ -431,7 +431,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
                             receipt.getStatus(),
                             receipt.getGasUsed()));
         }
-        return getResponseFromTransactionReceipt(transactionReceipt, functionType);
+        return getResponseFromTransactionReceipt(receipt, functionType);
     }
 
     PlatonSendTransaction executePlatonTransaction(
