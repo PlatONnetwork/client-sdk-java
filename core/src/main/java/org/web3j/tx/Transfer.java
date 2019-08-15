@@ -41,12 +41,11 @@ public class Transfer extends ManagedTransaction {
      * recommended via {@link Transfer#sendFunds(String, BigDecimal, Convert.Unit)}.
      *
      * @param toAddress destination address
-     * @param value amount to send
-     * @param unit of specified send
-     *
+     * @param value     amount to send
+     * @param unit      of specified send
      * @return {@link Optional} containing our transaction receipt
-     * @throws ExecutionException if the computation threw an
-     *                            exception
+     * @throws ExecutionException   if the computation threw an
+     *                              exception
      * @throws InterruptedException if the current thread was interrupted
      *                              while waiting
      * @throws TransactionException if the transaction was not mined while waiting
@@ -59,12 +58,11 @@ public class Transfer extends ManagedTransaction {
         return send(toAddress, value, unit, gasPrice, GAS_LIMIT);
     }
 
-    private TransactionReceipt send(
-            String toAddress, BigDecimal value, Convert.Unit unit, BigInteger gasPrice,
-            BigInteger gasLimit) throws IOException, InterruptedException,
+    private TransactionReceipt send(String toAddress, BigDecimal value, Convert.Unit unit, BigInteger gasPrice,
+                                    BigInteger gasLimit) throws IOException, InterruptedException,
             TransactionException {
 
-        BigDecimal weiValue = Convert.toWei(value, unit);
+        BigDecimal weiValue = Convert.toVon(value, unit);
         if (!Numeric.isIntegerValue(weiValue)) {
             throw new UnsupportedOperationException(
                     "Non decimal Wei value provided: " + value + " " + unit.toString()
@@ -81,11 +79,11 @@ public class Transfer extends ManagedTransaction {
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(
-            Web3j web3j, Credentials credentials,
+            Web3j web3j, Credentials credentials, String chainId,
             String toAddress, BigDecimal value, Convert.Unit unit) throws InterruptedException,
             IOException, TransactionException {
 
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, new Byte(chainId));
 
         return new RemoteCall<>(() ->
                 new Transfer(web3j, transactionManager).send(toAddress, value, unit));
@@ -96,9 +94,8 @@ public class Transfer extends ManagedTransaction {
      * fund transfers. For multiple, create an instance.
      *
      * @param toAddress destination address
-     * @param value amount to send
-     * @param unit of specified send
-     *
+     * @param value     amount to send
+     * @param unit      of specified send
      * @return {@link RemoteCall} containing executing transaction
      */
     public RemoteCall<TransactionReceipt> sendFunds(
