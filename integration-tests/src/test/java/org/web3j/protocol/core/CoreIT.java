@@ -115,7 +115,7 @@ public class CoreIT {
 
     @Test
     public void testEthGetTransactionCount() throws Exception {
-        PlatonGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        PlatonGetTransactionCount ethGetTransactionCount = web3j.platonGetTransactionCount(
                 config.validAccount(),
                 DefaultBlockParameter.valueOf("latest")).send();
         assertTrue(ethGetTransactionCount.getTransactionCount().signum() == 1);
@@ -133,7 +133,7 @@ public class CoreIT {
     @Test
     public void testEthGetBlockTransactionCountByNumber() throws Exception {
         PlatonGetBlockTransactionCountByNumber ethGetBlockTransactionCountByNumber =
-                web3j.ethGetBlockTransactionCountByNumber(
+                web3j.platonGetBlockTransactionCountByNumber(
                         DefaultBlockParameter.valueOf(config.validBlock())).send();
         assertThat(ethGetBlockTransactionCountByNumber.getTransactionCount(),
                 equalTo(config.validBlockTransactionCount()));
@@ -155,7 +155,7 @@ public class CoreIT {
     @Ignore  // TODO: Once account unlock functionality is available
     @Test
     public void testEthSendTransaction() throws Exception {
-        PlatonSendTransaction ethSendTransaction = web3j.ethSendTransaction(
+        PlatonSendTransaction ethSendTransaction = web3j.platonSendTransaction(
                 config.buildTransaction()).send();
         assertFalse(ethSendTransaction.getTransactionHash().isEmpty());
     }

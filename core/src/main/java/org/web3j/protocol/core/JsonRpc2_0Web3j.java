@@ -162,7 +162,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Request<?, PlatonGetTransactionCount> ethGetTransactionCount(
+    public Request<?, PlatonGetTransactionCount> platonGetTransactionCount(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "platon_getTransactionCount",
@@ -182,7 +182,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Request<?, PlatonGetBlockTransactionCountByNumber> ethGetBlockTransactionCountByNumber(
+    public Request<?, PlatonGetBlockTransactionCountByNumber> platonGetBlockTransactionCountByNumber(
             DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "platon_getBlockTransactionCountByNumber",
@@ -212,7 +212,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Request<?, PlatonSendTransaction>
-            ethSendTransaction(
+    platonSendTransaction(
             Transaction transaction) {
         return new Request<>(
                 "platon_sendTransaction",

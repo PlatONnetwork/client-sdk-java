@@ -72,11 +72,11 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     protected BigInteger getNonce() throws IOException {
-        PlatonGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        PlatonGetTransactionCount ethGetTransactionCount = web3j.platonGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
         if (ethGetTransactionCount.getTransactionCount().intValue() == 0) {
-            ethGetTransactionCount = web3j.ethGetTransactionCount(
+            ethGetTransactionCount = web3j.platonGetTransactionCount(
                     credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
         }
 

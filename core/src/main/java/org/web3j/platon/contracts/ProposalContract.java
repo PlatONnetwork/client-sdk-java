@@ -146,7 +146,7 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> vote(String proposalID, String verifier, VoteOption voteOption) throws Exception {
-        BigInteger programVersion = new BigInteger(getProgramVersion(web3j).send().data);
+        BigInteger programVersion = new BigInteger(getProgramVersion().send().data);
         PlatOnFunction function = new PlatOnFunction(FunctionType.VOTE_FUNC_TYPE,
                 Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                         new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue()),
@@ -166,7 +166,7 @@ public class ProposalContract extends PlatOnContract {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
-                return new BigInteger(getProgramVersion(web3j).send().data);
+                return new BigInteger(getProgramVersion().send().data);
             }
         }).map(new Func1<BigInteger, GasProvider>() {
             @Override
@@ -186,7 +186,7 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> voteReturnTransaction(String proposalID, String verifier, VoteOption voteOption) throws Exception {
-        BigInteger programVersion = new BigInteger(getProgramVersion(web3j).send().data);
+        BigInteger programVersion = new BigInteger(getProgramVersion().send().data);
         PlatOnFunction function = new PlatOnFunction(FunctionType.VOTE_FUNC_TYPE,
                 Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                         new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue()),

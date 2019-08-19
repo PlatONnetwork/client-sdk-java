@@ -19,7 +19,7 @@ public class StakingContractTest {
     private static final int OFFSET_LONG_ITEM = 0xb7;
     private static final int SIZE_THRESHOLD = 56;
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6795"));
 
     private StakingContract stakingContract;
 
@@ -47,39 +47,39 @@ public class StakingContractTest {
     @Test
     public void staking() {
 
-        try {
-            BaseResponse baseResponse = stakingContract.getProgramVersion(web3j).send();
-            System.out.println(baseResponse.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-//        String stakingAmount = "1000000000000000000000000000";
-//        StakingAmountType stakingAmountType = StakingAmountType.RESTRICTING_AMOUNT_TYPE;
-//        String benifitAddress = "0x5e57ae97e714abe990c882377aaf9c57f4ea363b";
-//        String externalId = "liyf-test-id";
-//        String nodeName = "liyf-test";
-//        String webSite = "www.baidu.com";
-//        String details = "details";
-//        String nodeVersion = "1792";
-//
 //        try {
-//            BaseResponse baseResponse = stakingContract.staking(new StakingParam.Builder()
-//                    .setNodeId(nodeId)
-//                    .setAmount(new BigInteger(stakingAmount))
-//                    .setStakingAmountType(stakingAmountType)
-//                    .setBenifitAddress(benifitAddress)
-//                    .setExternalId(externalId)
-//                    .setNodeName(nodeName)
-//                    .setWebSite(webSite)
-//                    .setDetails(details)
-//                    .setProcessVersion(new BigInteger(stakingAmount))
-//                    .build()).send();
+//            BaseResponse baseResponse = stakingContract.getProgramVersion(web3j).send();
 //            System.out.println(baseResponse.toString());
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+
+        String nodeId = "3aca21c898c892dae5081682119573c86b4dec3d50875cd95358cc28068231929827f3ee95471cb857986ad7f4b7d64f54be493dc3d476f603bdc2bc8a64e79b";
+        String stakingAmount = "1000000000000000000000000000";
+        StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
+        String benifitAddress = "0x5e57ae97e714abe990c882377aaf9c57f4ea363b";
+        String externalId = "liyf-test-id";
+        String nodeName = "liyf-test";
+        String webSite = "www.baidu.com";
+        String details = "details";
+        String nodeVersion = "1792";
+
+        try {
+            BaseResponse baseResponse = stakingContract.staking(new StakingParam.Builder()
+                    .setNodeId(nodeId)
+                    .setAmount(new BigInteger(stakingAmount))
+                    .setStakingAmountType(stakingAmountType)
+                    .setBenifitAddress(benifitAddress)
+                    .setExternalId(externalId)
+                    .setNodeName(nodeName)
+                    .setWebSite(webSite)
+                    .setDetails(details)
+                    .setProcessVersion(new BigInteger(stakingAmount))
+                    .build()).send();
+            System.out.println(baseResponse.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

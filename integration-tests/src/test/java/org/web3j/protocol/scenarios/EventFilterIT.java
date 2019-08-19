@@ -100,7 +100,7 @@ public class EventFilterIT extends Scenario {
                 encodedFunction);
 
         PlatonSendTransaction transactionResponse =
-                web3j.ethSendTransaction(transaction).sendAsync().get();
+                web3j.platonSendTransaction(transaction).sendAsync().get();
 
         assertFalse(transactionResponse.hasError());
 

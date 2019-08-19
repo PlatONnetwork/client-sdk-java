@@ -114,7 +114,7 @@ public class Scenario {
     }
 
     BigInteger getNonce(String address) throws Exception {
-        PlatonGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        PlatonGetTransactionCount ethGetTransactionCount = web3j.platonGetTransactionCount(
                 address, DefaultBlockParameterName.LATEST).sendAsync().get();
 
         return ethGetTransactionCount.getTransactionCount();

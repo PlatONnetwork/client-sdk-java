@@ -120,7 +120,7 @@ public class RequestTest extends RequestTester {
 
     @Test
     public void testEthGetTransactionCount() throws Exception {
-        web3j.ethGetTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+        web3j.platonGetTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1",
                 DefaultBlockParameterName.LATEST).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"platon_getTransactionCount\","
@@ -140,7 +140,7 @@ public class RequestTest extends RequestTester {
 
     @Test
     public void testEthGetBlockTransactionCountByNumber() throws Exception {
-        web3j.ethGetBlockTransactionCountByNumber(
+        web3j.platonGetBlockTransactionCountByNumber(
                 DefaultBlockParameter.valueOf(Numeric.toBigInt("0xe8"))).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"platon_getBlockTransactionCountByNumber\","
@@ -169,7 +169,7 @@ public class RequestTest extends RequestTester {
 
     @Test
     public void testEthSendTransaction() throws Exception {
-        web3j.ethSendTransaction(new Transaction(
+        web3j.platonSendTransaction(new Transaction(
                 "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
                 BigInteger.ONE,
                 Numeric.toBigInt("0x9184e72a000"),
