@@ -27,7 +27,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -208,13 +207,13 @@ public class ProposalContract extends PlatOnContract {
      * 版本声明
      *
      * @param activeNode 声明的节点，只能是验证人/候选人
-     * @param version    声明的版本
      * @return
      */
-    public RemoteCall<BaseResponse> declareVersion(String activeNode, BigInteger version) {
+    public RemoteCall<BaseResponse> declareVersion(String activeNode) throws Exception{
+        BigInteger processVersion = new BigInteger(getProgramVersion().send().data);
         PlatOnFunction function = new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
                 Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
-                        new Uint32(version)));
+                        new Uint32(processVersion)));
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -222,29 +221,29 @@ public class ProposalContract extends PlatOnContract {
      * 获取版本声明的gasProvider
      *
      * @param activeNode
-     * @param version
      * @return
      */
-    public Observable<GasProvider> getDeclareVersionGasProvider(String activeNode, BigInteger version) {
+    public Observable<GasProvider> getDeclareVersionGasProvider(String activeNode) {
         return Observable.fromCallable(new Callable<GasProvider>() {
             @Override
             public GasProvider call() throws Exception {
+                BigInteger processVersion = new BigInteger(getProgramVersion().send().data);
                 return new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
                         Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
-                                new Uint32(version))).getGasProvider();
+                                new Uint32(processVersion))).getGasProvider();
             }
         });
     }
 
     /**
      * @param activeNode 声明的节点，只能是验证人/候选人
-     * @param version    声明的版本
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(String activeNode, BigInteger version) {
+    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(String activeNode) throws Exception{
+        BigInteger processVersion = new BigInteger(getProgramVersion().send().data);
         PlatOnFunction function = new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
                 Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
-                        new Uint32(version)));
+                        new Uint32(processVersion)));
         return executeRemoteCallPlatonTransaction(function);
     }
 

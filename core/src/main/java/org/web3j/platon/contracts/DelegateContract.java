@@ -205,7 +205,7 @@ public class DelegateContract extends PlatOnContract {
      *
      * @param nodeId          验证人的节点Id
      * @param delAddr         委托人账户地址
-     * @param stakingBlockNum 验证人的节点Id
+     * @param stakingBlockNum 发起质押时的区块高度
      * @return
      */
     public RemoteCall<BaseResponse<Delegation>> getDelegateInfo(String nodeId, String delAddr, BigInteger stakingBlockNum) {
