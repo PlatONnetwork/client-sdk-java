@@ -1,61 +1,76 @@
 package org.web3j.platon.contracts;
 
 import org.web3j.abi.datatypes.BytesType;
-import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.abi.datatypes.generated.Uint64;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.ContractAddress;
 import org.web3j.platon.DoubleSignType;
 import org.web3j.platon.FunctionType;
+import org.web3j.platon.PlatOnFunction;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
-import org.web3j.tx.ReadonlyTransactionManager;
-import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+
+import rx.Observable;
 
 public class SlashContract extends PlatOnContract {
 
-    public static SlashContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return new SlashContract("", SLASH_CONTRACT_ADDRESS, web3j, credentials, contractGasProvider);
+    /**
+     * 查询操作
+     *
+     * @param web3j
+     * @return
+     */
+    public static SlashContract load(Web3j web3j) {
+        return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, web3j);
     }
 
-    public static SlashContract load(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return new SlashContract("", SLASH_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
+    /**
+     * sendRawTransaction 使用默认的gasProvider
+     *
+     * @param web3j
+     * @param credentials
+     * @param chainId
+     * @return
+     */
+    public static SlashContract load(Web3j web3j, Credentials credentials, String chainId) {
+        return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
 
-    public static SlashContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
-        return new SlashContract("", SLASH_CONTRACT_ADDRESS, web3j, contractGasProvider);
+    /**
+     * sendRawTransaction 使用自定义的gasProvider
+     *
+     * @param web3j
+     * @param credentials
+     * @param contractGasProvider
+     * @param chainId
+     * @return
+     */
+    public static SlashContract load(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String chainId) {
+        return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
     }
 
-    public static SlashContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
-        return new SlashContract("", SLASH_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
+    private SlashContract(String contractAddress, Web3j web3j) {
+        super(contractAddress, web3j);
     }
 
-    protected SlashContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
+    private SlashContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
+        super(contractAddress, chainId, web3j, credentials, null);
     }
 
-    protected SlashContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j,contractAddress), gasProvider);
-    }
-
-    public SlashContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, credentials, gasProvider);
-    }
-
-    public SlashContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, chainId, web3j, credentials, gasProvider);
+    private SlashContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
+        super(contractAddress, chainId, web3j, credentials, gasProvider);
     }
 
     /**
@@ -65,10 +80,24 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> reportDoubleSign(String data) {
-        Function function = new Function(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Utf8String(data))
-                , Collections.emptyList());
+        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                Arrays.asList(new Utf8String(data)));
         return executeRemoteCallTransactionWithFunctionType(function);
+    }
+
+    /**
+     * 获取举报双签的gasProvider
+     * @param data
+     * @return
+     */
+    public Observable<GasProvider> getReportDoubleSignGasProvider(String data) {
+        return Observable.fromCallable(new Callable<GasProvider>() {
+            @Override
+            public GasProvider call() throws Exception {
+                return new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                        Arrays.asList(new Utf8String(data))).getGasProvider();
+            }
+        });
     }
 
     /**
@@ -78,9 +107,8 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(String data) {
-        Function function = new Function(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Utf8String(data))
-                , Collections.emptyList());
+        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                Arrays.asList(new Utf8String(data)));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -101,11 +129,10 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> checkDoubleSign(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
-        Function function = new Function(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(doubleSignType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(address))
-                        , new Uint64(blockNumber))
-                , Collections.emptyList());
+                        , new Uint64(blockNumber)));
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -118,11 +145,10 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> checkDoubleSignReturnTransaction(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
-        Function function = new Function(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(doubleSignType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(address))
-                        , new Uint64(blockNumber))
-                , Collections.emptyList());
+                        , new Uint64(blockNumber)));
         return executeRemoteCallPlatonTransaction(function);
     }
 

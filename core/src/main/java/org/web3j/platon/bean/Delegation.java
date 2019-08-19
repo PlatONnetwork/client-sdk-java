@@ -1,7 +1,6 @@
 package org.web3j.platon.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.databind.node.BigIntegerNode;
 
 import java.math.BigInteger;
 

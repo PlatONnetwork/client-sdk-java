@@ -1,32 +1,18 @@
 package org.web3j.tx.gas;
 
-import org.web3j.tx.PlatOnContract;
-
 import java.math.BigInteger;
 
-public class DefaultWasmGasProvider implements ContractGasProvider {
+public class DefaultWasmGasProvider implements GasProvider {
     private BigInteger gasPrice = BigInteger.valueOf(1_000_000_000L);
-    private BigInteger deployGasLimit = BigInteger.valueOf(250_000_000L);
     private BigInteger invokeGasLimit = BigInteger.valueOf(2_000_000L);
 
     public DefaultWasmGasProvider() {
 
     }
 
-    public DefaultWasmGasProvider(BigInteger gasPrice, BigInteger deployGasLimit, BigInteger invokeGasLimit) {
+    public DefaultWasmGasProvider(BigInteger gasPrice, BigInteger invokeGasLimit) {
         this.gasPrice = gasPrice;
-        this.deployGasLimit = deployGasLimit;
         this.invokeGasLimit = invokeGasLimit;
-    }
-
-    @Override
-    public BigInteger getGasPrice(String contractFunc) {
-        return gasPrice;
-    }
-
-    @Override
-    public BigInteger getGasPrice(int functionType) {
-        return gasPrice;
     }
 
     @Override
@@ -34,22 +20,9 @@ public class DefaultWasmGasProvider implements ContractGasProvider {
         return gasPrice;
     }
 
-    @Override
-    public BigInteger getGasLimit(String contractFunc) {
-        if(PlatOnContract.FUNC_DEPLOY.equals(contractFunc)) {
-            return deployGasLimit;
-        }else {
-            return invokeGasLimit;
-        }
-    }
-
-    @Override
-    public BigInteger getGasLimit(int functionType) {
-        return invokeGasLimit;
-    }
 
     @Override
     public BigInteger getGasLimit() {
-        return deployGasLimit.max(invokeGasLimit);
+        return invokeGasLimit;
     }
 }

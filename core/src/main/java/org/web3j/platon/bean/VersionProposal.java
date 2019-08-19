@@ -19,19 +19,15 @@ public class VersionProposal extends Proposal {
      */
     private BigInteger newVersion;
     /**
-     * （如果投票通过）生效块高
+     * （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
      */
     private BigInteger activeBlock;
 
     public VersionProposal(Builder builder) {
-        this.proposalId = builder.proposalId;
         this.verifier = builder.verifier;
-        this.githubId = builder.githubId;
-        this.topic = builder.topic;
-        this.desc = builder.desc;
         this.url = builder.url;
-        this.endVoltingBlock = builder.endVoltingBlock;
         this.newVersion = builder.newVersion;
+        this.endVoltingBlock = builder.endVoltingBlock;
         this.activeBlock = builder.activeBlock;
     }
 
@@ -56,9 +52,6 @@ public class VersionProposal extends Proposal {
     public List<Type> getSubmitInputParameters() {
 
         return Arrays.asList(new BytesType(Numeric.hexStringToByteArray(this.verifier)),
-                new Utf8String(this.githubId),
-                new Utf8String(this.topic),
-                new Utf8String(this.desc),
                 new Utf8String(this.url),
                 new Uint16(this.newVersion),
                 new Uint64(this.endVoltingBlock),
@@ -71,38 +64,14 @@ public class VersionProposal extends Proposal {
     }
 
     public static final class Builder {
-        private String proposalId;
         private String verifier;
-        private String githubId;
-        private String topic;
-        private String desc;
         private String url;
-        private BigInteger endVoltingBlock;
         private BigInteger newVersion;
+        private BigInteger endVoltingBlock;
         private BigInteger activeBlock;
-
-        public Builder setProposalId(String proposalId) {
-            this.proposalId = proposalId;
-            return this;
-        }
 
         public Builder setVerifier(String verifier) {
             this.verifier = verifier;
-            return this;
-        }
-
-        public Builder setGithubId(String githubId) {
-            this.githubId = githubId;
-            return this;
-        }
-
-        public Builder setTopic(String topic) {
-            this.topic = topic;
-            return this;
-        }
-
-        public Builder setDesc(String desc) {
-            this.desc = desc;
             return this;
         }
 
@@ -111,13 +80,13 @@ public class VersionProposal extends Proposal {
             return this;
         }
 
-        public Builder setEndVoltingBlock(BigInteger endVoltingBlock) {
-            this.endVoltingBlock = endVoltingBlock;
+        public Builder setNewVersion(BigInteger newVersion) {
+            this.newVersion = newVersion;
             return this;
         }
 
-        public Builder setNewVersion(BigInteger newVersion) {
-            this.newVersion = newVersion;
+        public Builder setEndVoltingBlock(BigInteger endVoltingBlock) {
+            this.endVoltingBlock = endVoltingBlock;
             return this;
         }
 

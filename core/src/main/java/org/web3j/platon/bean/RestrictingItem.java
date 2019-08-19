@@ -1,6 +1,9 @@
 package org.web3j.platon.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.math.BigInteger;
+import java.util.List;
 
 public class RestrictingItem {
     /**
@@ -22,7 +25,8 @@ public class RestrictingItem {
     /**
      * 锁仓分录信息
      */
-    private RestrictingInfo info;
+    @JSONField(name = "Entry")
+    private List<RestrictingInfo> info;
 
     public BigInteger getBalance() {
         return balance;
@@ -56,11 +60,11 @@ public class RestrictingItem {
         this.debt = debt;
     }
 
-    public RestrictingInfo getInfo() {
+    public List<RestrictingInfo> getInfo() {
         return info;
     }
 
-    public void setInfo(RestrictingInfo info) {
+    public void setInfo(List<RestrictingInfo> info) {
         this.info = info;
     }
 

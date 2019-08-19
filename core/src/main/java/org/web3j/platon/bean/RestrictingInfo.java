@@ -1,7 +1,5 @@
 package org.web3j.platon.bean;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import java.math.BigInteger;
 
 public class RestrictingInfo {
@@ -9,18 +7,18 @@ public class RestrictingInfo {
     /**
      * 释放区块高度
      */
-    private BigInteger blockNum;
+    private BigInteger blockNumber;
     /**
      * 释放金额
      */
     private BigInteger amount;
 
-    public BigInteger getBlockNum() {
-        return blockNum;
+    public BigInteger getBlockNumber() {
+        return blockNumber;
     }
 
-    public void setBlockNum(BigInteger blockNum) {
-        this.blockNum = blockNum;
+    public void setBlockNumber(BigInteger blockNumber) {
+        this.blockNumber = blockNumber;
     }
 
     public BigInteger getAmount() {
@@ -34,7 +32,7 @@ public class RestrictingInfo {
     @Override
     public String toString() {
         return "RestrictingInfo{" +
-                "blockNum=" + blockNum +
+                "blockNumber=" + blockNumber +
                 ", amount=" + amount +
                 '}';
     }

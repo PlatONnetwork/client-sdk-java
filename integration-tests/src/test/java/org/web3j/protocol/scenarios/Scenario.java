@@ -22,7 +22,6 @@ import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
 import org.web3j.protocol.core.methods.response.PlatonGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.gas.StaticGasProvider;
 
 import static junit.framework.TestCase.fail;
 

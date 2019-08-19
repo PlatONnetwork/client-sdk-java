@@ -17,11 +17,7 @@ import java.util.List;
 public class TextProposal extends Proposal {
 
     public TextProposal(Builder builder) {
-        this.proposalId = builder.proposalId;
         this.verifier = builder.verifier;
-        this.githubId = builder.githubId;
-        this.topic = builder.topic;
-        this.desc = builder.desc;
         this.url = builder.url;
         this.endVoltingBlock = builder.endVoltingBlock;
     }
@@ -29,9 +25,6 @@ public class TextProposal extends Proposal {
     @Override
     public List<Type> getSubmitInputParameters() {
         return Arrays.asList(new BytesType(Numeric.hexStringToByteArray(this.verifier)),
-                new Utf8String(this.githubId),
-                new Utf8String(this.topic),
-                new Utf8String(this.desc),
                 new Utf8String(this.url),
                 new Uint64(this.endVoltingBlock));
     }
@@ -42,36 +35,12 @@ public class TextProposal extends Proposal {
     }
 
     public static final class Builder {
-        private String proposalId;
         private String verifier;
-        private String githubId;
-        private String topic;
-        private String desc;
         private String url;
         private BigInteger endVoltingBlock;
 
-        public Builder setProposalId(String proposalId) {
-            this.proposalId = proposalId;
-            return this;
-        }
-
         public Builder setVerifier(String verifier) {
             this.verifier = verifier;
-            return this;
-        }
-
-        public Builder setGithubId(String githubId) {
-            this.githubId = githubId;
-            return this;
-        }
-
-        public Builder setTopic(String topic) {
-            this.topic = topic;
-            return this;
-        }
-
-        public Builder setDesc(String desc) {
-            this.desc = desc;
             return this;
         }
 

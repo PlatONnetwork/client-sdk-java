@@ -1,14 +1,14 @@
 package org.web3j.platon.contracts;
 
 import org.web3j.abi.datatypes.BytesType;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint64;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
+import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Delegation;
 import org.web3j.platon.bean.DelegationIdInfo;
@@ -16,51 +16,65 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
-import org.web3j.tx.ReadonlyTransactionManager;
-import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import rx.Observable;
+
 public class DelegateContract extends PlatOnContract {
 
-    public static DelegateContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, web3j, credentials, contractGasProvider);
+    /**
+     * 查询操作
+     *
+     * @param web3j
+     * @return
+     */
+    public static DelegateContract load(Web3j web3j) {
+        return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, web3j);
     }
 
-    public static DelegateContract load(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
+    /**
+     * sendRawTransaction 自定义gasProvider
+     *
+     * @param web3j
+     * @param credentials
+     * @param contractGasProvider
+     * @param chainId
+     * @return
+     */
+    public static DelegateContract load(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String chainId) {
+        return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
     }
 
-    public static DelegateContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
-        return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, web3j, contractGasProvider);
+    /**
+     * sendRawTransaction 使用默认gasProvider
+     *
+     * @param web3j
+     * @param credentials
+     * @param chainId
+     * @return
+     */
+    public static DelegateContract load(Web3j web3j, Credentials credentials, String chainId) {
+        return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
 
-    public static DelegateContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
-        return new DelegateContract("", DELEGATE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
+    private DelegateContract(String contractAddress, Web3j web3j) {
+        super(contractAddress, web3j);
     }
 
-    protected DelegateContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
+    private DelegateContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
+        super(contractAddress, chainId, web3j, credentials);
     }
 
-    protected DelegateContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j, contractAddress), gasProvider);
-    }
-
-    protected DelegateContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, credentials, gasProvider);
-    }
-
-    protected DelegateContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, chainId, web3j, credentials, gasProvider);
+    private DelegateContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
+        super(contractAddress, chainId, web3j, credentials, gasProvider);
     }
 
     /**
@@ -72,11 +86,30 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> delegate(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        Function function = new Function(FunctionType.DELEGATE_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
                 Arrays.asList(new Uint16(stakingAmountType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), Collections.EMPTY_LIST);
+                        , new Uint256(amount)));
         return executeRemoteCallTransactionWithFunctionType(function);
+    }
+
+    /**
+     * 获取发起委托的gasProvider
+     * @param nodeId
+     * @param stakingAmountType
+     * @param amount
+     * @return
+     */
+    public Observable<GasProvider> getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
+        return Observable.fromCallable(new Callable<GasProvider>() {
+            @Override
+            public GasProvider call() throws Exception {
+                return new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
+                        Arrays.asList(new Uint16(stakingAmountType.getValue())
+                                , new BytesType(Numeric.hexStringToByteArray(nodeId))
+                                , new Uint256(amount))).getGasProvider();
+            }
+        });
     }
 
     /**
@@ -88,10 +121,10 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        Function function = new Function(FunctionType.DELEGATE_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
                 Arrays.asList(new Uint16(stakingAmountType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), Collections.EMPTY_LIST);
+                        , new Uint256(amount)));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -114,11 +147,30 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> unDelegate(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
-        Function function = new Function(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), Collections.EMPTY_LIST);
+                        , new Uint256(amount)));
         return executeRemoteCallTransactionWithFunctionType(function, amount);
+    }
+
+    /**
+     * 获取减持/撤销委托(全部减持就是撤销)gasProvider
+     * @param nodeId
+     * @param stakingBlockNum
+     * @param amount
+     * @return
+     */
+    public Observable<GasProvider> getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
+        return Observable.fromCallable(new Callable<GasProvider>() {
+            @Override
+            public GasProvider call() throws Exception {
+                return new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
+                        Arrays.asList(new Uint64(stakingBlockNum)
+                                , new BytesType(Numeric.hexStringToByteArray(nodeId))
+                                , new Uint256(amount))).getGasProvider();
+            }
+        });
     }
 
     /**
@@ -130,10 +182,10 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> unDelegateReturnTransaction(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
-        Function function = new Function(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), Collections.EMPTY_LIST);
+                        , new Uint256(amount)));
         return executeRemoteCallPlatonTransaction(function, amount);
     }
 
@@ -158,10 +210,10 @@ public class DelegateContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse<Delegation>> getDelegateInfo(String nodeId, String delAddr, BigInteger stakingBlockNum) {
 
-        Function function = new Function(FunctionType.GET_DELEGATEINFO_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_DELEGATEINFO_FUNC_TYPE,
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(delAddr))
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))), Collections.EMPTY_LIST);
+                        , new BytesType(Numeric.hexStringToByteArray(nodeId))));
 
         return new RemoteCall<BaseResponse<Delegation>>(new Callable<BaseResponse<Delegation>>() {
             @Override
@@ -180,10 +232,8 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse<List<DelegationIdInfo>>> getRelatedListByDelAddr(String address) {
-        Function function = new Function(FunctionType.GET_DELEGATELIST_BYADDR_FUNC_TYPE,
-                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(address))),
-                Collections.EMPTY_LIST);
-
+        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_DELEGATELIST_BYADDR_FUNC_TYPE,
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(address))));
         return new RemoteCall<BaseResponse<List<DelegationIdInfo>>>(new Callable<BaseResponse<List<DelegationIdInfo>>>() {
             @Override
             public BaseResponse<List<DelegationIdInfo>> call() throws Exception {

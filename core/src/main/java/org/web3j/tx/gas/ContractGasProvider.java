@@ -2,18 +2,23 @@ package org.web3j.tx.gas;
 
 import java.math.BigInteger;
 
-public interface ContractGasProvider {
-    BigInteger getGasPrice(String contractFunc);
+public class ContractGasProvider implements GasProvider {
 
-    BigInteger getGasPrice(int functionType);
+    private BigInteger gasPrice;
+    private BigInteger gasLimit;
 
-    @Deprecated
-    BigInteger getGasPrice();
+    public ContractGasProvider(BigInteger gasPrice, BigInteger gasLimit) {
+        this.gasPrice = gasPrice;
+        this.gasLimit = gasLimit;
+    }
 
-    BigInteger getGasLimit(String contractFunc);
+    @Override
+    public BigInteger getGasPrice() {
+        return gasPrice;
+    }
 
-    BigInteger getGasLimit(int functionType);
-
-    @Deprecated
-    BigInteger getGasLimit();
+    @Override
+    public BigInteger getGasLimit() {
+        return gasLimit;
+    }
 }

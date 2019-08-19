@@ -40,8 +40,8 @@ import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.tx.gas.StaticGasProvider;
 import org.web3j.utils.Async;
 import org.web3j.utils.Numeric;
 
@@ -321,7 +321,7 @@ public class ContractTest extends ManagedTransactionTester {
 
     @Test
     public void testStaticGasProvider() throws IOException, TransactionException {
-        StaticGasProvider gasProvider = new StaticGasProvider(BigInteger.TEN, BigInteger.ONE);
+        ContractGasProvider gasProvider = new ContractGasProvider(BigInteger.TEN, BigInteger.ONE);
         TransactionManager txManager = mock(TransactionManager.class);
         when(txManager.executeTransaction(any(), any(), any(), any(), any()))
                 .thenReturn(new TransactionReceipt());
@@ -452,7 +452,7 @@ public class ContractTest extends ManagedTransactionTester {
         public TestContract(
                 String contractAddress,
                 Web3j web3j, TransactionManager transactionManager,
-                ContractGasProvider gasProvider) {
+                GasProvider gasProvider) {
             super(TEST_CONTRACT_BINARY, contractAddress, web3j, transactionManager, gasProvider);
         }
 
