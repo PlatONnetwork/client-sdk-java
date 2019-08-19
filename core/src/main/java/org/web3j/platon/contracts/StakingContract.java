@@ -87,7 +87,8 @@ public class StakingContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse> staking(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
-        tempStakingParam.setProcessVersion(new BigInteger(getProgramVersion().send().data));
+//        tempStakingParam.setProcessVersion(new BigInteger(getProgramVersion().send().data));
+        tempStakingParam.setProcessVersion(BigInteger.valueOf(1792));
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters());
@@ -105,7 +106,7 @@ public class StakingContract extends PlatOnContract {
         return Observable.fromCallable(new Callable<BigInteger>() {
             @Override
             public BigInteger call() throws Exception {
-                return new BigInteger(getProgramVersion().send().data);
+                return new BigInteger(getProgramVersion(web3j).send().data);
             }
         }).map(new Func1<BigInteger, GasProvider>() {
             @Override
@@ -128,7 +129,7 @@ public class StakingContract extends PlatOnContract {
      */
     public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
-        BaseResponse baseResponse = getProgramVersion().send();
+        BaseResponse baseResponse = getProgramVersion(web3j).send();
         tempStakingParam.setProcessVersion((BigInteger) baseResponse.data);
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,

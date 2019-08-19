@@ -33,10 +33,10 @@ import java.util.List;
 
 public class DelegateContractTest {
 
-    private String nodeId = "1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429";
+    private String nodeId = "fb886b3da4cf875f7d85e820a9b39df2170fd1966ffa0ddbcd738027f6f8e0256204e4873a2569ef299b324da3d0ed1afebb160d8ff401c2f09e20fb699e4005";
     private String delegateAddress = "0x493301712671Ada506ba6Ca7891F436D29185821";
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6795"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.76:6792"));
 
     private Credentials credentials;
 
