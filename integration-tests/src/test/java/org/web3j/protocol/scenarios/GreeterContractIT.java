@@ -80,7 +80,7 @@ public class GreeterContractIT extends Scenario {
                 getGreeterSolidityBinary() + encodedConstructor);
 
         PlatonSendTransaction
-                transactionResponse = web3j.ethSendTransaction(transaction)
+                transactionResponse = web3j.platonSendTransaction(transaction)
                 .sendAsync().get();
 
         return transactionResponse.getTransactionHash();

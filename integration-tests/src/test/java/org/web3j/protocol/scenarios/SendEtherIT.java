@@ -31,7 +31,7 @@ public class SendEtherIT extends Scenario {
                 ALICE.getAddress(), nonce, GAS_PRICE, GAS_LIMIT, BOB.getAddress(), value);
 
         PlatonSendTransaction ethSendTransaction =
-                web3j.ethSendTransaction(transaction).sendAsync().get();
+                web3j.platonSendTransaction(transaction).sendAsync().get();
 
         String transactionHash = ethSendTransaction.getTransactionHash();
 

@@ -36,20 +36,20 @@ public interface Platon {
             String address, BigInteger position,
             DefaultBlockParameter defaultBlockParameter);
 
-    Request<?, PlatonGetTransactionCount> ethGetTransactionCount(
+    Request<?, PlatonGetTransactionCount> platonGetTransactionCount(
             String address, DefaultBlockParameter defaultBlockParameter);
 
     Request<?, PlatonGetBlockTransactionCountByHash> platonGetBlockTransactionCountByHash(
             String blockHash);
 
-    Request<?, PlatonGetBlockTransactionCountByNumber> ethGetBlockTransactionCountByNumber(
+    Request<?, PlatonGetBlockTransactionCountByNumber> platonGetBlockTransactionCountByNumber(
             DefaultBlockParameter defaultBlockParameter);
 
     Request<?, PlatonGetCode> platonGetCode(String address, DefaultBlockParameter defaultBlockParameter);
 
     Request<?, PlatonSign> platonSign(String address, String sha3HashOfDataToSign);
 
-    Request<?, PlatonSendTransaction> ethSendTransaction(
+    Request<?, PlatonSendTransaction> platonSendTransaction(
             org.web3j.protocol.core.methods.request.Transaction transaction);
 
     Request<?, PlatonSendTransaction> platonSendRawTransaction(

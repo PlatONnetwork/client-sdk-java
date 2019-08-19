@@ -70,7 +70,7 @@ public class DeployContractIT extends Scenario {
                 getFibonacciSolidityBinary());
 
         PlatonSendTransaction
-                transactionResponse = web3j.ethSendTransaction(transaction)
+                transactionResponse = web3j.platonSendTransaction(transaction)
                 .sendAsync().get();
 
         return transactionResponse.getTransactionHash();
