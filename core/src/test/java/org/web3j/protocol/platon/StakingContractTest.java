@@ -6,6 +6,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Node;
+import org.web3j.platon.bean.StakingParam;
 import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
@@ -47,7 +48,7 @@ public class StakingContractTest {
     public void staking() {
 
         try {
-            BaseResponse baseResponse = stakingContract.getProgramVersion().send();
+            BaseResponse baseResponse = stakingContract.getProgramVersion(web3j).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

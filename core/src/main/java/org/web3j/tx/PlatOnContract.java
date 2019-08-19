@@ -11,6 +11,7 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.protocol.Web3j;
@@ -355,7 +356,11 @@ public abstract class PlatOnContract extends ManagedTransaction {
      *
      * @return
      */
-    public RemoteCall<BaseResponse<String>> getProgramVersion() {
+    public RemoteCall<BaseResponse<String>> getProgramVersion(Web3j web3j) {
+
+        this.transactionManager = new ReadonlyTransactionManager(web3j, ContractAddress.PROPOSAL_CONTRACT_ADDRESS);
+        this.contractAddress = ensResolver.resolve(ContractAddress.PROPOSAL_CONTRACT_ADDRESS);
+
         final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROGRAM_VERSION);
         return new RemoteCall<BaseResponse<String>>(new Callable<BaseResponse<String>>() {
             @Override
