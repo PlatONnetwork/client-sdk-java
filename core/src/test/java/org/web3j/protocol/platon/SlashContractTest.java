@@ -15,7 +15,7 @@ import org.web3j.tx.gas.DefaultWasmGasProvider;
 import java.math.BigInteger;
 
 public class SlashContractTest {
-    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.157:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.200:6789"));
 
     private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
     private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
@@ -51,8 +51,7 @@ public class SlashContractTest {
         credentials = Credentials.create("0xa11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7");
 
         slashContract = SlashContract.load(web3j,
-                credentials,
-                new DefaultWasmGasProvider(BigInteger.valueOf(3355440), BigInteger.valueOf(3355440), BigInteger.valueOf(3355440)), "102");
+                credentials, "100");
     }
 
     @Test

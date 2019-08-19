@@ -21,7 +21,7 @@ import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.PlatOnContract;
 import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.*;
 import org.web3j.utils.Collection;
 import rx.functions.Func1;
@@ -359,7 +359,7 @@ public class SophiaFunctionWrapper extends Generator {
                 .addParameter(authType, authName);
 
         if (withGasProvider) {
-            toReturn.addParameter(ContractGasProvider.class, CONTRACT_GAS_PROVIDER)
+            toReturn.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER)
                     .addStatement("super($N, $N, $N, $N, $N)",
                             CONTRACT_BINARY, CONTRACT_ADDRESS, WEB3J, authName, CONTRACT_GAS_PROVIDER);
         } else {
@@ -466,10 +466,10 @@ public class SophiaFunctionWrapper extends Generator {
                     .addParameter(BigInteger.class, GAS_LIMIT)
                     .addParameter(BigInteger.class, INITIAL_VALUE);
         } else if (isPayable && withGasProvider) {
-            return builder.addParameter(ContractGasProvider.class, CONTRACT_GAS_PROVIDER)
+            return builder.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER)
                     .addParameter(BigInteger.class, INITIAL_VALUE);
         } else if (!isPayable && withGasProvider) {
-            return builder.addParameter(ContractGasProvider.class, CONTRACT_GAS_PROVIDER);
+            return builder.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER);
         } else {
             return builder.addParameter(BigInteger.class, GAS_PRICE)
                     .addParameter(BigInteger.class, GAS_LIMIT);
@@ -487,7 +487,7 @@ public class SophiaFunctionWrapper extends Generator {
                 .addParameter(authType, authName);
 
         if (withGasProvider) {
-            toReturn.addParameter(ContractGasProvider.class, CONTRACT_GAS_PROVIDER)
+            toReturn.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER)
                     .addStatement("return new $L($L, $L, $L, $L, $L)", className,
                             CONTRACT_BINARY,CONTRACT_ADDRESS, WEB3J, authName, CONTRACT_GAS_PROVIDER);
         } else {

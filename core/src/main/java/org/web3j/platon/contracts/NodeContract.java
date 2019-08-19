@@ -1,57 +1,44 @@
 package org.web3j.platon.contracts;
 
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
+import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.bean.Node;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.tx.PlatOnContract;
-import org.web3j.tx.ReadonlyTransactionManager;
-import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public class NodeContract extends PlatOnContract {
 
-    public static NodeContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return new NodeContract("", NODE_CONTRACT_ADDRESS, web3j, credentials, contractGasProvider);
+    public static NodeContract load(Web3j web3j) {
+        return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, web3j);
     }
 
-    public static NodeContract load(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return new NodeContract("", NODE_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
+    public static NodeContract load(Web3j web3j, Credentials credentials, String chainId) {
+        return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
 
-    public static NodeContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
-        return new NodeContract("", NODE_CONTRACT_ADDRESS, web3j, contractGasProvider);
+    public static NodeContract load(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String chainId) {
+        return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
     }
 
-    public static NodeContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
-        return new NodeContract("", NODE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
+    private NodeContract(String contractAddress, Web3j web3j) {
+        super(contractAddress, web3j);
     }
 
-    protected NodeContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
+    private NodeContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
+        super(contractAddress, chainId, web3j, credentials);
     }
 
-    protected NodeContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j, contractAddress), gasProvider);
-    }
-
-    protected NodeContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, credentials, gasProvider);
-    }
-
-    protected NodeContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, chainId, web3j, credentials, gasProvider);
+    private NodeContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
+        super(contractAddress, chainId, web3j, credentials, gasProvider);
     }
 
     /**
@@ -60,10 +47,7 @@ public class NodeContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse<List<Node>>> getVerifierList() {
-        final Function function = new Function(FunctionType.GET_VERIFIERLIST_FUNC_TYPE,
-                Arrays.<Type>asList(),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
-                }));
+        final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_VERIFIERLIST_FUNC_TYPE);
         return new RemoteCall<BaseResponse<List<Node>>>(new Callable<BaseResponse<List<Node>>>() {
             @Override
             public BaseResponse<List<Node>> call() throws Exception {
@@ -80,10 +64,7 @@ public class NodeContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse<List<Node>>> getValidatorList() {
-        final Function function = new Function(FunctionType.GET_VALIDATORLIST_FUNC_TYPE,
-                Arrays.<Type>asList(),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
-                }));
+        final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_VALIDATORLIST_FUNC_TYPE);
         return new RemoteCall<BaseResponse<List<Node>>>(new Callable<BaseResponse<List<Node>>>() {
             @Override
             public BaseResponse<List<Node>> call() throws Exception {
@@ -100,10 +81,7 @@ public class NodeContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse<List<Node>>> getCandidateList() {
-        final Function function = new Function(FunctionType.GET_CANDIDATELIST_FUNC_TYPE,
-                Arrays.<Type>asList(),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
-                }));
+        final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_CANDIDATELIST_FUNC_TYPE);
         return new RemoteCall<BaseResponse<List<Node>>>(new Callable<BaseResponse<List<Node>>>() {
             @Override
             public BaseResponse<List<Node>> call() throws Exception {

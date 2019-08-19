@@ -15,7 +15,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 
 /**
  * <p>Auto generated code.
@@ -45,7 +45,7 @@ public class Arrays extends Contract {
         super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
     }
 
-    protected Arrays(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+    protected Arrays(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
         super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
@@ -54,7 +54,7 @@ public class Arrays extends Contract {
         super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
-    protected Arrays(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+    protected Arrays(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
@@ -137,7 +137,7 @@ public class Arrays extends Contract {
                 });
     }
 
-    public static RemoteCall<Arrays> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+    public static RemoteCall<Arrays> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
         return deployRemoteCall(Arrays.class, web3j, credentials, contractGasProvider, BINARY, "");
     }
 
@@ -146,7 +146,7 @@ public class Arrays extends Contract {
         return deployRemoteCall(Arrays.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
     }
 
-    public static RemoteCall<Arrays> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+    public static RemoteCall<Arrays> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
         return deployRemoteCall(Arrays.class, web3j, transactionManager, contractGasProvider, BINARY, "");
     }
 
@@ -165,11 +165,11 @@ public class Arrays extends Contract {
         return new Arrays(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
     }
 
-    public static Arrays load(String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
+    public static Arrays load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
         return new Arrays(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static Arrays load(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
+    public static Arrays load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
         return new Arrays(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 }

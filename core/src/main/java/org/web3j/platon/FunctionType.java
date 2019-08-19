@@ -1,10 +1,5 @@
 package org.web3j.platon;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-import org.web3j.abi.datatypes.generated.Uint16;
-
-import java.math.BigInteger;
-
 public class FunctionType {
 
     /**

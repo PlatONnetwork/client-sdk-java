@@ -2,6 +2,7 @@ package org.web3j.protocol.platon;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.VoteOption;
@@ -20,18 +21,17 @@ import java.util.List;
 
 public class ProposalContractTest {
 
-    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.157:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6793"));
     private Credentials credentials;
     private ProposalContract proposalContract;
 
     @Before
     public void init() {
 
-        credentials = Credentials.create("0xa11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7");
+        credentials = Credentials.create("0xe1eb63c6f8d4d2b131b12ea4d06dd690c719afbe703bf9c152346317b0794d57");
 
         proposalContract = ProposalContract.load(web3j,
-                credentials,
-                new DefaultWasmGasProvider(BigInteger.valueOf(3355440), BigInteger.valueOf(3355440), BigInteger.valueOf(3355440)), "102");
+                credentials, "100");
     }
 
     @Test
@@ -50,9 +50,6 @@ public class ProposalContractTest {
         try {
             BaseResponse baseResponse = proposalContract.submitProposal(new TextProposal.Builder()
                     .setVerifier("1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429")
-                    .setDesc("Desc")
-                    .setTopic("Topic")
-                    .setGithubId("GithubID")
                     .setUrl("http://www.test.inet")
                     .setEndVoltingBlock(BigInteger.valueOf(100000))
                     .build()).send();
@@ -67,9 +64,6 @@ public class ProposalContractTest {
         try {
             BaseResponse baseResponse = proposalContract.submitProposal(new VersionProposal.Builder()
                     .setVerifier("1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429")
-                    .setDesc("Desc")
-                    .setTopic("Topic")
-                    .setGithubId("GithubID")
                     .setUrl("http://www.test.inet")
                     .setEndVoltingBlock(BigInteger.valueOf(1000))
                     .setNewVersion(BigInteger.valueOf(1))
@@ -86,9 +80,6 @@ public class ProposalContractTest {
         try {
             BaseResponse baseResponse = proposalContract.submitProposal(new ParamProposal.Builder()
                     .setVerifier("1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429")
-                    .setDesc("Desc")
-                    .setTopic("Topic")
-                    .setGithubId("GithubID")
                     .setUrl("http://www.test.inet")
                     .setEndVoltingBlock(BigInteger.valueOf(100000))
                     .setParamName("ParamName")
@@ -154,8 +145,12 @@ public class ProposalContractTest {
     @Test
     public void getProgramVersion() {
         try {
-            BaseResponse baseResponse = proposalContract.getProgramVersion().send();
-            System.out.println(baseResponse.data.toString());
+//            BaseResponse baseResponse = proposalContract.getProgramVersion().send();
+            Uint32 uint32 = new Uint32(65536);
+
+            byte[] bytes = uint32.getValue().toByteArray();
+
+            System.out.println(bytes);
         } catch (Exception e) {
             e.printStackTrace();
         }

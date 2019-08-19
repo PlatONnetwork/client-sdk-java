@@ -1,123 +1,139 @@
 package org.web3j.platon.contracts;
 
-import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.BytesType;
-import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
+import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Node;
+import org.web3j.platon.bean.StakingParam;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
-import org.web3j.tx.ReadonlyTransactionManager;
-import org.web3j.tx.TransactionManager;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import rx.Observable;
+import rx.functions.Func1;
+
 public class StakingContract extends PlatOnContract {
 
-    public static StakingContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return new StakingContract("", STAKING_CONTRACT_ADDRESS, web3j, credentials, contractGasProvider);
+    public static StakingContract load(Web3j web3j) {
+        return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, web3j);
     }
 
-    public static StakingContract load(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return new StakingContract("", STAKING_CONTRACT_ADDRESS, web3j, transactionManager, contractGasProvider);
+    public static StakingContract load(Web3j web3j, Credentials credentials, String chainId) {
+        return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
 
-    public static StakingContract load(Web3j web3j, ContractGasProvider contractGasProvider) {
-        return new StakingContract("", STAKING_CONTRACT_ADDRESS, web3j, contractGasProvider);
-    }
-
-    public static StakingContract load(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String chainId) {
-        return new StakingContract("", STAKING_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
-    }
-
-    protected StakingContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, transactionManager, gasProvider);
-    }
-
-    protected StakingContract(String contractBinary, String contractAddress, Web3j web3j, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, new ReadonlyTransactionManager(web3j,contractAddress), gasProvider);
-    }
-
-    protected StakingContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, web3j, credentials, gasProvider);
-    }
-
-    protected StakingContract(String contractBinary, String contractAddress, String chainId, Web3j web3j, Credentials credentials, ContractGasProvider gasProvider) {
-        super(contractBinary, contractAddress, chainId, web3j, credentials, gasProvider);
+    public static StakingContract load(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String chainId) {
+        return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
     }
 
     /**
-     * @param nodeId            64bytes 被质押的节点Id(也叫候选人的节点Id)
-     * @param amount            质押的von
-     * @param stakingAmountType 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
-     * @param benifitAddress    20bytes 用于接受出块奖励和质押奖励的收益账户
-     * @param externalId        外部Id(有长度限制，给第三方拉取节点描述的Id)
-     * @param nodeName          被质押节点的名称(有长度限制，表示该节点的名称)
-     * @param webSite           节点的第三方主页(有长度限制，表示该节点的主页)
-     * @param details           节点的描述(有长度限制，表示该节点的描述)
-     * @return
+     * 查询操作
+     *
+     * @param contractAddress
+     * @param web3j
      */
-    public RemoteCall<BaseResponse> staking(String nodeId, BigInteger amount, StakingAmountType stakingAmountType, String benifitAddress, String externalId, String nodeName, String webSite, String details, BigInteger processVersion) {
-        final Function function = new Function(
-                FunctionType.STAKING_FUNC_TYPE,
-                Arrays.<Type>asList(new Uint16(stakingAmountType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(benifitAddress))
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Utf8String(externalId)
-                        , new Utf8String(nodeName)
-                        , new Utf8String(webSite)
-                        , new Utf8String(details)
-                        , new Int256(amount)
-                        , new Uint32(processVersion)),
-                Collections.<TypeReference<?>>emptyList());
+    private StakingContract(String contractAddress, Web3j web3j) {
+        super(contractAddress, web3j);
+    }
 
+    /**
+     * sendRawTransaction，使用默认gasProvider
+     *
+     * @param contractAddress
+     * @param chainId
+     * @param web3j
+     * @param credentials
+     */
+    private StakingContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
+        super(contractAddress, chainId, web3j, credentials);
+    }
+
+    /**
+     * sendRawTransaction 使用用户自定义的gasProvider
+     *
+     * @param contractAddress
+     * @param chainId
+     * @param web3j
+     * @param credentials
+     * @param gasProvider
+     */
+    protected StakingContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
+        super(contractAddress, chainId, web3j, credentials, gasProvider);
+    }
+
+    /**
+     * 发起质押
+     *
+     * @param stakingParam
+     * @return
+     * @see StakingParam
+     */
+    public RemoteCall<BaseResponse> staking(StakingParam stakingParam) throws Exception {
+        StakingParam tempStakingParam = stakingParam.clone();
+        tempStakingParam.setProcessVersion(new BigInteger(getProgramVersion().send().data));
+        final PlatOnFunction function = new PlatOnFunction(
+                FunctionType.STAKING_FUNC_TYPE,
+                tempStakingParam.getSubmitInputParameters());
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
-
     /**
-     * @param nodeId            64bytes 被质押的节点Id(也叫候选人的节点Id)
-     * @param amount            质押的von
-     * @param stakingAmountType 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
-     * @param benifitAddress    20bytes 用于接受出块奖励和质押奖励的收益账户
-     * @param externalId        外部Id(有长度限制，给第三方拉取节点描述的Id)
-     * @param nodeName          被质押节点的名称(有长度限制，表示该节点的名称)
-     * @param webSite           节点的第三方主页(有长度限制，表示该节点的主页)
-     * @param details           节点的描述(有长度限制，表示该节点的描述)
+     * 获取质押gasProvider
+     *
+     * @param stakingParam
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(String nodeId, BigInteger amount, StakingAmountType stakingAmountType, String benifitAddress, String externalId, String nodeName, String webSite, String details, BigInteger processVersion) {
-        final Function function = new Function(
+    public Observable<GasProvider> getStakingGasProvider(StakingParam stakingParam) {
+        StakingParam tempStakingParam = stakingParam.clone();
+        return Observable.fromCallable(new Callable<BigInteger>() {
+            @Override
+            public BigInteger call() throws Exception {
+                return new BigInteger(getProgramVersion().send().data);
+            }
+        }).map(new Func1<BigInteger, GasProvider>() {
+            @Override
+            public GasProvider call(BigInteger bigInteger) {
+                tempStakingParam.setProcessVersion(bigInteger);
+                return new PlatOnFunction(
+                        FunctionType.STAKING_FUNC_TYPE,
+                        tempStakingParam.getSubmitInputParameters()).getGasProvider();
+            }
+        });
+    }
+
+
+    /**
+     * 发起质押
+     *
+     * @param stakingParam
+     * @return
+     * @see StakingParam
+     */
+    public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam) throws Exception {
+        StakingParam tempStakingParam = stakingParam.clone();
+        BaseResponse baseResponse = getProgramVersion().send();
+        tempStakingParam.setProcessVersion((BigInteger) baseResponse.data);
+        final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
-                Arrays.<Type>asList(new Uint16(stakingAmountType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(benifitAddress))
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Utf8String(externalId)
-                        , new Utf8String(nodeName)
-                        , new Utf8String(webSite)
-                        , new Utf8String(details)
-                        , new Int256(amount)
-                        , new Uint32(processVersion)),
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallPlatonTransaction(function, amount);
+                stakingParam.getSubmitInputParameters());
+        return executeRemoteCallPlatonTransaction(function);
     }
 
     /**
@@ -137,10 +153,25 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> unStaking(String nodeId) {
-        final Function function = new Function(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(nodeId))),
-                Collections.<TypeReference<?>>emptyList());
+        final PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(nodeId))));
         return executeRemoteCallTransactionWithFunctionType(function);
+    }
+
+    /**
+     * 获取撤销质押的gasProvider
+     *
+     * @param nodeId
+     * @return
+     */
+    public Observable<GasProvider> getUnStakingGasProvider(String nodeId) {
+        return Observable.fromCallable(new Callable<GasProvider>() {
+            @Override
+            public GasProvider call() throws Exception {
+                return new PlatOnFunction(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
+                        Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(nodeId)))).getGasProvider();
+            }
+        });
     }
 
     /**
@@ -150,9 +181,8 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> unStakingReturnTransaction(String nodeId) {
-        final Function function = new Function(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(nodeId))),
-                Collections.<TypeReference<?>>emptyList());
+        final PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(nodeId))));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -166,6 +196,7 @@ public class StakingContract extends PlatOnContract {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.WITHDREW_STAKING_FUNC_TYPE);
     }
 
+
     /**
      * 更新质押信息
      *
@@ -177,16 +208,41 @@ public class StakingContract extends PlatOnContract {
      * @param details
      * @return
      */
-    public RemoteCall<BaseResponse> updateStakingInfo(String nodeId,String benifitAddress, String externalId, String nodeName, String webSite, String details) {
-        Function function = new Function(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
+    public RemoteCall<BaseResponse> updateStakingInfo(String nodeId, String benifitAddress, String externalId, String nodeName, String webSite, String details) {
+        PlatOnFunction function = new PlatOnFunction(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(benifitAddress)),
                         new BytesType(Numeric.hexStringToByteArray(nodeId)),
                         new Utf8String(externalId),
                         new Utf8String(nodeName),
                         new Utf8String(webSite),
-                        new Utf8String(details)),
-                Collections.emptyList());
+                        new Utf8String(details)));
         return executeRemoteCallTransactionWithFunctionType(function);
+    }
+
+    /**
+     * 获取
+     *
+     * @param nodeId
+     * @param benifitAddress
+     * @param externalId
+     * @param nodeName
+     * @param webSite
+     * @param details
+     * @return
+     */
+    public Observable<GasProvider> getUpdateStakingInfo(String nodeId, String benifitAddress, String externalId, String nodeName, String webSite, String details) {
+        return Observable.fromCallable(new Callable<GasProvider>() {
+            @Override
+            public GasProvider call() throws Exception {
+                return new PlatOnFunction(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
+                        Arrays.asList(new BytesType(Numeric.hexStringToByteArray(benifitAddress)),
+                                new BytesType(Numeric.hexStringToByteArray(nodeId)),
+                                new Utf8String(externalId),
+                                new Utf8String(nodeName),
+                                new Utf8String(webSite),
+                                new Utf8String(details))).getGasProvider();
+            }
+        });
     }
 
     /**
@@ -201,14 +257,14 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> updateStakingInfoReturnTransaction(String nodeId, String benifitAddress, String externalId, String nodeName, String webSite, String details) {
-        Function function = new Function(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
+
+        PlatOnFunction function = new PlatOnFunction(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(benifitAddress)),
                         new BytesType(Numeric.hexStringToByteArray(nodeId)),
                         new Utf8String(externalId),
                         new Utf8String(nodeName),
                         new Utf8String(webSite),
-                        new Utf8String(details)),
-                Collections.emptyList());
+                        new Utf8String(details)));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -231,12 +287,31 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> addStaking(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        Function function = new Function(FunctionType.ADD_STAKING_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.ADD_STAKING_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId)),
                         new Uint16(stakingAmountType.getValue()),
-                        new Uint256(amount))
-                , Collections.emptyList());
+                        new Uint256(amount)));
         return executeRemoteCallTransactionWithFunctionType(function);
+    }
+
+    /**
+     * 获取增持质押gasProvider
+     *
+     * @param nodeId
+     * @param stakingAmountType
+     * @param amount
+     * @return
+     */
+    public Observable<GasProvider> getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
+        return Observable.fromCallable(new Callable<GasProvider>() {
+            @Override
+            public GasProvider call() throws Exception {
+                return new PlatOnFunction(FunctionType.ADD_STAKING_FUNC_TYPE,
+                        Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId)),
+                                new Uint16(stakingAmountType.getValue()),
+                                new Uint256(amount))).getGasProvider();
+            }
+        });
     }
 
     /**
@@ -248,11 +323,10 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> addStakingReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        Function function = new Function(FunctionType.ADD_STAKING_FUNC_TYPE,
+        PlatOnFunction function = new PlatOnFunction(FunctionType.ADD_STAKING_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId)),
                         new Uint16(stakingAmountType.getValue()),
-                        new Uint256(amount))
-                , Collections.emptyList());
+                        new Uint256(amount)));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -273,9 +347,8 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse<Node>> getStakingInfo(String nodeId) {
-        Function function = new Function(FunctionType.GET_STAKINGINFO_FUNC_TYPE,
-                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId)))
-                , Collections.emptyList());
+        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_STAKINGINFO_FUNC_TYPE,
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId))));
         return new RemoteCall<BaseResponse<Node>>(new Callable<BaseResponse<Node>>() {
             @Override
             public BaseResponse<Node> call() throws Exception {

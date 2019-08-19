@@ -1,7 +1,6 @@
 package org.web3j.platon;
 
 import org.web3j.abi.datatypes.StaticArray;
-import org.web3j.abi.datatypes.Type;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
