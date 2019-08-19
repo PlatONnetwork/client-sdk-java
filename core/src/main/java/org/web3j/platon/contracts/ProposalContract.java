@@ -10,10 +10,8 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
-import org.web3j.platon.VoteOption;
-import org.web3j.platon.bean.Node;
-import org.web3j.platon.bean.ParamProposal;
 import org.web3j.platon.bean.Proposal;
+import org.web3j.platon.VoteOption;
 import org.web3j.platon.bean.TallyResult;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
@@ -27,6 +25,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -203,6 +202,7 @@ public class ProposalContract extends PlatOnContract {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.VOTE_FUNC_TYPE);
     }
 
+
     /**
      * 版本声明
      *
@@ -335,13 +335,13 @@ public class ProposalContract extends PlatOnContract {
      *
      * @return
      */
-    public RemoteCall<BaseResponse<List<ParamProposal>>> getParamList() {
+    public RemoteCall<BaseResponse<List<Proposal>>> getParamList() {
         final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PARAM_LIST);
-        return new RemoteCall<BaseResponse<List<ParamProposal>>>(new Callable<BaseResponse<List<ParamProposal>>>() {
+        return new RemoteCall<BaseResponse<List<Proposal>>>(new Callable<BaseResponse<List<Proposal>>>() {
             @Override
-            public BaseResponse<List<ParamProposal>> call() throws Exception {
+            public BaseResponse<List<Proposal>> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseArray((String) response.data, Node.class);
+                response.data = JSONUtil.parseArray((String) response.data, Proposal.class);
                 return response;
             }
         });
