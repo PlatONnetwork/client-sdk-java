@@ -3,40 +3,30 @@ package org.web3j.protocol.platon;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Before;
 import org.junit.Test;
-import org.web3j.abi.PlatOnTypeEncoder;
-import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.RawTransaction;
-import org.web3j.crypto.TransactionEncoder;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Delegation;
 import org.web3j.platon.bean.DelegationIdInfo;
 import org.web3j.platon.contracts.DelegateContract;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.rlp.RlpDecoder;
-import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
-import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.DefaultWasmGasProvider;
 import org.web3j.utils.Numeric;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DelegateContractTest {
 
-    private String nodeId = "fb886b3da4cf875f7d85e820a9b39df2170fd1966ffa0ddbcd738027f6f8e0256204e4873a2569ef299b324da3d0ed1afebb160d8ff401c2f09e20fb699e4005";
-    private String delegateAddress = "0x493301712671Ada506ba6Ca7891F436D29185821";
+    private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
+    private String delegateAddress = "0xbfCAEc5286822434D59310E03B2F4F162A35CBDd";
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.76:6792"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
 
     private Credentials credentials;
 
@@ -44,7 +34,7 @@ public class DelegateContractTest {
 
     @Before
     public void init() {
-        credentials = Credentials.create("0xa7f1d33a30c1e8b332443825f2209755c52086d0a88b084301a6727d9f84bf32");
+        credentials = Credentials.create("0xce4f875efc9d21d06f8607de170d0011e79be86325bacc9639f57a437c65ce8c");
 
         delegateContract = DelegateContract.load(web3j,
                 credentials,
@@ -83,7 +73,7 @@ public class DelegateContractTest {
     public void delegate() {
 
         try {
-            BaseResponse baseResponse = delegateContract.delegate(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("1000000000000000000000000")).send();
+            BaseResponse baseResponse = delegateContract.delegate(nodeId, StakingAmountType.RESTRICTING_AMOUNT_TYPE, new BigInteger("1000000000000000000000000")).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,7 +95,7 @@ public class DelegateContractTest {
     public void getDelegateInfo() {
 
         try {
-            BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateAddress, BigInteger.valueOf(2360)).send();
+            BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateAddress, BigInteger.valueOf(1038)).send();
             System.out.println(baseResponse.data.toString());
         } catch (Exception e) {
             e.printStackTrace();

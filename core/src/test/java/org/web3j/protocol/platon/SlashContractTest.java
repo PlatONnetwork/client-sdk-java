@@ -10,12 +10,9 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.gas.DefaultWasmGasProvider;
-
-import java.math.BigInteger;
 
 public class SlashContractTest {
-    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.200:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
 
     private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
     private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
@@ -48,7 +45,7 @@ public class SlashContractTest {
 
     @Before
     public void init() {
-        credentials = Credentials.create("0xa11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7");
+        credentials = Credentials.create("0xe1eb63c6f8d4d2b131b12ea4d06dd690c719afbe703bf9c152346317b0794d57");
 
         slashContract = SlashContract.load(web3j,
                 credentials, "100");
@@ -68,7 +65,7 @@ public class SlashContractTest {
     public void checkDuplicateSign() {
         try {
             PlatonBlock platonBlock = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
-            BaseResponse baseResponse = slashContract.checkDoubleSign(DoubleSignType.PREPARE, "0x120b77ab712589ebd42d69003893ef962cc52832", platonBlock.getBlock().getNumber()).send();
+            BaseResponse baseResponse = slashContract.checkDoubleSign(DoubleSignType.PREPARE, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", platonBlock.getBlock().getNumber()).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
