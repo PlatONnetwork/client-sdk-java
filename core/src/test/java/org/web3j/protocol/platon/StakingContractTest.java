@@ -15,10 +15,6 @@ import java.math.BigInteger;
 
 public class StakingContractTest {
 
-    private static final int OFFSET_SHORT_ITEM = 0x80;
-    private static final int OFFSET_LONG_ITEM = 0xb7;
-    private static final int SIZE_THRESHOLD = 56;
-
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
 
     private StakingContract stakingContract;
@@ -45,16 +41,11 @@ public class StakingContractTest {
 
     }
 
-
+    /**
+     * 发起质押
+     */
     @Test
     public void staking() {
-
-//        String text = "f848b8467b22537461747573223a66616c73652c2244617461223a22222c224572724d7367223a22546869732063616e64696461746520697320616c726561647920657869737473227d";
-//
-//        String json = new String(Numeric.hexStringToByteArray(text));
-//
-//        System.out.println(json);
-
         try {
             BaseResponse baseResponse = stakingContract.staking(new StakingParam.Builder()
                     .setNodeId(nodeId)

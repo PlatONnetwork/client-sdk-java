@@ -19,6 +19,7 @@ import org.web3j.protocol.core.methods.response.AbiDefinition;
 import org.web3j.protocol.core.methods.response.AbiDefinition.NamedType;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.tx.Contract;
 import org.web3j.tx.PlatOnContract;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
@@ -329,7 +330,7 @@ public class SophiaFunctionWrapper extends Generator {
     Iterable<FieldSpec> buildFuncNameConstants(List<AbiDefinition> functionDefinitions) {
         List<FieldSpec> fields = new ArrayList<>();
         Set<String> fieldNames = new HashSet<>();
-        fieldNames.add(PlatOnContract.FUNC_DEPLOY);
+        fieldNames.add(Contract.FUNC_DEPLOY);
 
         for (AbiDefinition functionDefinition : functionDefinitions) {
             if (functionDefinition.getType().equals("function")) {
