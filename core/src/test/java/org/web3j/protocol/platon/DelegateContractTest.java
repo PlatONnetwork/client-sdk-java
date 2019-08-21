@@ -21,6 +21,12 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.List;
 
+/**
+ * 委托相关接口，包括，
+ * 发起委托
+ * 减持/撤销委托
+ * 查询当前单个委托信息
+ */
 public class DelegateContractTest {
 
     private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
@@ -69,6 +75,12 @@ public class DelegateContractTest {
 
     }
 
+    /**
+     * 发起委托
+     * typ 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额
+     * nodeId 被质押的节点的NodeId
+     * amount 委托的金额(按照最小单位算，1LAT = 10**18 von)
+     */
     @Test
     public void delegate() {
 
@@ -80,6 +92,12 @@ public class DelegateContractTest {
         }
     }
 
+    /**
+     * 减持/撤销委托(全部减持就是撤销)
+     * stakingBlockNum 代表着某个node的某次质押的唯一标示
+     * nodeId 被质押的节点的NodeId
+     * amount 减持委托的金额(按照最小单位算，1LAT = 10**18 von)
+     */
     @Test
     public void unDelegate() {
 
@@ -91,6 +109,12 @@ public class DelegateContractTest {
         }
     }
 
+    /**
+     * 查询当前单个委托信息
+     * stakingBlockNum 发起质押时的区块高度
+     * delAddr 委托人账户地址
+     * nodeId 验证人的节点Id
+     */
     @Test
     public void getDelegateInfo() {
 
@@ -102,6 +126,10 @@ public class DelegateContractTest {
         }
     }
 
+    /**
+     * 查询当前账户地址所委托的节点的NodeID和质押Id
+     * addr 委托人的账户地址
+     */
     @Test
     public void getRelatedListByDelAddr() {
         try {

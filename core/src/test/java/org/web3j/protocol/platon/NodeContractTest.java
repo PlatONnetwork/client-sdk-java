@@ -12,6 +12,12 @@ import org.web3j.tx.gas.DefaultWasmGasProvider;
 
 import java.util.List;
 
+/**
+ * 节点列表相关接口，包括，
+ * 查询当前结算周期的验证人列表
+ * 查询当前共识周期的验证人列表
+ * 查询所有实时的候选人列表
+ */
 public class NodeContractTest {
 
     private String nodeId = "1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429";
@@ -32,6 +38,9 @@ public class NodeContractTest {
                 new DefaultWasmGasProvider(), "100");
     }
 
+    /**
+     * 查询当前结算周期的验证人队列
+     */
     @Test
     public void getVerifierList() {
         try {
@@ -44,7 +53,9 @@ public class NodeContractTest {
 
     }
 
-    //1101
+    /**
+     * 查询当前共识周期的验证人列表
+     */
     @Test
     public void getValidatorList() {
         try {
@@ -57,7 +68,9 @@ public class NodeContractTest {
 
     }
 
-    //1102
+    /**
+     * 查询所有实时的候选人列表
+     */
     @Test
     public void getCandidateList() {
         try {
