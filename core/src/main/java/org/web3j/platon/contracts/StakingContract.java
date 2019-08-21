@@ -128,11 +128,10 @@ public class StakingContract extends PlatOnContract {
      */
     public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
-        String data = getProgramVersion().send().data;
         tempStakingParam.setProcessVersion(new BigInteger(getProgramVersion().send().data));
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
-                stakingParam.getSubmitInputParameters());
+                tempStakingParam.getSubmitInputParameters());
         return executeRemoteCallPlatonTransaction(function);
     }
 
