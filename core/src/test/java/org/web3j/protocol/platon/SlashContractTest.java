@@ -51,6 +51,10 @@ public class SlashContractTest {
                 credentials, "100");
     }
 
+    /**
+     * 举报双签
+     * data 证据的json值，格式为RPC接口Evidences的返回值
+     */
     @Test
     public void reportDuplicateSign() {
         try {
@@ -61,6 +65,12 @@ public class SlashContractTest {
         }
     }
 
+    /**
+     * 查询节点是否已被举报过多签
+     * typ  代表双签类型，1：prepare，2：viewChange，3：TimestampViewChange
+     * addr 举报的节点地址
+     * blockNumber 多签的块高
+     */
     @Test
     public void checkDuplicateSign() {
         try {

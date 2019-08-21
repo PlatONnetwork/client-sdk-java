@@ -17,6 +17,21 @@ import org.web3j.protocol.http.HttpService;
 import java.math.BigInteger;
 import java.util.List;
 
+
+/**
+ * 治理相关接口，包括，
+ * 提交文本提案
+ * 提交升级提案
+ * 提交参数提案
+ * 给提案投票
+ * 版本声明
+ * 查询提案
+ * 查询提案结果
+ * 查询提案列表
+ * 查询生效版本
+ * 查询节点代码版本
+ * 查询可治理参数列表
+ */
 public class ProposalContractTest {
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
@@ -32,6 +47,9 @@ public class ProposalContractTest {
                 credentials, "100");
     }
 
+    /**
+     * 查询提案列表
+     */
     @Test
     public void listProposal() {
         try {
@@ -43,6 +61,12 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 提交文本提案
+     * verifier 提交提案的验证人
+     * url 提案URL，长度不超过512
+     * endVotingBlock ((当前区块高度 / 200 )*200 + 200*10 - 10)
+     */
     @Test
     public void submitTextProposal() {
         try {
@@ -63,6 +87,14 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 提交升级提案
+     * verifier 提交提案的验证人
+     * url 提案URL，长度不超过512
+     * newVersion 升级版本
+     * endVotingBlock ((当前区块高度 / 200 )*200 + 200*10 - 10)
+     * activeBlock(endVotingBlock + 10 + 4*200 < 生效块高 <= endVotingBlock + 10 + 10*200)
+     */
     @Test
     public void submitVersionProposal() {
         try {
@@ -84,6 +116,16 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 提交参数提案
+     * verifier 提交提案的验证人
+     * url 提案URL，长度不超过512
+     * newVersion 升级版本
+     * endVotingBlock ((当前区块高度 / 200 )*200 + 200*10 - 10)
+     * paramName 参数名称
+     * currentValue 当前值
+     * newValue 新的值
+     */
     @Test
     public void submitParamProposal() {
         try {
@@ -101,6 +143,9 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 查询节点的链生效版本
+     */
     @Test
     public void getActiveVersion() {
         try {
@@ -111,6 +156,12 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 给提案投票
+     * verifier 投票验证人
+     * proposalID 提案ID
+     * option 投票选项 Years(0x01)支持 Nays(0x02)反对 Abstentions(0x03)弃权
+     */
     @Test
     public void vote() {
         try {
@@ -121,6 +172,10 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 版本声明
+     * activeNode 声明的节点，只能是验证人/候选人
+     */
     @Test
     public void declareVersion() {
         try {
@@ -131,6 +186,10 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 查询提案
+     * proposalID 提案ID
+     */
     @Test
     public void getProposal() {
         try {
@@ -141,6 +200,10 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 查询提案结果
+     * proposalID 提案ID
+     */
     @Test
     public void getTallyResult() {
         try {
@@ -151,6 +214,9 @@ public class ProposalContractTest {
         }
     }
 
+    /**
+     * 查询节点代码版本
+     */
     @Test
     public void getProgramVersion() {
         try {

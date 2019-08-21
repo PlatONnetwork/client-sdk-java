@@ -13,6 +13,13 @@ import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
 
+/**
+ * 质押相关接口，包括
+ * 发起质押
+ * 修改质押信息
+ * 增持质押
+ * 撤销质押
+ */
 public class StakingContractTest {
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
@@ -43,6 +50,14 @@ public class StakingContractTest {
 
     /**
      * 发起质押
+     * typ 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
+     * benefitAddress 用于接受出块奖励和质押奖励的收益账户
+     * nodeId 被质押的节点Id(也叫候选人的节点Id)
+     * externalId 外部Id(有长度限制，给第三方拉取节点描述的Id)
+     * nodeName 被质押节点的名称(有长度限制，表示该节点的名称)
+     * website 节点的第三方主页(有长度限制，表示该节点的主页)
+     * details 节点的描述(有长度限制，表示该节点的描述)
+     * amount 质押的von
      */
     @Test
     public void staking() {
@@ -65,6 +80,15 @@ public class StakingContractTest {
 
     }
 
+    /**
+     * 修改质押信息
+     * benefitAddress 用于接受出块奖励和质押奖励的收益账户
+     * nodeId 被质押的节点Id(也叫候选人的节点Id)
+     * externalId 外部Id(有长度限制，给第三方拉取节点描述的Id)
+     * nodeName 被质押节点的名称(有长度限制，表示该节点的名称)
+     * website 节点的第三方主页(有长度限制，表示该节点的主页)
+     * details 节点的描述(有长度限制，表示该节点的描述)
+     */
     @Test
     public void updateStakingInfo() {
         try {
@@ -75,6 +99,13 @@ public class StakingContractTest {
         }
     }
 
+
+    /**
+     * 增持质押
+     * nodeId 被质押的节点Id(也叫候选人的节点Id)
+     * typ 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
+     * amount 质押的von
+     */
     @Test
     public void addStaking() {
         try {
@@ -85,6 +116,10 @@ public class StakingContractTest {
         }
     }
 
+    /**
+     * 撤销质押(一次性发起全部撤销，多次到账)
+     * nodeId 被质押的节点的NodeId
+     */
     @Test
     public void unStaking() {
         try {
@@ -95,6 +130,10 @@ public class StakingContractTest {
         }
     }
 
+    /**
+     * 查询当前节点的质押信息
+     * nodeId 被质押的节点的NodeId
+     */
     @Test
     public void getStakingInfo() {
         try {
