@@ -67,8 +67,22 @@ public class PlatOnFunction {
     public ContractGasProvider getGasProvider() {
         BigInteger gasLimit = BASE_DEFAULT_GAS_LIMIT.add(getContractGasLimit())
                 .add(getFunctionGasLimit()).add(getInterfaceDynamicGasLimit()).add(getDataGasLimit());
-        BigInteger gasPrice = BASE_DEFAULT_GAS_PRICE;
-        return new ContractGasProvider(gasPrice, gasLimit);
+        return new ContractGasProvider(getGasPrice(), gasLimit);
+    }
+
+    private BigInteger getGasPrice() {
+        switch (type) {
+            case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
+                return BigInteger.valueOf(1500000).multiply(BigInteger.valueOf(1000000000));
+            case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
+                return BigInteger.valueOf(2100000).multiply(BigInteger.valueOf(1000000000));
+            case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+                return BigInteger.valueOf(2000000).multiply(BigInteger.valueOf(1000000000));
+            case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
+                return BigInteger.valueOf(3000000).multiply(BigInteger.valueOf(1000000000));
+            default:
+                return BASE_DEFAULT_GAS_PRICE;
+        }
     }
 
     /**
