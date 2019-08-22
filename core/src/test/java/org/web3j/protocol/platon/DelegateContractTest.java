@@ -10,6 +10,7 @@ import org.web3j.platon.bean.Delegation;
 import org.web3j.platon.bean.DelegationIdInfo;
 import org.web3j.platon.contracts.DelegateContract;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
@@ -29,7 +30,7 @@ import java.util.List;
  */
 public class DelegateContractTest {
 
-    private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
+    private String nodeId = "0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47";
     private String delegateAddress = "0xbfCAEc5286822434D59310E03B2F4F162A35CBDd";
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
@@ -85,7 +86,8 @@ public class DelegateContractTest {
     public void delegate() {
 
         try {
-            BaseResponse baseResponse = delegateContract.delegate(nodeId, StakingAmountType.RESTRICTING_AMOUNT_TYPE, new BigInteger("1000000000000000000000000")).send();
+            PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("1000000000000000000000000")).send();
+            BaseResponse baseResponse = delegateContract.getDelegateResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,7 +104,8 @@ public class DelegateContractTest {
     public void unDelegate() {
 
         try {
-            BaseResponse baseResponse = delegateContract.unDelegate(nodeId, BigInteger.valueOf(2360), new BigInteger("1000000000000000000000000")).send();
+            PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, BigInteger.valueOf(2360), new BigInteger("1000000000000000000000000")).send();
+            BaseResponse baseResponse = delegateContract.getUnDelegateResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

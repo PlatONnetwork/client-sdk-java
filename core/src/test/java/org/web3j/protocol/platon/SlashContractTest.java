@@ -9,6 +9,7 @@ import org.web3j.platon.contracts.SlashContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 
 public class SlashContractTest {
@@ -58,7 +59,8 @@ public class SlashContractTest {
     @Test
     public void reportDuplicateSign() {
         try {
-            BaseResponse baseResponse = slashContract.reportDoubleSign(data).send();
+            PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(data).send();
+            BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

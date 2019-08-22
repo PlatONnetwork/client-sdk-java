@@ -10,6 +10,7 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
+import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.Proposal;
 import org.web3j.platon.VoteOption;
 import org.web3j.platon.bean.TallyResult;
@@ -144,11 +145,12 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> vote(String proposalID, String verifier, VoteOption voteOption) throws Exception {
-        BigInteger programVersion = new BigInteger(getProgramVersion().send().data);
+        ProgramVersion programVersion = getProgramVersion().send().data;
         PlatOnFunction function = new PlatOnFunction(FunctionType.VOTE_FUNC_TYPE,
                 Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                         new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue()),
-                        new Uint32(programVersion)));
+                        new Uint32(programVersion.getProgramVersion()),
+                        new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign()))));
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -161,18 +163,19 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public Observable<GasProvider> getVoteProposalGasProvider(String proposalID, String verifier, VoteOption voteOption) {
-        return Observable.fromCallable(new Callable<BigInteger>() {
+        return Observable.fromCallable(new Callable<ProgramVersion>() {
             @Override
-            public BigInteger call() throws Exception {
-                return new BigInteger(getProgramVersion().send().data);
+            public ProgramVersion call() throws Exception {
+                return getProgramVersion().send().data;
             }
-        }).map(new Func1<BigInteger, GasProvider>() {
+        }).map(new Func1<ProgramVersion, GasProvider>() {
             @Override
-            public GasProvider call(BigInteger bigInteger) {
+            public GasProvider call(ProgramVersion programVersion) {
                 return new PlatOnFunction(FunctionType.VOTE_FUNC_TYPE,
                         Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                                 new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue()),
-                                new Uint32(bigInteger))).getGasProvider();
+                                new Uint32(programVersion.getProgramVersion()),
+                                new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign())))).getGasProvider();
             }
         });
     }
@@ -184,11 +187,11 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> voteReturnTransaction(String proposalID, String verifier, VoteOption voteOption) throws Exception {
-        BigInteger programVersion = new BigInteger(getProgramVersion().send().data);
+        ProgramVersion programVersion = getProgramVersion().send().data;
         PlatOnFunction function = new PlatOnFunction(FunctionType.VOTE_FUNC_TYPE,
                 Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                         new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue()),
-                        new Uint32(programVersion)));
+                        new Uint32(programVersion.getProgramVersion()), new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign()))));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -206,44 +209,47 @@ public class ProposalContract extends PlatOnContract {
     /**
      * 版本声明
      *
-     * @param activeNode 声明的节点，只能是验证人/候选人
+     * @param verifier 声明的节点，只能是验证人/候选人
      * @return
      */
-    public RemoteCall<BaseResponse> declareVersion(String activeNode) throws Exception{
-        BigInteger processVersion = new BigInteger(getProgramVersion().send().data);
+    public RemoteCall<BaseResponse> declareVersion(String verifier) throws Exception {
+        ProgramVersion processVersion = getProgramVersion().send().data;
         PlatOnFunction function = new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
-                        new Uint32(processVersion)));
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
+                        new Uint32(processVersion.getProgramVersion()),
+                        new BytesType(Numeric.hexStringToByteArray(processVersion.getProgramVersionSign()))));
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
     /**
      * 获取版本声明的gasProvider
      *
-     * @param activeNode
+     * @param verifier
      * @return
      */
-    public Observable<GasProvider> getDeclareVersionGasProvider(String activeNode) {
+    public Observable<GasProvider> getDeclareVersionGasProvider(String verifier) {
         return Observable.fromCallable(new Callable<GasProvider>() {
             @Override
             public GasProvider call() throws Exception {
-                BigInteger processVersion = new BigInteger(getProgramVersion().send().data);
+                ProgramVersion processVersion = getProgramVersion().send().data;
                 return new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
-                        Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
-                                new Uint32(processVersion))).getGasProvider();
+                        Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
+                                new Uint32(processVersion.getProgramVersion()),
+                                new BytesType(Numeric.hexStringToByteArray(processVersion.getProgramVersionSign())))).getGasProvider();
             }
         });
     }
 
     /**
-     * @param activeNode 声明的节点，只能是验证人/候选人
+     * @param verifier 声明的节点，只能是验证人/候选人
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(String activeNode) throws Exception{
-        BigInteger processVersion = new BigInteger(getProgramVersion().send().data);
+    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(String verifier) throws Exception {
+        ProgramVersion processVersion = getProgramVersion().send().data;
         PlatOnFunction function = new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(activeNode)),
-                        new Uint32(processVersion)));
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
+                        new Uint32(processVersion.getProgramVersion()),
+                        new BytesType(Numeric.hexStringToByteArray(processVersion.getProgramVersionSign()))));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -274,10 +280,11 @@ public class ProposalContract extends PlatOnContract {
 
     /**
      * 获取提交提案gasProvider
+     *
      * @param proposal
      * @return
      */
-    public Observable<GasProvider> getSubmitProposalGasProvider(Proposal proposal){
+    public Observable<GasProvider> getSubmitProposalGasProvider(Proposal proposal) {
         if (proposal == null) {
             return Observable.error(new Throwable("proposal must not be null"));
         }
