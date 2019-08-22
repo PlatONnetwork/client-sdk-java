@@ -81,4 +81,16 @@ public class TallyResult {
     public void setStatus(int status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "TallyResult{" +
+                "proposalID='" + proposalID + '\'' +
+                ", yeas=" + yeas +
+                ", nays=" + nays +
+                ", abstentions=" + abstentions +
+                ", accuVerifiers=" + accuVerifiers +
+                ", status=" + status +
+                '}';
+    }
 }

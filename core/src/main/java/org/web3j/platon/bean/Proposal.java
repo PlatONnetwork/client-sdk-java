@@ -179,7 +179,7 @@ public class Proposal {
             return Arrays.asList(new BytesType(Numeric.hexStringToByteArray(this.verifier)),
                     new Utf8String(this.piPid),
                     new Uint64(this.endVotingBlock),
-                    new Utf8String(this.toBeCanceled));
+                    new BytesType(Numeric.hexStringToByteArray(this.toBeCanceled)));
         }
 
         return new ArrayList<>();
