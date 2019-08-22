@@ -69,6 +69,87 @@ public class Proposal {
     private String verifier;
 
     public Proposal() {
+
+    }
+
+    public String getProposalId() {
+        return proposalId;
+    }
+
+    public void setProposalId(String proposalId) {
+        this.proposalId = proposalId;
+    }
+
+    public String getProposer() {
+        return proposer;
+    }
+
+    public void setProposer(String proposer) {
+        this.proposer = proposer;
+    }
+
+    public int getProposalType() {
+        return proposalType;
+    }
+
+    public void setProposalType(int proposalType) {
+        this.proposalType = proposalType;
+    }
+
+    public String getPiPid() {
+        return piPid;
+    }
+
+    public void setPiPid(String piPid) {
+        this.piPid = piPid;
+    }
+
+    public BigInteger getSubmitBlock() {
+        return submitBlock;
+    }
+
+    public void setSubmitBlock(BigInteger submitBlock) {
+        this.submitBlock = submitBlock;
+    }
+
+    public BigInteger getEndVotingBlock() {
+        return endVotingBlock;
+    }
+
+    public void setEndVotingBlock(BigInteger endVotingBlock) {
+        this.endVotingBlock = endVotingBlock;
+    }
+
+    public BigInteger getNewVersion() {
+        return newVersion;
+    }
+
+    public void setNewVersion(BigInteger newVersion) {
+        this.newVersion = newVersion;
+    }
+
+    public String getToBeCanceled() {
+        return toBeCanceled;
+    }
+
+    public void setToBeCanceled(String toBeCanceled) {
+        this.toBeCanceled = toBeCanceled;
+    }
+
+    public BigInteger getActiveBlock() {
+        return activeBlock;
+    }
+
+    public void setActiveBlock(BigInteger activeBlock) {
+        this.activeBlock = activeBlock;
+    }
+
+    public String getVerifier() {
+        return verifier;
+    }
+
+    public void setVerifier(String verifier) {
+        this.verifier = verifier;
     }
 
     public Proposal(Builder builder) {
