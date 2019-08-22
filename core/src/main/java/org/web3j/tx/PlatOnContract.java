@@ -14,6 +14,7 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
+import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
@@ -370,13 +371,15 @@ public abstract class PlatOnContract extends ManagedTransaction {
      *
      * @return
      */
-    public RemoteCall<BaseResponse<String>> getProgramVersion() {
+    public RemoteCall<BaseResponse<ProgramVersion>> getProgramVersion() {
 
         final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROGRAM_VERSION);
-        return new RemoteCall<BaseResponse<String>>(new Callable<BaseResponse<String>>() {
+        return new RemoteCall<BaseResponse<ProgramVersion>>(new Callable<BaseResponse<ProgramVersion>>() {
             @Override
-            public BaseResponse<String> call() throws Exception {
-                return executePatonCall(function, ensResolver.resolve(ContractAddress.PROPOSAL_CONTRACT_ADDRESS));
+            public BaseResponse<ProgramVersion> call() throws Exception {
+                BaseResponse baseResponse = executePatonCall(function, ensResolver.resolve(ContractAddress.PROPOSAL_CONTRACT_ADDRESS));
+                baseResponse.data = JSONUtil.parseObject((String) baseResponse.data, ProgramVersion.class);
+                return baseResponse;
             }
         });
     }

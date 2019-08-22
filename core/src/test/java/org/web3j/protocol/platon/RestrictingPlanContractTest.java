@@ -8,6 +8,7 @@ import org.web3j.platon.bean.RestrictingItem;
 import org.web3j.platon.bean.RestrictingPlan;
 import org.web3j.platon.contracts.RestrictingPlanContract;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
@@ -51,7 +52,8 @@ public class RestrictingPlanContractTest {
         restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(5), new BigInteger("200000000000000000000000")));
         restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(6), new BigInteger("21000000000000000000000")));
         try {
-            BaseResponse baseResponse = restrictingPlanContract.createRestrictingPlan(benifitAddress, restrictingPlans).send();
+            PlatonSendTransaction platonSendTransaction = restrictingPlanContract.createRestrictingPlanReturnTransaction(benifitAddress, restrictingPlans).send();
+            BaseResponse baseResponse = restrictingPlanContract.getCreateRestrictingPlanResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

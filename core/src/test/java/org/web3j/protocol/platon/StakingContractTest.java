@@ -9,6 +9,7 @@ import org.web3j.platon.bean.Node;
 import org.web3j.platon.bean.StakingParam;
 import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
@@ -34,6 +35,7 @@ public class StakingContractTest {
     String nodeName = "liyf-test";
     String webSite = "www.baidu.com";
     String details = "details";
+    String blsPubKey = "cec189e90234b2c4d9e55402c1abf7cfbbc85dbf1b6b43820a2c6f953464c201bf6d1c3f51cf5e7cbc6e40815406f611b1aeca99acd782ed8b8e33c82f71ee08";
 
     private Credentials credentials;
 
@@ -62,7 +64,7 @@ public class StakingContractTest {
     @Test
     public void staking() {
         try {
-            BaseResponse baseResponse = stakingContract.staking(new StakingParam.Builder()
+            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
                     .setNodeId(nodeId)
                     .setAmount(new BigInteger(stakingAmount))
                     .setStakingAmountType(stakingAmountType)
@@ -71,8 +73,9 @@ public class StakingContractTest {
                     .setNodeName(nodeName)
                     .setWebSite(webSite)
                     .setDetails(details)
-                    .setProcessVersion(new BigInteger(stakingAmount))
+                    .setBlsPubKey(blsPubKey)
                     .build()).send();
+            BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +95,8 @@ public class StakingContractTest {
     @Test
     public void updateStakingInfo() {
         try {
-            BaseResponse baseResponse = stakingContract.updateStakingInfo(nodeId, benifitAddress, externalId, nodeName, "https://www.github.com/", details).send();
+            PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(nodeId, benifitAddress, externalId, nodeName, "https://www.github.com/", details).send();
+            BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +113,8 @@ public class StakingContractTest {
     @Test
     public void addStaking() {
         try {
-            BaseResponse baseResponse = stakingContract.addStaking(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, BigInteger.valueOf(10000)).send();
+            PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, BigInteger.valueOf(10000)).send();
+            BaseResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,7 +128,8 @@ public class StakingContractTest {
     @Test
     public void unStaking() {
         try {
-            BaseResponse baseResponse = stakingContract.unStaking(nodeId).send();
+            PlatonSendTransaction platonSendTransaction = stakingContract.unStakingReturnTransaction(nodeId).send();
+            BaseResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

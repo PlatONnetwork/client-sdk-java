@@ -12,6 +12,7 @@ import org.web3j.platon.contracts.ProposalContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
@@ -36,7 +37,9 @@ public class ProposalContractTest {
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
     private Credentials credentials;
+    private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
     private ProposalContract proposalContract;
+    private String pIDID = "";
 
     @Before
     public void init() {
@@ -76,11 +79,8 @@ public class ProposalContractTest {
             System.out.println(blockNumber);
             BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
 
-            BaseResponse baseResponse = proposalContract.submitProposal(new Proposal.Builder(ProposalType.TEXT_PROPOSAL)
-                    .setVerifier("411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c")
-                    .setUrl("http://www.test.inet")
-                    .setEndVotingBlock(endVoltingBlock)
-                    .build()).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitTextProposalParam(nodeId, pIDID)).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,13 +103,8 @@ public class ProposalContractTest {
             BigInteger blockNumber = ethBlock.getBlock().getNumber();
             BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
             BigInteger activeBlock = endVoltingBlock.add(BigInteger.valueOf(10)).add(BigInteger.valueOf(1000));
-            BaseResponse baseResponse = proposalContract.submitProposal(new Proposal.Builder(ProposalType.VERSION_PROPOSAL)
-                    .setVerifier("411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c")
-                    .setUrl("http://www.test.inet")
-                    .setEndVotingBlock(endVoltingBlock)
-                    .setNewVersion(BigInteger.valueOf(5000))
-                    .setActiveBlock(activeBlock)
-                    .build()).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam(nodeId, pIDID, BigInteger.valueOf(5000), endVoltingBlock)).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,14 +124,7 @@ public class ProposalContractTest {
     @Test
     public void submitParamProposal() {
         try {
-            BaseResponse baseResponse = proposalContract.submitProposal(new Proposal.Builder(ProposalType.PARAM_PROPOSAL)
-                    .setVerifier("1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429")
-                    .setUrl("http://www.test.inet")
-                    .setEndVotingBlock(BigInteger.valueOf(100000))
-                    .setParamName("ParamName")
-                    .setCurrentValue("0.85")
-                    .setNewValue("1.02")
-                    .build()).send();
+            BaseResponse baseResponse = proposalContract.submitProposal(Proposal.createSubmitCancelProposalParam(nodeId, pIDID, BigInteger.valueOf(100000), "")).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

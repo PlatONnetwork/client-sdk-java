@@ -12,6 +12,7 @@ import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Node;
+import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.StakingParam;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
@@ -87,7 +88,7 @@ public class StakingContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse> staking(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
-        tempStakingParam.setProcessVersion(new BigInteger(getProgramVersion().send().data));
+        tempStakingParam.setProcessVersion(getProgramVersion().send().data);
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters());
@@ -102,15 +103,15 @@ public class StakingContract extends PlatOnContract {
      */
     public Observable<GasProvider> getStakingGasProvider(StakingParam stakingParam) {
         StakingParam tempStakingParam = stakingParam.clone();
-        return Observable.fromCallable(new Callable<BigInteger>() {
+        return Observable.fromCallable(new Callable<ProgramVersion>() {
             @Override
-            public BigInteger call() throws Exception {
-                return new BigInteger(getProgramVersion().send().data);
+            public ProgramVersion call() throws Exception {
+                return getProgramVersion().send().data;
             }
-        }).map(new Func1<BigInteger, GasProvider>() {
+        }).map(new Func1<ProgramVersion, GasProvider>() {
             @Override
-            public GasProvider call(BigInteger bigInteger) {
-                tempStakingParam.setProcessVersion(bigInteger);
+            public GasProvider call(ProgramVersion programVersion) {
+                tempStakingParam.setProcessVersion(programVersion);
                 return new PlatOnFunction(
                         FunctionType.STAKING_FUNC_TYPE,
                         tempStakingParam.getSubmitInputParameters()).getGasProvider();
@@ -128,7 +129,7 @@ public class StakingContract extends PlatOnContract {
      */
     public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
-        tempStakingParam.setProcessVersion(new BigInteger(getProgramVersion().send().data));
+        tempStakingParam.setProcessVersion(getProgramVersion().send().data);
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters());

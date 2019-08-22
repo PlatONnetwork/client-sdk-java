@@ -1,5 +1,10 @@
 package org.web3j.platon;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+import org.web3j.abi.datatypes.generated.Uint16;
+
+import java.math.BigInteger;
+
 public class FunctionType {
 
     /**
@@ -70,6 +75,10 @@ public class FunctionType {
      * 版本声明
      */
     public static final int DECLARE_VERSION_FUNC_TYPE = 2004;
+    /**
+     * 提交取消提案
+     */
+    public static final int SUBMIT_CANCEL_FUNC_TYPE = 2005;
     /**
      * 查询提案
      */

@@ -14,4 +14,8 @@ public class ProposalType {
      * 参数提案
      */
     public final static int PARAM_PROPOSAL = 0x03;
+    /**
+     * 取消提案
+     */
+    public final static int CANCEL_PROPOSAL = 0x04;
 }
