@@ -81,6 +81,24 @@ public class StakingContractTest {
             e.printStackTrace();
         }
 
+        try {
+            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
+                    .setNodeId(nodeId)
+                    .setAmount(new BigInteger(stakingAmount))
+                    .setStakingAmountType(stakingAmountType)
+                    .setBenifitAddress(benifitAddress)
+                    .setExternalId(externalId)
+                    .setNodeName(nodeName)
+                    .setWebSite(webSite)
+                    .setDetails(details)
+                    .setBlsPubKey(blsPubKey)
+                    .build()).send();
+            BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
+            System.out.println(baseResponse.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

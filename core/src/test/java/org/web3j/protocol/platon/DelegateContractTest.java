@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class DelegateContractTest {
 
-    private String nodeId = "0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47";
+    private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
     private String delegateAddress = "0xbfCAEc5286822434D59310E03B2F4F162A35CBDd";
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
@@ -122,7 +122,7 @@ public class DelegateContractTest {
     public void getDelegateInfo() {
 
         try {
-            BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateAddress, BigInteger.valueOf(1038)).send();
+            BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateAddress, BigInteger.valueOf(636)).send();
             System.out.println(baseResponse.data.toString());
         } catch (Exception e) {
             e.printStackTrace();

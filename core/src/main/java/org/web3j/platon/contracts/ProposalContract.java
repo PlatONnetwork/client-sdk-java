@@ -88,7 +88,7 @@ public class ProposalContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse<Proposal>> getProposal(String proposalId) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROPOSAL_FUNC_TYPE,
-                Arrays.asList(new Utf8String(proposalId)));
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId))));
         return new RemoteCall<BaseResponse<Proposal>>(new Callable<BaseResponse<Proposal>>() {
             @Override
             public BaseResponse<Proposal> call() throws Exception {
@@ -107,7 +107,7 @@ public class ProposalContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse<TallyResult>> getTallyResult(String proposalId) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.GET_TALLY_RESULT_FUNC_TYPE,
-                Arrays.asList(new Utf8String(proposalId)));
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId))));
         return new RemoteCall<BaseResponse<TallyResult>>(new Callable<BaseResponse<TallyResult>>() {
             @Override
             public BaseResponse<TallyResult> call() throws Exception {
@@ -318,8 +318,8 @@ public class ProposalContract extends PlatOnContract {
      * @param ethSendTransaction
      * @return
      */
-    public RemoteCall<BaseResponse> getSubmitProposalResult(PlatonSendTransaction ethSendTransaction) {
-        return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.SUBMIT_TEXT_FUNC_TYPE);
+    public RemoteCall<BaseResponse> getSubmitProposalResult(PlatonSendTransaction ethSendTransaction,int functionType) {
+        return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, functionType);
     }
 
     /**

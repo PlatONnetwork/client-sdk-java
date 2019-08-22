@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
 import org.web3j.platon.VoteOption;
 import org.web3j.platon.bean.Proposal;
@@ -39,7 +40,7 @@ public class ProposalContractTest {
     private Credentials credentials;
     private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
     private ProposalContract proposalContract;
-    private String pIDID = "";
+    private String pIDID = "1234567890";
 
     @Before
     public void init() {
@@ -80,7 +81,7 @@ public class ProposalContractTest {
             BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
 
             PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitTextProposalParam(nodeId, pIDID)).send();
-            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_TEXT_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,9 +103,8 @@ public class ProposalContractTest {
                     web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
             BigInteger blockNumber = ethBlock.getBlock().getNumber();
             BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
-            BigInteger activeBlock = endVoltingBlock.add(BigInteger.valueOf(10)).add(BigInteger.valueOf(1000));
-            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam(nodeId, pIDID, BigInteger.valueOf(5000), endVoltingBlock)).send();
-            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam(nodeId, pIDID, BigInteger.valueOf(20000), BigInteger.valueOf(1))).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_VERSION_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,9 +122,10 @@ public class ProposalContractTest {
      * newValue 新的值
      */
     @Test
-    public void submitParamProposal() {
+    public void submitCancelProposal() {
         try {
-            BaseResponse baseResponse = proposalContract.submitProposal(Proposal.createSubmitCancelProposalParam(nodeId, pIDID, BigInteger.valueOf(100000), "")).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitCancelProposalParam(nodeId, pIDID, BigInteger.valueOf(11980), "0x0250caeb2ffe9344145c5a41d48384657b3bca109b0c95e3b70248697280eb64")).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_CANCEL_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,7 +154,7 @@ public class ProposalContractTest {
     @Test
     public void vote() {
         try {
-            BaseResponse baseResponse = proposalContract.vote("0x359a26418d0d5d4dbe3c392862fdcfe83e0e33fe5720897698ea403b82bbd747", "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c", VoteOption.YEAS).send();
+            BaseResponse baseResponse = proposalContract.vote("0x2ceea9176087f6fe64162b8efb2d71ffd0cc0c0326b24738bb644e71db0d5cc6", "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c", VoteOption.YEAS).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,7 +182,7 @@ public class ProposalContractTest {
     @Test
     public void getProposal() {
         try {
-            BaseResponse<Proposal> baseResponse = proposalContract.getProposal("0x359a26418d0d5d4dbe3c392862fdcfe83e0e33fe5720897698ea403b82bbd747").send();
+            BaseResponse<Proposal> baseResponse = proposalContract.getProposal("0x2ceea9176087f6fe64162b8efb2d71ffd0cc0c0326b24738bb644e71db0d5cc6").send();
             System.out.println(baseResponse.data.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,7 +196,7 @@ public class ProposalContractTest {
     @Test
     public void getTallyResult() {
         try {
-            BaseResponse<TallyResult> baseResponse = proposalContract.getTallyResult("0x359a26418d0d5d4dbe3c392862fdcfe83e0e33fe5720897698ea403b82bbd747").send();
+            BaseResponse<TallyResult> baseResponse = proposalContract.getTallyResult("0x2ceea9176087f6fe64162b8efb2d71ffd0cc0c0326b24738bb644e71db0d5cc6").send();
             System.out.println(baseResponse.data.toString());
         } catch (Exception e) {
             e.printStackTrace();
