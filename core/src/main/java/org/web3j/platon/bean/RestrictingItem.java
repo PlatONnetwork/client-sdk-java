@@ -11,10 +11,6 @@ public class RestrictingItem {
      */
     private BigInteger balance;
     /**
-     * 惩罚金额
-     */
-    private BigInteger slash;
-    /**
      * 质押/抵押金额
      */
     private BigInteger pledge;
@@ -25,7 +21,7 @@ public class RestrictingItem {
     /**
      * 锁仓分录信息
      */
-    @JSONField(name = "Entry")
+    @JSONField(name = "plans")
     private List<RestrictingInfo> info;
 
     public BigInteger getBalance() {
@@ -34,14 +30,6 @@ public class RestrictingItem {
 
     public void setBalance(BigInteger balance) {
         this.balance = balance;
-    }
-
-    public BigInteger getSlash() {
-        return slash;
-    }
-
-    public void setSlash(BigInteger slash) {
-        this.slash = slash;
     }
 
     public BigInteger getPledge() {
@@ -72,7 +60,6 @@ public class RestrictingItem {
     public String toString() {
         return "RestrictingItem{" +
                 "balance=" + balance +
-                ", slash=" + slash +
                 ", pledge=" + pledge +
                 ", debt=" + debt +
                 ", info=" + info +
