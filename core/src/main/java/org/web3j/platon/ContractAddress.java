@@ -19,6 +19,10 @@ public class ContractAddress {
      */
     public static final String NODE_CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000002";
     /**
+     * 激励池相关接口
+     */
+    public static final String INCENTIVE_POOL_CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000003";
+    /**
      * 举报惩罚相关接口
      */
     public static final String SLASH_CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000004";
