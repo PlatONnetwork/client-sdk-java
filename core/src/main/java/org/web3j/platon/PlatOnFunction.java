@@ -5,11 +5,13 @@ import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.IntType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.platon.bean.Evidences;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.utils.JSONUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -102,13 +104,14 @@ public class PlatOnFunction {
             case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
             case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
             case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+            case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
             case FunctionType.VOTE_FUNC_TYPE:
             case FunctionType.DECLARE_VERSION_FUNC_TYPE:
                 return BigInteger.valueOf(9000);
             case FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE:
-                return BigInteger.valueOf(1000);
+                return BigInteger.valueOf(21000);
             case FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE:
-                return BigInteger.valueOf(2000);
+                return BigInteger.valueOf(18000);
             default:
                 return BigInteger.valueOf(0);
         }
@@ -122,6 +125,7 @@ public class PlatOnFunction {
     private BigInteger getFunctionGasLimit() {
         switch (type) {
             case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+            case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
                 return BigInteger.valueOf(500000);
             case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
                 return BigInteger.valueOf(450000);
@@ -144,7 +148,7 @@ public class PlatOnFunction {
             case FunctionType.VOTE_FUNC_TYPE:
                 return BigInteger.valueOf(2000);
             case FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE:
-                return BigInteger.valueOf(1000);
+                return BigInteger.valueOf(21000);
             default:
                 return BigInteger.valueOf(0);
         }
@@ -159,6 +163,13 @@ public class PlatOnFunction {
         if (type == FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE) {
             if (inputParameters.size() > 1 && inputParameters.get(1) instanceof CustomStaticArray) {
                 return BigInteger.valueOf(((CustomStaticArray) inputParameters.get(1)).getValue().size()).multiply(BASE_DEFAULT_GAS_LIMIT);
+            }
+        } else if (type == FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE) {
+            if (inputParameters.size() > 1) {
+                Evidences evidences = JSONUtil.parseObject((String) inputParameters.get(1).getValue(), Evidences.class);
+                if (evidences != null) {
+                    return BigInteger.valueOf(21000).multiply(BigInteger.valueOf(evidences.getEvidencesSize()));
+                }
             }
         }
         return BigInteger.ZERO;

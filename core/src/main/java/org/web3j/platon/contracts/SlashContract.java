@@ -10,15 +10,18 @@ import org.web3j.platon.ContractAddress;
 import org.web3j.platon.DoubleSignType;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
+import org.web3j.platon.bean.Node;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
 import org.web3j.tx.gas.GasProvider;
+import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
@@ -87,6 +90,7 @@ public class SlashContract extends PlatOnContract {
 
     /**
      * 获取举报双签的gasProvider
+     *
      * @param data
      * @return
      */
@@ -128,12 +132,17 @@ public class SlashContract extends PlatOnContract {
      * @param blockNumber    多签的块高
      * @return
      */
-    public RemoteCall<BaseResponse> checkDoubleSign(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
+    public RemoteCall<BaseResponse<String>> checkDoubleSign(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(doubleSignType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(address))
                         , new Uint64(blockNumber)));
-        return executeRemoteCallTransactionWithFunctionType(function);
+        return new RemoteCall<BaseResponse<String>>(new Callable<BaseResponse<String>>() {
+            @Override
+            public BaseResponse<String> call() throws Exception {
+                return executePatonCall(function);
+            }
+        });
     }
 
     /**
