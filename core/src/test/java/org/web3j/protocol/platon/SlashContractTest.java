@@ -5,12 +5,16 @@ import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.DoubleSignType;
+import org.web3j.platon.bean.Evidences;
 import org.web3j.platon.contracts.SlashContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.utils.JSONUtil;
+
+import java.math.BigInteger;
 
 public class SlashContractTest {
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
@@ -18,27 +22,105 @@ public class SlashContractTest {
     private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
     private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
     private String data = "{\n" +
-            "\t\"duplicate_prepare\": [{\n" +
-            "\t\t\"VoteA\": {\n" +
-            "\t\t\t\"timestamp\": 0,\n" +
-            "\t\t\t\"block_hash\": \"0x0a0409021f020b080a16070609071c141f19011d090b091303121e1802130407\",\n" +
-            "\t\t\t\"block_number\": 2,\n" +
-            "\t\t\t\"validator_index\": 1,\n" +
-            "\t\t\t\"validator_address\": \"0x120b77ab712589ebd42d69003893ef962cc52832\",\n" +
-            "\t\t\t\"signature\": \"0xa65e16b3bc4862fdd893eaaaaecf1e415cdc2c8a08e4bbb1f6b2a1f4bf4e2d0c0ec27857da86a5f3150b32bee75322073cec320e51fe0a123cc4238ee4155bf001\"\n" +
-            "\t\t},\n" +
-            "\t\t\"VoteB\": {\n" +
-            "\t\t\t\"timestamp\": 0,\n" +
-            "\t\t\t\"block_hash\": \"0x18030d1e01071b1d071a12151e100a091f060801031917161e0a0d0f02161d0e\",\n" +
-            "\t\t\t\"block_number\": 2,\n" +
-            "\t\t\t\"validator_index\": 1,\n" +
-            "\t\t\t\"validator_address\": \"0x120b77ab712589ebd42d69003893ef962cc52832\",\n" +
-            "\t\t\t\"signature\": \"0x9126f9a339c8c4a873efc397062d67e9e9109895cd9da0d09a010d5f5ebbc6e76d285f7d87f801850c8552234101b651c8b7601b4ea077328c27e4f86d66a1bf00\"\n" +
-            "\t\t}\n" +
-            "\t}],\n" +
-            "\t\"duplicate_viewchange\": [],\n" +
-            "\t\"timestamp_viewchange\": []\n" +
-            "}";
+            "         \"duplicate_prepare\": [\n" +
+            "          {\n" +
+            "           \"PrepareA\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0x2e9be564726853b352753b670aea793e351f5e26b1beaa1ca65af1b3253cc710\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"block_index\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0x7ad2a071b1854d977a0f058028837d77a0da6aa4\",\n" +
+            "             \"NodeID\": \"5327a7555985e560b629ed29623e9e57108f9a88fcae20acb11baa8d3ad04910f56b4a546188155778f4840cbaf09ea54ce887fdbdab4b4f49b9069e4bf873f8\",\n" +
+            "             \"blsPubKey\": null\n" +
+            "            },\n" +
+            "            \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"\n" +
+            "           },\n" +
+            "           \"PrepareB\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0x2e9be564726853b352753b670aea793e351f5e26b1beaa1ca65af1b3253cc710\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"block_index\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0x7ad2a071b1854d977a0f058028837d77a0da6aa4\",\n" +
+            "             \"NodeID\": \"5327a7555985e560b629ed29623e9e57108f9a88fcae20acb11baa8d3ad04910f56b4a546188155778f4840cbaf09ea54ce887fdbdab4b4f49b9069e4bf873f8\",\n" +
+            "             \"blsPubKey\": null\n" +
+            "            },\n" +
+            "            \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"\n" +
+            "           }\n" +
+            "          }\n" +
+            "         ],\n" +
+            "         \"duplicate_vote\": [\n" +
+            "          {\n" +
+            "           \"VoteA\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0x79e0a15bf743b2ba83cd4f361a6f5e10c6106cbfe5f2177dba2a21825cba9485\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"block_index\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0x7ad2a071b1854d977a0f058028837d77a0da6aa4\",\n" +
+            "             \"NodeID\": \"5327a7555985e560b629ed29623e9e57108f9a88fcae20acb11baa8d3ad04910f56b4a546188155778f4840cbaf09ea54ce887fdbdab4b4f49b9069e4bf873f8\",\n" +
+            "             \"blsPubKey\": null\n" +
+            "            },\n" +
+            "            \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"\n" +
+            "           },\n" +
+            "           \"VoteB\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0x79e0a15bf743b2ba83cd4f361a6f5e10c6106cbfe5f2177dba2a21825cba9485\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"block_index\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0x7ad2a071b1854d977a0f058028837d77a0da6aa4\",\n" +
+            "             \"NodeID\": \"5327a7555985e560b629ed29623e9e57108f9a88fcae20acb11baa8d3ad04910f56b4a546188155778f4840cbaf09ea54ce887fdbdab4b4f49b9069e4bf873f8\",\n" +
+            "             \"blsPubKey\": null\n" +
+            "            },\n" +
+            "            \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"\n" +
+            "           }\n" +
+            "          }\n" +
+            "         ],\n" +
+            "         \"duplicate_viewchange\": [\n" +
+            "          {\n" +
+            "           \"ViewA\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0xeed3a28c993de8634038f69b25949b9cc1e9b3adf1045fc13989d87ce04d0752\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0x7ad2a071b1854d977a0f058028837d77a0da6aa4\",\n" +
+            "             \"NodeID\": \"5327a7555985e560b629ed29623e9e57108f9a88fcae20acb11baa8d3ad04910f56b4a546188155778f4840cbaf09ea54ce887fdbdab4b4f49b9069e4bf873f8\",\n" +
+            "             \"blsPubKey\": null\n" +
+            "            },\n" +
+            "            \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000000000\",\n" +
+            "            \"block_epoch\": 0,\n" +
+            "            \"block_view\": 0\n" +
+            "           },\n" +
+            "           \"ViewB\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0xeed3a28c993de8634038f69b25949b9cc1e9b3adf1045fc13989d87ce04d0752\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0x7ad2a071b1854d977a0f058028837d77a0da6aa4\",\n" +
+            "             \"NodeID\": \"5327a7555985e560b629ed29623e9e57108f9a88fcae20acb11baa8d3ad04910f56b4a546188155778f4840cbaf09ea54ce887fdbdab4b4f49b9069e4bf873f8\",\n" +
+            "             \"blsPubKey\": null\n" +
+            "            },\n" +
+            "            \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000000000\",\n" +
+            "            \"block_epoch\": 0,\n" +
+            "            \"block_view\": 0\n" +
+            "           }\n" +
+            "          }\n" +
+            "         ]\n" +
+            "        }";
 
     private SlashContract slashContract;
 
@@ -46,7 +128,7 @@ public class SlashContractTest {
 
     @Before
     public void init() {
-        credentials = Credentials.create("0xe1eb63c6f8d4d2b131b12ea4d06dd690c719afbe703bf9c152346317b0794d57");
+        credentials = Credentials.create("0xa56f68ca7aa51c24916b9fff027708f856650f9ff36cc3c8da308040ebcc7867");
 
         slashContract = SlashContract.load(web3j,
                 credentials, "100");
@@ -58,6 +140,7 @@ public class SlashContractTest {
      */
     @Test
     public void reportDuplicateSign() {
+
         try {
             PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(data).send();
             BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTransaction).send();
@@ -76,8 +159,7 @@ public class SlashContractTest {
     @Test
     public void checkDuplicateSign() {
         try {
-            PlatonBlock platonBlock = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
-            BaseResponse baseResponse = slashContract.checkDoubleSign(DoubleSignType.PREPARE, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", platonBlock.getBlock().getNumber()).send();
+            BaseResponse baseResponse = slashContract.checkDoubleSign(DoubleSignType.PREPARE, "0x7ad2a071b1854d977a0f058028837d77a0da6aa4", BigInteger.valueOf(1889)).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

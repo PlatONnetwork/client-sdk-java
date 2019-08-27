@@ -1,8 +1,13 @@
 package org.web3j.protocol.platon;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Before;
 import org.junit.Test;
+import org.web3j.abi.PlatOnTypeEncoder;
+import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.TransactionEncoder;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
@@ -13,11 +18,21 @@ import org.web3j.platon.contracts.ProposalContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.rlp.RlpEncoder;
+import org.web3j.rlp.RlpList;
+import org.web3j.rlp.RlpString;
+import org.web3j.rlp.RlpType;
+import org.web3j.utils.Numeric;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -36,19 +51,80 @@ import java.util.List;
  */
 public class ProposalContractTest {
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    private String collusionNodeId1 = "87e6f09c4fe2f59029b79a12e20659b18644dd0e48e352ea8759cd5bf6833614aae80930d7e240f4acf9fc1e679fbc814a4a32e33afa72d1a318cb700e6fac1d";
+    private String collusionNodeId2 = "25a2407f1692febff715655d53912b6284d8672a411d39b250ec40530a7e36f0b7970ed1d413f9b079e104aba80e5cef25eaf299cbd6a01e8015b505cffebc2d";
+    private String collusionNodeId3 = "c75f603bf2502822f4e4b45bdf27eeb1dd9b39642f636c97ff497d2c48457f3983aa77fd8adc6580bcc938dcedf48e9a10d6b50997f16c73b77ddd44e498dce0";
+    private String collusionNodeId4 = "5de4975a1c60f47ae9bd630a054d3a336b938900ba5acbd8b96a3f5b646a6d9797fc32f8183721dc5f5acda085f3e0ee830b2041d51825426da0d7fc6405e6d2";
+
+    private String collusionPrivatekey1 = "0x48bb84bc7659ff3c18d2ea53d1491b5535c2d573742b5270a76750bafc9b80bf";
+    private String collusionPrivatekey2 = "0xd7f9e51e3a5be4a7af346c1fb6918cc9e78a308ef3db279c88a4c53c5e1a1d56";
+    private String collusionPrivatekey3 = "0x04eb7e47c6eb269083a977c47bb6e23d8eb129f3f56e72d65f06f5203267c10e";
+    private String collusionPrivatekey4 = "0x3cc53b6608313efdd666fba3150a64e0fcfa0af79cf31f07241e74fbc60f6a15";
+
+    private String builtInPrivateKey = "a11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7";
+    private String privateKey = "0x59a9fac3bc8024169df74e6c0c861e1a5fdbe620b8a7a0c1dd0539d02c4e6add";
+
+    private String nodeId = "47eddf1110e92262fd593df81307eca0cb544669986baa702fe11942fca14e20bd7436f2da1c4b23c1c72a4873bd6b322c8525e4324f8c85ed55ae98d5a115f2";
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
     private Credentials credentials;
-    private String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
     private ProposalContract proposalContract;
-    private String pIDID = "1234567890";
+    private String pIDID =null;
 
     @Before
     public void init() {
 
-        credentials = Credentials.create("0xa7f1d33a30c1e8b332443825f2209755c52086d0a88b084301a6727d9f84bf32");
+        credentials = Credentials.create(privateKey);
 
         proposalContract = ProposalContract.load(web3j,
                 credentials, "100");
+
+        pIDID = String.valueOf(UUID.randomUUID().toString().hashCode());
+    }
+
+    @Test
+    public void sendTransaction(){
+
+//        sendTransaction("a11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7", toAddress, new BigDecimal("6000000000000000000000000"), 500000000000L, 210000L);
+
+    }
+
+    protected BigInteger getNonce() throws IOException {
+        PlatonGetTransactionCount ethGetTransactionCount = web3j.platonGetTransactionCount(
+                credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
+
+        if (ethGetTransactionCount.getTransactionCount().intValue() == 0) {
+            ethGetTransactionCount = web3j.platonGetTransactionCount(
+                    credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
+        }
+        return ethGetTransactionCount.getTransactionCount();
+    }
+
+    public String sendTransaction(String privateKey, String toAddress, BigDecimal amount, long gasPrice, long gasLimit) {
+
+        BigInteger GAS_PRICE = BigInteger.valueOf(gasPrice);
+        BigInteger GAS_LIMIT = BigInteger.valueOf(gasLimit);
+
+        Credentials credentials = Credentials.create(privateKey);
+
+        try {
+
+            List<RlpType> result = new ArrayList<>();
+            result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Int64(0)))));
+            String txType = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
+
+            RawTransaction rawTransaction = RawTransaction.createTransaction(getNonce(), GAS_PRICE, GAS_LIMIT, toAddress, amount.toBigInteger(),
+                    txType);
+
+            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, new Byte("101"), credentials);
+            String hexValue = Numeric.toHexString(signedMessage);
+
+            PlatonSendTransaction transaction = web3j.platonSendRawTransaction(hexValue).send();
+
+            return transaction.getTransactionHash();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -78,7 +154,7 @@ public class ProposalContractTest {
                     web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
             BigInteger blockNumber = ethBlock.getBlock().getNumber();
             System.out.println(blockNumber);
-            BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
+            BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(2));
 
             PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitTextProposalParam(nodeId, pIDID)).send();
             BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_TEXT_FUNC_TYPE).send();
@@ -103,7 +179,7 @@ public class ProposalContractTest {
                     web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
             BigInteger blockNumber = ethBlock.getBlock().getNumber();
             BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
-            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam(nodeId, pIDID, BigInteger.valueOf(20000), BigInteger.valueOf(1))).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam(nodeId, "1177777335544552888200", BigInteger.valueOf(20000), BigInteger.valueOf(100))).send();
             BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_VERSION_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
@@ -123,8 +199,9 @@ public class ProposalContractTest {
      */
     @Test
     public void submitCancelProposal() {
+
         try {
-            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitCancelProposalParam(nodeId, pIDID, BigInteger.valueOf(11980), "0x0250caeb2ffe9344145c5a41d48384657b3bca109b0c95e3b70248697280eb64")).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitCancelProposalParam(nodeId, pIDID, BigInteger.valueOf(5), "0x1178f6dcecd1731e2556d4a014d30ebe04cf5522c07776135e60f613e51af0c9")).send();
             BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_CANCEL_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
@@ -154,7 +231,7 @@ public class ProposalContractTest {
     @Test
     public void vote() {
         try {
-            BaseResponse baseResponse = proposalContract.vote("0x2ceea9176087f6fe64162b8efb2d71ffd0cc0c0326b24738bb644e71db0d5cc6", "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c", VoteOption.YEAS).send();
+            BaseResponse baseResponse = proposalContract.vote("0x1178f6dcecd1731e2556d4a014d30ebe04cf5522c07776135e60f613e51af0c9", "25a2407f1692febff715655d53912b6284d8672a411d39b250ec40530a7e36f0b7970ed1d413f9b079e104aba80e5cef25eaf299cbd6a01e8015b505cffebc2d", VoteOption.YEAS).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,7 +259,7 @@ public class ProposalContractTest {
     @Test
     public void getProposal() {
         try {
-            BaseResponse<Proposal> baseResponse = proposalContract.getProposal("0x2ceea9176087f6fe64162b8efb2d71ffd0cc0c0326b24738bb644e71db0d5cc6").send();
+            BaseResponse<Proposal> baseResponse = proposalContract.getProposal("0x389dfd3345351e56bf0e6fc11cdda2c1a23787bf3326ece3072e355d0065cf73").send();
             System.out.println(baseResponse.data.toString());
         } catch (Exception e) {
             e.printStackTrace();

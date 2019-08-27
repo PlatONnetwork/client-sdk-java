@@ -23,10 +23,9 @@ import java.util.List;
 public class RestrictingPlanContractTest {
 
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
 
-    private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
-    private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
+    private String benifitAddress = "0x493301712671Ada586ba6Ca7891F436D29185821";
 
     private RestrictingPlanContract restrictingPlanContract;
 
@@ -35,7 +34,7 @@ public class RestrictingPlanContractTest {
     @Before
     public void init() {
 
-        credentials = Credentials.create("0xe1eb63c6f8d4d2b131b12ea4d06dd690c719afbe703bf9c152346317b0794d57");
+        credentials = Credentials.create("0x9d8dc0c4895d3bc1df7e557dda91089b539fe681807dedcf458850b02d8e7790");
 
         restrictingPlanContract = RestrictingPlanContract.load(web3j, credentials, "100");
     }
@@ -49,8 +48,8 @@ public class RestrictingPlanContractTest {
     public void createRestrictingPlan() {
 
         List<RestrictingPlan> restrictingPlans = new ArrayList<>();
-        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(5), new BigInteger("200000000000000000000000")));
-        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(6), new BigInteger("21000000000000000000000")));
+        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(100), new BigInteger("5000000000000000000")));
+        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(200), new BigInteger("600000000000000000")));
         try {
             PlatonSendTransaction platonSendTransaction = restrictingPlanContract.createRestrictingPlanReturnTransaction(benifitAddress, restrictingPlans).send();
             BaseResponse baseResponse = restrictingPlanContract.getCreateRestrictingPlanResult(platonSendTransaction).send();

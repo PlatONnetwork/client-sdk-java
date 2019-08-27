@@ -41,7 +41,7 @@ public class DelegateContractTest {
 
     @Before
     public void init() {
-        credentials = Credentials.create("0xce4f875efc9d21d06f8607de170d0011e79be86325bacc9639f57a437c65ce8c");
+        credentials = Credentials.create("0xa11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7");
 
         delegateContract = DelegateContract.load(web3j,
                 credentials,
