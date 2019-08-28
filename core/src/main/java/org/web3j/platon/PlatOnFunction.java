@@ -11,7 +11,6 @@ import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.ContractGasProvider;
-import org.web3j.utils.JSONUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class PlatOnFunction {
     public BigInteger getFeeAmount(BigInteger gasPrice) {
         BigInteger gasLimit = BASE_DEFAULT_GAS_LIMIT.add(getContractGasLimit())
                 .add(getFunctionGasLimit()).add(getInterfaceDynamicGasLimit()).add(getDataGasLimit());
-        return gasLimit.multiply(gasPrice);
+        return gasLimit.multiply(gasPrice == null || gasPrice.compareTo(BigInteger.ZERO) != 1 ? getGasPrice() : gasPrice);
     }
 
     private BigInteger getGasPrice() {
