@@ -14,7 +14,7 @@ import java.math.BigInteger;
 
 public class SlashContractTest {
     //    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.112.120:8222"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6796"));
 
     private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
     private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
@@ -120,35 +120,35 @@ public class SlashContractTest {
             "        }";
 
     private String evidence = "{\n" +
-            "           \"vote_a\": {\n" +
-            "            \"epoch\": 1,\n" +
-            "            \"view_number\": 1,\n" +
-            "            \"block_hash\": \"0xdb8e3281bbd47c0fbdc1fa74c55dc1907b28b1552fcca3c14933e090f7680230\",\n" +
-            "            \"block_number\": 1,\n" +
-            "            \"block_index\": 1,\n" +
-            "            \"validate_node\": {\n" +
-            "             \"index\": 0,\n" +
-            "             \"address\": \"0xcf071a864d320d0de9cfefce84d7c32764a04bf4\",\n" +
-            "             \"NodeID\": \"f8b53c97b0026fe3cca2e5aff159dd95a11a457b39550927f89760b87a298f04901f984e0663ba11a0095648cf3619f882d2447b68ce186266796b95fc993460\",\n" +
-            "             \"blsPubKey\": \"2d5ee61e4ed4aac6610fc0744a0726579af80a61fca6d6e100c3c767ed9b07259a85e2ff0b5605693e39452d41300f1f3f304cc83e27775e4c56937979fe8486\"\n" +
-            "            },\n" +
-            "            \"signature\": \"0xb4d30e820d0918c5ea3df8116df1eddeca943856d0f106fd7a9c15b7d996ef14\"\n" +
-            "           },\n" +
-            "           \"vote_b\": {\n" +
-            "            \"epoch\": 1,\n" +
-            "            \"view_number\": 1,\n" +
-            "            \"block_hash\": \"0xdb8e3281bbd47c0fbdc1fa74c55dc1907b28b1552fcca3c14933e090f7680230\",\n" +
-            "            \"block_number\": 1,\n" +
-            "            \"block_index\": 1,\n" +
-            "            \"validate_node\": {\n" +
-            "             \"index\": 0,\n" +
-            "             \"address\": \"0xcf071a864d320d0de9cfefce84d7c32764a04bf4\",\n" +
-            "             \"NodeID\": \"f8b53c97b0026fe3cca2e5aff159dd95a11a457b39550927f89760b87a298f04901f984e0663ba11a0095648cf3619f882d2447b68ce186266796b95fc993460\",\n" +
-            "             \"blsPubKey\": \"2d5ee61e4ed4aac6610fc0744a0726579af80a61fca6d6e100c3c767ed9b07259a85e2ff0b5605693e39452d41300f1f3f304cc83e27775e4c56937979fe8486\"\n" +
-            "            },\n" +
-            "            \"signature\": \"0xb4d30e820d0918c5ea3df8116df1eddeca943856d0f106fd7a9c15b7d996ef14\"\n" +
-            "           }\n" +
-            "          }";
+            "    \"prepare_a\": {\n" +
+            "        \"epoch\": 0,\n" +
+            "        \"view_number\": 0,\n" +
+            "        \"block_hash\": \"0x6b603a7674e42eeaa7d26abafc50f2f9b0fba2196c7195df8be87f96f4e75b04\",\n" +
+            "        \"block_number\": 500,\n" +
+            "        \"block_index\": 0,\n" +
+            "        \"validate_node\": {\n" +
+            "            \"index\": 0,\n" +
+            "            \"address\": \"0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4\",\n" +
+            "            \"NodeID\": \"19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365\",\n" +
+            "            \"blsPubKey\": \"7f58e6c152917637069be6b3fab9ebe9d3e5c9f5cf7dbf34e95c89647b2c7001e01447b8e2f697bff8f963e44cf7ca15a183ff1c0e701089ee2cd381f217e112\"\n" +
+            "        },\n" +
+            "        \"signature\": \"0x351d4f08f4ceb1fed7c499a9bbd5a0d399b1678dc7f455e0cce5b2112199f18e\"\n" +
+            "    },\n" +
+            "    \"prepare_b\": {\n" +
+            "        \"epoch\": 0,\n" +
+            "        \"view_number\": 0,\n" +
+            "        \"block_hash\": \"0xe26284d36031feff49b43e4132a8ef9e02492ba33060f557e1198f5d65367dbf\",\n" +
+            "        \"block_number\": 500,\n" +
+            "        \"block_index\": 0,\n" +
+            "        \"validate_node\": {\n" +
+            "            \"index\": 0,\n" +
+            "            \"address\": \"0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4\",\n" +
+            "            \"NodeID\": \"19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365\",\n" +
+            "            \"blsPubKey\": \"7f58e6c152917637069be6b3fab9ebe9d3e5c9f5cf7dbf34e95c89647b2c7001e01447b8e2f697bff8f963e44cf7ca15a183ff1c0e701089ee2cd381f217e112\"\n" +
+            "        },\n" +
+            "        \"signature\": \"0xf710ff75b93e85fc314360632827eaad4203fc9fffbd5fab8c7406e33dd04a9b\"\n" +
+            "    }\n" +
+            "}";
 
     private SlashContract slashContract;
 
@@ -157,10 +157,10 @@ public class SlashContractTest {
     @Before
     public void init() {
 
-        credentials = Credentials.create("0xc783df0e98baf34f2ed791f6087be8e3f55fe9c4e4687e0ddc30a37abc15b287");
+        credentials = Credentials.create("0xa56f68ca7aa51c24916b9fff027708f856650f9ff36cc3c8da308040ebcc7867");
 
         slashContract = SlashContract.load(web3j,
-                credentials, "102");
+                credentials, "100");
     }
 
     /**
@@ -169,17 +169,8 @@ public class SlashContractTest {
      */
     @Test
     public void reportDuplicateSign() {
-
-//        try {
-//            PlatonEvidences platonEvidences = web3j.platonEvidences().send();
-//
-//            System.out.println(platonEvidences.getEvidences());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
         try {
-            PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(DuplicateSignType.PREPARE_VOTE, evidence).send();
+            PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(DuplicateSignType.PREPARE_BLOCK, evidence).send();
             BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
@@ -196,7 +187,8 @@ public class SlashContractTest {
     @Test
     public void checkDuplicateSign() {
         try {
-            BaseResponse baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x7ad2a071b1854d977a0f058028837d77a0da6aa4", BigInteger.valueOf(1889)).send();
+            BaseResponse baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4", BigInteger.valueOf(500)).send();
+
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

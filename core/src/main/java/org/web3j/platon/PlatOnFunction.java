@@ -11,7 +11,6 @@ import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.ContractGasProvider;
-import org.web3j.utils.JSONUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
