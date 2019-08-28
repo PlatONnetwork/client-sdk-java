@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
 import org.web3j.protocol.core.methods.response.*;
+
 import rx.Observable;
 
 import org.web3j.protocol.Web3j;
@@ -580,13 +581,13 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Observable<org.web3j.protocol.core.methods.response.Transaction>
-            transactionObservable() {
+    transactionObservable() {
         return web3jRx.transactionObservable(blockTime);
     }
 
     @Override
     public Observable<org.web3j.protocol.core.methods.response.Transaction>
-            pendingTransactionObservable() {
+    pendingTransactionObservable() {
         return web3jRx.pendingTransactionObservable(blockTime);
     }
 
@@ -612,7 +613,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Observable<org.web3j.protocol.core.methods.response.Transaction>
-            replayTransactionsObservable(
+    replayTransactionsObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         return web3jRx.replayTransactionsObservable(startBlock, endBlock);
     }
@@ -633,7 +634,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Observable<org.web3j.protocol.core.methods.response.Transaction>
-            catchUpToLatestTransactionObservable(DefaultBlockParameter startBlock) {
+    catchUpToLatestTransactionObservable(DefaultBlockParameter startBlock) {
         return web3jRx.catchUpToLatestTransactionObservable(startBlock);
     }
 
@@ -646,7 +647,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Observable<org.web3j.protocol.core.methods.response.Transaction>
-            catchUpToLatestAndSubscribeToNewTransactionsObservable(
+    catchUpToLatestAndSubscribeToNewTransactionsObservable(
             DefaultBlockParameter startBlock) {
         return web3jRx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
                 startBlock, blockTime);
@@ -664,6 +665,10 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Request<?, PlatonEvidences> platonEvidences() {
-        return null;
+        return new Request<>(
+                "platon_evidences",
+                Collections.<String>emptyList(),
+                web3jService,
+                PlatonEvidences.class);
     }
 }

@@ -58,6 +58,6 @@ public class RestrictingPlan extends CustomType {
 
     @Override
     public RlpType getRlpEncodeData() {
-        return new RlpList(RlpString.create(RlpEncoder.encode(RlpString.create(epoch))), RlpString.create(RlpEncoder.encode(RlpString.create(amount))));
+        return new RlpList(RlpString.create(epoch), RlpString.create(amount));
     }
 }
