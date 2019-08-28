@@ -4,20 +4,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
-import org.web3j.platon.DoubleSignType;
-import org.web3j.platon.bean.Evidences;
+import org.web3j.platon.DuplicateSignType;
 import org.web3j.platon.contracts.SlashContract;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.PlatonBlock;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.utils.JSONUtil;
 
 import java.math.BigInteger;
 
 public class SlashContractTest {
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    //    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.112.120:8222"));
 
     private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
     private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
@@ -122,16 +119,48 @@ public class SlashContractTest {
             "         ]\n" +
             "        }";
 
+    private String evidence = "{\n" +
+            "           \"vote_a\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0xdb8e3281bbd47c0fbdc1fa74c55dc1907b28b1552fcca3c14933e090f7680230\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"block_index\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0xcf071a864d320d0de9cfefce84d7c32764a04bf4\",\n" +
+            "             \"NodeID\": \"f8b53c97b0026fe3cca2e5aff159dd95a11a457b39550927f89760b87a298f04901f984e0663ba11a0095648cf3619f882d2447b68ce186266796b95fc993460\",\n" +
+            "             \"blsPubKey\": \"2d5ee61e4ed4aac6610fc0744a0726579af80a61fca6d6e100c3c767ed9b07259a85e2ff0b5605693e39452d41300f1f3f304cc83e27775e4c56937979fe8486\"\n" +
+            "            },\n" +
+            "            \"signature\": \"0xb4d30e820d0918c5ea3df8116df1eddeca943856d0f106fd7a9c15b7d996ef14\"\n" +
+            "           },\n" +
+            "           \"vote_b\": {\n" +
+            "            \"epoch\": 1,\n" +
+            "            \"view_number\": 1,\n" +
+            "            \"block_hash\": \"0xdb8e3281bbd47c0fbdc1fa74c55dc1907b28b1552fcca3c14933e090f7680230\",\n" +
+            "            \"block_number\": 1,\n" +
+            "            \"block_index\": 1,\n" +
+            "            \"validate_node\": {\n" +
+            "             \"index\": 0,\n" +
+            "             \"address\": \"0xcf071a864d320d0de9cfefce84d7c32764a04bf4\",\n" +
+            "             \"NodeID\": \"f8b53c97b0026fe3cca2e5aff159dd95a11a457b39550927f89760b87a298f04901f984e0663ba11a0095648cf3619f882d2447b68ce186266796b95fc993460\",\n" +
+            "             \"blsPubKey\": \"2d5ee61e4ed4aac6610fc0744a0726579af80a61fca6d6e100c3c767ed9b07259a85e2ff0b5605693e39452d41300f1f3f304cc83e27775e4c56937979fe8486\"\n" +
+            "            },\n" +
+            "            \"signature\": \"0xb4d30e820d0918c5ea3df8116df1eddeca943856d0f106fd7a9c15b7d996ef14\"\n" +
+            "           }\n" +
+            "          }";
+
     private SlashContract slashContract;
 
     private Credentials credentials;
 
     @Before
     public void init() {
-        credentials = Credentials.create("0xa56f68ca7aa51c24916b9fff027708f856650f9ff36cc3c8da308040ebcc7867");
+
+        credentials = Credentials.create("0xc783df0e98baf34f2ed791f6087be8e3f55fe9c4e4687e0ddc30a37abc15b287");
 
         slashContract = SlashContract.load(web3j,
-                credentials, "100");
+                credentials, "102");
     }
 
     /**
@@ -141,8 +170,16 @@ public class SlashContractTest {
     @Test
     public void reportDuplicateSign() {
 
+//        try {
+//            PlatonEvidences platonEvidences = web3j.platonEvidences().send();
+//
+//            System.out.println(platonEvidences.getEvidences());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
         try {
-            PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(data).send();
+            PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(DuplicateSignType.PREPARE_VOTE, evidence).send();
             BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
@@ -159,7 +196,7 @@ public class SlashContractTest {
     @Test
     public void checkDuplicateSign() {
         try {
-            BaseResponse baseResponse = slashContract.checkDoubleSign(DoubleSignType.PREPARE, "0x7ad2a071b1854d977a0f058028837d77a0da6aa4", BigInteger.valueOf(1889)).send();
+            BaseResponse baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x7ad2a071b1854d977a0f058028837d77a0da6aa4", BigInteger.valueOf(1889)).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,23 +7,19 @@ import org.web3j.abi.datatypes.generated.Uint64;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ContractAddress;
-import org.web3j.platon.DoubleSignType;
+import org.web3j.platon.DuplicateSignType;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
-import org.web3j.platon.bean.Node;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
 import org.web3j.tx.gas.GasProvider;
-import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 
@@ -82,9 +78,9 @@ public class SlashContract extends PlatOnContract {
      * @param data 证据的json值
      * @return
      */
-    public RemoteCall<BaseResponse> reportDoubleSign(String data) {
+    public RemoteCall<BaseResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Utf8String(data)));
+                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -110,9 +106,9 @@ public class SlashContract extends PlatOnContract {
      * @param data 证据的json值
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(String data) {
+    public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Utf8String(data)));
+                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -132,7 +128,7 @@ public class SlashContract extends PlatOnContract {
      * @param blockNumber    多签的块高
      * @return
      */
-    public RemoteCall<BaseResponse<String>> checkDoubleSign(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
+    public RemoteCall<BaseResponse<String>> checkDoubleSign(DuplicateSignType doubleSignType, String address, BigInteger blockNumber) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(doubleSignType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(address))
@@ -143,32 +139,6 @@ public class SlashContract extends PlatOnContract {
                 return executePatonCall(function);
             }
         });
-    }
-
-    /**
-     * 查询节点是否已被举报过多签
-     *
-     * @param doubleSignType 代表双签类型，1：prepare，2：viewChange
-     * @param address        举报的节点地址
-     * @param blockNumber    多签的块高
-     * @return
-     */
-    public RemoteCall<PlatonSendTransaction> checkDoubleSignReturnTransaction(DoubleSignType doubleSignType, String address, BigInteger blockNumber) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint32(doubleSignType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(address))
-                        , new Uint64(blockNumber)));
-        return executeRemoteCallPlatonTransaction(function);
-    }
-
-    /**
-     * 获取查询节点是否已被举报过多签的结果
-     *
-     * @param ethSendTransaction
-     * @return
-     */
-    public RemoteCall<BaseResponse> getCheckDoubleSignResult(PlatonSendTransaction ethSendTransaction) {
-        return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE);
     }
 
 }

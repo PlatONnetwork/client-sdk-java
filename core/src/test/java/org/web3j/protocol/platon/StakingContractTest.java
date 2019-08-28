@@ -41,7 +41,8 @@ import java.util.List;
  */
 public class StakingContractTest {
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.127:6781"));
+//        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.112.120:8222"));
 
     private StakingContract stakingContract;
 
@@ -61,10 +62,11 @@ public class StakingContractTest {
     public void init() {
 
         credentials = Credentials.create("0x59a9fac3bc8024169df74e6c0c861e1a5fdbe620b8a7a0c1dd0539d02c4e6add");
+//        credentials = Credentials.create("0xc783df0e98baf34f2ed791f6087be8e3f55fe9c4e4687e0ddc30a37abc15b287");
 
         stakingContract = StakingContract.load(
                 web3j,
-                credentials, "100");
+                credentials, "102");
 
     }
 
@@ -82,13 +84,15 @@ public class StakingContractTest {
     @Test
     public void staking() {
 
-        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("59a9fac3bc8024169df74e6c0c861e1a5fdbe620b8a7a0c1dd0539d02c4e6add")));
-        try {
-            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0x"+fromAddress, DefaultBlockParameterName.LATEST).send();
-            System.out.println(platonGetBalance.getBalance().longValue());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("c783df0e98baf34f2ed791f6087be8e3f55fe9c4e4687e0ddc30a37abc15b287")));
+//        try {
+//            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0x"+fromAddress, DefaultBlockParameterName.LATEST).send();
+//            System.out.println(platonGetBalance.getBalance().longValue());
+//            System.out.println(web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST,false).send().getBlock().getNumber());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         try {
             PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
                     .setNodeId(nodeId)

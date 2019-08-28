@@ -72,6 +72,12 @@ public class PlatOnFunction {
         return new ContractGasProvider(getGasPrice(), gasLimit);
     }
 
+    public BigInteger getFeeAmount(BigInteger gasPrice) {
+        BigInteger gasLimit = BASE_DEFAULT_GAS_LIMIT.add(getContractGasLimit())
+                .add(getFunctionGasLimit()).add(getInterfaceDynamicGasLimit()).add(getDataGasLimit());
+        return gasLimit.multiply(gasPrice);
+    }
+
     private BigInteger getGasPrice() {
         switch (type) {
             case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
@@ -148,7 +154,7 @@ public class PlatOnFunction {
             case FunctionType.VOTE_FUNC_TYPE:
                 return BigInteger.valueOf(2000);
             case FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE:
-                return BigInteger.valueOf(21000);
+                return BigInteger.valueOf(42000);
             default:
                 return BigInteger.valueOf(0);
         }
@@ -163,13 +169,6 @@ public class PlatOnFunction {
         if (type == FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE) {
             if (inputParameters.size() > 1 && inputParameters.get(1) instanceof CustomStaticArray) {
                 return BigInteger.valueOf(((CustomStaticArray) inputParameters.get(1)).getValue().size()).multiply(BASE_DEFAULT_GAS_LIMIT);
-            }
-        } else if (type == FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE) {
-            if (inputParameters.size() > 1) {
-                Evidences evidences = JSONUtil.parseObject((String) inputParameters.get(1).getValue(), Evidences.class);
-                if (evidences != null) {
-                    return BigInteger.valueOf(21000).multiply(BigInteger.valueOf(evidences.getEvidencesSize()));
-                }
             }
         }
         return BigInteger.ZERO;

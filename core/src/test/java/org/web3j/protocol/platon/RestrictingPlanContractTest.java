@@ -1,15 +1,23 @@
 package org.web3j.protocol.platon;
 
+import org.bouncycastle.util.encoders.Hex;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.FunctionType;
 import org.web3j.platon.bean.RestrictingItem;
 import org.web3j.platon.bean.RestrictingPlan;
 import org.web3j.platon.contracts.RestrictingPlanContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.rlp.RlpEncoder;
+import org.web3j.rlp.RlpList;
+import org.web3j.rlp.RlpString;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -25,7 +33,7 @@ public class RestrictingPlanContractTest {
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
 
-    private String benifitAddress = "0x493301712671Ada586ba6Ca7891F436D29185821";
+    private String benifitAddress = "0x493301712671Ada586ba6Ca7891F436D29185889";
 
     private RestrictingPlanContract restrictingPlanContract;
 
@@ -47,9 +55,31 @@ public class RestrictingPlanContractTest {
     @Test
     public void createRestrictingPlan() {
 
+//        byte[] data = RlpEncoder.encode(new RlpList(
+//                        RlpString.create(RlpEncoder.encode(RlpString.create(FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE))),
+//                        RlpString.create(RlpEncoder.encode(RlpString.create(Numeric.hexStringToByteArray(benifitAddress)))),
+//                        RlpString.create(RlpEncoder.encode(new RlpList(
+//                                        new RlpList(
+//                                                RlpString.create(100),
+//                                                RlpString.create(new BigInteger("5000000000000000000"))
+//                                        ),
+//                                        new RlpList(
+//                                                RlpString.create(100),
+//                                                RlpString.create(new BigInteger("600000000000000000"))
+//                                        )
+//                                )
+//                                )
+//                        )
+//                )
+//        );
+//
+//        String result = Hex.toHexString(data);
+//
+//        System.out.println(result);
+
         List<RestrictingPlan> restrictingPlans = new ArrayList<>();
-        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(100), new BigInteger("5000000000000000000")));
-        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(200), new BigInteger("600000000000000000")));
+        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(100), new BigInteger("1000000000000000000")));
+        restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(200), new BigInteger("200000000000000000")));
         try {
             PlatonSendTransaction platonSendTransaction = restrictingPlanContract.createRestrictingPlanReturnTransaction(benifitAddress, restrictingPlans).send();
             BaseResponse baseResponse = restrictingPlanContract.getCreateRestrictingPlanResult(platonSendTransaction).send();
