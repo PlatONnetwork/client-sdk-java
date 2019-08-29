@@ -19,18 +19,27 @@ public class TransactionDecoder {
         String to = ((RlpString) values.getValues().get(3)).asString();
         BigInteger value = ((RlpString) values.getValues().get(4)).asPositiveBigInteger();
         String data = ((RlpString) values.getValues().get(5)).asString();
-        if (values.getValues().size() > 6) {
-            byte v = ((RlpString) values.getValues().get(6)).getBytes()[0];
-            byte[] r = Numeric.toBytesPadded(
-                Numeric.toBigInt(((RlpString) values.getValues().get(7)).getBytes()), 32);
-            byte[] s = Numeric.toBytesPadded(
-                Numeric.toBigInt(((RlpString) values.getValues().get(8)).getBytes()), 32);
-            Sign.SignatureData signatureData = new Sign.SignatureData(v, r, s);
-            return new SignedRawTransaction(nonce, gasPrice, gasLimit,
-                to, value, data, signatureData);
+        if (values.getValues().size() == 6
+                || (values.getValues().size() == 8
+                        && ((RlpString) values.getValues().get(7)).getBytes().length == 10)
+                || (values.getValues().size() == 9
+                        && ((RlpString) values.getValues().get(8)).getBytes().length == 10)) {
+            // the 8th or 9nth element is the hex
+            // representation of "restricted" for private transactions
+            return RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
         } else {
-            return RawTransaction.createTransaction(nonce,
-                gasPrice, gasLimit, to, value, data);
+            final byte[] v = ((RlpString) values.getValues().get(6)).getBytes();
+            final byte[] r =
+                    Numeric.toBytesPadded(
+                            Numeric.toBigInt(((RlpString) values.getValues().get(7)).getBytes()),
+                            32);
+            final byte[] s =
+                    Numeric.toBytesPadded(
+                            Numeric.toBigInt(((RlpString) values.getValues().get(8)).getBytes()),
+                            32);
+            final Sign.SignatureData signatureData = new Sign.SignatureData(v, r, s);
+            return new SignedRawTransaction(
+                    nonce, gasPrice, gasLimit, to, value, data, signatureData);
         }
     }
     
