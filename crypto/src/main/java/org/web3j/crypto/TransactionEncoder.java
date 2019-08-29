@@ -1,5 +1,7 @@
 package org.web3j.crypto;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,9 @@ import org.web3j.utils.Numeric;
  * <a href="http://gavwood.com/paper.pdf">yellow paper</a>.
  */
 public class TransactionEncoder {
+	
+	private static final int CHAIN_ID_INC = 35;
+    private static final int LOWER_REAL_V = 27;
 
     public static byte[] signMessage(RawTransaction rawTransaction, Credentials credentials) {
         byte[] encodedTransaction = encode(rawTransaction);
@@ -36,10 +41,16 @@ public class TransactionEncoder {
 
     public static Sign.SignatureData createEip155SignatureData(
             Sign.SignatureData signatureData, byte chainId) {
-        byte v = (byte) (signatureData.getV() + (chainId << 1) + 8);
+//        byte v = (byte) (signatureData.getV() + (chainId << 1) + 8);
+        BigInteger v =  Numeric.toBigInt(signatureData.getV());
+        v = v.subtract(BigInteger.valueOf(LOWER_REAL_V));
+        v = v.add(BigInteger.valueOf(chainId * 2));
+        v = v.add(BigInteger.valueOf(CHAIN_ID_INC));
+
+        
 
         return new Sign.SignatureData(
-                v, signatureData.getR(), signatureData.getS());
+                v.toByteArray(), signatureData.getR(), signatureData.getS());
     }
 
     public static byte[] encode(RawTransaction rawTransaction) {
@@ -48,7 +59,7 @@ public class TransactionEncoder {
 
     public static byte[] encode(RawTransaction rawTransaction, byte chainId) {
         Sign.SignatureData signatureData = new Sign.SignatureData(
-                chainId, new byte[] {}, new byte[] {});
+        		longToBytes(chainId), new byte[] {}, new byte[] {});
         return encode(rawTransaction, signatureData);
     }
 
@@ -56,6 +67,12 @@ public class TransactionEncoder {
         List<RlpType> values = asRlpValues(rawTransaction, signatureData);
         RlpList rlpList = new RlpList(values);
         return RlpEncoder.encode(rlpList);
+    }
+    
+    private static byte[] longToBytes(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(x);
+        return buffer.array();
     }
 
     static List<RlpType> asRlpValues(
@@ -83,7 +100,7 @@ public class TransactionEncoder {
         result.add(RlpString.create(data));
 
         if (signatureData != null) {
-            result.add(RlpString.create(signatureData.getV()));
+            result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getV())));
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getR())));
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getS())));
         }
