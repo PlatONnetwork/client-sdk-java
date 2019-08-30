@@ -96,7 +96,7 @@ public class RawTransactionManager extends TransactionManager {
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, BigInteger value) throws IOException {
 
-        BigInteger nonce = getNonce().add(BigInteger.TEN);
+        BigInteger nonce = getNonce();
 
         RawTransaction rawTransaction = RawTransaction.createTransaction(
                 nonce,
