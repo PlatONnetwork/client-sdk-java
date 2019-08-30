@@ -47,29 +47,12 @@ public class SlashContract extends PlatOnContract {
         return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
 
-    /**
-     * sendRawTransaction 使用自定义的gasProvider
-     *
-     * @param web3j
-     * @param credentials
-     * @param contractGasProvider
-     * @param chainId
-     * @return
-     */
-    public static SlashContract load(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String chainId) {
-        return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
-    }
-
     private SlashContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
     }
 
     private SlashContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
-        super(contractAddress, chainId, web3j, credentials, null);
-    }
-
-    private SlashContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
-        super(contractAddress, chainId, web3j, credentials, gasProvider);
+        super(contractAddress, chainId, web3j, credentials);
     }
 
     /**
@@ -81,6 +64,19 @@ public class SlashContract extends PlatOnContract {
     public RemoteCall<BaseResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
+        return executeRemoteCallTransactionWithFunctionType(function);
+    }
+
+    /**
+     * 举报双签
+     *
+     * @param data        证据的json值
+     * @param gasProvider
+     * @return
+     */
+    public RemoteCall<BaseResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {
+        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)), gasProvider);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -109,6 +105,19 @@ public class SlashContract extends PlatOnContract {
     public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
+        return executeRemoteCallPlatonTransaction(function);
+    }
+
+    /**
+     * 举报双签
+     *
+     * @param data        证据的json值
+     * @param gasProvider
+     * @return
+     */
+    public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {
+        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)), gasProvider);
         return executeRemoteCallPlatonTransaction(function);
     }
 

@@ -14,6 +14,7 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.StakingAmountType;
 import org.web3j.platon.bean.Node;
 import org.web3j.platon.bean.StakingParam;
+import org.web3j.platon.bean.UpdateStakingParam;
 import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -42,7 +43,7 @@ import java.util.List;
  */
 public class StakingContractTest {
 
-//        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
+    //        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
 
     private StakingContract stakingContract;
@@ -126,8 +127,15 @@ public class StakingContractTest {
      */
     @Test
     public void updateStakingInfo() {
+
         try {
-            PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(nodeId, benifitAddress, externalId, nodeName, "https://www.github.com/", details).send();
+            PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
+                    .setNodeId(nodeId)
+                    .setBenifitAddress(benifitAddress)
+                    .setExternalId(externalId)
+                    .setNodeName("https://www.github.com/")
+                    .setDetails(details)
+                    .build()).send();
             BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {

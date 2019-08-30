@@ -17,7 +17,8 @@ public class FakeNodeGenerator {
         for (int i=0;i<count;i++){
             IPGenerator.IpPort ipPort = fakeIpPorts.get(i);
             ECKeyPairGenerator.KeyPair keyPair = keyPairs.get(i);
-            Node node = new Node(keyPair.getPublicKey(),randomName()+1,ipPort.getIp(),ipPort.getPort().toString());
+//            Node node = new Node(keyPair.getPublicKey(),randomName()+1,ipPort.getIp(),ipPort.getPort().toString());
+            Node node = new Node("",randomName()+1,"","");
             fakeNodes.add(node);
         }
         return fakeNodes;

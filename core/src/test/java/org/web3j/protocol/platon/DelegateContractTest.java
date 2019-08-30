@@ -44,8 +44,7 @@ public class DelegateContractTest {
         credentials = Credentials.create("0x6fe419582271a4dcf01c51b89195b77b228377fde4bde6e04ef126a0b4373f79");
 
         delegateContract = DelegateContract.load(web3j,
-                credentials,
-                new DefaultWasmGasProvider(), "100");
+                credentials, "100");
     }
 
     @Test

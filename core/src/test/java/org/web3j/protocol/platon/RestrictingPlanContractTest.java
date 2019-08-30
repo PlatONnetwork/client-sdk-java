@@ -1,23 +1,15 @@
 package org.web3j.protocol.platon;
 
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
 import org.web3j.platon.BaseResponse;
-import org.web3j.platon.FunctionType;
 import org.web3j.platon.bean.RestrictingItem;
 import org.web3j.platon.bean.RestrictingPlan;
 import org.web3j.platon.contracts.RestrictingPlanContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.rlp.RlpEncoder;
-import org.web3j.rlp.RlpList;
-import org.web3j.rlp.RlpString;
-import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
