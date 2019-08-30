@@ -14,7 +14,7 @@ import java.math.BigInteger;
 
 public class SlashContractTest {
     //    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6796"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
 
     private String address = "0x493301712671Ada506ba6Ca7891F436D29185821";
     private String benifitAddress = "0x12c171900f010b17e969702efa044d077e868082";
@@ -129,10 +129,10 @@ public class SlashContractTest {
             "        \"validate_node\": {\n" +
             "            \"index\": 0,\n" +
             "            \"address\": \"0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4\",\n" +
-            "            \"NodeID\": \"19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365\",\n" +
-            "            \"blsPubKey\": \"7f58e6c152917637069be6b3fab9ebe9d3e5c9f5cf7dbf34e95c89647b2c7001e01447b8e2f697bff8f963e44cf7ca15a183ff1c0e701089ee2cd381f217e112\"\n" +
+            "            \"NodeID\": \"411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c\",\n" +
+            "            \"blsPubKey\": \"80d98a48400a36e3da9de8e227e4a8c8fa3f90c08c82a467c9ac01298c2eb57f543d7e9568b0f381cc6c9de911870d1292b62459d083700d3958d775fca60e41ddd7d8532163f5acabaa6e0c47b626c39de51d9d67fb97a5af1871a661ca7788\"\n" +
             "        },\n" +
-            "        \"signature\": \"0x351d4f08f4ceb1fed7c499a9bbd5a0d399b1678dc7f455e0cce5b2112199f18e\"\n" +
+            "        \"signature\": \"0x351d4f08f4ceb1fed7c499a9bbd5a0d399b1678dc7f455e0cce5b2112199f18e351d4f08f4ceb1fed7c499a9bbd5a0d399b1678dc7f455e0cce5b2112199f18e\"\n" +
             "    },\n" +
             "    \"prepare_b\": {\n" +
             "        \"epoch\": 0,\n" +
@@ -143,10 +143,10 @@ public class SlashContractTest {
             "        \"validate_node\": {\n" +
             "            \"index\": 0,\n" +
             "            \"address\": \"0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4\",\n" +
-            "            \"NodeID\": \"19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365\",\n" +
-            "            \"blsPubKey\": \"7f58e6c152917637069be6b3fab9ebe9d3e5c9f5cf7dbf34e95c89647b2c7001e01447b8e2f697bff8f963e44cf7ca15a183ff1c0e701089ee2cd381f217e112\"\n" +
+            "            \"NodeID\": \"411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c\",\n" +
+            "            \"blsPubKey\": \"80d98a48400a36e3da9de8e227e4a8c8fa3f90c08c82a467c9ac01298c2eb57f543d7e9568b0f381cc6c9de911870d1292b62459d083700d3958d775fca60e41ddd7d8532163f5acabaa6e0c47b626c39de51d9d67fb97a5af1871a661ca7788\"\n" +
             "        },\n" +
-            "        \"signature\": \"0xf710ff75b93e85fc314360632827eaad4203fc9fffbd5fab8c7406e33dd04a9b\"\n" +
+            "        \"signature\": \"0xf710ff75b93e85fc314360632827eaad4203fc9fffbd5fab8c7406e33dd04a9b351d4f08f4ceb1fed7c499a9bbd5a0d399b1678dc7f455e0cce5b2112199f18e\"\n" +
             "    }\n" +
             "}";
 
@@ -157,7 +157,7 @@ public class SlashContractTest {
     @Before
     public void init() {
 
-        credentials = Credentials.create("0xa56f68ca7aa51c24916b9fff027708f856650f9ff36cc3c8da308040ebcc7867");
+        credentials = Credentials.create("0x6fe419582271a4dcf01c51b89195b77b228377fde4bde6e04ef126a0b4373f79");
 
         slashContract = SlashContract.load(web3j,
                 credentials, "100");

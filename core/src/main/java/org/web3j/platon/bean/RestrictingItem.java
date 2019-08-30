@@ -2,6 +2,8 @@ package org.web3j.platon.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import org.web3j.utils.Numeric;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -28,24 +30,24 @@ public class RestrictingItem {
         return balance;
     }
 
-    public void setBalance(BigInteger balance) {
-        this.balance = balance;
+    public void setBalance(String balance) {
+        this.balance = Numeric.decodeQuantity(balance);
     }
 
     public BigInteger getPledge() {
         return pledge;
     }
 
-    public void setPledge(BigInteger pledge) {
-        this.pledge = pledge;
+    public void setPledge(String pledge) {
+        this.pledge = Numeric.decodeQuantity(pledge);
     }
 
     public BigInteger getDebt() {
         return debt;
     }
 
-    public void setDebt(BigInteger debt) {
-        this.debt = debt;
+    public void setDebt(String debt) {
+        this.debt = Numeric.decodeQuantity(debt);
     }
 
     public List<RestrictingInfo> getInfo() {

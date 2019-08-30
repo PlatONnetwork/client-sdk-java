@@ -6,6 +6,7 @@ import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint16;
+import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.abi.datatypes.generated.Uint64;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
@@ -173,7 +174,7 @@ public class Proposal {
         } else if (proposalType == ProposalType.VERSION_PROPOSAL) {
             return Arrays.asList(new BytesType(Numeric.hexStringToByteArray(this.verifier)),
                     new Utf8String(this.piPid),
-                    new Uint16(this.newVersion),
+                    new Uint32(this.newVersion),
                     new Uint64(this.endVotingBlock));
         } else if (proposalType == ProposalType.CANCEL_PROPOSAL) {
             return Arrays.asList(new BytesType(Numeric.hexStringToByteArray(this.verifier)),

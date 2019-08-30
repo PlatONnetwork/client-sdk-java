@@ -41,7 +41,7 @@ public class DelegateContractTest {
 
     @Before
     public void init() {
-        credentials = Credentials.create("0xa11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7");
+        credentials = Credentials.create("0x6fe419582271a4dcf01c51b89195b77b228377fde4bde6e04ef126a0b4373f79");
 
         delegateContract = DelegateContract.load(web3j,
                 credentials,
@@ -84,7 +84,6 @@ public class DelegateContractTest {
      */
     @Test
     public void delegate() {
-
         try {
             PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("1000000000000000000000000")).send();
             BaseResponse baseResponse = delegateContract.getDelegateResult(platonSendTransaction).send();
@@ -102,7 +101,6 @@ public class DelegateContractTest {
      */
     @Test
     public void unDelegate() {
-
         try {
             PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, BigInteger.valueOf(2360), new BigInteger("1000000000000000000000000")).send();
             BaseResponse baseResponse = delegateContract.getUnDelegateResult(platonSendTransaction).send();
@@ -120,7 +118,6 @@ public class DelegateContractTest {
      */
     @Test
     public void getDelegateInfo() {
-
         try {
             BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateAddress, BigInteger.valueOf(636)).send();
             System.out.println(baseResponse.data.toString());

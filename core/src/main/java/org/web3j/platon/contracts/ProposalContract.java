@@ -22,11 +22,9 @@ import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -112,7 +110,9 @@ public class ProposalContract extends PlatOnContract {
             @Override
             public BaseResponse<TallyResult> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseObject((String) response.data, TallyResult.class);
+                if(response.isStatusOk()) {
+                    response.data = JSONUtil.parseObject((String) response.data, TallyResult.class);
+                }
                 return response;
             }
         });
