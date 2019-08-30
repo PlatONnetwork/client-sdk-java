@@ -11,6 +11,7 @@ import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.GasProvider;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -39,13 +40,26 @@ public class PlatOnFunction {
 
     private List<Type> inputParameters;
 
+    protected GasProvider gasProvider;
+
     public PlatOnFunction(int type) {
         this.type = type;
+    }
+
+    public PlatOnFunction(int type, GasProvider gasProvider) {
+        this.type = type;
+        this.gasProvider = gasProvider;
     }
 
     public PlatOnFunction(int type, List<Type> inputParameters) {
         this.type = type;
         this.inputParameters = inputParameters;
+    }
+
+    public PlatOnFunction(int type, List<Type> inputParameters, GasProvider gasProvider) {
+        this.type = type;
+        this.inputParameters = inputParameters;
+        this.gasProvider = gasProvider;
     }
 
     public int getType() {
@@ -65,10 +79,13 @@ public class PlatOnFunction {
     }
 
 
-    public ContractGasProvider getGasProvider() {
-        BigInteger gasLimit = BASE_DEFAULT_GAS_LIMIT.add(getContractGasLimit())
-                .add(getFunctionGasLimit()).add(getInterfaceDynamicGasLimit()).add(getDataGasLimit());
-        return new ContractGasProvider(getGasPrice(), gasLimit);
+    public GasProvider getGasProvider() {
+        if (gasProvider == null) {
+            BigInteger gasLimit = BASE_DEFAULT_GAS_LIMIT.add(getContractGasLimit())
+                    .add(getFunctionGasLimit()).add(getInterfaceDynamicGasLimit()).add(getDataGasLimit());
+            return new ContractGasProvider(getGasPrice(), gasLimit);
+        }
+        return gasProvider;
     }
 
     public BigInteger getFeeAmount(BigInteger gasPrice) {

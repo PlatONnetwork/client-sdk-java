@@ -63,9 +63,10 @@ public class ProposalContractTest {
 
     private String builtInPrivateKey = "a11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7";
     private String privateKey = "0x59a9fac3bc8024169df74e6c0c861e1a5fdbe620b8a7a0c1dd0539d02c4e6add";
+    private String privateKey2 = "0xa689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b";
 
     private String nodeId = "47eddf1110e92262fd593df81307eca0cb544669986baa702fe11942fca14e20bd7436f2da1c4b23c1c72a4873bd6b322c8525e4324f8c85ed55ae98d5a115f2";
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.112.171:6789"));
     private Credentials credentials;
     private ProposalContract proposalContract;
     private String pIDID =null;
@@ -73,7 +74,7 @@ public class ProposalContractTest {
     @Before
     public void init() {
 
-        credentials = Credentials.create(privateKey);
+        credentials = Credentials.create(privateKey2);
 
         proposalContract = ProposalContract.load(web3j,
                 credentials, "100");
@@ -179,7 +180,7 @@ public class ProposalContractTest {
                     web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
             BigInteger blockNumber = ethBlock.getBlock().getNumber();
             BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
-            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam(nodeId, "1177777335544552888200", BigInteger.valueOf(20000), BigInteger.valueOf(100))).send();
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam("0aa9805681d8f77c05f317efc141c97d5adb511ffb51f5a251d2d7a4a3a96d9a12adf39f06b702f0ccdff9eddc1790eb272dca31b0c47751d49b5931c58701e7", "1177777335544552888200", BigInteger.valueOf(20000), BigInteger.valueOf(50))).send();
             BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_VERSION_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {

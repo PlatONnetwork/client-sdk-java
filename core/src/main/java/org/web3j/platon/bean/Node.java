@@ -4,6 +4,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 
+import org.bouncycastle.util.encoders.HexEncoder;
+import org.web3j.utils.Numeric;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+
 public class Node {
 
     @JSONField(name = "NodeId")
@@ -128,40 +133,40 @@ public class Node {
         return shares;
     }
 
-    public void setShares(BigInteger shares) {
-        this.shares = shares;
+    public void setShares(String shares) {
+        this.shares = Numeric.decodeQuantity(shares);
     }
 
     public BigInteger getReleased() {
         return released;
     }
 
-    public void setReleased(BigInteger released) {
-        this.released = released;
+    public void setReleased(String released) {
+        this.released = Numeric.decodeQuantity(released);
     }
 
     public BigInteger getReleasedHes() {
         return releasedHes;
     }
 
-    public void setReleasedHes(BigInteger releasedHes) {
-        this.releasedHes = releasedHes;
+    public void setReleasedHes(String releasedHes) {
+        this.releasedHes = Numeric.decodeQuantity(releasedHes);
     }
 
     public BigInteger getRestrictingPlan() {
         return restrictingPlan;
     }
 
-    public void setRestrictingPlan(BigInteger restrictingPlan) {
-        this.restrictingPlan = restrictingPlan;
+    public void setRestrictingPlan(String restrictingPlan) {
+        this.restrictingPlan = Numeric.decodeQuantity(restrictingPlan);
     }
 
     public BigInteger getRestrictingPlanHes() {
         return restrictingPlanHes;
     }
 
-    public void setRestrictingPlanHes(BigInteger restrictingPlanHes) {
-        this.restrictingPlanHes = restrictingPlanHes;
+    public void setRestrictingPlanHes(String restrictingPlanHes) {
+        this.restrictingPlanHes = Numeric.decodeQuantity(restrictingPlanHes);
     }
 
     public String getExternalId() {

@@ -7,6 +7,7 @@ import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
@@ -42,8 +43,8 @@ public class RestrictingPlan extends CustomType {
         return amount;
     }
 
-    public void setAmount(BigInteger amount) {
-        this.amount = amount;
+    public void setAmount(String amount) {
+        this.amount = Numeric.decodeQuantity(amount);
     }
 
     @Override

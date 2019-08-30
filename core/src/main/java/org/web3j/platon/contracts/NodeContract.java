@@ -25,20 +25,12 @@ public class NodeContract extends PlatOnContract {
         return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
 
-    public static NodeContract load(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String chainId) {
-        return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, chainId, web3j, credentials, contractGasProvider);
-    }
-
     private NodeContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
     }
 
     private NodeContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
-    }
-
-    private NodeContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
-        super(contractAddress, chainId, web3j, credentials, gasProvider);
     }
 
     /**
