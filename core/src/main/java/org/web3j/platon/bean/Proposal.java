@@ -226,7 +226,6 @@ public class Proposal {
                 .build();
     }
 
-
     static final class Builder {
         private String proposalId;
         private String proposer;
