@@ -4,6 +4,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 
+import org.web3j.utils.Numeric;
+
 public class Delegation {
 
     /**
@@ -87,41 +89,61 @@ public class Delegation {
     public BigInteger getDelegateReleased() {
         return delegateReleased;
     }
-
-    public void setDelegateReleased(BigInteger delegateReleased) {
-        this.delegateReleased = delegateReleased;
+    
+    public void setDelegateReleased(String delegateReleased) {
+      	if(delegateReleased != null && delegateReleased.length()>0) {
+      		this.delegateReleased = Numeric.decodeQuantity(delegateReleased);
+      	}else {
+      		this.delegateReleased = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getDelegateReleasedHes() {
         return delegateReleasedHes;
     }
-
-    public void setDelegateReleasedHes(BigInteger delegateReleasedHes) {
-        this.delegateReleasedHes = delegateReleasedHes;
+    
+    public void setDelegateReleasedHes(String delegateReleasedHes) {
+      	if(delegateReleasedHes != null && delegateReleasedHes.length()>0) {
+      		this.delegateReleasedHes = Numeric.decodeQuantity(delegateReleasedHes);
+      	}else {
+      		this.delegateReleasedHes = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getDelegateLocked() {
         return delegateLocked;
     }
-
-    public void setDelegateLocked(BigInteger delegateLocked) {
-        this.delegateLocked = delegateLocked;
+    
+    public void setDelegateLocked(String delegateLocked) {
+      	if(delegateLocked != null && delegateLocked.length()>0) {
+      		this.delegateLocked = Numeric.decodeQuantity(delegateLocked);
+      	}else {
+      		this.delegateLocked = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getDelegateLockedHes() {
         return delegateLockedHes;
     }
 
-    public void setDelegateLockedHes(BigInteger delegateLockedHes) {
-        this.delegateLockedHes = delegateLockedHes;
+    public void setDelegateLockedHes(String delegateLockedHes) {
+      	if(delegateLockedHes != null && delegateLockedHes.length()>0) {
+      		this.delegateLockedHes = Numeric.decodeQuantity(delegateLockedHes);
+      	}else {
+      		this.delegateLockedHes = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getDelegateReduction() {
         return delegateReduction;
     }
-
-    public void setDelegateReduction(BigInteger delegateReduction) {
-        this.delegateReduction = delegateReduction;
+    
+    public void setDelegateReduction(String delegateReduction) {
+      	if(delegateReduction != null && delegateReduction.length()>0) {
+      		this.delegateReduction = Numeric.decodeQuantity(delegateReduction);
+      	}else {
+      		this.delegateReduction = BigInteger.ZERO;
+		}
     }
 
     @Override

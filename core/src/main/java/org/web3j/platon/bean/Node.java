@@ -1,13 +1,10 @@
 package org.web3j.platon.bean;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 import java.math.BigInteger;
 
-import org.bouncycastle.util.encoders.HexEncoder;
 import org.web3j.utils.Numeric;
 
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import com.alibaba.fastjson.annotation.JSONField;
 
 public class Node {
 
@@ -134,7 +131,11 @@ public class Node {
     }
 
     public void setShares(String shares) {
-        this.shares = Numeric.decodeQuantity(shares);
+      	if(shares != null && shares.length()>0) {
+      		this.shares = Numeric.decodeQuantity(shares);
+    	}else {
+    		this.shares = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getReleased() {
@@ -142,7 +143,11 @@ public class Node {
     }
 
     public void setReleased(String released) {
-        this.released = Numeric.decodeQuantity(released);
+      	if(released != null && released.length()>0) {
+      		this.released = Numeric.decodeQuantity(released);
+      	}else {
+      		this.released = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getReleasedHes() {
@@ -150,7 +155,11 @@ public class Node {
     }
 
     public void setReleasedHes(String releasedHes) {
-        this.releasedHes = Numeric.decodeQuantity(releasedHes);
+      	if(releasedHes != null && releasedHes.length()>0) {
+      		this.releasedHes = Numeric.decodeQuantity(releasedHes);
+      	}else {
+      		this.releasedHes = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getRestrictingPlan() {
@@ -158,7 +167,11 @@ public class Node {
     }
 
     public void setRestrictingPlan(String restrictingPlan) {
-        this.restrictingPlan = Numeric.decodeQuantity(restrictingPlan);
+      	if(restrictingPlan != null && restrictingPlan.length()>0) {
+      		this.restrictingPlan = Numeric.decodeQuantity(restrictingPlan);
+      	}else {
+      		this.restrictingPlan = BigInteger.ZERO;
+		}
     }
 
     public BigInteger getRestrictingPlanHes() {
@@ -166,7 +179,11 @@ public class Node {
     }
 
     public void setRestrictingPlanHes(String restrictingPlanHes) {
-        this.restrictingPlanHes = Numeric.decodeQuantity(restrictingPlanHes);
+      	if(restrictingPlanHes != null && restrictingPlanHes.length()>0) {
+      		this.restrictingPlanHes = Numeric.decodeQuantity(restrictingPlanHes);
+      	}else {
+      		this.restrictingPlanHes = BigInteger.ZERO;
+		}
     }
 
     public String getExternalId() {
