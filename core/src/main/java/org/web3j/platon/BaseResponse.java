@@ -1,5 +1,7 @@
 package org.web3j.platon;
 
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class BaseResponse<T> {
@@ -12,6 +14,8 @@ public class BaseResponse<T> {
 
     @JSONField(name = "ErrMsg")
     public String errMsg;
+    
+    public TransactionReceipt transactionReceipt;
 
     public BaseResponse() {
     }
@@ -25,12 +29,9 @@ public class BaseResponse<T> {
         this.errMsg = throwable.getMessage();
     }
 
-    @Override
-    public String toString() {
-        return "BaseResponse{" +
-                "status=" + status +
-                ", data=" + data +
-                ", errMsg='" + errMsg + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "BaseResponse [status=" + status + ", data=" + data + ", errMsg=" + errMsg + ", transactionReceipt="
+				+ transactionReceipt + "]";
+	}
 }

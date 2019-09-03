@@ -83,7 +83,7 @@ public class Transfer extends ManagedTransaction {
             String toAddress, BigDecimal value, Convert.Unit unit) throws InterruptedException,
             IOException, TransactionException {
 
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, new Byte(chainId));
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, Long.valueOf(chainId));
 
         return new RemoteCall<>(() ->
                 new Transfer(web3j, transactionManager).send(toAddress, value, unit));

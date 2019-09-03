@@ -70,3 +70,5 @@ console/out/
 core/out/
 crypto/out/
 integration-tests/out/
+
+bin/

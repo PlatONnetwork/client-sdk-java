@@ -308,7 +308,7 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> getDeclareVersionResult(PlatonSendTransaction ethSendTransaction) {
-        return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.DELEGATE_FUNC_TYPE);
+        return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.DECLARE_VERSION_FUNC_TYPE);
     }
 
     /**

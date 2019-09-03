@@ -30,7 +30,7 @@ public class TransactionEncoder {
     }
 
     public static byte[] signMessage(
-            RawTransaction rawTransaction, byte chainId, Credentials credentials) {
+            RawTransaction rawTransaction, long chainId, Credentials credentials) {
         byte[] encodedTransaction = encode(rawTransaction, chainId);
         Sign.SignatureData signatureData = Sign.signMessage(
                 encodedTransaction, credentials.getEcKeyPair());
@@ -40,7 +40,7 @@ public class TransactionEncoder {
     }
 
     public static Sign.SignatureData createEip155SignatureData(
-            Sign.SignatureData signatureData, byte chainId) {
+            Sign.SignatureData signatureData, long chainId) {
 //        byte v = (byte) (signatureData.getV() + (chainId << 1) + 8);
         BigInteger v =  Numeric.toBigInt(signatureData.getV());
         v = v.subtract(BigInteger.valueOf(LOWER_REAL_V));
@@ -57,7 +57,7 @@ public class TransactionEncoder {
         return encode(rawTransaction, null);
     }
 
-    public static byte[] encode(RawTransaction rawTransaction, byte chainId) {
+    public static byte[] encode(RawTransaction rawTransaction, long chainId) {
         Sign.SignatureData signatureData = new Sign.SignatureData(
         		longToBytes(chainId), new byte[] {}, new byte[] {});
         return encode(rawTransaction, signatureData);
