@@ -168,7 +168,7 @@ public class DelegateContract extends PlatOnContract {
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint256(amount)));
-        return executeRemoteCallTransactionWithFunctionType(function, amount);
+        return executeRemoteCallTransactionWithFunctionType(function);
     }
 
     /**
@@ -185,7 +185,7 @@ public class DelegateContract extends PlatOnContract {
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint256(amount)), gasProvider);
-        return executeRemoteCallTransactionWithFunctionType(function, amount);
+        return executeRemoteCallTransactionWithFunctionType(function);
     }
 
     /**
@@ -221,7 +221,7 @@ public class DelegateContract extends PlatOnContract {
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint256(amount)));
-        return executeRemoteCallPlatonTransaction(function, amount);
+        return executeRemoteCallPlatonTransaction(function);
     }
 
     /**
@@ -237,7 +237,7 @@ public class DelegateContract extends PlatOnContract {
                 Arrays.asList(new Uint64(stakingBlockNum)
                         , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint256(amount)), gasProvider);
-        return executeRemoteCallPlatonTransaction(function, amount);
+        return executeRemoteCallPlatonTransaction(function);
     }
 
     /**
