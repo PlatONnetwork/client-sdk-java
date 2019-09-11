@@ -12,6 +12,7 @@ import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.GasProvider;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -196,12 +197,12 @@ public class PlatOnFunction {
      * @return
      */
     private BigInteger getDataGasLimit() {
-        byte[] bytes = getEncodeData().getBytes();
+        byte[] bytes = Numeric.hexStringToByteArray(getEncodeData());  
         int nonZeroSize = 0;
         int zeroSize = 0;
 
         for (byte b : bytes) {
-            if (b > 0) {
+            if (b != 0) {
                 nonZeroSize++;
             } else {
                 zeroSize++;
