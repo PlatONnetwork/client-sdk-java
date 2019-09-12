@@ -671,4 +671,13 @@ public class JsonRpc2_0Web3j implements Web3j {
                 web3jService,
                 PlatonEvidences.class);
     }
+
+	@Override
+	public Request<?, AdminProgramVersion> getProgramVersion() {
+        return new Request<>(
+                "admin_getProgramVersion",
+                Collections.<String>emptyList(),
+                web3jService,
+                AdminProgramVersion.class);
+	}
 }

@@ -53,52 +53,52 @@ public class StakingScenario extends Scenario {
 		
 		//创建质押信息(1000)
 		BaseResponse createStakingResponse = staking();
-		assertTrue(createStakingResponse.toString(),createStakingResponse.status);
+		assertTrue(createStakingResponse.toString(),createStakingResponse.isStatusOk());
 		BigInteger stakingBlockNum = createStakingResponse.transactionReceipt.getBlockNumber();
 		
 		//修改质押信息(1001)
 		BaseResponse updateStakingResponse = updateStakingInfo();
-		assertTrue(updateStakingResponse.toString(),updateStakingResponse.status);
+		assertTrue(updateStakingResponse.toString(),updateStakingResponse.isStatusOk());
 		
 		//修改质押金额(1002)
 		BaseResponse addStakingResponse = addStaking();
-		assertTrue(addStakingResponse.toString(),addStakingResponse.status);
+		assertTrue(addStakingResponse.toString(),addStakingResponse.isStatusOk());
 		
 		//对质押委托(1004)
 		BaseResponse delegateResponse = delegate();
-		assertTrue(delegateResponse.toString(),delegateResponse.status);
+		assertTrue(delegateResponse.toString(),delegateResponse.isStatusOk());
 		
 		//查询当前结算周期的验证人队列(1100)
 		BaseResponse<List<Node>> getVerifierListResponse = getVerifierList();
-		assertTrue(getVerifierListResponse.toString(),getVerifierListResponse.status);
+		assertTrue(getVerifierListResponse.toString(),getVerifierListResponse.isStatusOk());
 		
 		//查询当前共识周期的验证人列表(1101)
 		BaseResponse<List<Node>> getValidatorListResponse = getValidatorList();
-		assertTrue(getValidatorListResponse.toString(),getValidatorListResponse.status);
+		assertTrue(getValidatorListResponse.toString(),getValidatorListResponse.isStatusOk());
 		
 		//查询所有实时的候选人列表(1102)
 		BaseResponse<List<Node>> getCandidateListResponse = getCandidateList();
-		assertTrue(getCandidateListResponse.toString(),getCandidateListResponse.status);
+		assertTrue(getCandidateListResponse.toString(),getCandidateListResponse.isStatusOk());
 		
 		//查询当前账户地址所委托的节点的NodeID和质押Id(1103)
 		BaseResponse<List<DelegationIdInfo>> getRelatedListByDelAddrResponse = getRelatedListByDelAddr();
-		assertTrue(getRelatedListByDelAddrResponse.toString(),getRelatedListByDelAddrResponse.status);
+		assertTrue(getRelatedListByDelAddrResponse.toString(),getRelatedListByDelAddrResponse.isStatusOk());
 		
 		//查询当前单个委托信息(1104)
 		BaseResponse<Delegation> getDelegateResponse = getDelegateInfo(stakingBlockNum);
-		assertTrue(getDelegateResponse.toString(),getDelegateResponse.status);
+		assertTrue(getDelegateResponse.toString(),getDelegateResponse.isStatusOk());
 		
 		//查询当前节点的质押信息(1105)
 		BaseResponse<Node> getStakingInfoResponse = getStakingInfo();
-		assertTrue(getStakingInfoResponse.toString(),getStakingInfoResponse.status);
+		assertTrue(getStakingInfoResponse.toString(),getStakingInfoResponse.isStatusOk());
 		
 		//对质押解除委托(1005)
 		BaseResponse unDelegateResponse = unDelegate(stakingBlockNum);
-		assertTrue(unDelegateResponse.toString(),unDelegateResponse.status);
+		assertTrue(unDelegateResponse.toString(),unDelegateResponse.isStatusOk());
 		
 		//退出质押(1003)
 		BaseResponse unStakingResponse = unStaking();
-		assertTrue(unStakingResponse.toString(),unStakingResponse.status);
+		assertTrue(unStakingResponse.toString(),unStakingResponse.isStatusOk());
 	}
 	
 	

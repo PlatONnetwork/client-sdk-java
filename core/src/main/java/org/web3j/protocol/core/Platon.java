@@ -124,4 +124,6 @@ public interface Platon {
     Request<?, ShhMessages> shhGetMessages(BigInteger filterId);
 
     Request<?, PlatonEvidences> platonEvidences();
+    
+    Request<?, AdminProgramVersion> getProgramVersion();
 }

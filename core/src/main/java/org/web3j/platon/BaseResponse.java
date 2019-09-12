@@ -6,8 +6,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class BaseResponse<T> {
 
-    @JSONField(name = "Status")
-    public boolean status;
+    @JSONField(name = "Code")
+    public int code;
 
     @JSONField(name = "Data")
     public T data;
@@ -20,18 +20,17 @@ public class BaseResponse<T> {
     public BaseResponse() {
     }
 
-    public boolean isStatusOk() {
-        return status;
+    public int getCode() {
+        return code;
     }
-
-    public BaseResponse(Throwable throwable) {
-        this.status = false;
-        this.errMsg = throwable.getMessage();
+    
+    public boolean isStatusOk() {
+    	return code == 0 ? true : false;
     }
 
 	@Override
 	public String toString() {
-		return "BaseResponse [status=" + status + ", data=" + data + ", errMsg=" + errMsg + ", transactionReceipt="
+		return "BaseResponse [code=" + code + ", data=" + data + ", errMsg=" + errMsg + ", transactionReceipt="
 				+ transactionReceipt + "]";
 	}
 }

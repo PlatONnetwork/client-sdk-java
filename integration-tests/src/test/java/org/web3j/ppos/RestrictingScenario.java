@@ -38,11 +38,11 @@ public class RestrictingScenario extends Scenario {
 		
 		//创建锁仓计划(4000)
 		BaseResponse createRestrictingPlanResponse = createRestrictingPlan();
-		assertTrue(createRestrictingPlanResponse.toString(),createRestrictingPlanResponse.status);
+		assertTrue(createRestrictingPlanResponse.toString(),createRestrictingPlanResponse.isStatusOk());
 
 		//获取锁仓信息(4100)
 		BaseResponse<RestrictingItem> getRestrictingPlanInfoResponse = getRestrictingPlanInfo();
-		assertTrue(getRestrictingPlanInfoResponse.toString(),getRestrictingPlanInfoResponse.status);
+		assertTrue(getRestrictingPlanInfoResponse.toString(),getRestrictingPlanInfoResponse.isStatusOk());
 	}
     
 	    
