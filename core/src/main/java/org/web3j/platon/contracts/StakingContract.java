@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 
 public class StakingContract extends PlatOnContract {
 
@@ -72,6 +73,7 @@ public class StakingContract extends PlatOnContract {
     public RemoteCall<BaseResponse> staking(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
         tempStakingParam.setProcessVersion(getProgramVersion().send().data);
+        tempStakingParam.setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve());
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters());
@@ -89,6 +91,7 @@ public class StakingContract extends PlatOnContract {
     public RemoteCall<BaseResponse> staking(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
         tempStakingParam.setProcessVersion(getProgramVersion().send().data);
+        tempStakingParam.setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve());
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters(), gasProvider);
@@ -108,17 +111,27 @@ public class StakingContract extends PlatOnContract {
             public ProgramVersion call() throws Exception {
                 return getProgramVersion().send().data;
             }
-        }).map(new Func1<ProgramVersion, GasProvider>() {
-            @Override
-            public GasProvider call(ProgramVersion programVersion) {
-                tempStakingParam.setProcessVersion(programVersion);
-                return new PlatOnFunction(
-                        FunctionType.STAKING_FUNC_TYPE,
-                        tempStakingParam.getSubmitInputParameters()).getGasProvider();
-            }
-        });
-    }
+        }).zipWith(Observable.fromCallable(new Callable<String>() {
 
+			@Override
+			public String call() throws Exception {
+				return web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve();
+			}
+        	
+		}), new Func2<ProgramVersion, String, GasProvider>() {
+
+			@Override
+			public GasProvider call(ProgramVersion programVersion, String blsProof) {
+				  tempStakingParam.setProcessVersion(programVersion);
+	                tempStakingParam.setBlsProof(blsProof);
+	                return new PlatOnFunction(
+	                        FunctionType.STAKING_FUNC_TYPE,
+	                        tempStakingParam.getSubmitInputParameters()).getGasProvider();
+			}
+        	
+		});
+    }
+    
 
     /**
      * 发起质押
@@ -130,6 +143,7 @@ public class StakingContract extends PlatOnContract {
     public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
         tempStakingParam.setProcessVersion(getProgramVersion().send().data);
+        tempStakingParam.setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve());
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters());
@@ -147,6 +161,7 @@ public class StakingContract extends PlatOnContract {
     public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
         StakingParam tempStakingParam = stakingParam.clone();
         tempStakingParam.setProcessVersion(getProgramVersion().send().data);
+        tempStakingParam.setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve());
         final PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
                 tempStakingParam.getSubmitInputParameters(), gasProvider);

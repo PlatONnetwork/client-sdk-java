@@ -126,4 +126,6 @@ public interface Platon {
     Request<?, PlatonEvidences> platonEvidences();
     
     Request<?, AdminProgramVersion> getProgramVersion();
+    
+    Request<?, AdminSchnorrNIZKProve> getSchnorrNIZKProve();
 }

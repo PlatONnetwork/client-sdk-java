@@ -680,4 +680,13 @@ public class JsonRpc2_0Web3j implements Web3j {
                 web3jService,
                 AdminProgramVersion.class);
 	}
+
+	@Override
+	public Request<?, AdminSchnorrNIZKProve> getSchnorrNIZKProve() {
+        return new Request<>(
+                "admin_getSchnorrNIZKProve",
+                Collections.<String>emptyList(),
+                web3jService,
+                AdminSchnorrNIZKProve.class);
+	}
 }
