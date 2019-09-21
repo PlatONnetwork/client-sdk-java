@@ -3,26 +3,16 @@ package org.web3j.tx;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import org.bouncycastle.util.encoders.Hex;
-import org.web3j.abi.PlatOnTypeEncoder;
-import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
-import org.web3j.rlp.RlpEncoder;
-import org.web3j.rlp.RlpList;
-import org.web3j.rlp.RlpString;
-import org.web3j.rlp.RlpType;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
-import org.web3j.utils.PlatOnUtil;
 
 /**
  * Class for performing Ether transactions on the Ethereum blockchain.
@@ -30,7 +20,7 @@ import org.web3j.utils.PlatOnUtil;
 public class Transfer extends ManagedTransaction {
 
     // This is the cost to send Ether between parties
-    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(210000);
+    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(21000);
 
     public Transfer(Web3j web3j, TransactionManager transactionManager) {
         super(web3j, transactionManager);
@@ -71,11 +61,11 @@ public class Transfer extends ManagedTransaction {
 
         String resolvedAddress = ensResolver.resolve(toAddress);
 
-        List<RlpType> result = new ArrayList<>();
-        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Int64(0)))));
-        String data = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
+//        List<RlpType> result = new ArrayList<>();
+//        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Int64(0)))));
+//        String data = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
 
-        return send(resolvedAddress, data, weiValue.toBigIntegerExact(), gasPrice, gasLimit);
+        return send(resolvedAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(

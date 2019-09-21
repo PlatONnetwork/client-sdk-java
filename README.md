@@ -7,6 +7,7 @@
     cd client-sdk-java/
     ./gradlew clean jar            //Generate jar package
 	./gradlew clean distZip        //Generate code generation skeleton tool
+    ./gradlew -Pintegration-tests=true :integration-tests:test    //To run the integration tests:
    
 ``` 
 
