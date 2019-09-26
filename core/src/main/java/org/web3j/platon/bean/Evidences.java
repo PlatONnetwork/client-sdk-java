@@ -6,37 +6,37 @@ import java.util.List;
 
 public class Evidences {
 
-    @JSONField(name = "duplicate_prepare")
-    private List<DuplicatePrepare> duplicatePrepare;
-    @JSONField(name = "duplicate_vote")
-    private List<DuplicateVote> duplicateVote;
-    @JSONField(name = "duplicate_viewchange")
-    private List<DulicateViewChange> duplicateViewChange;
+    @JSONField(name = "duplicatePrepare")
+    private List<String> duplicatePrepare;
+    @JSONField(name = "duplicateVote")
+    private List<String> duplicateVote;
+    @JSONField(name = "duplicateViewchange")
+    private List<String> duplicateViewChange;
 
     public Evidences() {
     }
 
-    public List<DuplicatePrepare> getDuplicatePrepare() {
+    public List<String> getDuplicatePrepare() {
         return duplicatePrepare;
     }
 
-    public void setDuplicatePrepare(List<DuplicatePrepare> duplicatePrepare) {
+    public void setDuplicatePrepare(List<String> duplicatePrepare) {
         this.duplicatePrepare = duplicatePrepare;
     }
 
-    public List<DuplicateVote> getDuplicateVote() {
+    public List<String> getDuplicateVote() {
         return duplicateVote;
     }
 
-    public void setDuplicateVote(List<DuplicateVote> duplicateVote) {
+    public void setDuplicateVote(List<String> duplicateVote) {
         this.duplicateVote = duplicateVote;
     }
 
-    public List<DulicateViewChange> getDuplicateViewChange() {
+    public List<String> getDuplicateViewChange() {
         return duplicateViewChange;
     }
 
-    public void setDuplicateViewChange(List<DulicateViewChange> duplicateViewChange) {
+    public void setDuplicateViewChange(List<String> duplicateViewChange) {
         this.duplicateViewChange = duplicateViewChange;
     }
 

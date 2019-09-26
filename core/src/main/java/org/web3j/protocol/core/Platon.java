@@ -128,4 +128,6 @@ public interface Platon {
     Request<?, AdminProgramVersion> getProgramVersion();
     
     Request<?, AdminSchnorrNIZKProve> getSchnorrNIZKProve();
+    
+    Request<?, DebugEconomicConfig> getEconomicConfig();
 }

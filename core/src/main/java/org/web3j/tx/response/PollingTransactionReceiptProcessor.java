@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.exceptions.NoTransactionReceiptException;
 import org.web3j.protocol.exceptions.TransactionException;
 
 /**
@@ -48,7 +49,7 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
             }
         }
 
-        throw new TransactionException("Transaction receipt was not generated after "
+        throw new NoTransactionReceiptException("Transaction receipt was not generated after "
                 + ((sleepDuration * attempts) / 1000
                 + " seconds for transaction: " + transactionHash));
     }

@@ -9,20 +9,63 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.web3j.protocol.core.methods.response.*;
-
-import rx.Observable;
-
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.methods.request.ShhFilter;
 import org.web3j.protocol.core.methods.request.ShhPost;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.AdminProgramVersion;
+import org.web3j.protocol.core.methods.response.AdminSchnorrNIZKProve;
+import org.web3j.protocol.core.methods.response.DbGetHex;
+import org.web3j.protocol.core.methods.response.DbGetString;
+import org.web3j.protocol.core.methods.response.DbPutHex;
+import org.web3j.protocol.core.methods.response.DbPutString;
+import org.web3j.protocol.core.methods.response.DebugEconomicConfig;
+import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.protocol.core.methods.response.NetListening;
+import org.web3j.protocol.core.methods.response.NetPeerCount;
+import org.web3j.protocol.core.methods.response.NetVersion;
+import org.web3j.protocol.core.methods.response.PlatonAccounts;
+import org.web3j.protocol.core.methods.response.PlatonBlock;
+import org.web3j.protocol.core.methods.response.PlatonBlockNumber;
+import org.web3j.protocol.core.methods.response.PlatonCall;
+import org.web3j.protocol.core.methods.response.PlatonEstimateGas;
+import org.web3j.protocol.core.methods.response.PlatonEvidences;
+import org.web3j.protocol.core.methods.response.PlatonFilter;
+import org.web3j.protocol.core.methods.response.PlatonGasPrice;
+import org.web3j.protocol.core.methods.response.PlatonGetBalance;
+import org.web3j.protocol.core.methods.response.PlatonGetBlockTransactionCountByHash;
+import org.web3j.protocol.core.methods.response.PlatonGetBlockTransactionCountByNumber;
+import org.web3j.protocol.core.methods.response.PlatonGetCode;
+import org.web3j.protocol.core.methods.response.PlatonGetStorageAt;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
+import org.web3j.protocol.core.methods.response.PlatonGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.PlatonLog;
+import org.web3j.protocol.core.methods.response.PlatonPendingTransactions;
+import org.web3j.protocol.core.methods.response.PlatonProtocolVersion;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
+import org.web3j.protocol.core.methods.response.PlatonSign;
+import org.web3j.protocol.core.methods.response.PlatonSubscribe;
+import org.web3j.protocol.core.methods.response.PlatonSyncing;
+import org.web3j.protocol.core.methods.response.PlatonTransaction;
+import org.web3j.protocol.core.methods.response.PlatonUninstallFilter;
+import org.web3j.protocol.core.methods.response.ShhAddToGroup;
+import org.web3j.protocol.core.methods.response.ShhHasIdentity;
+import org.web3j.protocol.core.methods.response.ShhMessages;
+import org.web3j.protocol.core.methods.response.ShhNewFilter;
+import org.web3j.protocol.core.methods.response.ShhNewGroup;
+import org.web3j.protocol.core.methods.response.ShhNewIdentity;
+import org.web3j.protocol.core.methods.response.ShhUninstallFilter;
+import org.web3j.protocol.core.methods.response.ShhVersion;
+import org.web3j.protocol.core.methods.response.Web3ClientVersion;
+import org.web3j.protocol.core.methods.response.Web3Sha3;
 import org.web3j.protocol.rx.JsonRpc2_0Rx;
 import org.web3j.protocol.websocket.events.LogNotification;
 import org.web3j.protocol.websocket.events.NewHeadsNotification;
 import org.web3j.utils.Async;
 import org.web3j.utils.Numeric;
+
+import rx.Observable;
 
 /**
  * JSON-RPC 2.0 factory implementation.
@@ -688,5 +731,14 @@ public class JsonRpc2_0Web3j implements Web3j {
                 Collections.<String>emptyList(),
                 web3jService,
                 AdminSchnorrNIZKProve.class);
+	}
+
+	@Override
+	public Request<?, DebugEconomicConfig> getEconomicConfig() {
+        return new Request<>(
+                "debug_economicConfig",
+                Collections.<String>emptyList(),
+                web3jService,
+                DebugEconomicConfig.class);
 	}
 }

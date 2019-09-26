@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.web3j.protocol.ObjectMapperFactory;
 import org.web3j.protocol.core.Response;
+import org.web3j.utils.NodeIdTool;
 import org.web3j.utils.Numeric;
 
 /**
@@ -310,6 +311,10 @@ public class PlatonBlock extends Response<PlatonBlock.Block> {
 
         public void setSealFields(List<String> sealFields) {
             this.sealFields = sealFields;
+        }
+        
+        public String getNodeId() {
+        	return NodeIdTool.getPublicKey(this);
         }
 
         @Override
