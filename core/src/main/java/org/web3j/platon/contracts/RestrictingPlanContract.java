@@ -1,5 +1,9 @@
 package org.web3j.platon.contracts;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
@@ -14,14 +18,10 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 
@@ -48,6 +48,10 @@ public class RestrictingPlanContract extends PlatOnContract {
     public static RestrictingPlanContract load(Web3j web3j, Credentials credentials, String chainId) {
         return new RestrictingPlanContract(ContractAddress.RESTRICTING_PLAN_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
+    
+    public static RestrictingPlanContract load(Web3j web3j, TransactionManager transactionManager) {
+        return new RestrictingPlanContract(ContractAddress.RESTRICTING_PLAN_CONTRACT_ADDRESS, web3j, transactionManager);
+    }
 
     private RestrictingPlanContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
@@ -55,6 +59,10 @@ public class RestrictingPlanContract extends PlatOnContract {
 
     private RestrictingPlanContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
+    }
+    
+    private RestrictingPlanContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
+        super(contractAddress, web3j, transactionManager);
     }
 
     /**

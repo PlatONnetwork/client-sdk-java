@@ -1,5 +1,9 @@
 package org.web3j.platon.contracts;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.concurrent.Callable;
+
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint32;
@@ -14,12 +18,9 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
-
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.concurrent.Callable;
 
 import rx.Observable;
 
@@ -46,6 +47,10 @@ public class SlashContract extends PlatOnContract {
     public static SlashContract load(Web3j web3j, Credentials credentials, String chainId) {
         return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
+    
+    public static SlashContract load(Web3j web3j, TransactionManager transactionManager) {
+        return new SlashContract(ContractAddress.SLASH_CONTRACT_ADDRESS, web3j, transactionManager);
+    }
 
     private SlashContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
@@ -53,6 +58,10 @@ public class SlashContract extends PlatOnContract {
 
     private SlashContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
+    }
+    
+    private SlashContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
+        super(contractAddress, web3j, transactionManager);
     }
 
     /**

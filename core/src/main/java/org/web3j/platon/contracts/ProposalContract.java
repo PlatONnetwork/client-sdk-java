@@ -1,8 +1,11 @@
 package org.web3j.platon.contracts;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
@@ -10,21 +13,18 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
+import org.web3j.platon.VoteOption;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.Proposal;
-import org.web3j.platon.VoteOption;
 import org.web3j.platon.bean.TallyResult;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -52,6 +52,10 @@ public class ProposalContract extends PlatOnContract {
     public static ProposalContract load(Web3j web3j, Credentials credentials, String chainId) {
         return new ProposalContract(ContractAddress.PROPOSAL_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
+    
+    public static ProposalContract load(Web3j web3j, TransactionManager transactionManager) {
+        return new ProposalContract(ContractAddress.PROPOSAL_CONTRACT_ADDRESS, web3j, transactionManager);
+    }
 
     private ProposalContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
@@ -59,6 +63,10 @@ public class ProposalContract extends PlatOnContract {
 
     private ProposalContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
+    }
+    
+    private ProposalContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
+        super(contractAddress, web3j, transactionManager);
     }
 
     /**

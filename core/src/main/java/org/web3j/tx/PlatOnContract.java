@@ -1,5 +1,13 @@
 package org.web3j.tx;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Callable;
+
 import org.web3j.abi.EventValues;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.PlatOnEventEncoder;
@@ -11,7 +19,6 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
-import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.bean.ProgramVersion;
@@ -19,25 +26,16 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.PlatonCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
-import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.tx.exceptions.ContractCallException;
 import org.web3j.tx.gas.GasProvider;
-import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.PlatOnUtil;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Callable;
 
 
 /**
@@ -49,7 +47,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
     protected String contractAddress;
     protected TransactionReceipt transactionReceipt;
 
-    private PlatOnContract(String contractAddress,
+    protected PlatOnContract(String contractAddress,
                            Web3j web3j, TransactionManager transactionManager) {
         super(web3j, transactionManager);
 

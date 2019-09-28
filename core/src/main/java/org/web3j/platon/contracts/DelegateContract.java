@@ -1,5 +1,10 @@
 package org.web3j.platon.contracts;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -16,15 +21,10 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.PlatOnContract;
+import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
-
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 
@@ -50,6 +50,10 @@ public class DelegateContract extends PlatOnContract {
     public static DelegateContract load(Web3j web3j, Credentials credentials, String chainId) {
         return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
+    
+    public static DelegateContract load(Web3j web3j, TransactionManager transactionManager) {
+        return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, web3j, transactionManager);
+    }
 
     private DelegateContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
@@ -57,6 +61,10 @@ public class DelegateContract extends PlatOnContract {
 
     private DelegateContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
+    }
+    	
+    private DelegateContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
+        super(contractAddress, web3j, transactionManager);
     }
 
     /**
