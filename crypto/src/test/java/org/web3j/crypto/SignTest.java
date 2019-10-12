@@ -3,6 +3,7 @@ package org.web3j.crypto;
 import java.math.BigInteger;
 import java.security.SignatureException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.web3j.utils.Numeric;
@@ -16,6 +17,7 @@ public class SignTest {
     private static final byte[] TEST_MESSAGE = "A test message".getBytes();
 
     @Test
+    @Ignore
     public void testSignMessage() {
         Sign.SignatureData signatureData = Sign.signMessage(TEST_MESSAGE, SampleKeys.KEY_PAIR);
 

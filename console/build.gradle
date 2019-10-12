@@ -1,4 +1,3 @@
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 
 description 'web3j command line tools'

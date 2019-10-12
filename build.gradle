@@ -22,12 +22,15 @@ buildscript {
     dependencies {
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.1'
     }
 }
 
 plugins {
     // id "com.jfrog.bintray" version "1.7.3"
     id "net.researchgate.release" version "2.7.0"
+    //添加插件信息
+    id "org.sonarqube" version "2.7.1"
 }
 
 apply plugin: 'java'
@@ -38,6 +41,14 @@ apply plugin: 'io.codearte.nexus-staging'
 apply plugin: 'jacoco'
 
 description 'web3j base project'
+
+apply plugin: "org.sonarqube"
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+    }
+}
 
 allprojects {
 
@@ -78,10 +89,6 @@ allprojects {
         reports.html.destination = file("${reporting.baseDir}/${name}")
     }
 
-//    checkstyle {
-//        toolVersion = "7.7"
-//        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-//    }
 }
 
 subprojects {
@@ -91,9 +98,15 @@ subprojects {
         testCompile "junit:junit:$junitVersion",
                 "org.mockito:mockito-core:$mockitoVersion"
     }
-    
-    tasks.withType(JavaCompile){
+
+    tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
+    }
+    //sonar扫描的路径
+    sonarqube {
+        properties {
+            property "sonar.sources", "src/main/java"
+        }
     }
 }
 
@@ -124,15 +137,13 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     artifacts {
         archives sourcesJar, javadocJar, testJar
     }
-    
+
     ext {
         ossrhUsername = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : System.getenv("ossrhUsername")
         ossrhPassword = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : System.getenv("ossrhPassword")
-        //bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-        //bintrayKey = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
         isSnapshotVersion = project.version.endsWith("-SNAPSHOT")
     }
-    
+
     publishing {
         publications {
             mavenJava(MavenPublication) {
@@ -197,12 +208,13 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     }
 
     signing {
-        required { gradle.taskGraph.hasTask('uploadArchives') }  // only execute as part of this task
+        required { gradle.taskGraph.hasTask('uploadArchives') }
+        // only execute as part of this task
         sign configurations.archives
     }
-    
 
-/*  
+
+/*
     bintray {
         user = bintrayUser
         key = bintrayKey
@@ -222,8 +234,8 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     }
 */
 
-    
-task release {
+
+    task release {
         //TODO run clean & closeAndPromoteRepository once
         dependsOn 'build'
         dependsOn 'uploadArchives'

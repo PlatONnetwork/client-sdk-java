@@ -390,7 +390,8 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                         + "    return responses;\n"
                         + "  }\n"
                         + "\n"
-                        + "  public rx.Observable<TransferEventResponse> transferEventObservable(org.web3j.protocol.core.methods.request.EthFilter filter) {\n"
+                        + "  public rx.Observable<TransferEventResponse> transferEventObservable" +
+                        "(org.web3j.protocol.core.methods.request.PlatonFilter filter) {\n"
                         + "    return web3j.platonLogObservable(filter).map(new rx.functions.Func1<org.web3j.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
                         + "      @java.lang.Override\n"
                         + "      public TransferEventResponse call(org.web3j.protocol.core.methods.response.Log log) {\n"
@@ -408,7 +409,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                         + "  }\n"
                         + "\n"
                         + "  public rx.Observable<TransferEventResponse> transferEventObservable(org.web3j.protocol.core.DefaultBlockParameter startBlock, org.web3j.protocol.core.DefaultBlockParameter endBlock) {\n"
-                        + "    org.web3j.protocol.core.methods.request.EthFilter filter = new org.web3j.protocol.core.methods.request.EthFilter(startBlock, endBlock, getContractAddress());\n"
+                        + "    org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter(startBlock, endBlock, getContractAddress());\n"
                         + "    filter.addSingleTopic(org.web3j.abi.EventEncoder.encode(TRANSFER_EVENT));\n"
                         + "    return transferEventObservable(filter);\n"
                         + "  }\n"

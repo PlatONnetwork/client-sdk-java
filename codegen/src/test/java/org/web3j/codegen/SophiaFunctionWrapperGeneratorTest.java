@@ -15,6 +15,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.web3j.TempFileProvider;
 import org.web3j.utils.Strings;
@@ -34,6 +35,7 @@ public class SophiaFunctionWrapperGeneratorTest extends TempFileProvider {
     }
 
     @Test
+    @Ignore
     public void testHumanStandardTokenGeneration() throws Exception {
 //        testCodeGenerationJvmTypes("contracts", "token");
 //        testCodeGenerationSolidityTypes("contracts", "token");

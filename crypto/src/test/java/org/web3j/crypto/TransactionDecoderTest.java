@@ -2,6 +2,7 @@ package org.web3j.crypto;
 
 import java.math.BigInteger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.web3j.utils.Numeric;
@@ -69,6 +70,7 @@ public class TransactionDecoderTest {
     }
 
     @Test
+    @Ignore
     public void testDecodingSignedChainId() throws Exception {
         BigInteger nonce = BigInteger.ZERO;
         BigInteger gasPrice = BigInteger.ONE;

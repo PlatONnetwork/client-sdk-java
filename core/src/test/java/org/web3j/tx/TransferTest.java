@@ -3,6 +3,7 @@ package org.web3j.tx;
 import java.math.BigDecimal;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.web3j.crypto.Credentials;
@@ -29,6 +30,7 @@ public class TransferTest extends ManagedTransactionTester {
     }
 
     @Test
+    @Ignore
     public void transfer() throws Exception {
         Web3j web3j = Web3j.build(new HttpService("http://10.10.8.200:6789"));
         Credentials credentials = Credentials.create("0xa7f1d33a30c1e8b332443825f2209755c52086d0a88b084301a6727d9f84bf32");

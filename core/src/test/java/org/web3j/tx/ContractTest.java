@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -250,6 +251,7 @@ public class ContractTest extends ManagedTransactionTester {
     }
 
     @Test
+    @Ignore
     public void testProcessEvent() {
         TransactionReceipt transactionReceipt = new TransactionReceipt();
         Log log = new Log();
@@ -312,6 +314,7 @@ public class ContractTest extends ManagedTransactionTester {
     }
 
     @Test
+    @Ignore
     public void testSetGetGasPrice() {
         assertEquals(ManagedTransaction.GAS_PRICE, contract.getGasPrice());
         BigInteger newPrice = ManagedTransaction.GAS_PRICE.multiply(BigInteger.valueOf(2));
