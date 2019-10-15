@@ -23,8 +23,6 @@ import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
-import rx.Observable;
-
 public class RestrictingPlanContract extends PlatOnContract {
 
     /**
@@ -75,9 +73,7 @@ public class RestrictingPlanContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> createRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
-        final PlatOnFunction function = new PlatOnFunction(
-                FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList)));
+        PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, null);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -92,9 +88,7 @@ public class RestrictingPlanContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> createRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList, GasProvider gasProvider) {
-        final PlatOnFunction function = new PlatOnFunction(
-                FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList)), gasProvider);
+        PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, gasProvider);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -105,15 +99,9 @@ public class RestrictingPlanContract extends PlatOnContract {
      * @param restrictingPlanList
      * @return
      */
-    public Observable<GasProvider> getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
-        return Observable.fromCallable(new Callable<GasProvider>() {
-            @Override
-            public GasProvider call() throws Exception {
-                return new PlatOnFunction(
-                        FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                        Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList))).getGasProvider();
-            }
-        });
+    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
+    	PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, null);
+    	return function.getGasProvider();
     }
 
     /**
@@ -124,9 +112,7 @@ public class RestrictingPlanContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> createRestrictingPlanReturnTransaction(String account, List<RestrictingPlan> restrictingPlanList) {
-        final PlatOnFunction function = new PlatOnFunction(
-                FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList)));
+    	PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, null);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -139,9 +125,7 @@ public class RestrictingPlanContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> createRestrictingPlanReturnTransaction(String account, List<RestrictingPlan> restrictingPlanList, GasProvider gasProvider) {
-        final PlatOnFunction function = new PlatOnFunction(
-                FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList)), gasProvider);
+        PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, gasProvider);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -151,6 +135,13 @@ public class RestrictingPlanContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse> getCreateRestrictingPlanResult(PlatonSendTransaction ethSendTransaction) {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE);
+    }
+    
+    private PlatOnFunction createRestrictingPlanFunction(String account, List<RestrictingPlan> restrictingPlanList, GasProvider gasProvider) {          
+    	PlatOnFunction function = new PlatOnFunction(
+                FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
+                Arrays.<Type>asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray(restrictingPlanList)), gasProvider);
+        return function;
     }
 
     /**

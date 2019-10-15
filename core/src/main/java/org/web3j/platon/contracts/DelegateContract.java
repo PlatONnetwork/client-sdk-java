@@ -26,12 +26,10 @@ import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
-import rx.Observable;
-
 public class DelegateContract extends PlatOnContract {
 
     /**
-     * 查询操作
+     * 加载合约（只查询）
      *
      * @param web3j
      * @return
@@ -40,7 +38,7 @@ public class DelegateContract extends PlatOnContract {
         return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, web3j);
     }
     /**
-     * sendRawTransaction 使用默认gasProvider
+     * 加载合约
      *
      * @param web3j
      * @param credentials
@@ -51,6 +49,13 @@ public class DelegateContract extends PlatOnContract {
         return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
     
+    /**
+     * 加载合约
+     * 
+     * @param web3j
+     * @param transactionManager
+     * @return
+     */
     public static DelegateContract load(Web3j web3j, TransactionManager transactionManager) {
         return new DelegateContract(ContractAddress.DELEGATE_CONTRACT_ADDRESS, web3j, transactionManager);
     }
@@ -76,10 +81,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> delegate(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint16(stakingAmountType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)));
+        PlatOnFunction function = createDelegateFunction(nodeId, stakingAmountType, amount, null);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -93,10 +95,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> delegate(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint16(stakingAmountType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), gasProvider);
+        PlatOnFunction function = createDelegateFunction(nodeId, stakingAmountType, amount, gasProvider);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -108,16 +107,9 @@ public class DelegateContract extends PlatOnContract {
      * @param amount
      * @return
      */
-    public Observable<GasProvider> getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        return Observable.fromCallable(new Callable<GasProvider>() {
-            @Override
-            public GasProvider call() throws Exception {
-                return new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
-                        Arrays.asList(new Uint16(stakingAmountType.getValue())
-                                , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                                , new Uint256(amount))).getGasProvider();
-            }
-        });
+    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
+    	PlatOnFunction function = createDelegateFunction(nodeId, stakingAmountType, amount, null);
+    	return function.getGasProvider();
     }
 
     /**
@@ -129,10 +121,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint16(stakingAmountType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)));
+        PlatOnFunction function = createDelegateFunction(nodeId, stakingAmountType, amount, null);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -146,10 +135,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint16(stakingAmountType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), gasProvider);
+        PlatOnFunction function = createDelegateFunction(nodeId, stakingAmountType, amount, gasProvider);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -162,6 +148,16 @@ public class DelegateContract extends PlatOnContract {
     public RemoteCall<BaseResponse> getDelegateResult(PlatonSendTransaction ethSendTransaction) {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.DELEGATE_FUNC_TYPE);
     }
+    
+    
+    private PlatOnFunction createDelegateFunction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
+    	PlatOnFunction function = new PlatOnFunction(FunctionType.DELEGATE_FUNC_TYPE,
+                								Arrays.asList(new Uint16(stakingAmountType.getValue())
+                								, new BytesType(Numeric.hexStringToByteArray(nodeId))
+                								, new Uint256(amount)), gasProvider);
+        return function;
+    }
+    
 
     /**
      * 减持/撤销委托(全部减持就是撤销)
@@ -172,10 +168,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> unDelegate(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint64(stakingBlockNum)
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)));
+        PlatOnFunction function =  createUnDelegateFunction(nodeId, stakingBlockNum, amount, null);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -189,10 +182,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> unDelegate(String nodeId, BigInteger stakingBlockNum, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint64(stakingBlockNum)
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), gasProvider);
+        PlatOnFunction function = createUnDelegateFunction(nodeId, stakingBlockNum, amount, gasProvider);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -204,16 +194,9 @@ public class DelegateContract extends PlatOnContract {
      * @param amount
      * @return
      */
-    public Observable<GasProvider> getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
-        return Observable.fromCallable(new Callable<GasProvider>() {
-            @Override
-            public GasProvider call() throws Exception {
-                return new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
-                        Arrays.asList(new Uint64(stakingBlockNum)
-                                , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                                , new Uint256(amount))).getGasProvider();
-            }
-        });
+    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
+        PlatOnFunction function = createUnDelegateFunction(nodeId, stakingBlockNum, amount, null);
+    	return function.getGasProvider();
     }
 
     /**
@@ -225,10 +208,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> unDelegateReturnTransaction(String nodeId, BigInteger stakingBlockNum, BigInteger amount) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint64(stakingBlockNum)
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)));
+        PlatOnFunction function = createUnDelegateFunction(nodeId, stakingBlockNum, amount, null);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -241,10 +221,7 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> unDelegateReturnTransaction(String nodeId, BigInteger stakingBlockNum, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
-                Arrays.asList(new Uint64(stakingBlockNum)
-                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                        , new Uint256(amount)), gasProvider);
+        PlatOnFunction function = createUnDelegateFunction(nodeId, stakingBlockNum, amount, gasProvider);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -255,8 +232,15 @@ public class DelegateContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> getUnDelegateResult(PlatonSendTransaction ethSendTransaction) {
-
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.WITHDREW_DELEGATE_FUNC_TYPE);
+    }
+    
+    private PlatOnFunction createUnDelegateFunction(String nodeId, BigInteger stakingBlockNum, BigInteger amount, GasProvider gasProvider) {
+    	PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_DELEGATE_FUNC_TYPE,
+                Arrays.asList(new Uint64(stakingBlockNum)
+                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
+                        , new Uint256(amount)), gasProvider);
+        return function;
     }
 
     /**

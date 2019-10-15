@@ -21,8 +21,8 @@ public abstract class Scenario {
 	
 	protected Logger logger = LoggerFactory.getLogger(Scenario.class);
 
-	protected Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6793"));
-	protected Web3j proposalWeb3j = Web3j.build(new HttpService("http://192.168.9.76:6792"));
+	protected Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
+	protected Web3j proposalWeb3j = Web3j.build(new HttpService("http://192.168.120.144:6789"));
 	protected Web3j slashWeb3j = proposalWeb3j;
 	protected String chainId = "103";
 	protected String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
@@ -50,8 +50,8 @@ public abstract class Scenario {
     protected List<VoteInfo> voteInfos = new ArrayList<>(); 
     
     {
-    	voteInfos.add(createVoteInfo("http://192.168.9.76:6789", "0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47", VoteOption.YEAS));
-    	voteInfos.add(createVoteInfo("http://192.168.9.76:6790", "e0b6af6cc2e10b2b74540b87098083d48343805a3ff09c655eab0b20dba2b2851aea79ee75b6e150bde58ead0be03ee4a8619ea1dfaf529cbb8ff55ca23531ed", VoteOption.NAYS));
+    	voteInfos.add(createVoteInfo("http://192.168.120.141:6789", "0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47", VoteOption.YEAS));
+    	voteInfos.add(createVoteInfo("http://192.168.120.142:6789", "e0b6af6cc2e10b2b74540b87098083d48343805a3ff09c655eab0b20dba2b2851aea79ee75b6e150bde58ead0be03ee4a8619ea1dfaf529cbb8ff55ca23531ed", VoteOption.NAYS));
     }
     
     private VoteInfo createVoteInfo(String nodeHost, String nodeId, VoteOption voteOption) {

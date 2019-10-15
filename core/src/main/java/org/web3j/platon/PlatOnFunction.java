@@ -1,11 +1,14 @@
 package org.web3j.platon;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.IntType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.platon.bean.Evidences;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
@@ -13,10 +16,6 @@ import org.web3j.rlp.RlpType;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlatOnFunction {
 

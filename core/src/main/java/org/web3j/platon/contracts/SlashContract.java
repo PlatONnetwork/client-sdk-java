@@ -22,8 +22,6 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
-import rx.Observable;
-
 public class SlashContract extends PlatOnContract {
 
     /**
@@ -71,8 +69,7 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
+        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, null);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -84,8 +81,7 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)), gasProvider);
+        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, gasProvider);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -95,14 +91,9 @@ public class SlashContract extends PlatOnContract {
      * @param data
      * @return
      */
-    public Observable<GasProvider> getReportDoubleSignGasProvider(String data) {
-        return Observable.fromCallable(new Callable<GasProvider>() {
-            @Override
-            public GasProvider call() throws Exception {
-                return new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                        Arrays.asList(new Utf8String(data))).getGasProvider();
-            }
-        });
+    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) {
+    	 PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, null);
+    	 return function.getGasProvider();
     }
 
     /**
@@ -112,8 +103,7 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
+        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, null);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -125,8 +115,7 @@ public class SlashContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)), gasProvider);
+        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, gasProvider);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -136,6 +125,12 @@ public class SlashContract extends PlatOnContract {
      */
     public RemoteCall<BaseResponse> getReportDoubleSignResult(PlatonSendTransaction ethSendTransaction) {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE);
+    }
+    
+    private PlatOnFunction createReportDoubleSignFunction(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {          
+        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)), gasProvider);
+        return function;
     }
 
     /**
