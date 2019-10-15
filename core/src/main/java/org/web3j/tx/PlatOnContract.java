@@ -234,7 +234,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
                 gasProvider.getGasLimit());
     }
 
-    private BaseResponse getResponseFromTransactionReceipt(TransactionReceipt transactionReceipt, int functionType) throws TransactionException {
+    protected BaseResponse getResponseFromTransactionReceipt(TransactionReceipt transactionReceipt, int functionType) throws TransactionException {
 
         Event event = new Event(functionType,
                 Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
