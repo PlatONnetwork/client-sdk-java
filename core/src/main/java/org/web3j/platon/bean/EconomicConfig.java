@@ -166,9 +166,9 @@ public class EconomicConfig {
     }
     
     public class Slashing {
-        // 违规-低出块率-触发处罚的出块率阈值 60%
-        @JSONField(name = "PackAmountAbnormal")
-        private BigDecimal packAmountAbnormal;
+
+        @JSONField(name = "DuplicateSignReportReward")
+        private BigDecimal duplicateSignReportReward;
         // 区块双签扣除验证人自有质押金比例 100%
         @JSONField(name = "DuplicateSignHighSlashing")
         private BigDecimal duplicateSignHighSlashing;
@@ -178,11 +178,11 @@ public class EconomicConfig {
         // EvidenceValidEpoch
         @JSONField(name = "EvidenceValidEpoch")
         private BigDecimal evidenceValidEpoch;
-		public BigDecimal getPackAmountAbnormal() {
-			return packAmountAbnormal;
+		public BigDecimal getDuplicateSignReportReward() {
+			return duplicateSignReportReward;
 		}
-		public void setPackAmountAbnormal(BigDecimal packAmountAbnormal) {
-			this.packAmountAbnormal = packAmountAbnormal;
+		public void setDuplicateSignReportReward(BigDecimal duplicateSignReportReward) {
+			this.duplicateSignReportReward = duplicateSignReportReward;
 		}
 		public BigDecimal getDuplicateSignHighSlashing() {
 			return duplicateSignHighSlashing;
