@@ -35,7 +35,7 @@ public class StakingContract extends PlatOnContract {
     public static StakingContract load(Web3j web3j, Credentials credentials, String chainId) {
         return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, chainId, web3j, credentials);
     }
-    
+
     public static StakingContract load(Web3j web3j, TransactionManager transactionManager) {
         return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, web3j, transactionManager);
     }
@@ -49,6 +49,7 @@ public class StakingContract extends PlatOnContract {
     private StakingContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
     }
+
     /**
      * sendRawTransaction，使用默认gasProvider
      *
@@ -60,7 +61,7 @@ public class StakingContract extends PlatOnContract {
     private StakingContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
     }
-    
+
     private StakingContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
         super(contractAddress, web3j, transactionManager);
     }
@@ -85,7 +86,7 @@ public class StakingContract extends PlatOnContract {
      * @return
      * @see StakingParam
      */
-    public RemoteCall<BaseResponse> staking(StakingParam stakingParam, GasProvider gasProvider) throws Exception {        
+    public RemoteCall<BaseResponse> staking(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
         PlatOnFunction function = createStakingFunction(stakingParam, gasProvider);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
@@ -97,10 +98,10 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public GasProvider getStakingGasProvider(StakingParam stakingParam) throws Exception {
-    	PlatOnFunction function = createStakingFunction(stakingParam, null);
-    	return function.getGasProvider();
+        PlatOnFunction function = createStakingFunction(stakingParam, null);
+        return function.getGasProvider();
     }
-    
+
 
     /**
      * 发起质押
@@ -136,15 +137,16 @@ public class StakingContract extends PlatOnContract {
     public RemoteCall<BaseResponse> getStakingResult(PlatonSendTransaction ethSendTransaction) {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.STAKING_FUNC_TYPE);
     }
-    
+
     private PlatOnFunction createStakingFunction(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
-        StakingParam tempStakingParam = stakingParam.clone();
-        tempStakingParam.setProcessVersion(getProgramVersion().send().data);
-        tempStakingParam.setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve());
         PlatOnFunction function = new PlatOnFunction(
                 FunctionType.STAKING_FUNC_TYPE,
-                tempStakingParam.getSubmitInputParameters(), gasProvider);
+                stakingParam.getSubmitInputParameters(), gasProvider);
         return function;
+    }
+
+    public String getAdminSchnorrNIZKProve() throws Exception {
+        return web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve();
     }
 
     /**
@@ -154,7 +156,7 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse> unStaking(String nodeId) {
-        PlatOnFunction function  = createUnStakingFunction(nodeId, null);
+        PlatOnFunction function = createUnStakingFunction(nodeId, null);
         return executeRemoteCallTransactionWithFunctionType(function);
     }
 
@@ -176,8 +178,8 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public GasProvider getUnStakingGasProvider(String nodeId) {
-    	PlatOnFunction function = createUnStakingFunction(nodeId, null);
-    	return function.getGasProvider();
+        PlatOnFunction function = createUnStakingFunction(nodeId, null);
+        return function.getGasProvider();
     }
 
     /**
@@ -249,8 +251,8 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) {
-    	PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);
-    	return function.getGasProvider();
+        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);
+        return function.getGasProvider();
     }
 
     /**
@@ -260,7 +262,7 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> updateStakingInfoReturnTransaction(UpdateStakingParam updateStakingParam) {
-        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);        
+        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -287,10 +289,10 @@ public class StakingContract extends PlatOnContract {
 
     private PlatOnFunction createUpdateStakingFunction(UpdateStakingParam updateStakingParam, GasProvider gasProvider) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
-                updateStakingParam.getSubmitInputParameters(),gasProvider);
+                updateStakingParam.getSubmitInputParameters(), gasProvider);
         return function;
     }
-    
+
     /**
      * 增持质押
      *
@@ -328,7 +330,7 @@ public class StakingContract extends PlatOnContract {
      */
     public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
         PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, null);
-    	return function.getGasProvider();
+        return function.getGasProvider();
     }
 
     /**
@@ -354,7 +356,7 @@ public class StakingContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> addStakingReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, gasProvider);        
+        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, gasProvider);
         return executeRemoteCallPlatonTransaction(function);
     }
 
@@ -367,8 +369,8 @@ public class StakingContract extends PlatOnContract {
     public RemoteCall<BaseResponse> getAddStakingResult(PlatonSendTransaction ethSendTransaction) {
         return executeRemoteCallTransactionWithFunctionType(ethSendTransaction, FunctionType.ADD_STAKING_FUNC_TYPE);
     }
-    
-    private PlatOnFunction createAddStakingFunction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {        
+
+    private PlatOnFunction createAddStakingFunction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
         PlatOnFunction function = new PlatOnFunction(FunctionType.ADD_STAKING_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId)),
                         new Uint16(stakingAmountType.getValue()),

@@ -242,12 +242,12 @@ public abstract class PlatOnContract extends ManagedTransaction {
 
         List<EventValuesWithLog> eventValuesWithLogList = extractEventParametersWithLog(event, transactionReceipt);
 
-        BaseResponse result = JSONUtil.parseObject(getResponseFromLog(transactionReceipt, eventValuesWithLogList), BaseResponse.class);
+        BaseResponse result = JSONUtil.parseObject(getResponseFromLog(eventValuesWithLogList), BaseResponse.class);
         result.transactionReceipt = transactionReceipt;
         return result;
     }
 
-    private String getResponseFromLog(TransactionReceipt transactionReceipt, List<EventValuesWithLog> eventValuesWithLogList) throws TransactionException {
+    private String getResponseFromLog(List<EventValuesWithLog> eventValuesWithLogList) throws TransactionException {
 
         boolean isEventValuesWithLogEmpty = eventValuesWithLogList == null || eventValuesWithLogList.isEmpty();
 
@@ -256,10 +256,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
         if (isEventValuesWithLogEmpty || (nonIndexedValues = eventValuesWithLogList.get(0).getNonIndexedValues()) == null || nonIndexedValues.isEmpty()) {
             throw new TransactionException(
                     String.format(
-                            "Transaction has failed with status: %s. "
-                                    + "Gas used: %d. (not-enough gas?)",
-                            transactionReceipt.getStatus(),
-                            transactionReceipt.getGasUsed()));
+                            "logs is empty or cannot parse to normal log message"));
         }
 
         return (String) nonIndexedValues.get(0).getValue();
@@ -327,7 +324,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
      *
      * @return
      */
-    public RemoteCall<BaseResponse<ProgramVersion>> getProgramVersion() {
+    public ProgramVersion getProgramVersion() throws Exception{
         final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROGRAM_VERSION);
         return new RemoteCall<BaseResponse<ProgramVersion>>(new Callable<BaseResponse<ProgramVersion>>() {
             @Override
@@ -338,7 +335,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
             	baseResponse.code = 0;
                 return baseResponse;
             }
-        });
+        }).send().data;
     }
 
     public static EventValues staticExtractEventParameters(

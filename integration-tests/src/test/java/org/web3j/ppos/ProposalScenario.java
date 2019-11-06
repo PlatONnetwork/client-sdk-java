@@ -121,7 +121,7 @@ public class ProposalScenario extends Scenario {
     }
 
     public BaseResponse declareVersion() throws Exception {
-        PlatonSendTransaction platonSendTransaction = proposalContract.declareVersionReturnTransaction(proposalNodeId).send();
+        PlatonSendTransaction platonSendTransaction = proposalContract.declareVersionReturnTransaction(proposalContract.getProgramVersion(),proposalNodeId).send();
         BaseResponse baseResponse = proposalContract.getDeclareVersionResult(platonSendTransaction).send();
         return baseResponse;
     }
@@ -151,7 +151,7 @@ public class ProposalScenario extends Scenario {
     }
 	
     public BaseResponse vote(VoteInfo voteInfo,String proposalID) throws Exception {   	
-    	PlatonSendTransaction platonSendTransaction = voteInfo.getVoteContract().voteReturnTransaction(proposalID, voteInfo.getNodeId(), voteInfo.getVoteOption()).send();
+    	PlatonSendTransaction platonSendTransaction = voteInfo.getVoteContract().voteReturnTransaction(voteInfo.getVoteContract().getProgramVersion(), voteInfo.getVoteOption(),proposalID, voteInfo.getNodeId()).send();
         BaseResponse baseResponse = voteInfo.getVoteContract().getVoteResult(platonSendTransaction).send();
         return baseResponse;
     }

@@ -205,6 +205,8 @@ public class StakingScenario extends Scenario {
                 .setWebSite(webSite)
                 .setDetails(details)
                 .setBlsPubKey(blsPubKey)
+				.setProcessVersion(stakingContract.getProgramVersion())
+				.setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
                 .build()).send(); 
         BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
         return baseResponse;
