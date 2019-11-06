@@ -108,6 +108,8 @@ public class StakingContractTest {
                     .setWebSite(webSite)
                     .setDetails(details)
                     .setBlsPubKey(blsPubKey)
+                    .setProcessVersion(stakingContract.getProgramVersion())
+                    .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
                     .build()).send();
             BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());

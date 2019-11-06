@@ -12,6 +12,7 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
 import org.web3j.platon.VoteOption;
+import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.Proposal;
 import org.web3j.platon.bean.TallyResult;
 import org.web3j.platon.contracts.ProposalContract;
@@ -69,7 +70,7 @@ public class ProposalContractTest {
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.112.171:6789"));
     private Credentials credentials;
     private ProposalContract proposalContract;
-    private String pIDID =null;
+    private String pIDID = null;
 
     @Before
     public void init() {
@@ -83,7 +84,7 @@ public class ProposalContractTest {
     }
 
     @Test
-    public void sendTransaction(){
+    public void sendTransaction() {
 
 //        sendTransaction("a11859ce23effc663a9460e332ca09bd812acc390497f8dc7542b6938e13f8d7", toAddress, new BigDecimal("6000000000000000000000000"), 500000000000L, 210000L);
 
@@ -179,7 +180,6 @@ public class ProposalContractTest {
             PlatonBlock ethBlock =
                     web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
             BigInteger blockNumber = ethBlock.getBlock().getNumber();
-            BigInteger endVoltingBlock = blockNumber.divide(BigInteger.valueOf(200)).multiply(BigInteger.valueOf(200)).add(BigInteger.valueOf(200).multiply(BigInteger.valueOf(10))).subtract(BigInteger.valueOf(10));
             PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitVersionProposalParam("0aa9805681d8f77c05f317efc141c97d5adb511ffb51f5a251d2d7a4a3a96d9a12adf39f06b702f0ccdff9eddc1790eb272dca31b0c47751d49b5931c58701e7", "1177777335544552888200", BigInteger.valueOf(20000), BigInteger.valueOf(50))).send();
             BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_VERSION_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
@@ -232,7 +232,7 @@ public class ProposalContractTest {
     @Test
     public void vote() {
         try {
-            BaseResponse baseResponse = proposalContract.vote("0x1178f6dcecd1731e2556d4a014d30ebe04cf5522c07776135e60f613e51af0c9", "25a2407f1692febff715655d53912b6284d8672a411d39b250ec40530a7e36f0b7970ed1d413f9b079e104aba80e5cef25eaf299cbd6a01e8015b505cffebc2d", VoteOption.YEAS).send();
+            BaseResponse baseResponse = proposalContract.vote(proposalContract.getProgramVersion(), VoteOption.YEAS, "0x1178f6dcecd1731e2556d4a014d30ebe04cf5522c07776135e60f613e51af0c9", "25a2407f1692febff715655d53912b6284d8672a411d39b250ec40530a7e36f0b7970ed1d413f9b079e104aba80e5cef25eaf299cbd6a01e8015b505cffebc2d").send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,7 +246,7 @@ public class ProposalContractTest {
     @Test
     public void declareVersion() {
         try {
-            BaseResponse baseResponse = proposalContract.declareVersion("411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c").send();
+            BaseResponse baseResponse = proposalContract.declareVersion(proposalContract.getProgramVersion(), "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c").send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,8 +287,8 @@ public class ProposalContractTest {
     @Test
     public void getProgramVersion() {
         try {
-            BaseResponse baseResponse = proposalContract.getProgramVersion().send();
-            System.out.println(baseResponse.data);
+            ProgramVersion programVersion = proposalContract.getProgramVersion();
+            System.out.println(programVersion);
         } catch (Exception e) {
             e.printStackTrace();
         }
