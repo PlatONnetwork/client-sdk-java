@@ -31,6 +31,7 @@ import org.web3j.protocol.core.methods.response.PlatonCall;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
+import org.web3j.protocol.exceptions.UnableParseLogException;
 import org.web3j.tx.exceptions.ContractCallException;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
@@ -48,7 +49,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
     protected TransactionReceipt transactionReceipt;
 
     protected PlatOnContract(String contractAddress,
-                           Web3j web3j, TransactionManager transactionManager) {
+                             Web3j web3j, TransactionManager transactionManager) {
         super(web3j, transactionManager);
 
         this.contractAddress = ensResolver.resolve(contractAddress);
@@ -254,7 +255,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
         List<Type> nonIndexedValues;
 
         if (isEventValuesWithLogEmpty || (nonIndexedValues = eventValuesWithLogList.get(0).getNonIndexedValues()) == null || nonIndexedValues.isEmpty()) {
-            throw new TransactionException(
+            throw new UnableParseLogException(
                     String.format(
                             "logs is empty or cannot parse to normal log message"));
         }
@@ -324,15 +325,15 @@ public abstract class PlatOnContract extends ManagedTransaction {
      *
      * @return
      */
-    public ProgramVersion getProgramVersion() throws Exception{
+    public ProgramVersion getProgramVersion() throws Exception {
         final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROGRAM_VERSION);
         return new RemoteCall<BaseResponse<ProgramVersion>>(new Callable<BaseResponse<ProgramVersion>>() {
             @Override
             public BaseResponse<ProgramVersion> call() throws Exception {
-            	ProgramVersion programVersion = web3j.getProgramVersion().send().getAdminProgramVersion();
-            	BaseResponse<ProgramVersion> baseResponse = new BaseResponse<ProgramVersion>();
-            	baseResponse.data = programVersion;
-            	baseResponse.code = 0;
+                ProgramVersion programVersion = web3j.getProgramVersion().send().getAdminProgramVersion();
+                BaseResponse<ProgramVersion> baseResponse = new BaseResponse<ProgramVersion>();
+                baseResponse.data = programVersion;
+                baseResponse.code = 0;
                 return baseResponse;
             }
         }).send().data;
