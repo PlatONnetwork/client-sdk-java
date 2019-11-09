@@ -1,10 +1,8 @@
-﻿
-
-# 入门
+﻿# 入门
 
 ​		根据构建工具的不同，使用以下方式将相关依赖项添加到项目中：
 
-- 使用要求jdk1.8以上
+- 使用要求jdk1.8以上.
 
 ## maven
 
@@ -83,15 +81,10 @@ StakingContract contract = StakingContract.load(web3j, credentials, chainId)
 BaseRespons
 ```
 
-* **BaseResponse描述**
-
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -139,14 +132,10 @@ StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 ```java
@@ -175,14 +164,10 @@ BaseResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransac
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -223,14 +208,10 @@ BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSen
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse ： 通用应答包
+  - int：Code   结果标识，1为成功，0为失败
+  - String：Data   应答数据
+  - String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 ```java
@@ -256,42 +237,48 @@ BaseResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransa
 BaseResponse<Node> baseRespons
 ```
 
-* **BaseResponse<Node>描述**
+- BaseResponse<Node>描述
+	- int： Code   结果标识，1为成功，0为失败
+	- Node：Data   Node对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
-```java
-{
-	"Code":int,                             //是否成功 1:成功  0:失败
-	"Data":Node                          	//返回数据Node对象
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+* **Node**：保存当前节点质押信息的对象
 
-* **Node**
+  - String：BenefitAddress	用于接受出块奖励和质押奖励的收益账户
 
-  node对象，表示：**{查询当前节点的质押信息}**
+  - String：Details   节点的描述(有长度限制，表示该节点的描述) 
 
-```json
- {
- 		"BenefitAddress": "0x1000000000000000000000000000000000000003",
- 		"Details": "The PlatON Node",
- 		"ExternalId": "",
- 		"NodeId": "4fcc251cf6bf3ea53a748971a223f5676225ee4380b65c7889a2b491e1551d45fe9fcc19c6af54dcf0d5323b5aa8ee1d919791695082bae1f86dd282dba4150f",
- 		"NodeName": "platon.node.1",
- 		"ProgramVersion": 1792,
- 		"Released": 1500000000000000000000000,
- 		"ReleasedHes": 0,
- 		"RestrictingPlan": 0,
- 		"RestrictingPlanHes": 0,
- 		"Shares": 1500000000000000000000000,
- 		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
- 		"StakingBlockNum": 0,
- 		"StakingEpoch": 0,
- 		"StakingTxIndex": 0,
- 		"Status": 0,
- 		"ValidatorTerm": 0,
- 		"Website": "www.platon.network"
- 	}
-```
+  - String：NodeId   被质押的节点Id(也叫候选人的节点Id)
+
+  - String：NodeName   被质押节点的名称(有长度限制，表示该节点的名称)
+
+  - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
+
+  - String：Released   发起质押账户的自由金额的锁定期质押的von
+
+  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+
+  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+
+  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+
+  - String：Shares   当前候选人总共质押加被委托的von数目
+
+  - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
+
+  - BigInteger：StakingBlockNum    发起质押时的区块高度
+
+  - BigInteger：StakingEpoch   当前变更质押金额时的结算周期
+
+  - BigInteger：StakingTxIndex   发起质押时的交易索引
+
+  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+
+    4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
+
+  - BigInteger：ValidatorTerm   验证人的任期
+
+  - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
 
 * **Java SDK合约使用**
 
@@ -332,14 +319,10 @@ delegateContract contract = DelegateContract.load(web3j, credentials, chainId);
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse ： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -367,42 +350,15 @@ StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
 BaseResponse<List<DelegationIdInfo>> baseRespons
 ```
 
-* **BaseResponse<List<DelegationIdInfo>>描述**
+- BaseResponse<List<DelegationIdInfo>>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- List<DelegationIdInfo>：Data   DelegationIdInfo对象列表
+	- String：ErrMsg   错误信息，失败时存在
 
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":List<DelegationIdInfo>          //返回数据DelegationIdInfoList数组
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
-
-* **List<DelegationIdInfo>描述**
-
-委托信息列表，表示：**[{查询当前账户地址所委托的节点的NodeID和质押Id}]**
-
-```json
- [{
- 		"BenefitAddress": "0x1000000000000000000000000000000000000003",
- 		"Details": "The PlatON Node",
- 		"ExternalId": "",
- 		"NodeId": "4fcc251cf6bf3ea53a748971a223f5676225ee4380b65c7889a2b491e1551d45fe9fcc19c6af54dcf0d5323b5aa8ee1d919791695082bae1f86dd282dba4150f",
- 		"NodeName": "platon.node.1",
- 		"ProgramVersion": 1792,
- 		"Released": 1500000000000000000000000,
- 		"ReleasedHes": 0,
- 		"RestrictingPlan": 0,
- 		"RestrictingPlanHes": 0,
- 		"Shares": 1500000000000000000000000,
- 		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
- 		"StakingBlockNum": 0,
- 		"StakingEpoch": 0,
- 		"StakingTxIndex": 0,
- 		"Status": 0,
- 		"Website": "www.platon.network"
- 	}
- ]
-```
+* **DelegationIdInfo**：保存当前账户地址所委托的节点的NodeID和质押区块高度的对象
+  - String：address   委托人的账户地址
+  - String：NodeId   验证人的节点Id
+  - BigInteger：StakingBlockNum   发起质押时的区块高度
 
 * **Java SDK合约使用**
 
@@ -427,33 +383,21 @@ List<DelegationIdInfo> DelegationIdInfoList = baseResponse.data;
 BaseResponse<Delegation>
 ```
 
-* **BaseResponse<Delegation>描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":Delegation                      //返回数据Delegation对象
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse<Delegation>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- Delegation：Data   Delegation对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
-* **Delegation描述**
-
-json格式字符串，内部结构为一个数组，表示：**[{查询当前单个委托信息}]**
-
-```json
- [{
- 		"delegateAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
- 		"stakingBlockNum": "",
- 		"NodeId": "4fcc251cf6bf3ea53a748971a223f5676225ee4380b65c7889a2b491e1551d45fe9fcc19c6af54dcf0d5323b5aa8ee1d919791695082bae1f86dd282dba4150f",
- 		"delegateEpoch": 12,
- 		"delegateReleased": 1500000000000000000000000,
- 		"delegateReleasedHes": 1500000000000000000000000,
- 		"delegateLocked": 1500000000000000000000000,
- 		"delegateLockedHes": 1500000000000000000000000,
-		"delegateReduction": 1500000000000000000000000
- 	}
- ]
-```
+* **Delegation**：保存当前委托账户委托信息的对象
+  - String：Address	委托人的账户地址
+  - String：NodeId   验证人的节点Id
+  - BigInteger：StakingBlockNum    发起质押时的区块高度
+  - BigInteger：DelegateEpoch   最近一次对该候选人发起的委托时的结算周期
+  - String：Released   发起委托账户的自由金额的锁定期委托的von
+  - String：ReleasedHes   发起委托账户的自由金额的犹豫期委托的von
+  - String：RestrictingPlan   发起委托账户的锁仓金额的锁定期委托的von
+  - String：RestrictingPlanHes   发起委托账户的锁仓金额的犹豫期质押的von
+  - String：Reduction   处于撤销计划中的von
 
 * **Java SDK合约使用**
 
@@ -482,14 +426,10 @@ Delegation delegation = baseResponse.data;
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -534,38 +474,48 @@ nodeContract contract = NodeContract.load(web3j, credentials, chainId);
 BaseResponse<List<Node>> baseResponse
 ```
 
-**BaseResponse<List<Node>>描述**
+- BaseResponse<List<Node>>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- List<Node>：Data   nodeList对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
+* **Node**：保存单个当前结算周期验证节点信息的对象
 
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":List<Node>                      //返回数据nodeList数组
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+  - String：BenefitAddress	用于接受出块奖励和质押奖励的收益账户
 
-* **List<Node>描述**
+  - String：Details   节点的描述(有长度限制，表示该节点的描述) 
 
-内部节点node数组列表，表示：**[{当前结算周期的验证人队列}]**
+  - String：NodeId   被质押的节点Id(也叫候选人的节点Id)
 
-```json
-[ {
-		"BenefitAddress": "0x1000000000000000000000000000000000000003",
-		"Details": "The PlatON Node",
-		"ExternalId": "",
-		"NodeId": "4fcc251cf6bf3ea53a748971a223f5676225ee4380b65c7889a2b491e1551d45fe9fcc19c6af54dcf0d5323b5aa8ee1d919791695082bae1f86dd282dba4150f",
-		"NodeName": "platon.node.1",
-		"ProgramVersion": 1792,
-		"Shares": 1500000000000000000000000,
-		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
-		"StakingBlockNum": 0,
-		"StakingTxIndex": 0,
-		"ValidatorTerm": 0,
-		"Website": "www.platon.network"
-	}
-]
-```
+  - String：NodeName   被质押节点的名称(有长度限制，表示该节点的名称)
+
+  - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
+
+  - String：Released   发起质押账户的自由金额的锁定期质押的von
+
+  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+
+  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+
+  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+
+  - String：Shares   当前候选人总共质押加被委托的von数目
+
+  - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
+
+  - BigInteger：StakingBlockNum    发起质押时的区块高度
+
+  - BigInteger：StakingEpoch   当前变更质押金额时的结算周期
+
+  - BigInteger：StakingTxIndex   发起质押时的交易索引
+
+  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+
+    4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
+
+  - BigInteger：ValidatorTerm   验证人的任期
+
+  - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
 
 * **Java SDK合约使用**
 
@@ -587,51 +537,48 @@ List<Node> nodeList = baseResponse.data;
 BaseResponse<List<Node>> baseResponse
 ```
 
-**BaseResponse<List<Node>>描述**
+- BaseResponse<List<Node>>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- List<Node>：Data   nodeList对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
+* **Node**：保存单个当前共识周期验证节点信息的对象
 
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":List<Node>                      //返回数据nodeList数组
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+  - String：BenefitAddress	用于接受出块奖励和质押奖励的收益账户
 
-* **List<Node>描述**
+  - String：Details   节点的描述(有长度限制，表示该节点的描述) 
 
-内部节点node数组列表，内部结构为一个数组，表示：**[{当前共识周期的验证人列表}]**
+  - String：NodeId   被质押的节点Id(也叫候选人的节点Id)
 
-```java
-[{
-		"BenefitAddress": "0x1000000000000000000000000000000000000003",
-		"Details": "The PlatON Node",
-		"ExternalId": "",
-		"NodeId": "53242dec8799f3f4f8882b109e1a3ebb4aa8c2082d000937d5876365414150c5337aa3d3d41ead1ac873f4e0b19cb9238d2995598207e8d571f0bd5dd843cdf3",
-		"NodeName": "platon.node.3",
-		"ProgramVersion": 1792,
-		"Shares": 1500000000000000000000000,
-		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
-		"StakingBlockNum": 0,
-		"StakingTxIndex": 2,
-		"ValidatorTerm": 3,
-		"Website": "www.platon.network"
-	}, {
-		"BenefitAddress": "0x1000000000000000000000000000000000000003",
-		"Details": "The PlatON Node",
-		"ExternalId": "",
-		"NodeId": "459d199acb83bfe08c26d5c484cbe36755b53b7ae2ea5f7a5f0a8f4c08e843b51c4661f3faa57b03b710b48a9e17118c2659c5307af0cc5329726c13119a6b85",
-		"NodeName": "platon.node.2",
-		"ProgramVersion": 1792,
-		"Shares": 1500000000000000000000000,
-		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
-		"StakingBlockNum": 0,
-		"StakingTxIndex": 1,
-		"ValidatorTerm": 2,
-		"Website": "www.platon.network"
-	}
-]
-```
+  - String：NodeName   被质押节点的名称(有长度限制，表示该节点的名称)
+
+  - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
+
+  - String：Released   发起质押账户的自由金额的锁定期质押的von
+
+  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+
+  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+
+  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+
+  - String：Shares   当前候选人总共质押加被委托的von数目
+
+  - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
+
+  - BigInteger：StakingBlockNum    发起质押时的区块高度
+
+  - BigInteger：StakingEpoch   当前变更质押金额时的结算周期
+
+  - BigInteger：StakingTxIndex   发起质押时的交易索引
+
+  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+
+    4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
+
+  - BigInteger：ValidatorTerm   验证人的任期
+
+  - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
 
 * **Java SDK合约使用**
 
@@ -654,61 +601,48 @@ List<Node> nodeList = baseResponse.data;
 BaseResponse<List<Node>> baseResponse
 ```
 
-**BaseResponse<List<Node>>描述**
+- BaseResponse<List<Node>>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- List<Node>：Data   nodeList对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
+* **Node**：保存单个候选节点信息对象
 
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":List<Node>                      //返回数据nodeList数组
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+  - String：BenefitAddress	用于接受出块奖励和质押奖励的收益账户
 
-* **List<Node>描述**
+  - String：Details   节点的描述(有长度限制，表示该节点的描述) 
 
-内部节点node数组列表，内部结构为一个数组，表示：**[{实时的候选人列表}]**
+  - String：NodeId   被质押的节点Id(也叫候选人的节点Id)
 
-```json
- [{
- 		"BenefitAddress": "0x1000000000000000000000000000000000000003",
- 		"Details": "The PlatON Node",
- 		"ExternalId": "",
- 		"NodeId": "4fcc251cf6bf3ea53a748971a223f5676225ee4380b65c7889a2b491e1551d45fe9fcc19c6af54dcf0d5323b5aa8ee1d919791695082bae1f86dd282dba4150f",
- 		"NodeName": "platon.node.1",
- 		"ProgramVersion": 1792,
- 		"Released": 1500000000000000000000000,
- 		"ReleasedHes": 0,
- 		"RestrictingPlan": 0,
- 		"RestrictingPlanHes": 0,
- 		"Shares": 1500000000000000000000000,
- 		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
- 		"StakingBlockNum": 0,
- 		"StakingEpoch": 0,
- 		"StakingTxIndex": 0,
- 		"Status": 0,
- 		"Website": "www.platon.network"
- 	}, {
- 		"BenefitAddress": "0x1000000000000000000000000000000000000003",
- 		"Details": "The PlatON Node",
- 		"ExternalId": "",
- 		"NodeId": "459d199acb83bfe08c26d5c484cbe36755b53b7ae2ea5f7a5f0a8f4c08e843b51c4661f3faa57b03b710b48a9e17118c2659c5307af0cc5329726c13119a6b85",
- 		"NodeName": "platon.node.2",
- 		"ProgramVersion": 1792,
- 		"Released": 1500000000000000000000000,
- 		"ReleasedHes": 0,
- 		"RestrictingPlan": 0,
- 		"RestrictingPlanHes": 0,
- 		"Shares": 1500000000000000000000000,
- 		"StakingAddress": "0xc1f330b214668beac2e6418dd651b09c759a4bf5",
- 		"StakingBlockNum": 0,
- 		"StakingEpoch": 0,
- 		"StakingTxIndex": 1,
- 		"Status": 0,
- 		"Website": "www.platon.network"
- 	}
- ]
-```
+  - String：NodeName   被质押节点的名称(有长度限制，表示该节点的名称)
+
+  - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
+
+  - String：Released   发起质押账户的自由金额的锁定期质押的von
+
+  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+
+  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+
+  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+
+  - String：Shares   当前候选人总共质押加被委托的von数目
+
+  - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
+
+  - BigInteger：StakingBlockNum    发起质押时的区块高度
+
+  - BigInteger：StakingEpoch   当前变更质押金额时的结算周期
+
+  - BigInteger：StakingTxIndex   发起质押时的交易索引
+
+  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+
+    4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
+
+  - BigInteger：ValidatorTerm   验证人的任期
+
+  - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
 
 * **Java SDK合约使用**
 
@@ -762,14 +696,10 @@ ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -796,14 +726,10 @@ BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendT
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**：
 
@@ -827,32 +753,21 @@ BaseResponse baseResponse = voteInfo.getVoteContract().getVoteResult(platonSendT
 BaseResponse<Proposal>
 ```
 
-* **Proposal描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":Proposal                        //返回Proposal对象
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse<Proposal>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- Proposal：Data   Proposal对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
-* **Proposal描述**
-
-提案对象，表示：**{提案结构}**
-
-```json
-{
-	"proposalId":"111",		//提案id
-	"proposer":"0x.....",	//提案节点ID
-	"proposalType":"0x01",	//提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
-	"piPid":"asx123",		//提案PIPID
-	"submitBlock":111,		//提交提案的块高
-	"endVotingBlock":111,	//提案投票结束的块高
-	"newVersion":1,			//升级版本
-	"toBeCanceled":"",		//提案要取消的升级提案ID
-	"activeBlock":"",		//（如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
-}
-```
+* **Proposal**：保存单个提案信息的对象
+  - String:	proposalId	提案ID
+  - String:    proposer   提案节点ID
+  - String:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
+  - String:    piPid   提案PIPID
+  - BigInteger:   submitBlock   提交提案的块高
+  - BigInteger:   endVotingBlock   提案投票结束的块高
+  - BigInteger:   newVersion   升级版本
+  - String:   toBeCanceled   提案要取消的升级提案ID
+  - String:   activeBlock   （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
 
 * **合约使用**
 
@@ -871,40 +786,29 @@ Proposal proposal = baseResponse.data;
 
 * **返回值**
 ```
-BaseResponse<Proposal>
+BaseResponse<TallyResult>
 ```
 
-* **Proposal描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":Proposal                        //返回Proposal对象
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse<TallyResult>描述
+  - int：Code   结果标识，1为成功，0为失败
+  - Proposal：Data   Proposal对象数据
+  - String：ErrMsg   错误信息，失败时存在
 
-* **Proposal描述**
-
-提案对象，表示：**{查询返回提案结构}**
-
-```json
-{
-	"proposalID":"sd",		//提案ID
-	"yeas":10,				//赞成票
-	"nays":11,				//反对票
-	"abstentions":123,		//弃权票
-	"accuVerifiers":1111,	//在整个投票期内有投票资格的验证人总数
-	"status":1,				//提案状态
-}
-```
+* **TallyResult**：保存单个提案结果的对象
+  - String:   proposalID   提案ID
+  - BigInteger:   yeas   赞成票票数
+  - BigInteger:   nays   反对票票数
+  - BigInteger:   abstentions   弃权票票数
+  - BigInteger:   accuVerifiers   在整个投票期内有投票资格的验证人总数
+  - BigInteger:   status   提案状态
 
 * **合约使用**
 
 ```java
 //提案id
 String proposalID ="";
-BaseResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).send();
-Proposal proposal = baseResponse.data;
+BaseResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposalID).send();
+TallyResult tallyResult = baseResponse.data;
 ```
 
 ##### **GetProposalList**
@@ -920,31 +824,21 @@ Proposal proposal = baseResponse.data;
 BaseResponse<List<Proposal>>
 ```
 
-* **BaseResponse<List<Proposal>>描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":List<Proposal>                  //返回ProposalList数组
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse<List<Proposal>>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- List<Proposal>：Data   ProposalList对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
-* **List<Proposal>描述**
-
-提案对象数组，表示：**[{提案列表}]**
-
-```json
-[
-	{
-	"proposalID":"sd",		//提案ID
-	"yeas":10,				//赞成票
-	"nays":11,				//反对票
-	"abstentions":123,		//弃权票
-	"accuVerifiers":1111,	//在整个投票期内有投票资格的验证人总数
-	"status":1,				//提案状态
-	}
-]
-```
+* **Proposal**：保存单个提案的对象
+  - String:	proposalId	提案ID
+  - String:    proposer   提案节点ID
+  - String:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
+  - String:    piPid   提案PIPID
+  - BigInteger:   submitBlock   提交提案的块高
+  - BigInteger:   endVotingBlock   提案投票结束的块高
+  - BigInteger:   newVersion   升级版本
+  - String:   toBeCanceled   提案要取消的升级提案ID
+  - String:   activeBlock   （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
 
 * **合约使用**
 
@@ -965,14 +859,10 @@ List<Proposal> proposalList = baseResponse.data;
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -995,14 +885,10 @@ BaseResponse baseResponse = proposalContract.getDeclareVersionResult(platonSendT
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -1040,14 +926,10 @@ SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -1072,16 +954,12 @@ BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTr
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
-合约使用：
+* **合约使用**
 
 ```java
 BaseResponse baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
@@ -1119,14 +997,10 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 BaseRespons
 ```
 
-* **BaseResponse描述**
-```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":string                          //返回数据
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
+- BaseResponse： 通用应答包
+	- int：Code   结果标识，1为成功，0为失败
+	- String：Data   应答数据
+	- String：ErrMsg   错误信息，失败时存在
 
 * **合约使用**
 
@@ -1151,44 +1025,20 @@ BaseResponse baseResponse = restrictingPlanContract.getCreateRestrictingPlanResu
 BaseResponse<RestrictingItem> baseResponse
 ```
 
-**BaseResponse<RestrictingItem>描述**
+- BaseResponse<RestrictingItem>描述
+	- int：Code   结果标识，1为成功，0为失败
+	- RestrictingItem：Data   RestrictingItem对象数据
+	- String：ErrMsg   错误信息，失败时存在
 
+* **RestrictingItem**：保存锁仓信息对象
+  - BigInteger：balance    锁仓余额
+  - BigInteger：pledge   质押/抵押金额
+  - BigInteger：debt   欠释放金额
+  - info：plans   锁仓分录信息
+
+* **info**：锁仓分录信息结构
 
 ```java
-{
-	"Code":int,                            //是否成功 1:成功  0:失败
-	"Data":RestrictingItem                 //返回数据RestrictingItem对象
-	"ErrMsg":string                        //错误信息，失败时存在
-}
-```
-
-* **RestrictingItem描述**
-
-锁仓信息，表示：**[{锁仓信息}]**
-
-```json
-{
-	"balance":111,	//锁仓余额
-	"pledge":222,	//质押/抵押金额
-	"debt":333,		//欠释放金额
-	info:[
-		{
-			"blockNumber":444,	//释放区块高度
-			"amount":555		//释放金额
-		},
-		{
-			"blockNumber":666,	//释放区块高度
-			"amount":666		//释放金额
-		}
-	]
-}
-```
-
-* **其中info:为内部结构数组**
-
-表示**[{锁仓分录信息}]**
-
-```json
 info:[
 		{
 			"blockNumber":444,	//释放区块高度
