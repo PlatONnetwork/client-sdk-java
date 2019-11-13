@@ -44,7 +44,7 @@ import java.util.List;
 public class StakingContractTest {
 
     //        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.118:6789"));
 
     private StakingContract stakingContract;
 
@@ -65,7 +65,7 @@ public class StakingContractTest {
     @Before
     public void init() {
 
-        credentials = Credentials.create("0x6fe419582271a4dcf01c51b89195b77b228377fde4bde6e04ef126a0b4373f79");
+        credentials = Credentials.create("0xbfa6c75e2240a4735fdc99a73b48ae42d625f34b859327fc2f0e553f7e97888e");
 
         stakingContract = StakingContract.load(
                 web3j,

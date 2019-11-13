@@ -158,7 +158,7 @@ public class RestrictingPlanContract extends PlatOnContract {
             @Override
             public BaseResponse<RestrictingItem> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseObject((String) response.data, RestrictingItem.class);
+                response.data = JSONUtil.parseObject(JSONUtil.toJSONString(response.data), RestrictingItem.class);
                 return response;
             }
         });

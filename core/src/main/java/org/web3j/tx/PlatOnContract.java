@@ -1,5 +1,7 @@
 package org.web3j.tx;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
+import org.web3j.platon.ErrorCode;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.bean.ProgramVersion;
@@ -128,12 +131,7 @@ public abstract class PlatOnContract extends ManagedTransaction {
                         transactionManager.getFromAddress(), contractAddress, function.getEncodeData()),
                 DefaultBlockParameterName.LATEST)
                 .send();
-        String value = ethCall.getValue();
-        BaseResponse response = JSONUtil.parseObject(new String(Numeric.hexStringToByteArray(value)), BaseResponse.class);
-        if (response == null) {
-            response = new BaseResponse();
-        }
-        return response;
+        return PlatOnUtil.invokeDecode(ethCall.getValue());
     }
 
     protected BaseResponse executePatonCall(PlatOnFunction function, String contractAddress) throws IOException {
@@ -243,9 +241,14 @@ public abstract class PlatOnContract extends ManagedTransaction {
 
         List<EventValuesWithLog> eventValuesWithLogList = extractEventParametersWithLog(event, transactionReceipt);
 
-        BaseResponse result = JSONUtil.parseObject(getResponseFromLog(eventValuesWithLogList), BaseResponse.class);
-        result.transactionReceipt = transactionReceipt;
-        return result;
+        int code = ErrorCode.SYSTEM_ERROR;
+        try {
+            code = Integer.valueOf(getResponseFromLog(eventValuesWithLogList));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        return new BaseResponse(code, transactionReceipt);
     }
 
     private String getResponseFromLog(List<EventValuesWithLog> eventValuesWithLogList) throws TransactionException {
@@ -260,7 +263,14 @@ public abstract class PlatOnContract extends ManagedTransaction {
                             "logs is empty or cannot parse to normal log message"));
         }
 
-        return (String) nonIndexedValues.get(0).getValue();
+        String code = (String) nonIndexedValues.get(0).getValue();
+
+        if (code == null || code == "" || !code.matches("\\d+")) {
+            throw new UnableParseLogException(
+                    String.format(
+                            "logs is empty or cannot parse to normal log message"));
+        }
+        return code;
     }
 
     protected <T> RemoteCall<BaseResponse<T>> executePlatonRemoteCallSingleValueReturn(PlatOnFunction function) {

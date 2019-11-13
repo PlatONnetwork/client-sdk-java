@@ -81,7 +81,7 @@ public class ProposalContract extends PlatOnContract {
             @Override
             public BaseResponse<Proposal> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseObject((String) response.data, Proposal.class);
+                response.data = JSONUtil.parseObject(JSONUtil.toJSONString(response.data), Proposal.class);
                 return response;
             }
         });
@@ -101,7 +101,7 @@ public class ProposalContract extends PlatOnContract {
             public BaseResponse<TallyResult> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
                 if (response.isStatusOk()) {
-                    response.data = JSONUtil.parseObject((String) response.data, TallyResult.class);
+                    response.data = JSONUtil.parseObject(JSONUtil.toJSONString(response.data), TallyResult.class);
                 }
                 return response;
             }
@@ -120,7 +120,7 @@ public class ProposalContract extends PlatOnContract {
             @Override
             public BaseResponse<List<Proposal>> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseArray((String) response.data, Proposal.class);
+                response.data = JSONUtil.parseArray(JSONUtil.toJSONString(response.data), Proposal.class);
                 return response;
             }
         });
@@ -408,9 +408,9 @@ public class ProposalContract extends PlatOnContract {
         return new RemoteCall<BaseResponse<BigInteger[]>>(new Callable<BaseResponse<BigInteger[]>>() {
             @Override
             public BaseResponse<BigInteger[]> call() throws Exception {
-                BaseResponse baseResponse = executePatonCall(platOnFunction);
-                baseResponse.data = JSONUtil.parseArray((String) baseResponse.data, BigInteger.class);
-                return baseResponse;
+                BaseResponse response = executePatonCall(platOnFunction);
+                response.data = JSONUtil.parseArray(JSONUtil.toJSONString(response.data), BigInteger.class);
+                return response;
             }
         });
     }
@@ -426,7 +426,7 @@ public class ProposalContract extends PlatOnContract {
             @Override
             public BaseResponse<List<GovernParam>> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseArray((String) response.data, GovernParam.class);
+                response.data = JSONUtil.parseArray(JSONUtil.toJSONString(response.data), GovernParam.class);
                 return response;
             }
         });
