@@ -326,7 +326,6 @@ public abstract class PlatOnContract extends ManagedTransaction {
      * @return
      */
     public ProgramVersion getProgramVersion() throws Exception {
-        final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROGRAM_VERSION);
         return new RemoteCall<BaseResponse<ProgramVersion>>(new Callable<BaseResponse<ProgramVersion>>() {
             @Override
             public BaseResponse<ProgramVersion> call() throws Exception {
