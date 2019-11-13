@@ -68,12 +68,15 @@ StakingContract contract = StakingContract.load(web3j, credentials, chainId)
 
   - String：nodeId   节点id,16进制格式，0x开头
   - BigInteger：amount   质押的von，质押金额必须大于等于1000000LAT
-  - Enum：stakingAmountType   表示使用账户自由金额还是锁仓金额做质押，0: 自由金额，1: 锁仓金额
+  - StakingAmountType：stakingAmountType,枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
   - String：benifitAddress   收益账户
   - String：nodeName   被质押节点的名称
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥
   - String：webSite   节点的第三方主页(有长度限制，表示该节点的主页)
   - String：details   节点的描述(有长度限制，表示该节点的描述)
+  - ProgramVersion：processVersion  程序的真实版本，治理rpc获取
+  - String：blsPubKey   bls的公钥
+  - String：blsProof    bls的证明
 
 * **返回值**
 
@@ -200,7 +203,7 @@ BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSen
 
 * **入参**
     - String：nodeId   节点id，16进制格式，0x开头
-    - Enum：stakingAmountType   表示使用账户自由金额还是锁仓金额做质押，0: 自由金额，1: 锁仓金额
+    - StakingAmountType：stakingAmountType,枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
     - BigInteger：addStakingAmount   增持的金额
 
 * **返回值**
@@ -254,15 +257,15 @@ BaseResponse<Node> baseRespons
 
   - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
-  - String：Released   发起质押账户的自由金额的锁定期质押的von
+  - BigInteger：Released   发起质押账户的自由金额的锁定期质押的von
 
-  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+  - BigInteger：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
 
-  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+  - BigInteger：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
 
-  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+  - BigInteger：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
 
-  - String：Shares   当前候选人总共质押加被委托的von数目
+  - BigInteger：Shares   当前候选人总共质押加被委托的von数目
 
   - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
 
@@ -272,7 +275,7 @@ BaseResponse<Node> baseRespons
 
   - BigInteger：StakingTxIndex   发起质押时的交易索引
 
-  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
 
     4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
 
@@ -311,7 +314,7 @@ delegateContract contract = DelegateContract.load(web3j, credentials, chainId);
 
 * **入参**
   - String：nodeId   节点id，16进制格式，0x开头
-  - Enum：stakingAmountType   表示使用账户自由金额还是锁仓金额做质押，0: 自由金额，1: 锁仓金额
+  - StakingAmountType：stakingAmountType,枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
   - BigInteger：amount   委托的金额(按照最小单位算，1LAT = 10**18 von)
 
 * **返回值**
@@ -374,7 +377,6 @@ List<DelegationIdInfo> DelegationIdInfoList = baseResponse.data;
 * **入参**
 
   - String：address   委托人的账户地址
-
   - String：nodeId   节点id，16进制格式，0x开头
   - BigInteger：stakingBlockNum   发起质押时的区块高度
 
@@ -393,11 +395,11 @@ BaseResponse<Delegation>
   - String：NodeId   验证人的节点Id
   - BigInteger：StakingBlockNum    发起质押时的区块高度
   - BigInteger：DelegateEpoch   最近一次对该候选人发起的委托时的结算周期
-  - String：Released   发起委托账户的自由金额的锁定期委托的von
-  - String：ReleasedHes   发起委托账户的自由金额的犹豫期委托的von
-  - String：RestrictingPlan   发起委托账户的锁仓金额的锁定期委托的von
-  - String：RestrictingPlanHes   发起委托账户的锁仓金额的犹豫期质押的von
-  - String：Reduction   处于撤销计划中的von
+  - BigInteger：Released   发起委托账户的自由金额的锁定期委托的von
+  - BigInteger：ReleasedHes   发起委托账户的自由金额的犹豫期委托的von
+  - BigInteger：RestrictingPlan   发起委托账户的锁仓金额的锁定期委托的von
+  - BigInteger：RestrictingPlanHes   发起委托账户的锁仓金额的犹豫期质押的von
+  - BigInteger：Reduction   处于撤销计划中的von
 
 * **Java SDK合约使用**
 
@@ -491,15 +493,15 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
-  - String：Released   发起质押账户的自由金额的锁定期质押的von
+  - BigInteger：Released   发起质押账户的自由金额的锁定期质押的von
 
-  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+  - BigInteger：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
 
-  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+  - BigInteger：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
 
-  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+  - BigInteger：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
 
-  - String：Shares   当前候选人总共质押加被委托的von数目
+  - BigInteger：Shares   当前候选人总共质押加被委托的von数目
 
   - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
 
@@ -509,7 +511,7 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：StakingTxIndex   发起质押时的交易索引
 
-  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
 
     4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
 
@@ -554,15 +556,15 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
-  - String：Released   发起质押账户的自由金额的锁定期质押的von
+  - BigInteger：Released   发起质押账户的自由金额的锁定期质押的von
 
-  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+  - BigInteger：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
 
-  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+  - BigInteger：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
 
-  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+  - BigInteger：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
 
-  - String：Shares   当前候选人总共质押加被委托的von数目
+  - BigInteger：Shares   当前候选人总共质押加被委托的von数目
 
   - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
 
@@ -572,7 +574,7 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：StakingTxIndex   发起质押时的交易索引
 
-  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
 
     4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
 
@@ -618,15 +620,15 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：ProgramVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
-  - String：Released   发起质押账户的自由金额的锁定期质押的von
+  - BigInteger：Released   发起质押账户的自由金额的锁定期质押的von
 
-  - String：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
+  - BigInteger：ReleasedHes   发起质押账户的自由金额的犹豫期质押的von
 
-  - String：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
+  - BigInteger：RestrictingPlan   发起质押账户的锁仓金额的锁定期质押的von
 
-  - String：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
+  - BigInteger：RestrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的von
 
-  - String：Shares   当前候选人总共质押加被委托的von数目
+  - BigInteger：Shares   当前候选人总共质押加被委托的von数目
 
   - String：StakingAddress   发起质押时使用的账户(撤销质押时，von会被退回该账户或者该账户的锁仓信息中)
 
@@ -636,7 +638,7 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：StakingTxIndex   发起质押时的交易索引
 
-  - String：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
+  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
 
     4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
 
@@ -759,15 +761,16 @@ BaseResponse<Proposal>
 	- String：ErrMsg   错误信息，失败时存在
 
 * **Proposal**：保存单个提案信息的对象
-  - String:	proposalId	提案ID
+  - String:	   proposalId	提案ID
   - String:    proposer   提案节点ID
-  - String:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
+  - int:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
   - String:    piPid   提案PIPID
   - BigInteger:   submitBlock   提交提案的块高
   - BigInteger:   endVotingBlock   提案投票结束的块高
   - BigInteger:   newVersion   升级版本
-  - String:   toBeCanceled   提案要取消的升级提案ID
-  - String:   activeBlock   （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
+  - BigInteger:   toBeCanceled   提案要取消的升级提案ID
+  - BigInteger:   activeBlock   （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
+  - String:   verifier     提交提案的验证人
 
 * **合约使用**
 
@@ -791,7 +794,7 @@ BaseResponse<TallyResult>
 
 - BaseResponse<TallyResult>描述
   - int：Code   结果标识，1为成功，0为失败
-  - Proposal：Data   Proposal对象数据
+  - TallyResult：Data   TallyResult对象数据
   - String：ErrMsg   错误信息，失败时存在
 
 * **TallyResult**：保存单个提案结果的对象
@@ -800,7 +803,7 @@ BaseResponse<TallyResult>
   - BigInteger:   nays   反对票票数
   - BigInteger:   abstentions   弃权票票数
   - BigInteger:   accuVerifiers   在整个投票期内有投票资格的验证人总数
-  - BigInteger:   status   提案状态
+  - int:   status   提案状态
 
 * **合约使用**
 
@@ -830,15 +833,16 @@ BaseResponse<List<Proposal>>
 	- String：ErrMsg   错误信息，失败时存在
 
 * **Proposal**：保存单个提案的对象
-  - String:	proposalId	提案ID
+  - String:	   proposalId	提案ID
   - String:    proposer   提案节点ID
-  - String:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
+  - int:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
   - String:    piPid   提案PIPID
   - BigInteger:   submitBlock   提交提案的块高
   - BigInteger:   endVotingBlock   提案投票结束的块高
   - BigInteger:   newVersion   升级版本
   - String:   toBeCanceled   提案要取消的升级提案ID
-  - String:   activeBlock   （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
+  - BigInteger:   activeBlock   （如果投票通过）生效块高（endVotingBlock + 20 + 4*250 < 生效块高 <= endVotingBlock + 20 + 10*250）
+  - String:   verifier     提交提案的验证人
 
 * **合约使用**
 
@@ -918,7 +922,7 @@ SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 > 提交提案
 
 * **入参**
-  - Enum：DuplicateSignType   代表双签类型：prepareBlock，EprepareVote，viewChange
+  - DuplicateSignType：DuplicateSignType   枚举，代表双签类型：prepareBlock，EprepareVote，viewChange
   - String：data   单个证据的json值，格式参照[RPC接口Evidences](#evidences_interface)
 
 * **返回值**
@@ -940,12 +944,12 @@ BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTr
 ```
 
 
-##### **GetReportDoubleSignResult**
+##### **CheckDoubleSign**
 
 > 查询节点是否已被举报过多签
 
 * **入参**
-  - Enum：DuplicateSignType   代表双签类型：prepareBlock，EprepareVote，viewChange
+  - DuplicateSignType：DuplicateSignType   枚举，代表双签类型：prepareBlock，EprepareVote，viewChange
   - String：address   举报的节点地址
   - BigInteger：blockNumber   多签的块高 
 
@@ -982,7 +986,7 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 
 #### 接口说明
 
-##### **GetCreateRestrictingPlanResult**
+##### **CreateRestrictingPlan**
 
 > 创建锁仓计划
 
@@ -994,7 +998,7 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 
 * **返回值**
 ```
-BaseRespons
+BaseResponse
 ```
 
 - BaseResponse： 通用应答包
@@ -1034,22 +1038,10 @@ BaseResponse<RestrictingItem> baseResponse
   - BigInteger：balance    锁仓余额
   - BigInteger：pledge   质押/抵押金额
   - BigInteger：debt   欠释放金额
-  - info：plans   锁仓分录信息
-
-* **info**：锁仓分录信息结构
-
-```java
-info:[
-		{
-			"blockNumber":444,	//释放区块高度
-			"amount":555		//释放金额
-		},
-		{
-			"blockNumber":666,	//释放区块高度
-			"amount":666		//释放金额
-		}
-	]
-```
+  - List<RestrictingInfo>：info   锁仓分录信息
+* **RestrictingInfo**：保存单个锁仓分录信息的对象
+  - BigInteger：blockNumber    释放区块高度
+  - BigInteger：amount   释放金额
 
 * **合约使用**
 

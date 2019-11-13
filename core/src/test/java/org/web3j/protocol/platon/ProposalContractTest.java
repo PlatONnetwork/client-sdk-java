@@ -189,20 +189,39 @@ public class ProposalContractTest {
     }
 
     /**
-     * 提交参数提案
+     * 提交取消提案
      * verifier 提交提案的验证人
-     * url 提案URL，长度不超过512
-     * newVersion 升级版本
+     * pIDID PIPID
      * endVotingBlock ((当前区块高度 / 200 )*200 + 200*10 - 10)
-     * paramName 参数名称
-     * currentValue 当前值
-     * newValue 新的值
+     * tobeCanceledProposalID 待取消的升级提案ID
      */
     @Test
     public void submitCancelProposal() {
 
         try {
             PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitCancelProposalParam(nodeId, pIDID, BigInteger.valueOf(5), "0x1178f6dcecd1731e2556d4a014d30ebe04cf5522c07776135e60f613e51af0c9")).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_CANCEL_FUNC_TYPE).send();
+            System.out.println(baseResponse.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 提交参数提案
+     * verifier 提交提案的验证人
+     * pIDID PIPID
+     * module 参数模块
+     * name 参数名称
+     * newValue 参数新值
+     */
+    @Test
+    public void submitParamProposal() {
+        try {
+            String module = "";
+            String name = "";
+            String newValue = "";
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitParamProposalParam(nodeId, pIDID, module, name, newValue)).send();
             BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_CANCEL_FUNC_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {

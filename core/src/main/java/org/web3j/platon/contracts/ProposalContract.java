@@ -1,5 +1,6 @@
 package org.web3j.platon.contracts;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -14,6 +15,7 @@ import org.web3j.platon.ContractAddress;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.VoteOption;
+import org.web3j.platon.bean.GovernParam;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.Proposal;
 import org.web3j.platon.bean.TallyResult;
@@ -378,17 +380,53 @@ public class ProposalContract extends PlatOnContract {
     }
 
     /**
+     * 查询当前块高的治理参数值
+     *
+     * @param module 参数模块
+     * @param name   参数名称
+     * @return
+     */
+    public RemoteCall<BaseResponse<String>> getGovernParamValue(String module, String name) {
+        PlatOnFunction platOnFunction = new PlatOnFunction(FunctionType.GET_GOVERN_PARAM_VALUE, Arrays.asList(new BytesType(Numeric.hexStringToByteArray(module)), new BytesType(Numeric.hexStringToByteArray(name))));
+        return new RemoteCall<BaseResponse<String>>(new Callable<BaseResponse<String>>() {
+            @Override
+            public BaseResponse<String> call() throws Exception {
+                return executePatonCall(platOnFunction);
+            }
+        });
+    }
+
+    /**
+     * 查询提案的累积可投票人数
+     *
+     * @param proposalId 提案ID
+     * @param blockHash  块hash
+     * @return
+     */
+    public RemoteCall<BaseResponse<BigInteger[]>> getAccuVerifiersCount(String proposalId, String blockHash) {
+        PlatOnFunction platOnFunction = new PlatOnFunction(FunctionType.GET_ACCUVERIFIERS_COUNT, Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId)), new BytesType(Numeric.hexStringToByteArray(blockHash))));
+        return new RemoteCall<BaseResponse<BigInteger[]>>(new Callable<BaseResponse<BigInteger[]>>() {
+            @Override
+            public BaseResponse<BigInteger[]> call() throws Exception {
+                BaseResponse baseResponse = executePatonCall(platOnFunction);
+                baseResponse.data = JSONUtil.parseArray((String) baseResponse.data, BigInteger.class);
+                return baseResponse;
+            }
+        });
+    }
+
+    /**
      * 查询可治理参数列表
      *
      * @return
      */
-    public RemoteCall<BaseResponse<List<Proposal>>> getParamList() {
+    public RemoteCall<BaseResponse<List<GovernParam>>> getParamList() {
         final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PARAM_LIST);
-        return new RemoteCall<BaseResponse<List<Proposal>>>(new Callable<BaseResponse<List<Proposal>>>() {
+        return new RemoteCall<BaseResponse<List<GovernParam>>>(new Callable<BaseResponse<List<GovernParam>>>() {
             @Override
-            public BaseResponse<List<Proposal>> call() throws Exception {
+            public BaseResponse<List<GovernParam>> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseArray((String) response.data, Proposal.class);
+                response.data = JSONUtil.parseArray((String) response.data, GovernParam.class);
                 return response;
             }
         });

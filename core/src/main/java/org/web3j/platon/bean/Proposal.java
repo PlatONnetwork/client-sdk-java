@@ -67,7 +67,22 @@ public class Proposal {
     @JSONField(name = "ActiveBlock")
     private BigInteger activeBlock;
 
+    /**
+     * 提交提案的验证人
+     */
     private String verifier;
+    /**
+     * 参数模块
+     */
+    private String module;
+    /**
+     * 参数名称
+     */
+    private String name;
+    /**
+     * 参数新值
+     */
+    private String newValue;
 
     public Proposal() {
 
@@ -153,6 +168,30 @@ public class Proposal {
         this.verifier = verifier;
     }
 
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNewValue() {
+        return newValue;
+    }
+
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
+    }
+
     public Proposal(Builder builder) {
         this.proposalId = builder.proposalId;
         this.proposer = builder.proposer;
@@ -164,6 +203,9 @@ public class Proposal {
         this.toBeCanceled = builder.toBeCanceled;
         this.activeBlock = builder.activeBlock;
         this.verifier = builder.verifier;
+        this.module = builder.module;
+        this.name = builder.name;
+        this.newValue = builder.newValue;
     }
 
 
@@ -181,6 +223,12 @@ public class Proposal {
                     new Utf8String(this.piPid),
                     new Uint64(this.endVotingBlock),
                     new BytesType(Numeric.hexStringToByteArray(this.toBeCanceled)));
+        } else if (proposalType == ProposalType.PARAM_PROPOSAL) {
+            return Arrays.asList(new BytesType(Numeric.hexStringToByteArray(this.verifier)),
+                    new Utf8String(this.piPid),
+                    new Utf8String(this.module),
+                    new Utf8String(this.name),
+                    new Utf8String(this.newValue));
         }
 
         return new ArrayList<>();
@@ -226,6 +274,18 @@ public class Proposal {
                 .build();
     }
 
+    public static Proposal createSubmitParamProposalParam(String verifier, String pIDID, String module, String name, String newValue) {
+
+        return new Proposal.Builder()
+                .setProposalType(ProposalType.PARAM_PROPOSAL)
+                .setVerifier(verifier)
+                .setPiPid(pIDID)
+                .setModule(module)
+                .setName(name)
+                .setNewValue(newValue)
+                .build();
+    }
+
     static final class Builder {
         private String proposalId;
         private String proposer;
@@ -237,6 +297,9 @@ public class Proposal {
         private String toBeCanceled;
         private BigInteger activeBlock;
         private String verifier;
+        private String module;
+        private String name;
+        private String newValue;
 
         public Builder setProposalId(String proposalId) {
             this.proposalId = proposalId;
@@ -285,6 +348,21 @@ public class Proposal {
 
         public Builder setVerifier(String verifier) {
             this.verifier = verifier;
+            return this;
+        }
+
+        public Builder setModule(String module) {
+            this.module = module;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setNewValue(String newValue) {
+            this.newValue = newValue;
             return this;
         }
 

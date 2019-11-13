@@ -96,13 +96,17 @@ public class FunctionType {
      */
     public static final int GET_ACTIVE_VERSION = 2103;
     /**
-     * 查询节点代码版本
+     * 查询当前块高的治理参数值
      */
-    public static final int GET_PROGRAM_VERSION = 2104;
+    public static final int GET_GOVERN_PARAM_VALUE = 2104;
+    /**
+     * 查询提案的累积可投票人数
+     */
+    public static final int GET_ACCUVERIFIERS_COUNT = 2105;
     /**
      * 查询可治理列表
      */
-    public static final int GET_PARAM_LIST = 2105;
+    public static final int GET_PARAM_LIST = 2106;
     /**
      * 举报双签
      */
