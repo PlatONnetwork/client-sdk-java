@@ -15,6 +15,7 @@ import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.CustomStaticArray;
 import org.web3j.platon.CustomType;
+import org.web3j.platon.ErrorCode;
 import org.web3j.platon.bean.Response;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.Request;
@@ -176,7 +177,9 @@ public class PlatOnUtil {
             return new BaseResponse();
         }
 
-        if (!baseResponse.isStatusOk()) {
+        if (baseResponse.isStatusOk()) {
+            baseResponse.errMsg = ErrorCode.getErrorMsg(ErrorCode.SUCCESS);
+        } else {
             baseResponse.errMsg = (String) baseResponse.data;
             baseResponse.data = null;
         }
