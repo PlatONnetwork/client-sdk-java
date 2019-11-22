@@ -12,8 +12,11 @@ import org.web3j.abi.datatypes.IntType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int64;
+import org.web3j.platon.BaseResponse;
 import org.web3j.platon.CustomStaticArray;
 import org.web3j.platon.CustomType;
+import org.web3j.platon.ErrorCode;
+import org.web3j.platon.bean.Response;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.request.Transaction;
@@ -149,6 +152,38 @@ public class PlatOnUtil {
         }
         String data = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
         return data;
+    }
+
+    public static BaseResponse invokeDecode(String result) {
+
+        if (result == null) {
+            return new BaseResponse();
+        }
+
+        RlpList rlpList = RlpDecoder.decode(Hex.decode(Numeric.cleanHexPrefix(result)));
+
+        List<RlpType> rlpTypeList = rlpList.getValues();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (RlpType rlpType : rlpTypeList) {
+            byte[] bytes = RlpEncoder.encode(rlpType);
+            sb.append(new String(bytes));
+        }
+
+        BaseResponse baseResponse = JSONUtil.parseObject(sb.toString(), BaseResponse.class);
+
+        if (baseResponse == null) {
+            return new BaseResponse();
+        }
+
+        if (baseResponse.isStatusOk()) {
+            baseResponse.errMsg = ErrorCode.getErrorMsg(ErrorCode.SUCCESS);
+        } else {
+            baseResponse.errMsg = (String) baseResponse.data;
+            baseResponse.data = null;
+        }
+        return baseResponse;
     }
 
     /**

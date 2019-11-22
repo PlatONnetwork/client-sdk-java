@@ -18,6 +18,7 @@ import org.web3j.platon.bean.UpdateStakingParam;
 import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.PlatonBlock;
 import org.web3j.protocol.core.methods.response.PlatonGetBalance;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
@@ -44,32 +45,30 @@ import java.util.List;
 public class StakingContractTest {
 
     //        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
+    private Web3j web3j = Web3j.build(new HttpService("https://aton.main.platon.network/rpc"));
 
     private StakingContract stakingContract;
 
-    String nodeId = "411a6c3640b6cd13799e7d4ed286c95104e3a31fbb05d7ae0004463db648f26e93f7f5848ee9795fb4bbb5f83985afd63f750dc4cf48f53b0e84d26d6834c20c";
-    String stakingAmount = "5000000000000000000000000";
+    String nodeId = "4181b4611a5e76726add1f2aac376a9e62ceb4526a2ee2092466f37303fb2ec474b6a5f6f164330d2ee77b0a775ab84dd8e7b2a23042ee12a7e05b1d358b2538";
+    String stakingAmount = "1800000000000000000000000";
     StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-    String benifitAddress = "0x5e57ae97e714abe990c882377aaf9c57f4ea363b";
-    String externalId = "liyf-test-id";
-    String nodeName = "liyf-test";
+    String benifitAddress = "0x82c53dcb0bb305ce1f0bfd092090f779e87c6f58";
+    String externalId = "platonThreesomeId";
+    String nodeName = "threesome";
     String webSite = "www.baidu.com";
-    String details = "details";
-    String blsPubKey = "80d98a48400a36e3da9de8e227e4a8c8fa3f90c08c82a467c9ac01298c2eb57f543d7e9568b0f381cc6c9de911870d1292b62459d083700d3958d775fca60e41ddd7d8532163f5acabaa6e0c47b626c39de51d9d67fb97a5af1871a661ca7788";
-
-    private String privateKey2 = "0xa689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b";
+    String details = "Three Some Team Node";
+    String blsPubKey = "8bd1afb431ec95ba2b8f1fb63d396f6f1b0f4679f796b80c9e4b35272bbc1a38276f38478ea11e3acf30e861402ba00e201909ae4b9a548cf0dfac09402d09714f0969a11acaa5fd39c92d38fd712a31a6b009c8901a5e071d3775dd9ad10e96";
 
     private Credentials credentials;
 
     @Before
     public void init() {
 
-        credentials = Credentials.create("0x6fe419582271a4dcf01c51b89195b77b228377fde4bde6e04ef126a0b4373f79");
+        credentials = Credentials.create("0x4947398900e3f3f5e056102ea1ebbc6197118a099940057b2e40116aa1493e7d");
 
         stakingContract = StakingContract.load(
                 web3j,
-                credentials, "100");
+                credentials, "99");
 
     }
 
@@ -87,12 +86,13 @@ public class StakingContractTest {
     @Test
     public void staking() {
 
-//        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("a689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b")));
-//
+        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("4947398900e3f3f5e056102ea1ebbc6197118a099940057b2e40116aa1493e7d")));
+
 //        try {
-//            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0x"+fromAddress, DefaultBlockParameterName.LATEST).send();
-//            System.out.println(platonGetBalance.getBalance().longValue());
-//            System.out.println(web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST,false).send().getBlock().getNumber());
+//            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0xbe8c8bfc195f3c9f89405b0f2e749c7a0e9f91b0", DefaultBlockParameterName.LATEST).send();
+//            PlatonBlock platonBlock = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
+//            System.out.println("jjjjj" + platonGetBalance.getBalance().toString(10));
+//            System.out.println("bbbbb" + platonBlock.getBlock().getNumber().toString(10));
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
@@ -133,10 +133,11 @@ public class StakingContractTest {
         try {
             PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
                     .setNodeId(nodeId)
-                    .setBenifitAddress(benifitAddress)
-                    .setExternalId(externalId)
-                    .setNodeName("https://www.github.com/")
+                    .setBenifitAddress("0x67ce01568e4157624cc15d427a742559e2f37bfe")
+                    .setExternalId("4EEB8C9E9B711E02")
+                    .setNodeName(nodeName)
                     .setDetails(details)
+                    .setWebSite(webSite)
                     .build()).send();
             BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
@@ -155,7 +156,7 @@ public class StakingContractTest {
     @Test
     public void addStaking() {
         try {
-            PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger(stakingAmount)).send();
+            PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("80000000000000000000000")).send();
             BaseResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {

@@ -391,7 +391,7 @@ public class StakingContract extends PlatOnContract {
             @Override
             public BaseResponse<Node> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseObject((String) response.data, Node.class);
+                response.data = JSONUtil.parseObject(JSONUtil.toJSONString(response.data), Node.class);
                 return response;
             }
         });

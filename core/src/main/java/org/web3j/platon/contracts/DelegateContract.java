@@ -262,7 +262,7 @@ public class DelegateContract extends PlatOnContract {
             @Override
             public BaseResponse<Delegation> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseObject((String) response.data, Delegation.class);
+                response.data = JSONUtil.parseObject(JSONUtil.toJSONString(response.data), Delegation.class);
                 return response;
             }
         });
@@ -281,7 +281,7 @@ public class DelegateContract extends PlatOnContract {
             @Override
             public BaseResponse<List<DelegationIdInfo>> call() throws Exception {
                 BaseResponse response = executePatonCall(function);
-                response.data = JSONUtil.parseArray((String) response.data, DelegationIdInfo.class);
+                response.data = JSONUtil.parseArray(JSONUtil.toJSONString(response.data), DelegationIdInfo.class);
                 return response;
             }
         });
