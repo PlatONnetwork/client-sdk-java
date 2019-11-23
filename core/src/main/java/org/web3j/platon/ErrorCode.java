@@ -272,6 +272,22 @@ public class ErrorCode {
      */
     public static final int TALLY_RESULT_NOT_FOUND = 302030;
     /**
+     * 不支持的治理参数
+     */
+    public static final int UNSUPPORTED_GOVERN_PARAMETER = 302031;
+    /**
+     * 有另一个在投票期的参数提案
+     */
+    public static final int ANOTHER_PARAM_PROPOSAL_AT_VOTING_STAGE = 302032;
+    /**
+     * 参数提案的的参数值错误
+     */
+    public static final int GOVERN_PARAMETER_VALUE_ERROR = 302033;
+    /**
+     * 参数提案的值必须和旧值不同
+     */
+    public static final int PARAMETER_PROPOSAL_NEW_VALUE_SAME_AS_OLD_VALUE = 302034;
+    /**
      * 双签证据校验失败
      */
     public static final int DUPLICATE_SIGNATURE_VERIFICATION_FAILED = 303000;
@@ -480,6 +496,14 @@ public class ErrorCode {
                 return "把节点声明的版本通知Staking时出错";
             case TALLY_RESULT_NOT_FOUND:
                 return "提案结果没有找到";
+            case UNSUPPORTED_GOVERN_PARAMETER:
+                return "不支持的治理参数";
+            case ANOTHER_PARAM_PROPOSAL_AT_VOTING_STAGE:
+                return "有另一个在投票期的参数提案";
+            case GOVERN_PARAMETER_VALUE_ERROR:
+                return "参数提案的的参数值错误";
+            case PARAMETER_PROPOSAL_NEW_VALUE_SAME_AS_OLD_VALUE:
+                return "参数提案的值必须和旧值不同";
             case DUPLICATE_SIGNATURE_VERIFICATION_FAILED:
                 return "双签证据校验失败";
             case PUNISHMENT_HAS_BEEN_IMPLEMENTED:

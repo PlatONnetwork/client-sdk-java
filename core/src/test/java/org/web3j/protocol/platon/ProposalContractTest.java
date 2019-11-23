@@ -79,7 +79,7 @@ public class ProposalContractTest {
         credentials = Credentials.create(privateKey2);
 
         proposalContract = ProposalContract.load(web3j,
-                credentials, "100");
+                credentials, "103");
 
         pIDID = String.valueOf(UUID.randomUUID().toString().hashCode());
     }
@@ -219,11 +219,11 @@ public class ProposalContractTest {
     @Test
     public void submitParamProposal() {
         try {
-            String module = "";
-            String name = "";
-            String newValue = "";
-            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitParamProposalParam(nodeId, pIDID, module, name, newValue)).send();
-            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_CANCEL_FUNC_TYPE).send();
+            String module = "module";
+            String name = "param proposal name";
+            String value = "param proposal value";
+            PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(Proposal.createSubmitParamProposalParam(nodeId, pIDID, module, name, value)).send();
+            BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIR_PARAM_FUNCTION_TYPE).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
