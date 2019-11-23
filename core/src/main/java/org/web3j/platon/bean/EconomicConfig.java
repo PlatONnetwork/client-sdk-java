@@ -3,339 +3,559 @@ package org.web3j.platon.bean;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 public class EconomicConfig {
-    @JSONField(name = "Common")
+    /**
+     * common的配置项
+     */
     private Common common;
-    @JSONField(name = "Staking")
+    /**
+     * staking的配置项
+     */
     private Staking staking;
-    @JSONField(name = "Slashing")
+    /**
+     * slashing的配置项
+     */
     private Slashing slashing;
-    @JSONField(name = "Gov")
-    private Gov gov;	
-    @JSONField(name = "Reward")
+    /**
+     * gov的配置项
+     */
+    private Gov gov;
+    /**
+     * reward的配置项
+     */
     private Reward reward;
-    @JSONField(name = "InnerAcc")
+    /**
+     * innerAcc的配置项
+     */
     private InnerAcc innerAcc;
-    
-    
-    
+
+    public EconomicConfig() {
+    }
+
     public Common getCommon() {
-		return common;
-	}
-	public void setCommon(Common common) {
-		this.common = common;
-	}
-	public Staking getStaking() {
-		return staking;
-	}
-	public void setStaking(Staking staking) {
-		this.staking = staking;
-	}
-	public Slashing getSlashing() {
-		return slashing;
-	}
-	public void setSlashing(Slashing slashing) {
-		this.slashing = slashing;
-	}
-	public Gov getGov() {
-		return gov;
-	}
-	public void setGov(Gov gov) {
-		this.gov = gov;
-	}
-	public Reward getReward() {
-		return reward;
-	}
-	public void setReward(Reward reward) {
-		this.reward = reward;
-	}
-	public InnerAcc getInnerAcc() {
-		return innerAcc;
-	}
-	public void setInnerAcc(InnerAcc innerAcc) {
-		this.innerAcc = innerAcc;
-	}
+        return common;
+    }
+
+    public void setCommon(Common common) {
+        this.common = common;
+    }
+
+    public Staking getStaking() {
+        return staking;
+    }
+
+    public void setStaking(Staking staking) {
+        this.staking = staking;
+    }
+
+    public Slashing getSlashing() {
+        return slashing;
+    }
+
+    public void setSlashing(Slashing slashing) {
+        this.slashing = slashing;
+    }
+
+    public Gov getGov() {
+        return gov;
+    }
+
+    public void setGov(Gov gov) {
+        this.gov = gov;
+    }
+
+    public Reward getReward() {
+        return reward;
+    }
+
+    public void setReward(Reward reward) {
+        this.reward = reward;
+    }
+
+    public InnerAcc getInnerAcc() {
+        return innerAcc;
+    }
+
+    public void setInnerAcc(InnerAcc innerAcc) {
+        this.innerAcc = innerAcc;
+    }
 
 
     public class Common {
-        // 结算周期规定的分钟数（整数）
-        @JSONField(name = "ExpectedMinutes")
-        private BigInteger expectedMinutes;
-        // 系统分配的节点出块时间窗口
-        @JSONField(name = "NodeBlockTimeWindow")
-        private BigInteger nodeBlockTimeWindow;
-        // 每个验证人每个view出块数量目标值
-        @JSONField(name = "PerRoundBlocks")
-        private BigInteger perRoundBlocks;
-        // 当前共识轮验证节点数量
-        @JSONField(name = "ValidatorCount")
-        private BigInteger validatorCount;
-        // 增发周期的分钟数
-        @JSONField(name = "AdditionalCycleTime")
+        /**
+         * 结算周期规定的分钟数（整数）(eh)
+         */
+        private BigInteger maxEpochMinutes;
+        /**
+         * 共识轮验证人数
+         */
+        private BigInteger maxConsensusVals;
+        /**
+         * 增发周期的时间（分钟）
+         */
         private BigInteger additionalCycleTime;
-        
-		public BigInteger getExpectedMinutes() {
-			return expectedMinutes;
-		}
-		public void setExpectedMinutes(BigInteger expectedMinutes) {
-			this.expectedMinutes = expectedMinutes;
-		}
-		public BigInteger getNodeBlockTimeWindow() {
-			return nodeBlockTimeWindow;
-		}
-		public void setNodeBlockTimeWindow(BigInteger nodeBlockTimeWindow) {
-			this.nodeBlockTimeWindow = nodeBlockTimeWindow;
-		}
-		public BigInteger getPerRoundBlocks() {
-			return perRoundBlocks;
-		}
-		public void setPerRoundBlocks(BigInteger perRoundBlocks) {
-			this.perRoundBlocks = perRoundBlocks;
-		}
-		public BigInteger getValidatorCount() {
-			return validatorCount;
-		}
-		public void setValidatorCount(BigInteger validatorCount) {
-			this.validatorCount = validatorCount;
-		}
-		public BigInteger getAdditionalCycleTime() {
-			return additionalCycleTime;
-		}
-		public void setAdditionalCycleTime(BigInteger additionalCycleTime) {
-			this.additionalCycleTime = additionalCycleTime;
-		}
+        /**
+         * 底层内部调试用
+         */
+        private BigInteger nodeBlockTimeWindow;
+        /**
+         * 底层内部调试用
+         */
+        private BigInteger perRoundBlocks;
+
+        public Common() {
+
+        }
+
+        public BigInteger getMaxEpochMinutes() {
+            return maxEpochMinutes;
+        }
+
+        public void setMaxEpochMinutes(BigInteger maxEpochMinutes) {
+            this.maxEpochMinutes = maxEpochMinutes;
+        }
+
+        public BigInteger getMaxConsensusVals() {
+            return maxConsensusVals;
+        }
+
+        public void setMaxConsensusVals(BigInteger maxConsensusVals) {
+            this.maxConsensusVals = maxConsensusVals;
+        }
+
+        public BigInteger getAdditionalCycleTime() {
+            return additionalCycleTime;
+        }
+
+        public void setAdditionalCycleTime(BigInteger additionalCycleTime) {
+            this.additionalCycleTime = additionalCycleTime;
+        }
+
+        public BigInteger getNodeBlockTimeWindow() {
+            return nodeBlockTimeWindow;
+        }
+
+        public void setNodeBlockTimeWindow(BigInteger nodeBlockTimeWindow) {
+            this.nodeBlockTimeWindow = nodeBlockTimeWindow;
+        }
+
+        public BigInteger getPerRoundBlocks() {
+            return perRoundBlocks;
+        }
+
+        public void setPerRoundBlocks(BigInteger perRoundBlocks) {
+            this.perRoundBlocks = perRoundBlocks;
+        }
+
+        @Override
+        public String toString() {
+            return "Common{" +
+                    "maxEpochMinutes=" + maxEpochMinutes +
+                    ", maxConsensusVals=" + maxConsensusVals +
+                    ", additionalCycleTime=" + additionalCycleTime +
+                    ", nodeBlockTimeWindow=" + nodeBlockTimeWindow +
+                    ", perRoundBlocks=" + perRoundBlocks +
+                    '}';
+        }
     }
-    
+
     public class Staking {
-        // 验证人最低的质押Token数(VON)
-        @JSONField(name = "StakeThreshold")
-        private BigDecimal stakeThreshold;
-        // 委托人每次委托及赎回的最低Token数(VON)
-        @JSONField(name = "MinimumThreshold")
-        private BigDecimal minimumThreshold;
-        // 每个结算周期内验证人数（24或101）
-        @JSONField(name = "EpochValidatorNum")
-        private BigDecimal epochValidatorNum;
-        // 犹豫期是几个结算周期v
-        @JSONField(name = "HesitateRatio")
-        private BigDecimal hesitateRatio;
-        // 节点质押退回锁定周期
-        @JSONField(name = "UnStakeFreezeRatio")
-        private BigInteger unStakeFreezeRatio;
-        // 解除委托锁定的结算周期
-        @JSONField(name = "ActiveUnDelegateFreezeRatio")
-        private BigDecimal activeUnDelegateFreezeRatio;
-		public BigDecimal getStakeThreshold() {
-			return stakeThreshold;
-		}
-		public void setStakeThreshold(BigDecimal stakeThreshold) {
-			this.stakeThreshold = stakeThreshold;
-		}
-		public BigDecimal getMinimumThreshold() {
-			return minimumThreshold;
-		}
-		public void setMinimumThreshold(BigDecimal minimumThreshold) {
-			this.minimumThreshold = minimumThreshold;
-		}
-		public BigDecimal getEpochValidatorNum() {
-			return epochValidatorNum;
-		}
-		public void setEpochValidatorNum(BigDecimal epochValidatorNum) {
-			this.epochValidatorNum = epochValidatorNum;
-		}
-		public BigDecimal getHesitateRatio() {
-			return hesitateRatio;
-		}
-		public void setHesitateRatio(BigDecimal hesitateRatio) {
-			this.hesitateRatio = hesitateRatio;
-		}
-		public BigInteger getUnStakeFreezeRatio() {
-			return unStakeFreezeRatio;
-		}
-		public void setUnStakeFreezeRatio(BigInteger unStakeFreezeRatio) {
-			this.unStakeFreezeRatio = unStakeFreezeRatio;
-		}
-		public BigDecimal getActiveUnDelegateFreezeRatio() {
-			return activeUnDelegateFreezeRatio;
-		}
-		public void setActiveUnDelegateFreezeRatio(BigDecimal activeUnDelegateFreezeRatio) {
-			this.activeUnDelegateFreezeRatio = activeUnDelegateFreezeRatio;
-		}
+        /**
+         * 质押的von门槛（单位：Von）===>100w lat
+         */
+        private BigInteger stakeThreshold;
+        /**
+         * (incr, decr)委托或incr设置允许的最小阈值（单位：Von）===> 10 lat
+         */
+        private BigInteger operatingThreshold;
+        /**
+         * 结算周期验证人个数
+         */
+        private BigInteger maxValidators;
+        /**
+         * 犹豫期(多少个结算周期)
+         */
+        private BigInteger hesitateRatio;
+        /**
+         * 退出质押后von被冻结的周期(单位： 结算周期，退出表示主动撤销和被动失去资格)
+         */
+        private BigInteger unStakeFreezeDuration;
+
+        public Staking() {
+        }
+
+        public BigInteger getStakeThreshold() {
+            return stakeThreshold;
+        }
+
+        public void setStakeThreshold(BigInteger stakeThreshold) {
+            this.stakeThreshold = stakeThreshold;
+        }
+
+        public BigInteger getOperatingThreshold() {
+            return operatingThreshold;
+        }
+
+        public void setOperatingThreshold(BigInteger operatingThreshold) {
+            this.operatingThreshold = operatingThreshold;
+        }
+
+        public BigInteger getMaxValidators() {
+            return maxValidators;
+        }
+
+        public void setMaxValidators(BigInteger maxValidators) {
+            this.maxValidators = maxValidators;
+        }
+
+        public BigInteger getHesitateRatio() {
+            return hesitateRatio;
+        }
+
+        public void setHesitateRatio(BigInteger hesitateRatio) {
+            this.hesitateRatio = hesitateRatio;
+        }
+
+        public BigInteger getUnStakeFreezeDuration() {
+            return unStakeFreezeDuration;
+        }
+
+        public void setUnStakeFreezeDuration(BigInteger unStakeFreezeDuration) {
+            this.unStakeFreezeDuration = unStakeFreezeDuration;
+        }
+
+        @Override
+        public String toString() {
+            return "Staking{" +
+                    "stakeThreshold=" + stakeThreshold +
+                    ", operatingThreshold=" + operatingThreshold +
+                    ", maxValidators=" + maxValidators +
+                    ", hesitateRatio=" + hesitateRatio +
+                    ", unStakeFreezeDuration=" + unStakeFreezeDuration +
+                    '}';
+        }
     }
-    
+
     public class Slashing {
 
-        @JSONField(name = "DuplicateSignReportReward")
+        /**
+         * 双签高处罚金额，万分比（‱）
+         */
+        private BigInteger slashFractionDuplicateSign;
+        /**
+         * 表示从扣除的惩罚金里面，拿出x%奖励给举报者（%）
+         */
         private BigDecimal duplicateSignReportReward;
-        // 区块双签扣除验证人自有质押金比例 100%
-        @JSONField(name = "DuplicateSignHighSlashing")
-        private BigDecimal duplicateSignHighSlashing;
-        // 低出块率处罚多少个区块奖励
-        @JSONField(name = "NumberOfBlockRewardForSlashing")
-        private BigDecimal numberOfBlockRewardForSlashing;
-        // EvidenceValidEpoch
-        @JSONField(name = "EvidenceValidEpoch")
-        private BigDecimal evidenceValidEpoch;
-		public BigDecimal getDuplicateSignReportReward() {
-			return duplicateSignReportReward;
-		}
-		public void setDuplicateSignReportReward(BigDecimal duplicateSignReportReward) {
-			this.duplicateSignReportReward = duplicateSignReportReward;
-		}
-		public BigDecimal getDuplicateSignHighSlashing() {
-			return duplicateSignHighSlashing;
-		}
-		public void setDuplicateSignHighSlashing(BigDecimal duplicateSignHighSlashing) {
-			this.duplicateSignHighSlashing = duplicateSignHighSlashing;
-		}
-		public BigDecimal getNumberOfBlockRewardForSlashing() {
-			return numberOfBlockRewardForSlashing;
-		}
-		public void setNumberOfBlockRewardForSlashing(BigDecimal numberOfBlockRewardForSlashing) {
-			this.numberOfBlockRewardForSlashing = numberOfBlockRewardForSlashing;
-		}
-		public BigDecimal getEvidenceValidEpoch() {
-			return evidenceValidEpoch;
-		}
-		public void setEvidenceValidEpoch(BigDecimal evidenceValidEpoch) {
-			this.evidenceValidEpoch = evidenceValidEpoch;
-		}
-    }
-    
-    public class Gov {
-        //
-        @JSONField(name = "VersionProposalVote_DurationSeconds")
-        private BigDecimal versionProposalVoteDurationSeconds;
-        // 升级提案通过率
-        @JSONField(name = "VersionProposal_SupportRate")
-        private BigDecimal versionProposalSupportRate;
-        //
-        @JSONField(name = "VersionProposalActive_ConsensusRounds")
-        private BigDecimal versionProposalActiveConsensusRounds;
-        //
-        @JSONField(name = "TextProposalVote_DurationSeconds")
-        private BigDecimal textProposalVoteDurationSeconds;
-        // 文本提案参与率
-        @JSONField(name = "TextProposal_VoteRate")
-        private BigDecimal textProposalVoteRate;
-        // 文本提案支持率
-        @JSONField(name = "TextProposal_SupportRate")
-        private BigDecimal textProposalSupportRate;
-        // 取消提案参与率
-        @JSONField(name = "CancelProposal_VoteRate")
-        private BigDecimal cancelProposalVoteRate;
-        // 取消提案支持率
-        @JSONField(name = "CancelProposal_SupportRate")
-        private BigDecimal cancelProposalSupportRate;
-		public BigDecimal getVersionProposalVoteDurationSeconds() {
-			return versionProposalVoteDurationSeconds;
-		}
-		public void setVersionProposalVoteDurationSeconds(BigDecimal versionProposalVoteDurationSeconds) {
-			this.versionProposalVoteDurationSeconds = versionProposalVoteDurationSeconds;
-		}
-		public BigDecimal getVersionProposalSupportRate() {
-			return versionProposalSupportRate;
-		}
-		public void setVersionProposalSupportRate(BigDecimal versionProposalSupportRate) {
-			this.versionProposalSupportRate = versionProposalSupportRate;
-		}
-		public BigDecimal getVersionProposalActiveConsensusRounds() {
-			return versionProposalActiveConsensusRounds;
-		}
-		public void setVersionProposalActiveConsensusRounds(BigDecimal versionProposalActiveConsensusRounds) {
-			this.versionProposalActiveConsensusRounds = versionProposalActiveConsensusRounds;
-		}
-		public BigDecimal getTextProposalVoteDurationSeconds() {
-			return textProposalVoteDurationSeconds;
-		}
-		public void setTextProposalVoteDurationSeconds(BigDecimal textProposalVoteDurationSeconds) {
-			this.textProposalVoteDurationSeconds = textProposalVoteDurationSeconds;
-		}
-		public BigDecimal getTextProposalVoteRate() {
-			return textProposalVoteRate;
-		}
-		public void setTextProposalVoteRate(BigDecimal textProposalVoteRate) {
-			this.textProposalVoteRate = textProposalVoteRate;
-		}
-		public BigDecimal getTextProposalSupportRate() {
-			return textProposalSupportRate;
-		}
-		public void setTextProposalSupportRate(BigDecimal textProposalSupportRate) {
-			this.textProposalSupportRate = textProposalSupportRate;
-		}
-		public BigDecimal getCancelProposalVoteRate() {
-			return cancelProposalVoteRate;
-		}
-		public void setCancelProposalVoteRate(BigDecimal cancelProposalVoteRate) {
-			this.cancelProposalVoteRate = cancelProposalVoteRate;
-		}
-		public BigDecimal getCancelProposalSupportRate() {
-			return cancelProposalSupportRate;
-		}
-		public void setCancelProposalSupportRate(BigDecimal cancelProposalSupportRate) {
-			this.cancelProposalSupportRate = cancelProposalSupportRate;
-		}
-    }
-    
-	public class Reward {
-	    // 激励池分配给出块激励的比例 50%
-	    @JSONField(name = "NewBlockRate")
-	    private BigDecimal newBlockRate;
-	    // 一个参数，单位是年， 这个参数时间到达后，按NewBlockRate分配奖励给矿工
-	    @JSONField(name = "PlatONFoundationYear")
-	    private BigInteger platONFoundationYear;
-		
-	    public BigDecimal getNewBlockRate() {
-			return newBlockRate;
-		}
-		public void setNewBlockRate(BigDecimal newBlockRate) {
-			this.newBlockRate = newBlockRate;
-		}
-		public BigInteger getPlatONFoundationYear() {
-			return platONFoundationYear;
-		}
-		public void setPlatONFoundationYear(BigInteger platONFoundationYear) {
-			this.platONFoundationYear = platONFoundationYear;
-		}
-	}
-    
-    
-	public class InnerAcc {
-	    @JSONField(name = "PlatONFundAccount")
-	    private String platONFundAccount;
-	    @JSONField(name = "PlatONFundBalance")
-	    private BigDecimal platONFundBalance;
-	    @JSONField(name = "CDFAccount")
-	    private String CDFAccount;
-	    @JSONField(name = "CDFBalance")
-	    private BigDecimal CDFBalance;
-	    
-		public String getPlatONFundAccount() {
-			return platONFundAccount;
-		}
-		public void setPlatONFundAccount(String platONFundAccount) {
-			this.platONFundAccount = platONFundAccount;
-		}
-		public BigDecimal getPlatONFundBalance() {
-			return platONFundBalance;
-		}
-		public void setPlatONFundBalance(BigDecimal platONFundBalance) {
-			this.platONFundBalance = platONFundBalance;
-		}
-		public String getCDFAccount() {
-			return CDFAccount;
-		}
-		public void setCDFAccount(String cDFAccount) {
-			CDFAccount = cDFAccount;
-		}
-		public BigDecimal getCDFBalance() {
-			return CDFBalance;
-		}
-		public void setCDFBalance(BigDecimal cDFBalance) {
-			CDFBalance = cDFBalance;
-		}
-	}
+        /**
+         * 零出块率惩罚的区块奖励数
+         */
+        private BigInteger slashBlocksReward;
+        /**
+         * 证据有效期
+         */
+        private BigInteger maxEvidenceAge;
 
+        public Slashing() {
+        }
+
+        public BigInteger getSlashFractionDuplicateSign() {
+            return slashFractionDuplicateSign;
+        }
+
+        public void setSlashFractionDuplicateSign(BigInteger slashFractionDuplicateSign) {
+            this.slashFractionDuplicateSign = slashFractionDuplicateSign;
+        }
+
+        public BigDecimal getDuplicateSignReportReward() {
+            return duplicateSignReportReward;
+        }
+
+        public void setDuplicateSignReportReward(BigDecimal duplicateSignReportReward) {
+            this.duplicateSignReportReward = duplicateSignReportReward;
+        }
+
+        public BigInteger getSlashBlocksReward() {
+            return slashBlocksReward;
+        }
+
+        public void setSlashBlocksReward(BigInteger slashBlocksReward) {
+            this.slashBlocksReward = slashBlocksReward;
+        }
+
+        public BigInteger getMaxEvidenceAge() {
+            return maxEvidenceAge;
+        }
+
+        public void setMaxEvidenceAge(BigInteger maxEvidenceAge) {
+            this.maxEvidenceAge = maxEvidenceAge;
+        }
+
+        @Override
+        public String toString() {
+            return "Slashing{" +
+                    "slashFractionDuplicateSign=" + slashFractionDuplicateSign +
+                    ", duplicateSignReportReward=" + duplicateSignReportReward +
+                    ", slashBlocksReward=" + slashBlocksReward +
+                    ", maxEvidenceAge=" + maxEvidenceAge +
+                    '}';
+        }
+    }
+
+    public class Gov {
+        /**
+         * 升级提案的投票持续最长的时间（单位：s）
+         */
+        private BigInteger versionProposalVoteDurationSeconds;
+        /**
+         * 升级提案投票支持率阈值（大于等于此值，则升级提案投票通过）
+         */
+        private BigDecimal versionProposalSupportRate;
+        /**
+         * 文本提案的投票持续最长的时间（单位：s）
+         */
+        private BigInteger textProposalVoteDurationSeconds;
+        /**
+         * 文本提案投票参与率阈值（文本提案投票通过条件之一：大于此值，则文本提案投票通过）
+         */
+        private BigDecimal textProposalVoteRate;
+        /**
+         * 文本提案投票支持率阈值（文本提案投票通过条件之一：大于等于此值，则文本提案投票通过）
+         */
+        private BigDecimal textProposalSupportRate;
+        /**
+         * 取消提案投票参与率阈值（取消提案投票通过条件之一：大于此值，则取消提案投票通过）
+         */
+        private BigDecimal cancelProposalVoteRate;
+        /**
+         * 取消提案投票支持率阈值（取消提案投票通过条件之一：大于等于此值，则取消提案投票通过）
+         */
+        private BigDecimal cancelProposalSupportRate;
+        /**
+         * 参数提案的投票持续最长的时间（单位：s）
+         */
+        private BigInteger paramProposalVoteDurationSeconds;
+        /**
+         * 参数提案投票参与率阈值（参数提案投票通过条件之一：大于此值，则参数提案投票通过)
+         */
+        private BigDecimal paramProposalVoteRate;
+        /**
+         * 参数提案投票支持率阈值（参数提案投票通过条件之一：大于等于此值，则参数提案投票通过
+         */
+        private BigDecimal paramProposalSupportRate;
+
+        public Gov() {
+        }
+
+        public BigInteger getVersionProposalVoteDurationSeconds() {
+            return versionProposalVoteDurationSeconds;
+        }
+
+        public void setVersionProposalVoteDurationSeconds(BigInteger versionProposalVoteDurationSeconds) {
+            this.versionProposalVoteDurationSeconds = versionProposalVoteDurationSeconds;
+        }
+
+        public BigDecimal getVersionProposalSupportRate() {
+            return versionProposalSupportRate;
+        }
+
+        public void setVersionProposalSupportRate(BigDecimal versionProposalSupportRate) {
+            this.versionProposalSupportRate = versionProposalSupportRate;
+        }
+
+        public BigInteger getTextProposalVoteDurationSeconds() {
+            return textProposalVoteDurationSeconds;
+        }
+
+        public void setTextProposalVoteDurationSeconds(BigInteger textProposalVoteDurationSeconds) {
+            this.textProposalVoteDurationSeconds = textProposalVoteDurationSeconds;
+        }
+
+        public BigDecimal getTextProposalVoteRate() {
+            return textProposalVoteRate;
+        }
+
+        public void setTextProposalVoteRate(BigDecimal textProposalVoteRate) {
+            this.textProposalVoteRate = textProposalVoteRate;
+        }
+
+        public BigDecimal getTextProposalSupportRate() {
+            return textProposalSupportRate;
+        }
+
+        public void setTextProposalSupportRate(BigDecimal textProposalSupportRate) {
+            this.textProposalSupportRate = textProposalSupportRate;
+        }
+
+        public BigDecimal getCancelProposalVoteRate() {
+            return cancelProposalVoteRate;
+        }
+
+        public void setCancelProposalVoteRate(BigDecimal cancelProposalVoteRate) {
+            this.cancelProposalVoteRate = cancelProposalVoteRate;
+        }
+
+        public BigDecimal getCancelProposalSupportRate() {
+            return cancelProposalSupportRate;
+        }
+
+        public void setCancelProposalSupportRate(BigDecimal cancelProposalSupportRate) {
+            this.cancelProposalSupportRate = cancelProposalSupportRate;
+        }
+
+        public BigInteger getParamProposalVoteDurationSeconds() {
+            return paramProposalVoteDurationSeconds;
+        }
+
+        public void setParamProposalVoteDurationSeconds(BigInteger paramProposalVoteDurationSeconds) {
+            this.paramProposalVoteDurationSeconds = paramProposalVoteDurationSeconds;
+        }
+
+        public BigDecimal getParamProposalVoteRate() {
+            return paramProposalVoteRate;
+        }
+
+        public void setParamProposalVoteRate(BigDecimal paramProposalVoteRate) {
+            this.paramProposalVoteRate = paramProposalVoteRate;
+        }
+
+        public BigDecimal getParamProposalSupportRate() {
+            return paramProposalSupportRate;
+        }
+
+        public void setParamProposalSupportRate(BigDecimal paramProposalSupportRate) {
+            this.paramProposalSupportRate = paramProposalSupportRate;
+        }
+
+        @Override
+        public String toString() {
+            return "Gov{" +
+                    "versionProposalVoteDurationSeconds=" + versionProposalVoteDurationSeconds +
+                    ", versionProposalSupportRate=" + versionProposalSupportRate +
+                    ", textProposalVoteDurationSeconds=" + textProposalVoteDurationSeconds +
+                    ", textProposalVoteRate=" + textProposalVoteRate +
+                    ", textProposalSupportRate=" + textProposalSupportRate +
+                    ", cancelProposalVoteRate=" + cancelProposalVoteRate +
+                    ", cancelProposalSupportRate=" + cancelProposalSupportRate +
+                    ", paramProposalVoteDurationSeconds=" + paramProposalVoteDurationSeconds +
+                    ", paramProposalVoteRate=" + paramProposalVoteRate +
+                    ", paramProposalSupportRate=" + paramProposalSupportRate +
+                    '}';
+        }
+    }
+
+    public class Reward {
+        /**
+         * 奖励池分配给出块奖励的比例，剩下的比例为分配给质押的奖励（%）
+         */
+        private BigInteger newBlockRate;
+        /**
+         * 基金会分配年，代表基金会每年边界的百分比
+         */
+        private BigInteger platonFoundationYear;
+
+        public Reward() {
+        }
+
+        public BigInteger getNewBlockRate() {
+            return newBlockRate;
+        }
+
+        public void setNewBlockRate(BigInteger newBlockRate) {
+            this.newBlockRate = newBlockRate;
+        }
+
+        public BigInteger getPlatonFoundationYear() {
+            return platonFoundationYear;
+        }
+
+        public void setPlatonFoundationYear(BigInteger platonFoundationYear) {
+            this.platonFoundationYear = platonFoundationYear;
+        }
+
+        @Override
+        public String toString() {
+            return "Reward{" +
+                    "newBlockRate=" + newBlockRate +
+                    ", platonFoundationYear=" + platonFoundationYear +
+                    '}';
+        }
+    }
+
+
+    public class InnerAcc {
+
+        /**
+         * 基金会账号地址
+         */
+        private String platonFundAccount;
+        /**
+         * 基金会初始金额
+         */
+        private BigInteger platonFundBalance;
+        /**
+         * 社区开发者账户
+         */
+        private String cdfAccount;
+        /**
+         * 社区开发者初始金额
+         */
+        private BigInteger cdfBalance;
+
+        public InnerAcc() {
+        }
+
+        public String getPlatonFundAccount() {
+            return platonFundAccount;
+        }
+
+        public void setPlatonFundAccount(String platonFundAccount) {
+            this.platonFundAccount = platonFundAccount;
+        }
+
+        public BigInteger getPlatonFundBalance() {
+            return platonFundBalance;
+        }
+
+        public void setPlatonFundBalance(BigInteger platonFundBalance) {
+            this.platonFundBalance = platonFundBalance;
+        }
+
+        public String getCdfAccount() {
+            return cdfAccount;
+        }
+
+        public void setCdfAccount(String cdfAccount) {
+            this.cdfAccount = cdfAccount;
+        }
+
+        public BigInteger getCdfBalance() {
+            return cdfBalance;
+        }
+
+        public void setCdfBalance(BigInteger cdfBalance) {
+            this.cdfBalance = cdfBalance;
+        }
+
+        @Override
+        public String toString() {
+            return "InnerAcc{" +
+                    "platonFundAccount='" + platonFundAccount + '\'' +
+                    ", platonFundBalance=" + platonFundBalance +
+                    ", cdfAccount='" + cdfAccount + '\'' +
+                    ", cdfBalance=" + cdfBalance +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "EconomicConfig{" +
+                "common=" + common +
+                ", staking=" + staking +
+                ", slashing=" + slashing +
+                ", gov=" + gov +
+                ", reward=" + reward +
+                ", innerAcc=" + innerAcc +
+                '}';
+    }
 }

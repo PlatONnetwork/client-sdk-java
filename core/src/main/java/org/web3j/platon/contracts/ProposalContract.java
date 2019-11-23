@@ -388,7 +388,7 @@ public class ProposalContract extends PlatOnContract {
      * @return
      */
     public RemoteCall<BaseResponse<String>> getGovernParamValue(String module, String name) {
-        PlatOnFunction platOnFunction = new PlatOnFunction(FunctionType.GET_GOVERN_PARAM_VALUE, Arrays.asList(new BytesType(Numeric.hexStringToByteArray(module)), new BytesType(Numeric.hexStringToByteArray(name))));
+        PlatOnFunction platOnFunction = new PlatOnFunction(FunctionType.GET_GOVERN_PARAM_VALUE, Arrays.asList(new Utf8String(module), new Utf8String(name)));
         return new RemoteCall<BaseResponse<String>>(new Callable<BaseResponse<String>>() {
             @Override
             public BaseResponse<String> call() throws Exception {

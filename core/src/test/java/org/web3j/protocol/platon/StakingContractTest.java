@@ -1,8 +1,10 @@
 package org.web3j.protocol.platon;
 
+import org.bouncycastle.jcajce.provider.digest.Keccak;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Before;
 import org.junit.Test;
+import org.web3j.abi.PlatOnEventEncoder;
 import org.web3j.abi.PlatOnTypeEncoder;
 import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.crypto.Credentials;
@@ -12,12 +14,14 @@ import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.StakingAmountType;
+import org.web3j.platon.bean.EconomicConfig;
 import org.web3j.platon.bean.Node;
 import org.web3j.platon.bean.StakingParam;
 import org.web3j.platon.bean.UpdateStakingParam;
 import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.DebugEconomicConfig;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
 import org.web3j.protocol.core.methods.response.PlatonGetBalance;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
@@ -27,9 +31,11 @@ import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.tx.Transfer;
+import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -87,36 +93,36 @@ public class StakingContractTest {
     @Test
     public void staking() {
 
-        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("4947398900e3f3f5e056102ea1ebbc6197118a099940057b2e40116aa1493e7d")));
-
+//        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("4947398900e3f3f5e056102ea1ebbc6197118a099940057b2e40116aa1493e7d")));
+//
+////        try {
+////            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0xbe8c8bfc195f3c9f89405b0f2e749c7a0e9f91b0", DefaultBlockParameterName.LATEST).send();
+////            PlatonBlock platonBlock = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
+////            System.out.println("jjjjj" + platonGetBalance.getBalance().toString(10));
+////            System.out.println("bbbbb" + platonBlock.getBlock().getNumber().toString(10));
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }
+//
 //        try {
-//            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0xbe8c8bfc195f3c9f89405b0f2e749c7a0e9f91b0", DefaultBlockParameterName.LATEST).send();
-//            PlatonBlock platonBlock = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
-//            System.out.println("jjjjj" + platonGetBalance.getBalance().toString(10));
-//            System.out.println("bbbbb" + platonBlock.getBlock().getNumber().toString(10));
-//        } catch (IOException e) {
+//            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
+//                    .setNodeId(nodeId)
+//                    .setAmount(new BigInteger(stakingAmount))
+//                    .setStakingAmountType(stakingAmountType)
+//                    .setBenifitAddress(benifitAddress)
+//                    .setExternalId(externalId)
+//                    .setNodeName(nodeName)
+//                    .setWebSite(webSite)
+//                    .setDetails(details)
+//                    .setBlsPubKey(blsPubKey)
+//                    .setProcessVersion(stakingContract.getProgramVersion())
+//                    .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
+//                    .build()).send();
+//            BaseResponse baseResponse = stakingContract.getStakingResult(new PlatonSendTransaction()).send();
+//            System.out.println(baseResponse.toString());
+//        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-
-        try {
-            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
-                    .setNodeId(nodeId)
-                    .setAmount(new BigInteger(stakingAmount))
-                    .setStakingAmountType(stakingAmountType)
-                    .setBenifitAddress(benifitAddress)
-                    .setExternalId(externalId)
-                    .setNodeName(nodeName)
-                    .setWebSite(webSite)
-                    .setDetails(details)
-                    .setBlsPubKey(blsPubKey)
-                    .setProcessVersion(stakingContract.getProgramVersion())
-                    .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
-                    .build()).send();
-            BaseResponse baseResponse = stakingContract.getStakingResult(new PlatonSendTransaction()).send();
-            System.out.println(baseResponse.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -191,6 +197,16 @@ public class StakingContractTest {
             Node node = baseResponse.data;
             System.out.println(node.toString());
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getEconomicConfig() {
+        try {
+            DebugEconomicConfig economicConfig = web3j.getEconomicConfig().send();
+            System.out.println(JSONUtil.toJSONString(economicConfig.getEconomicConfig()));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

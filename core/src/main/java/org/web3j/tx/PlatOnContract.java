@@ -20,7 +20,6 @@ import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
 import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ErrorCode;
-import org.web3j.platon.FunctionType;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.protocol.Web3j;
