@@ -160,18 +160,7 @@ public class PlatOnUtil {
             return new BaseResponse();
         }
 
-        RlpList rlpList = RlpDecoder.decode(Hex.decode(Numeric.cleanHexPrefix(result)));
-
-        List<RlpType> rlpTypeList = rlpList.getValues();
-
-        StringBuilder sb = new StringBuilder();
-
-        for (RlpType rlpType : rlpTypeList) {
-            byte[] bytes = RlpEncoder.encode(rlpType);
-            sb.append(new String(bytes));
-        }
-
-        BaseResponse baseResponse = JSONUtil.parseObject(sb.toString(), BaseResponse.class);
+        BaseResponse baseResponse = JSONUtil.parseObject(new String(Hex.decode(Numeric.cleanHexPrefix(result))), BaseResponse.class);
 
         if (baseResponse == null) {
             return new BaseResponse();

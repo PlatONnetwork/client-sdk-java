@@ -12,6 +12,7 @@ import org.web3j.platon.BaseResponse;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
 import org.web3j.platon.VoteOption;
+import org.web3j.platon.bean.GovernParam;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.Proposal;
 import org.web3j.platon.bean.TallyResult;
@@ -67,7 +68,7 @@ public class ProposalContractTest {
     private String privateKey2 = "0xa689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b";
 
     private String nodeId = "47eddf1110e92262fd593df81307eca0cb544669986baa702fe11942fca14e20bd7436f2da1c4b23c1c72a4873bd6b322c8525e4324f8c85ed55ae98d5a115f2";
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.112.171:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.190:443/rpc"));
     private Credentials credentials;
     private ProposalContract proposalContract;
     private String pIDID = null;
@@ -308,6 +309,18 @@ public class ProposalContractTest {
         try {
             ProgramVersion programVersion = proposalContract.getProgramVersion();
             System.out.println(programVersion);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getParamList() {
+
+        try {
+            BaseResponse baseResponse = proposalContract.getParamList("").send();
+            List<GovernParam> governParamList = (List<GovernParam>) baseResponse.data;
+            System.out.println(governParamList);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -45,7 +45,8 @@ import java.util.List;
 public class StakingContractTest {
 
     //        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
-    private Web3j web3j = Web3j.build(new HttpService("https://aton.main.platon.network/rpc"));
+//    private Web3j web3j = Web3j.build(new HttpService("https://aton.main.platon.network/rpc"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.190:443/rpc"));
 
     private StakingContract stakingContract;
 
@@ -68,7 +69,7 @@ public class StakingContractTest {
 
         stakingContract = StakingContract.load(
                 web3j,
-                credentials, "99");
+                credentials, "100");
 
     }
 
@@ -111,7 +112,7 @@ public class StakingContractTest {
                     .setProcessVersion(stakingContract.getProgramVersion())
                     .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
                     .build()).send();
-            BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
+            BaseResponse baseResponse = stakingContract.getStakingResult(new PlatonSendTransaction()).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,4 +28,12 @@ public class GovernParam {
     public void setParamValue(ParamValue paramValue) {
         this.paramValue = paramValue;
     }
+
+    @Override
+    public String toString() {
+        return "GovernParam{" +
+                "paramItem=" + paramItem +
+                ", paramValue=" + paramValue +
+                '}';
+    }
 }

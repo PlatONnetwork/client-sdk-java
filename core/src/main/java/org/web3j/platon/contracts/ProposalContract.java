@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint32;
 import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
@@ -420,8 +421,8 @@ public class ProposalContract extends PlatOnContract {
      *
      * @return
      */
-    public RemoteCall<BaseResponse<List<GovernParam>>> getParamList() {
-        final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PARAM_LIST);
+    public RemoteCall<BaseResponse<List<GovernParam>>> getParamList(String module) {
+        final PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PARAM_LIST, Arrays.asList(new Utf8String(module)));
         return new RemoteCall<BaseResponse<List<GovernParam>>>(new Callable<BaseResponse<List<GovernParam>>>() {
             @Override
             public BaseResponse<List<GovernParam>> call() throws Exception {
