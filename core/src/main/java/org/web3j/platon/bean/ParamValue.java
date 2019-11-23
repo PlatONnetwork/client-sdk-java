@@ -46,4 +46,13 @@ public class ParamValue {
     public void setActiveBlock(String activeBlock) {
         this.activeBlock = activeBlock;
     }
+
+    @Override
+    public String toString() {
+        return "ParamValue{" +
+                "staleValue='" + staleValue + '\'' +
+                ", value='" + value + '\'' +
+                ", activeBlock='" + activeBlock + '\'' +
+                '}';
+    }
 }

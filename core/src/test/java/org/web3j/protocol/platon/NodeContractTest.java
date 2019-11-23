@@ -34,7 +34,7 @@ public class NodeContractTest {
 
     private String nodeId = "1f3a8672348ff6b789e416762ad53e69063138b8eb4d8780101658f24b2369f1a8e09499226b467d8bc0c4e03e1dc903df857eeb3c67733d21b6aaee2840e429";
 
-    private Web3j web3j = Web3j.build(new HttpService("http://10.10.8.118:6789"));
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.190:443/rpc"));
 
     private Credentials credentials;
 
