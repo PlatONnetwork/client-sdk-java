@@ -349,10 +349,11 @@ public abstract class PlatOnContract extends ManagedTransaction {
             Event event, Log log) {
 
         List<String> topics = log.getTopics();
-        String encodedEventSignature = PlatOnEventEncoder.encodeWithFunctionType(event);
-        if (!topics.get(0).equals(encodedEventSignature)) {
-            return null;
-        }
+        //todo-兼容底层，暂时过滤校验
+//        String encodedEventSignature = PlatOnEventEncoder.encodeWithFunctionType(event);
+//        if (!topics.get(0).equals(encodedEventSignature)) {
+//            return null;
+//        }
 
         List<Type> indexedValues = new ArrayList<>();
         List<Type> nonIndexedValues = PlatOnUtil.eventDecode(log.getData(), event.getNonIndexedParameters());
