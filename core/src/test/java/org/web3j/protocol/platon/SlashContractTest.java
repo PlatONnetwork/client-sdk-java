@@ -3,12 +3,13 @@ package org.web3j.protocol.platon;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
-import org.web3j.platon.BaseResponse;
 import org.web3j.platon.DuplicateSignType;
-import org.web3j.platon.contracts.SlashContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
+
+import com.platon.sdk.contracts.inner.SlashContract;
+import com.platon.sdk.contracts.inner.dto.BaseResponse;
 
 import java.math.BigInteger;
 

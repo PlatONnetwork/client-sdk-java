@@ -8,7 +8,6 @@ import org.web3j.abi.datatypes.generated.Int64;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
-import org.web3j.platon.BaseResponse;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
 import org.web3j.platon.VoteOption;
@@ -16,7 +15,6 @@ import org.web3j.platon.bean.GovernParam;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.platon.bean.Proposal;
 import org.web3j.platon.bean.TallyResult;
-import org.web3j.platon.contracts.ProposalContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonBlock;
@@ -28,6 +26,9 @@ import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.utils.Numeric;
+
+import com.platon.sdk.contracts.inner.ProposalContract;
+import com.platon.sdk.contracts.inner.dto.BaseResponse;
 
 import java.io.IOException;
 import java.math.BigDecimal;

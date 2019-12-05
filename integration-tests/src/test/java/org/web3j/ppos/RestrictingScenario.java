@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.web3j.Scenario;
-import org.web3j.platon.BaseResponse;
 import org.web3j.platon.bean.RestrictingItem;
 import org.web3j.platon.bean.RestrictingPlan;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -17,6 +16,8 @@ import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
+
+import com.platon.sdk.contracts.inner.dto.BaseResponse;
 
 public class RestrictingScenario extends Scenario {
 	

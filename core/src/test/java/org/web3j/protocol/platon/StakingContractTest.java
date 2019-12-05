@@ -1,213 +1,180 @@
 package org.web3j.protocol.platon;
 
-import org.bouncycastle.jcajce.provider.digest.Keccak;
-import org.bouncycastle.util.encoders.Hex;
-import org.junit.Before;
-import org.junit.Test;
-import org.web3j.abi.PlatOnEventEncoder;
-import org.web3j.abi.PlatOnTypeEncoder;
-import org.web3j.abi.datatypes.generated.Int64;
-import org.web3j.crypto.Credentials;
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
-import org.web3j.crypto.RawTransaction;
-import org.web3j.crypto.TransactionEncoder;
-import org.web3j.platon.BaseResponse;
-import org.web3j.platon.StakingAmountType;
-import org.web3j.platon.bean.EconomicConfig;
-import org.web3j.platon.bean.Node;
-import org.web3j.platon.bean.StakingParam;
-import org.web3j.platon.bean.UpdateStakingParam;
-import org.web3j.platon.contracts.StakingContract;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.DebugEconomicConfig;
-import org.web3j.protocol.core.methods.response.PlatonBlock;
-import org.web3j.protocol.core.methods.response.PlatonGetBalance;
-import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
-import org.web3j.protocol.http.HttpService;
-import org.web3j.rlp.RlpEncoder;
-import org.web3j.rlp.RlpList;
-import org.web3j.rlp.RlpString;
-import org.web3j.rlp.RlpType;
-import org.web3j.tx.Transfer;
-import org.web3j.utils.JSONUtil;
-import org.web3j.utils.Numeric;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * 质押相关接口，包括
- * 发起质押
- * 修改质押信息
- * 增持质押
- * 撤销质押
- */
+import org.junit.Before;
+import org.junit.Test;
+import org.web3j.crypto.Credentials;
+import org.web3j.platon.bean.Node;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.Transfer;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Convert.Unit;
+
+import com.platon.sdk.contracts.inner.StakingContract;
+import com.platon.sdk.contracts.inner.dto.CallResponse;
+import com.platon.sdk.contracts.inner.dto.TransactionResponse;
+import com.platon.sdk.contracts.inner.dto.enums.StakingAmountType;
+import com.platon.sdk.contracts.inner.dto.param.StakingParam;
+import com.platon.sdk.contracts.inner.dto.param.UpdateStakingParam;
+
 public class StakingContractTest {
 
-    //        private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.88:6788"));
-//    private Web3j web3j = Web3j.build(new HttpService("https://aton.main.platon.network/rpc"));
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.9.190:443/rpc"));
-
+    private String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
+    String chainId = "103";
+    String blsPubKey = "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda7a75d569f591730481a8b91b5fad52ac26ac495522a069686df1061fc184c31771008c1fedfafd50ae794778811";
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
+    
+    
+    private Credentials superCredentials;
+    private Credentials stakingCredentials;
+    private Credentials benefitCredentials;
     private StakingContract stakingContract;
 
-    String nodeId = "4181b4611a5e76726add1f2aac376a9e62ceb4526a2ee2092466f37303fb2ec474b6a5f6f164330d2ee77b0a775ab84dd8e7b2a23042ee12a7e05b1d358b2538";
-    String stakingAmount = "1800000000000000000000000";
-    StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-    String benifitAddress = "0x82c53dcb0bb305ce1f0bfd092090f779e87c6f58";
-    String externalId = "platonThreesomeId";
-    String nodeName = "threesome";
-    String webSite = "www.baidu.com";
-    String details = "Three Some Team Node";
-    String blsPubKey = "8bd1afb431ec95ba2b8f1fb63d396f6f1b0f4679f796b80c9e4b35272bbc1a38276f38478ea11e3acf30e861402ba00e201909ae4b9a548cf0dfac09402d09714f0969a11acaa5fd39c92d38fd712a31a6b009c8901a5e071d3775dd9ad10e96";
-
-    private Credentials credentials;
-
     @Before
-    public void init() {
+    public void init() throws Exception {
+    	superCredentials = Credentials.create("0xa689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b");
+    	System.out.println("superCredentials balance="+ web3j.platonGetBalance(superCredentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance());
 
-        credentials = Credentials.create("0x4947398900e3f3f5e056102ea1ebbc6197118a099940057b2e40116aa1493e7d");
-
-        stakingContract = StakingContract.load(
-                web3j,
-                credentials, "100");
-
+    	stakingCredentials = Credentials.create("0x690a32ceb7eab4131f7be318c1672d3b9b2dadeacba20b99432a7847c1e926e0");
+    	System.out.println("stakingCredentials balance="+ web3j.platonGetBalance(stakingCredentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance());
+    	
+    	benefitCredentials = Credentials.create("0x3581985348bffd03b286b37712165f7addf3a8d907b25efc44addf54117e9b91");
+    	System.out.println("benefitCredentials balance="+ web3j.platonGetBalance(benefitCredentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance());
+  	
+        stakingContract = StakingContract.load( web3j,stakingCredentials, chainId);    
     }
-
-    /**
-     * 发起质押
-     * typ 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
-     * benefitAddress 用于接受出块奖励和质押奖励的收益账户
-     * nodeId 被质押的节点Id(也叫候选人的节点Id)
-     * externalId 外部Id(有长度限制，给第三方拉取节点描述的Id)
-     * nodeName 被质押节点的名称(有长度限制，表示该节点的名称)
-     * website 节点的第三方主页(有长度限制，表示该节点的主页)
-     * details 节点的描述(有长度限制，表示该节点的描述)
-     * amount 质押的von
-     */
+    
     @Test
-    public void staking() {
-
-//        String fromAddress = Keys.getAddress(ECKeyPair.create(Numeric.toBigIntNoPrefix("4947398900e3f3f5e056102ea1ebbc6197118a099940057b2e40116aa1493e7d")));
-//
-////        try {
-////            PlatonGetBalance platonGetBalance = web3j.platonGetBalance("0xbe8c8bfc195f3c9f89405b0f2e749c7a0e9f91b0", DefaultBlockParameterName.LATEST).send();
-////            PlatonBlock platonBlock = web3j.platonGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send();
-////            System.out.println("jjjjj" + platonGetBalance.getBalance().toString(10));
-////            System.out.println("bbbbb" + platonBlock.getBlock().getNumber().toString(10));
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//
-//        try {
-//            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
-//                    .setNodeId(nodeId)
-//                    .setAmount(new BigInteger(stakingAmount))
-//                    .setStakingAmountType(stakingAmountType)
-//                    .setBenifitAddress(benifitAddress)
-//                    .setExternalId(externalId)
-//                    .setNodeName(nodeName)
-//                    .setWebSite(webSite)
-//                    .setDetails(details)
-//                    .setBlsPubKey(blsPubKey)
-//                    .setProcessVersion(stakingContract.getProgramVersion())
-//                    .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
-//                    .build()).send();
-//            BaseResponse baseResponse = stakingContract.getStakingResult(new PlatonSendTransaction()).send();
-//            System.out.println(baseResponse.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+    public void transfer() throws Exception {
+    	Transfer.sendFunds(web3j, superCredentials, chainId, stakingCredentials.getAddress(), new BigDecimal("10000000"), Unit.LAT).send();
+    	System.out.println("stakingCredentials balance="+ web3j.platonGetBalance(stakingCredentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance());
+    }
+    
+    @Test
+    public void getStakingInfo() {
+    	try {
+    		CallResponse<Node> baseResponse = stakingContract.getStakingInfo("0x15245d4dceeb7552b52d70e56c53fc86aa030eab6b7b325e430179902884fca3d684b0e896ea421864a160e9c18418e4561e9a72f911e2511c29204a857de71a").send();
+    		System.out.println(baseResponse);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
-    /**
-     * 修改质押信息
-     * benefitAddress 用于接受出块奖励和质押奖励的收益账户
-     * nodeId 被质押的节点Id(也叫候选人的节点Id)
-     * externalId 外部Id(有长度限制，给第三方拉取节点描述的Id)
-     * nodeName 被质押节点的名称(有长度限制，表示该节点的名称)
-     * website 节点的第三方主页(有长度限制，表示该节点的主页)
-     * details 节点的描述(有长度限制，表示该节点的描述)
-     */
+    @Test
+    public void getPackageReward() {
+    	try {
+    		CallResponse<BigInteger> baseResponse = stakingContract.getPackageReward().send();
+    		System.out.println(baseResponse);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    @Test
+    public void getStakingReward() {
+    	try {
+    		CallResponse<BigInteger> baseResponse = stakingContract.getStakingReward().send();
+    		System.out.println(baseResponse);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    @Test
+    public void getAvgPackTime() {
+    	try {
+    		CallResponse<BigInteger> baseResponse = stakingContract.getAvgPackTime().send();
+    		System.out.println(baseResponse);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+
+    @Test
+    public void staking() throws Exception {   	
+        try {
+        	StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
+        	String benifitAddress = benefitCredentials.getAddress();
+        	String externalId = "";
+            String nodeName = "chendai-node3";
+            String webSite = "www.baidu.com";
+            String details = "chendai-node3-details";
+            BigDecimal stakingAmount = Convert.toVon("5000000", Unit.LAT);
+            
+        	
+            PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
+                    .setNodeId(nodeId)
+                    .setAmount(stakingAmount.toBigInteger())  
+                    .setStakingAmountType(stakingAmountType)
+                    .setBenifitAddress(benifitAddress)
+                    .setExternalId(externalId)
+                    .setNodeName(nodeName)
+                    .setWebSite(webSite)
+                    .setDetails(details)
+                    .setBlsPubKey(blsPubKey)
+                    .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
+                    .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve()) 
+                    .build()).send();
+            TransactionResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
+            System.out.println(baseResponse.toString());  // 438552‬
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void updateStakingInfo() {
-
         try {
+        	String benifitAddress = benefitCredentials.getAddress();
+        	String externalId = "";
+            String nodeName = "chendai-node3-u";
+            String webSite = "www.baidu.com-u";
+            String details = "chendai-node3-details-u";
+
             PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
-                    .setNodeId(nodeId)
-                    .setBenifitAddress("0x67ce01568e4157624cc15d427a742559e2f37bfe")
-                    .setExternalId("4EEB8C9E9B711E02")
-                    .setNodeName(nodeName)
-                    .setDetails(details)
-                    .setWebSite(webSite)
-                    .build()).send();
-            BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
+            		.setBenifitAddress(benifitAddress)
+            		.setExternalId(externalId)
+            		.setNodeId(nodeId)
+            		.setNodeName(nodeName)
+            		.setWebSite(webSite)
+            		.setDetails(details)
+            		.build()).send();
+
+            TransactionResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    /**
-     * 增持质押
-     * nodeId 被质押的节点Id(也叫候选人的节点Id)
-     * typ 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
-     * amount 质押的von
-     */
     @Test
     public void addStaking() {
         try {
-            PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("80000000000000000000000")).send();
-            BaseResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransaction).send();
+        	StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
+            BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT).add(new BigDecimal("999999999999999998"));
+        	
+            PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
+            TransactionResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * 撤销质押(一次性发起全部撤销，多次到账)
-     * nodeId 被质押的节点的NodeId
-     */
     @Test
     public void unStaking() {
         try {
             PlatonSendTransaction platonSendTransaction = stakingContract.unStakingReturnTransaction(nodeId).send();
-            BaseResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransaction).send();
+            TransactionResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransaction).send();
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * 查询当前节点的质押信息
-     * nodeId 被质押的节点的NodeId
-     */
-    @Test
-    public void getStakingInfo() {
-        try {
-            BaseResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
-            Node node = baseResponse.data;
-            System.out.println(node.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void getEconomicConfig() {
-        try {
-            DebugEconomicConfig economicConfig = web3j.getEconomicConfig().send();
-            System.out.println(JSONUtil.toJSONString(economicConfig.getEconomicConfig()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

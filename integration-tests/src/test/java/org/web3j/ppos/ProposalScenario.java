@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.web3j.Scenario;
-import org.web3j.platon.BaseResponse;
 import org.web3j.platon.FunctionType;
 import org.web3j.platon.ProposalType;
 import org.web3j.platon.bean.Proposal;
@@ -23,6 +22,9 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
+
+import com.platon.sdk.contracts.inner.dto.BaseResponse;
+
 import org.web3j.utils.Numeric;
 import org.web3j.utils.ProposalUtils;
 

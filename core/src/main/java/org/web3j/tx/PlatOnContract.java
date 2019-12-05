@@ -18,7 +18,6 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.Credentials;
-import org.web3j.platon.BaseResponse;
 import org.web3j.platon.ErrorCode;
 import org.web3j.platon.PlatOnFunction;
 import org.web3j.platon.bean.ProgramVersion;
@@ -37,6 +36,8 @@ import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.PlatOnUtil;
+
+import com.platon.sdk.contracts.inner.dto.BaseResponse;
 
 
 /**

@@ -1,10 +1,5 @@
 package org.web3j.platon;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-import org.web3j.abi.datatypes.generated.Uint16;
-
-import java.math.BigInteger;
-
 public class FunctionType {
 
     /**
@@ -55,6 +50,18 @@ public class FunctionType {
      * 查询当前节点的质押信息
      */
     public static final int GET_STAKINGINFO_FUNC_TYPE = 1105;
+    /**
+     * 查询当前结算周期的区块奖励
+     */
+    public static final int GET_PACKAGEREWARD_FUNC_TYPE = 1200;
+    /**
+     * 查询当前结算周期的质押奖励
+     */
+    public static final int GET_STAKINGREWARD_FUNC_TYPE = 1201;
+    /**
+     * 查询打包区块的平均时间
+     */
+    public static final int GET_AVGPACKTIME_FUNC_TYPE = 1202;
     /**
      * 提交文本提案
      */

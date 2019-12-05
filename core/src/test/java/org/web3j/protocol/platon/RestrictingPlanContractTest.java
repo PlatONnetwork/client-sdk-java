@@ -3,13 +3,14 @@ package org.web3j.protocol.platon;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
-import org.web3j.platon.BaseResponse;
 import org.web3j.platon.bean.RestrictingItem;
 import org.web3j.platon.bean.RestrictingPlan;
-import org.web3j.platon.contracts.RestrictingPlanContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
+
+import com.platon.sdk.contracts.inner.RestrictingPlanContract;
+import com.platon.sdk.contracts.inner.dto.BaseResponse;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
