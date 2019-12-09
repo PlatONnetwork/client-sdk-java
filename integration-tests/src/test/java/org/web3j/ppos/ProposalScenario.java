@@ -10,23 +10,20 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.web3j.Scenario;
-import org.web3j.platon.FunctionType;
-import org.web3j.platon.ProposalType;
-import org.web3j.platon.bean.Proposal;
-import org.web3j.platon.bean.TallyResult;
-import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
-import org.web3j.protocol.core.methods.response.Transaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
 
-import com.platon.sdk.contracts.inner.dto.BaseResponse;
-
-import org.web3j.utils.Numeric;
-import org.web3j.utils.ProposalUtils;
+import com.platon.sdk.contracts.ppos.dto.BaseResponse;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.ProposalType;
+import com.platon.sdk.contracts.ppos.dto.resp.GovernParam;
+import com.platon.sdk.contracts.ppos.dto.resp.Proposal;
+import com.platon.sdk.contracts.ppos.dto.resp.TallyResult;
+import com.platon.sdk.contracts.ppos.utils.ProposalUtils;
 
 public class ProposalScenario extends Scenario {
 
@@ -62,74 +59,72 @@ public class ProposalScenario extends Scenario {
         assertTrue(new BigDecimal(delegateBalance).compareTo(Convert.fromVon(transferValue, Unit.VON)) >= 0);
 
         //提交文本提案(2000)
-        BaseResponse createTextProposalResponse = createTextProposal();
+        TransactionResponse createTextProposalResponse = createTextProposal();
         assertTrue(createTextProposalResponse.toString(), createTextProposalResponse.isStatusOk());
-        String textProposalHash = createTextProposalResponse.transactionReceipt.getTransactionHash();
+        String textProposalHash = createTextProposalResponse.getTransactionReceipt().getTransactionHash();
 
         //给提案投票(2003)
         for (VoteInfo voteInfo : voteInfos) {
-            BaseResponse voteBaseResponse = vote(voteInfo, textProposalHash);
+        	TransactionResponse voteBaseResponse = vote(voteInfo, textProposalHash);
             assertTrue(voteBaseResponse.toString(), voteBaseResponse.isStatusOk());
         }
 
         //查询提案(2100)
-        BaseResponse<Proposal> getProposalResponse = getProposal(textProposalHash);
+        CallResponse<Proposal> getProposalResponse = getProposal(textProposalHash);
         assertTrue(getProposalResponse.toString(), getProposalResponse.isStatusOk());
 
         //判断等待投票结果
         waitResult(getProposalResponse);
 
         //查询提案结果(2101)
-        BaseResponse<TallyResult> getTallyResultResponse = getTallyResult(textProposalHash);
+        CallResponse<TallyResult> getTallyResultResponse = getTallyResult(textProposalHash);
         assertTrue(getTallyResultResponse.toString(), getTallyResultResponse.isStatusOk());
 
         //提交升级提案(2001)
-        BaseResponse createVersionProposalResponse = createVersionProposal();
+        TransactionResponse createVersionProposalResponse = createVersionProposal();
         assertTrue(createVersionProposalResponse.toString(), createVersionProposalResponse.isStatusOk());
-        //code = 302025 desc = verifier not upgraded
-        //assertArrayEquals(createVersionProposalResponse.toString(), new int[] {createVersionProposalResponse.getCode()}, new int[] {302025});
-        String versionProposalHash = createVersionProposalResponse.transactionReceipt.getTransactionHash();
+        String versionProposalHash = createVersionProposalResponse.getTransactionReceipt().getTransactionHash();
 
         //提交参数提案
-        BaseResponse createParamProposalResponse = createParamProposal();
+        TransactionResponse createParamProposalResponse = createParamProposal();
         assertTrue(createParamProposalResponse.toString(), createParamProposalResponse.isStatusOk());
 
         //查询提案列表(2102)
-        BaseResponse<List<Proposal>> getProposalListResponse = getProposalList();
+        CallResponse<List<Proposal>> getProposalListResponse = getProposalList();
         assertTrue(getProposalListResponse.toString(), getProposalListResponse.isStatusOk());
 
-        List<Proposal> proposalList = getProposalListResponse.data;
+        List<Proposal> proposalList = getProposalListResponse.getData();
         assertTrue(proposalList != null && !proposalList.isEmpty());
 
         Proposal proposal = proposalList.get(0);
 
         //版本声明(2004)
-        BaseResponse declareVersionResponse = declareVersion();
+        TransactionResponse declareVersionResponse = declareVersion();
         assertTrue(declareVersionResponse.toString(), declareVersionResponse.isStatusOk());
 
         //查询生效版本(2103)
-        BaseResponse getActiveVersionResponse = getActiveVersion();
+        CallResponse<BigInteger> getActiveVersionResponse = getActiveVersion();
         assertTrue(getActiveVersionResponse.toString(), getActiveVersionResponse.isStatusOk());
 
         //查询可治理参数列表
-        BaseResponse getParamListResponse = getParamList("");
+        CallResponse<List<GovernParam>>  getParamListResponse = getParamList("");
         assertTrue(getParamListResponse.toString(), getActiveVersionResponse.isStatusOk());
 
         //查询提案的累积可投票人数
-        BaseResponse getAccuVerifiersCountResponse = getAccuVerifiersCount(proposal.getProposalId(), versionProposalHash);
+        CallResponse<List<BigInteger>>  getAccuVerifiersCountResponse = getAccuVerifiersCount(proposal.getProposalId(), versionProposalHash);
         assertTrue(getAccuVerifiersCountResponse.toString(), getAccuVerifiersCountResponse.isStatusOk());
 
         Proposal paramProposal = getParamProposal(proposalList);
         assertTrue(paramProposal != null);
 
         //查询当前块高的治理参数值
-        BaseResponse getGovernParamValueResponse = getGovernParamValue(paramProposal.getModule(), paramProposal.getName());
+        CallResponse<String> getGovernParamValueResponse = getGovernParamValue(paramProposal.getModule(), paramProposal.getName());
         assertTrue(getGovernParamValueResponse.toString(), getGovernParamValueResponse.isStatusOk());
 
         //提交取消提(2005)
-        BaseResponse createCancalProposalResponse = createCancalProposal(versionProposalHash);
+        TransactionResponse createCancalProposalResponse = createCancalProposal(versionProposalHash);
         assertTrue(createCancalProposalResponse.toString(), createCancalProposalResponse.isStatusOk());
-        String cancalProposalHash = createCancalProposalResponse.transactionReceipt.getTransactionHash();
+        String cancalProposalHash = createCancalProposalResponse.getTransactionReceipt().getTransactionHash();
 
         //给提案投票(2003)
         for (VoteInfo voteInfo : voteInfos) {
@@ -151,68 +146,68 @@ public class ProposalScenario extends Scenario {
     }
 
 
-    public BaseResponse createCancalProposal(String versionProposalId) throws Exception {
+    public TransactionResponse createCancalProposal(String versionProposalId) throws Exception {
         Proposal proposal = Proposal.createSubmitCancelProposalParam(proposalNodeId, String.valueOf(pid + 2), BigInteger.valueOf(2), versionProposalId);
         PlatonSendTransaction platonSendTransactionCan = proposalContract.submitProposalReturnTransaction(proposal).send();
-        BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransactionCan, FunctionType.SUBMIT_CANCEL_FUNC_TYPE).send();
+        TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransactionCan).send();
         return baseResponse;
     }
 
-    public BaseResponse getActiveVersion() throws Exception {
-        BaseResponse baseResponse = proposalContract.getActiveVersion().send();
+    public CallResponse<BigInteger> getActiveVersion() throws Exception {
+        CallResponse<BigInteger> baseResponse = proposalContract.getActiveVersion().send();
         return baseResponse;
     }
 
-    public BaseResponse declareVersion() throws Exception {
-        PlatonSendTransaction platonSendTransaction = proposalContract.declareVersionReturnTransaction(proposalContract.getProgramVersion(), proposalNodeId).send();
-        BaseResponse baseResponse = proposalContract.getDeclareVersionResult(platonSendTransaction).send();
+    public TransactionResponse declareVersion() throws Exception {
+        PlatonSendTransaction platonSendTransaction = proposalContract.declareVersionReturnTransaction(proposalWeb3j.getProgramVersion().send().getAdminProgramVersion(), proposalNodeId).send();
+        TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse createVersionProposal() throws Exception {
+    public TransactionResponse createVersionProposal() throws Exception {
         BigInteger newVersion = ProposalUtils.versionStrToInteger("100.0.0");
         BigInteger endVotingRounds = BigInteger.valueOf(4);
         Proposal proposal = Proposal.createSubmitVersionProposalParam(proposalNodeId, String.valueOf(pid + 1), newVersion, endVotingRounds);
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
-        BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_VERSION_FUNC_TYPE).send();
+        TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse createParamProposal() throws Exception {
+    public TransactionResponse createParamProposal() throws Exception {
         String module = "module";
         String name = "param proposal name";
         String value = "100";
         Proposal proposal = Proposal.createSubmitParamProposalParam(proposalNodeId, String.valueOf(pid + 1), module, name, value);
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
-        BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIR_PARAM_FUNCTION_TYPE).send();
+        TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse<List<Proposal>> getProposalList() throws Exception {
-        BaseResponse<List<Proposal>> baseResponse = proposalContract.getProposalList().send();
+    public CallResponse<List<Proposal>> getProposalList() throws Exception {
+        CallResponse<List<Proposal>> baseResponse = proposalContract.getProposalList().send();
         return baseResponse;
     }
 
-    public BaseResponse<TallyResult> getTallyResult(String proposalID) throws Exception {
-        BaseResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposalID).send();
+    public CallResponse<TallyResult> getTallyResult(String proposalID) throws Exception {
+    	CallResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposalID).send();
         return baseResponse;
     }
 
-    public BaseResponse<Proposal> getProposal(String proposalID) throws Exception {
-        BaseResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).send();
+    public CallResponse<Proposal> getProposal(String proposalID) throws Exception {
+    	CallResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).send();
         return baseResponse;
     }
 
-    public BaseResponse vote(VoteInfo voteInfo, String proposalID) throws Exception {
-        PlatonSendTransaction platonSendTransaction = voteInfo.getVoteContract().voteReturnTransaction(voteInfo.getVoteContract().getProgramVersion(), voteInfo.getVoteOption(), proposalID, voteInfo.getNodeId()).send();
-        BaseResponse baseResponse = voteInfo.getVoteContract().getVoteResult(platonSendTransaction).send();
+    public TransactionResponse vote(VoteInfo voteInfo, String proposalID) throws Exception {
+        PlatonSendTransaction platonSendTransaction = voteInfo.getVoteContract().voteReturnTransaction(voteInfo.getWeb3j().getProgramVersion().send().getAdminProgramVersion(), voteInfo.getVoteOption(), proposalID, voteInfo.getNodeId()).send();
+        TransactionResponse baseResponse = voteInfo.getVoteContract().getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse createTextProposal() throws Exception {
+    public TransactionResponse createTextProposal() throws Exception {
         Proposal proposal = Proposal.createSubmitTextProposalParam(proposalNodeId, String.valueOf(pid));
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
-        BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_TEXT_FUNC_TYPE).send();
+        TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
@@ -221,22 +216,22 @@ public class ProposalScenario extends Scenario {
         Transfer.sendFunds(web3j, superCredentials, chainId, voteCredentials.getAddress(), transferValue, Unit.LAT).send();
     }
 
-    public BaseResponse getGovernParamValue(String module, String name) throws Exception {
+    public CallResponse<String> getGovernParamValue(String module, String name) throws Exception {
         return proposalContract.getGovernParamValue(module, name).send();
     }
 
-    public BaseResponse getAccuVerifiersCount(String proposalId, String blockHash) throws Exception {
+    public CallResponse<List<BigInteger>> getAccuVerifiersCount(String proposalId, String blockHash) throws Exception {
         return proposalContract.getAccuVerifiersCount(proposalId, blockHash).send();
     }
 
-    public BaseResponse getParamList(String module) throws Exception {
+    public CallResponse<List<GovernParam>>  getParamList(String module) throws Exception {
         return proposalContract.getParamList(module).send();
     }
 
-    public void waitResult(BaseResponse<Proposal> getProposalResponse) throws Exception {
+    public void waitResult(CallResponse<Proposal> getProposalResponse) throws Exception {
         int time = 0;
         while (true) {
-            BigInteger endVotingBlock = getProposalResponse.data.getEndVotingBlock();
+            BigInteger endVotingBlock = getProposalResponse.getData().getEndVotingBlock();
             BigInteger curBlockNumber = web3j.platonBlockNumber().send().getBlockNumber();
             if (curBlockNumber.compareTo(endVotingBlock) > 0) {
                 break;

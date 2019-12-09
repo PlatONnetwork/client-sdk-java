@@ -1,12 +1,11 @@
 package org.web3j.console;
 
+import static org.web3j.utils.Collection.tail;
+
 import org.web3j.codegen.Console;
 import org.web3j.codegen.SolidityFunctionWrapperGenerator;
-import org.web3j.codegen.SophiaFunctionWrapperGenerator;
 import org.web3j.codegen.TruffleJsonFunctionWrapperGenerator;
 import org.web3j.utils.Version;
-
-import static org.web3j.utils.Collection.tail;
 
 /**
  * Main entry point for running command line utilities.
@@ -41,9 +40,9 @@ public class Runner {
                 case "truffle":
                     TruffleJsonFunctionWrapperGenerator.run(tail(args));
                     break;
-                case "wasm":
-                	SophiaFunctionWrapperGenerator.run(tail(args));
-                    break;
+//                case "wasm":
+//                	SophiaFunctionWrapperGenerator.run(tail(args));
+//                    break;
                 case "version":
                     Console.exitSuccess("Version: " + Version.getVersion() + "\n"
                             + "Build timestamp: " + Version.getTimestamp());
