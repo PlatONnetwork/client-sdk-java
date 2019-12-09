@@ -1,7 +1,5 @@
 package org.web3j.protocol.core.methods.response;
 
-import com.alibaba.fastjson.JSON;
-
 import org.web3j.platon.bean.EconomicConfig;
 import org.web3j.protocol.core.Response;
 import org.web3j.utils.JSONUtil;

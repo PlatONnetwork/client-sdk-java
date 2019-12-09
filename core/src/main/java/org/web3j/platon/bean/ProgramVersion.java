@@ -78,4 +78,9 @@ public class ProgramVersion {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ProgramVersion [version=" + version + ", sign=" + sign + "]";
+	}
 }

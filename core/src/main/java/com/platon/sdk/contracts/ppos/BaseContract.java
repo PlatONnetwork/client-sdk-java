@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.crypto.Credentials;
+import org.web3j.exceptions.MessageDecodingException;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
@@ -89,12 +90,28 @@ public abstract class BaseContract extends ManagedTransaction {
         CallResponse<T> callResponse = new CallResponse<T>();
         if (callRet.isStatusOk()) {
         	callResponse.setCode(callRet.getCode());
-        	callResponse.setData(JSONUtil.parseObject(JSONUtil.toJSONString(callRet.getRet()), returnType));
+        	if(BigInteger.class.isAssignableFrom(returnType) ) {
+        		callResponse.setData((T)numberDecoder(callRet.getRet()));
+        	}else {
+        		callResponse.setData(JSONUtil.parseObject(JSONUtil.toJSONString(callRet.getRet()), returnType));
+			}
         } else {
         	callResponse.setCode(callRet.getCode());
         	callResponse.setErrMsg(callRet.getRet().toString());
         }
         return callResponse;
+    }
+    
+    private BigInteger numberDecoder(Object number) {
+    	if(number instanceof String) {
+    		String numberStr = (String)number;
+    		return Numeric.decodeQuantity(numberStr);
+    	} else if(number instanceof Number ){
+    		Number number2 = (Number)number;
+    		return BigInteger.valueOf(number2.longValue());
+		} else {
+			throw new MessageDecodingException("Can not decode number value = " + number);
+		}
     }
    
     private <T> CallResponse<List<T>> executeCallListValueReturn(PlatOnFunction function, Class<T> returnType) throws IOException {
