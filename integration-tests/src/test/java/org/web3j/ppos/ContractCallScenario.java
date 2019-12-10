@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.web3j.Scenario;
 
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.resp.GovernParam;
 import com.platon.sdk.contracts.ppos.dto.resp.Node;
 
 public class ContractCallScenario extends Scenario {
@@ -54,5 +55,29 @@ public class ContractCallScenario extends Scenario {
     	CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
     	assertThat(response.isStatusOk(), equalTo(true));
     	System.out.println(response);
-    }   
+    }  
+    
+    @Test
+    public void getGovernParamValue() throws Exception {
+        String module = "staking";
+        String name = "operatingThreshold";
+    	CallResponse<String> response = proposalContract.getGovernParamValue(module, name).send();
+    	assertThat(response.isStatusOk(), equalTo(true));
+    	System.out.println(response);
+    }  
+    
+    @Test
+    public void getParamList() throws Exception {
+        String module = "";
+    	CallResponse<List<GovernParam>> response = proposalContract.getParamList(module).send();
+    	assertThat(response.isStatusOk(), equalTo(true));
+    	System.out.println(response);
+    }  
+    
+    @Test
+    public void getActiveVersion() throws Exception {
+    	CallResponse<BigInteger> response = proposalContract.getActiveVersion().send();
+    	assertThat(response.isStatusOk(), equalTo(true));
+    	System.out.println(response);
+    }  
 }

@@ -69,18 +69,6 @@ public class StakingScenario extends Scenario {
         TransactionResponse delegateResponse = delegate();
         assertTrue(delegateResponse.toString(), delegateResponse.isStatusOk());
 
-        //查询当前结算周期的验证人队列(1100)
-        CallResponse<List<Node>> getVerifierListResponse = getVerifierList();
-        assertTrue(getVerifierListResponse.toString(), getVerifierListResponse.isStatusOk());
-
-        //查询当前共识周期的验证人列表(1101)
-        CallResponse<List<Node>> getValidatorListResponse = getValidatorList();
-        assertTrue(getValidatorListResponse.toString(), getValidatorListResponse.isStatusOk());
-
-        //查询所有实时的候选人列表(1102)
-        CallResponse<List<Node>> getCandidateListResponse = getCandidateList();
-        assertTrue(getCandidateListResponse.toString(), getCandidateListResponse.isStatusOk());
-
         //查询当前账户地址所委托的节点的NodeID和质押Id(1103)
         CallResponse<List<DelegationIdInfo>> getRelatedListByDelAddrResponse = getRelatedListByDelAddr();
         assertTrue(getRelatedListByDelAddrResponse.toString(), getRelatedListByDelAddrResponse.isStatusOk());
@@ -134,21 +122,6 @@ public class StakingScenario extends Scenario {
 
     public CallResponse<List<DelegationIdInfo>> getRelatedListByDelAddr() throws Exception {
     	CallResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedListByDelAddr(delegateCredentials.getAddress()).send();
-        return baseResponse;
-    }
-
-    public CallResponse<List<Node>> getCandidateList() throws Exception {
-    	CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
-        return baseResponse;
-    }
-
-    public CallResponse<List<Node>> getValidatorList() throws Exception {
-    	CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
-        return baseResponse;
-    }
-
-    public CallResponse<List<Node>> getVerifierList() throws Exception {
-    	CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
         return baseResponse;
     }
 

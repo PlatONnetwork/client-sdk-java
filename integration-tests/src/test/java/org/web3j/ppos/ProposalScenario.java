@@ -4,8 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
@@ -20,7 +20,6 @@ import com.platon.sdk.contracts.ppos.dto.BaseResponse;
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
 import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.common.ProposalType;
-import com.platon.sdk.contracts.ppos.dto.resp.GovernParam;
 import com.platon.sdk.contracts.ppos.dto.resp.Proposal;
 import com.platon.sdk.contracts.ppos.dto.resp.TallyResult;
 import com.platon.sdk.contracts.ppos.utils.ProposalUtils;
@@ -28,7 +27,6 @@ import com.platon.sdk.contracts.ppos.utils.ProposalUtils;
 public class ProposalScenario extends Scenario {
 
     private BigDecimal transferValue = new BigDecimal("1000");
-    private int pid = new Random(System.currentTimeMillis()).nextInt();
 
     /**
      * 正常的场景:
@@ -101,25 +99,13 @@ public class ProposalScenario extends Scenario {
         //版本声明(2004)
         TransactionResponse declareVersionResponse = declareVersion();
         assertTrue(declareVersionResponse.toString(), declareVersionResponse.isStatusOk());
-
-        //查询生效版本(2103)
-        CallResponse<BigInteger> getActiveVersionResponse = getActiveVersion();
-        assertTrue(getActiveVersionResponse.toString(), getActiveVersionResponse.isStatusOk());
-
-        //查询可治理参数列表
-        CallResponse<List<GovernParam>>  getParamListResponse = getParamList("");
-        assertTrue(getParamListResponse.toString(), getActiveVersionResponse.isStatusOk());
-
+        
         //查询提案的累积可投票人数
         CallResponse<List<BigInteger>>  getAccuVerifiersCountResponse = getAccuVerifiersCount(proposal.getProposalId(), versionProposalHash);
         assertTrue(getAccuVerifiersCountResponse.toString(), getAccuVerifiersCountResponse.isStatusOk());
 
         Proposal paramProposal = getParamProposal(proposalList);
         assertTrue(paramProposal != null);
-
-        //查询当前块高的治理参数值
-        CallResponse<String> getGovernParamValueResponse = getGovernParamValue(paramProposal.getModule(), paramProposal.getName());
-        assertTrue(getGovernParamValueResponse.toString(), getGovernParamValueResponse.isStatusOk());
 
         //提交取消提(2005)
         TransactionResponse createCancalProposalResponse = createCancalProposal(versionProposalHash);
@@ -147,14 +133,9 @@ public class ProposalScenario extends Scenario {
 
 
     public TransactionResponse createCancalProposal(String versionProposalId) throws Exception {
-        Proposal proposal = Proposal.createSubmitCancelProposalParam(proposalNodeId, String.valueOf(pid + 2), BigInteger.valueOf(2), versionProposalId);
+        Proposal proposal = Proposal.createSubmitCancelProposalParam(proposalNodeId, String.valueOf(new Date().getTime()), BigInteger.valueOf(2), versionProposalId);
         PlatonSendTransaction platonSendTransactionCan = proposalContract.submitProposalReturnTransaction(proposal).send();
         TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransactionCan).send();
-        return baseResponse;
-    }
-
-    public CallResponse<BigInteger> getActiveVersion() throws Exception {
-        CallResponse<BigInteger> baseResponse = proposalContract.getActiveVersion().send();
         return baseResponse;
     }
 
@@ -167,17 +148,17 @@ public class ProposalScenario extends Scenario {
     public TransactionResponse createVersionProposal() throws Exception {
         BigInteger newVersion = ProposalUtils.versionStrToInteger("100.0.0");
         BigInteger endVotingRounds = BigInteger.valueOf(4);
-        Proposal proposal = Proposal.createSubmitVersionProposalParam(proposalNodeId, String.valueOf(pid + 1), newVersion, endVotingRounds);
+        Proposal proposal = Proposal.createSubmitVersionProposalParam(proposalNodeId, String.valueOf(new Date().getTime()), newVersion, endVotingRounds);
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
         TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
     public TransactionResponse createParamProposal() throws Exception {
-        String module = "module";
-        String name = "param proposal name";
-        String value = "100";
-        Proposal proposal = Proposal.createSubmitParamProposalParam(proposalNodeId, String.valueOf(pid + 1), module, name, value);
+        String module = "staking";
+        String name = "operatingThreshold";
+        String value = "200000"+System.currentTimeMillis();
+        Proposal proposal = Proposal.createSubmitParamProposalParam(proposalNodeId, String.valueOf(new Date().getTime()), module, name, value);
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
         TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
@@ -205,7 +186,7 @@ public class ProposalScenario extends Scenario {
     }
 
     public TransactionResponse createTextProposal() throws Exception {
-        Proposal proposal = Proposal.createSubmitTextProposalParam(proposalNodeId, String.valueOf(pid));
+        Proposal proposal = Proposal.createSubmitTextProposalParam(proposalNodeId, String.valueOf(new Date().getTime()));
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
         TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
@@ -216,16 +197,8 @@ public class ProposalScenario extends Scenario {
         Transfer.sendFunds(web3j, superCredentials, chainId, voteCredentials.getAddress(), transferValue, Unit.LAT).send();
     }
 
-    public CallResponse<String> getGovernParamValue(String module, String name) throws Exception {
-        return proposalContract.getGovernParamValue(module, name).send();
-    }
-
     public CallResponse<List<BigInteger>> getAccuVerifiersCount(String proposalId, String blockHash) throws Exception {
         return proposalContract.getAccuVerifiersCount(proposalId, blockHash).send();
-    }
-
-    public CallResponse<List<GovernParam>>  getParamList(String module) throws Exception {
-        return proposalContract.getParamList(module).send();
     }
 
     public void waitResult(CallResponse<Proposal> getProposalResponse) throws Exception {
