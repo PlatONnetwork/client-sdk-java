@@ -1,6 +1,5 @@
 package org.web3j.ppos;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -8,13 +7,16 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 import org.web3j.Scenario;
-import org.web3j.platon.BaseResponse;
-import org.web3j.platon.DuplicateSignType;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
+
+import com.platon.sdk.contracts.ppos.dto.BaseResponse;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.DuplicateSignType;
 
 public class SlashScenario extends Scenario {
 	
@@ -45,14 +47,14 @@ public class SlashScenario extends Scenario {
 		
 	}
 	
-    public BaseResponse reportDuplicateSign() throws Exception {
+    public TransactionResponse reportDuplicateSign() throws Exception {
         PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(DuplicateSignType.PREPARE_BLOCK, data).send();
-        BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTransaction).send();
+        TransactionResponse baseResponse = slashContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse checkDuplicateSign() throws Exception {
-    	 BaseResponse baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
+    public CallResponse<String> checkDuplicateSign() throws Exception {
+    	CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
     	 return baseResponse;
     }
     

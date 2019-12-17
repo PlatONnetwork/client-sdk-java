@@ -14,7 +14,6 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.protocol.infura.InfuraHttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
@@ -135,8 +134,6 @@ public class WalletSendFunds extends WalletManager {
         Web3j web3j;
         if (clientAddress.equals("")) {
             web3j = Web3j.build(new HttpService());
-        } else if (clientAddress.contains("infura.io")) {
-            web3j = Web3j.build(new InfuraHttpService(clientAddress));
         } else {
             web3j = Web3j.build(new HttpService(clientAddress));
         }

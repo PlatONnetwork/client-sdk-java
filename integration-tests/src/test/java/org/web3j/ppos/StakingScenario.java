@@ -8,20 +8,20 @@ import java.util.List;
 
 import org.junit.Test;
 import org.web3j.Scenario;
-import org.web3j.platon.BaseResponse;
-import org.web3j.platon.StakingAmountType;
-import org.web3j.platon.bean.Delegation;
-import org.web3j.platon.bean.DelegationIdInfo;
-import org.web3j.platon.bean.Node;
-import org.web3j.platon.bean.StakingParam;
-import org.web3j.platon.bean.UpdateStakingParam;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.DebugEconomicConfig;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
-import org.web3j.utils.JSONUtil;
+
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
+import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
+import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
+import com.platon.sdk.contracts.ppos.dto.resp.Delegation;
+import com.platon.sdk.contracts.ppos.dto.resp.DelegationIdInfo;
+import com.platon.sdk.contracts.ppos.dto.resp.Node;
 
 public class StakingScenario extends Scenario {
 
@@ -54,127 +54,123 @@ public class StakingScenario extends Scenario {
         assertTrue(new BigDecimal(delegateBalance).compareTo(Convert.fromVon(transferValue, Unit.VON)) >= 0);
 
         //创建质押信息(1000)
-        BaseResponse createStakingResponse = staking();
+        TransactionResponse createStakingResponse = staking();
         assertTrue(createStakingResponse.toString(), createStakingResponse.isStatusOk());
-        BigInteger stakingBlockNum = createStakingResponse.transactionReceipt.getBlockNumber();
 
         //修改质押信息(1001)
-        BaseResponse updateStakingResponse = updateStakingInfo();
+        TransactionResponse updateStakingResponse = updateStakingInfo();
         assertTrue(updateStakingResponse.toString(), updateStakingResponse.isStatusOk());
 
         //修改质押金额(1002)
-        BaseResponse addStakingResponse = addStaking();
+        TransactionResponse addStakingResponse = addStaking();
         assertTrue(addStakingResponse.toString(), addStakingResponse.isStatusOk());
 
         //对质押委托(1004)
-        BaseResponse delegateResponse = delegate();
+        TransactionResponse delegateResponse = delegate();
         assertTrue(delegateResponse.toString(), delegateResponse.isStatusOk());
 
         //查询当前结算周期的验证人队列(1100)
-        BaseResponse<List<Node>> getVerifierListResponse = getVerifierList();
+        CallResponse<List<Node>> getVerifierListResponse = getVerifierList();
         assertTrue(getVerifierListResponse.toString(), getVerifierListResponse.isStatusOk());
 
         //查询当前共识周期的验证人列表(1101)
-        BaseResponse<List<Node>> getValidatorListResponse = getValidatorList();
+        CallResponse<List<Node>> getValidatorListResponse = getValidatorList();
         assertTrue(getValidatorListResponse.toString(), getValidatorListResponse.isStatusOk());
 
         //查询所有实时的候选人列表(1102)
-        BaseResponse<List<Node>> getCandidateListResponse = getCandidateList();
+        CallResponse<List<Node>> getCandidateListResponse = getCandidateList();
         assertTrue(getCandidateListResponse.toString(), getCandidateListResponse.isStatusOk());
 
         //查询当前账户地址所委托的节点的NodeID和质押Id(1103)
-        BaseResponse<List<DelegationIdInfo>> getRelatedListByDelAddrResponse = getRelatedListByDelAddr();
+        CallResponse<List<DelegationIdInfo>> getRelatedListByDelAddrResponse = getRelatedListByDelAddr();
         assertTrue(getRelatedListByDelAddrResponse.toString(), getRelatedListByDelAddrResponse.isStatusOk());
 
-        List<DelegationIdInfo> delegationIdInfos = getRelatedListByDelAddrResponse.data;
+        List<DelegationIdInfo> delegationIdInfos = getRelatedListByDelAddrResponse.getData();
         assertTrue(delegationIdInfos != null && !delegationIdInfos.isEmpty());
 
         //查询当前单个委托信息(1104)
-        BaseResponse<Delegation> getDelegateResponse = getDelegateInfo(delegationIdInfos.get(0).getStakingBlockNum());
+        CallResponse<Delegation> getDelegateResponse = getDelegateInfo(delegationIdInfos.get(0).getStakingBlockNum());
         assertTrue(getDelegateResponse.toString(), getDelegateResponse.isStatusOk());
 
         //查询当前节点的质押信息(1105)
-        BaseResponse<Node> getStakingInfoResponse = getStakingInfo();
+        CallResponse<Node> getStakingInfoResponse = getStakingInfo();
         assertTrue(getStakingInfoResponse.toString(), getStakingInfoResponse.isStatusOk());
 
         //对质押解除委托(1005)
-        BaseResponse unDelegateResponse = unDelegate(delegationIdInfos.get(0).getStakingBlockNum());
+        TransactionResponse unDelegateResponse = unDelegate(delegationIdInfos.get(0).getStakingBlockNum());
         assertTrue(unDelegateResponse.toString(), unDelegateResponse.isStatusOk());
 
         //退出质押(1003)
-        BaseResponse unStakingResponse = unStaking();
+        TransactionResponse unStakingResponse = unStaking();
         assertTrue(unStakingResponse.toString(), unStakingResponse.isStatusOk());
-
-        DebugEconomicConfig economicConfig = web3j.getEconomicConfig().send();
-        assertTrue(JSONUtil.toJSONString(economicConfig.getEconomicConfig()) != null);
     }
 
 
-    public BaseResponse unStaking() throws Exception {
+    public TransactionResponse unStaking() throws Exception {
         PlatonSendTransaction platonSendTransaction = stakingContract.unStakingReturnTransaction(nodeId).send();
-        BaseResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransaction).send();
+        TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse unDelegate(BigInteger stakingBlockNum) throws Exception {
+    public TransactionResponse unDelegate(BigInteger stakingBlockNum) throws Exception {
         BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
         PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
-        BaseResponse baseResponse = delegateContract.getUnDelegateResult(platonSendTransaction).send();
+        TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
 
-    public BaseResponse<Node> getStakingInfo() throws Exception {
-        BaseResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
+    public CallResponse<Node> getStakingInfo() throws Exception {
+    	CallResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
         return baseResponse;
     }
 
 
-    public BaseResponse<Delegation> getDelegateInfo(BigInteger stakingBlockNum) throws Exception {
-        BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateCredentials.getAddress(), stakingBlockNum).send();
+    public CallResponse<Delegation> getDelegateInfo(BigInteger stakingBlockNum) throws Exception {
+    	CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, delegateCredentials.getAddress(), stakingBlockNum).send();
         return baseResponse;
     }
 
 
-    public BaseResponse<List<DelegationIdInfo>> getRelatedListByDelAddr() throws Exception {
-        BaseResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedListByDelAddr(delegateCredentials.getAddress()).send();
+    public CallResponse<List<DelegationIdInfo>> getRelatedListByDelAddr() throws Exception {
+    	CallResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedListByDelAddr(delegateCredentials.getAddress()).send();
         return baseResponse;
     }
 
-    public BaseResponse<List<Node>> getCandidateList() throws Exception {
-        BaseResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
+    public CallResponse<List<Node>> getCandidateList() throws Exception {
+    	CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
         return baseResponse;
     }
 
-    public BaseResponse<List<Node>> getValidatorList() throws Exception {
-        BaseResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
+    public CallResponse<List<Node>> getValidatorList() throws Exception {
+    	CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
         return baseResponse;
     }
 
-    public BaseResponse<List<Node>> getVerifierList() throws Exception {
-        BaseResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
+    public CallResponse<List<Node>> getVerifierList() throws Exception {
+    	CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
         return baseResponse;
     }
 
-    public BaseResponse delegate() throws Exception {
+    public TransactionResponse delegate() throws Exception {
         StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
         BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
 
         PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, stakingAmount.toBigInteger()).send();
-        BaseResponse baseResponse = delegateContract.getDelegateResult(platonSendTransaction).send();
+        TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse addStaking() throws Exception {
+    public TransactionResponse addStaking() throws Exception {
         StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
         BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT).add(new BigDecimal("999999999999999998"));
 
-        PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, addStakingAmount.toBigInteger()).send();
-        BaseResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransaction).send();
+        PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
+        TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse updateStakingInfo() throws Exception {
+    public TransactionResponse updateStakingInfo() throws Exception {
         String benifitAddress = benefitCredentials.getAddress();
         String externalId = "";
         String nodeName = "integration-node1-u";
@@ -190,11 +186,11 @@ public class StakingScenario extends Scenario {
                 .setDetails(details)
                 .build()).send();
 
-        BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
+        TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 
-    public BaseResponse staking() throws Exception {
+    public TransactionResponse staking() throws Exception {
         StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
         String benifitAddress = benefitCredentials.getAddress();
         String externalId = "";
@@ -213,10 +209,10 @@ public class StakingScenario extends Scenario {
                 .setWebSite(webSite)
                 .setDetails(details)
                 .setBlsPubKey(blsPubKey)
-                .setProcessVersion(stakingContract.getProgramVersion())
-                .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
+                .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
+                .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
                 .build()).send();
-        BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
+        TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }
 

@@ -2,8 +2,7 @@
 description 'web3j integration tests'
 
 dependencies {
-    compile project(':core'),
-            project(':parity')
+    compile project(':core')
     testCompile "ch.qos.logback:logback-core:$logbackVersion",
             "ch.qos.logback:logback-classic:$logbackVersion",
             "com.carrotsearch:junit-benchmarks:$junitBenchmarkVersion"

@@ -6,15 +6,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
-import org.web3j.platon.VoteOption;
-import org.web3j.platon.contracts.DelegateContract;
-import org.web3j.platon.contracts.NodeContract;
-import org.web3j.platon.contracts.ProposalContract;
-import org.web3j.platon.contracts.RestrictingPlanContract;
-import org.web3j.platon.contracts.SlashContract;
-import org.web3j.platon.contracts.StakingContract;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
+
+import com.platon.sdk.contracts.ppos.DelegateContract;
+import com.platon.sdk.contracts.ppos.NodeContract;
+import com.platon.sdk.contracts.ppos.ProposalContract;
+import com.platon.sdk.contracts.ppos.RestrictingPlanContract;
+import com.platon.sdk.contracts.ppos.SlashContract;
+import com.platon.sdk.contracts.ppos.StakingContract;
+import com.platon.sdk.contracts.ppos.dto.enums.VoteOption;
 
 
 public abstract class Scenario {
@@ -57,23 +58,25 @@ public abstract class Scenario {
     private VoteInfo createVoteInfo(String nodeHost, String nodeId, VoteOption voteOption) {
       	Web3j web3j =  Web3j.build(new HttpService(nodeHost));
       	ProposalContract voteContract = ProposalContract.load(web3j, voteCredentials, chainId);
-      	return new VoteInfo(voteContract, nodeId, voteOption);
+      	return new VoteInfo(voteContract, nodeId, voteOption,web3j);
     }
     
     protected class VoteInfo{
     	private ProposalContract voteContract;
     	private String nodeId;
     	private VoteOption voteOption;
+    	private Web3j web3j;
 		
     	public VoteInfo() {
     		
     	}
     	
-    	public VoteInfo(ProposalContract voteContract, String nodeId, VoteOption voteOption) {
+    	public VoteInfo(ProposalContract voteContract, String nodeId, VoteOption voteOption, Web3j web3j) {
 			super();
 			this.voteContract = voteContract;
 			this.nodeId = nodeId;
 			this.voteOption = voteOption;
+			this.web3j = web3j;
 		}
     	
 		public ProposalContract getVoteContract() {
@@ -93,6 +96,12 @@ public abstract class Scenario {
 		}
 		public void setVoteOption(VoteOption voteOption) {
 			this.voteOption = voteOption;
+		}
+		public Web3j getWeb3j() {
+			return web3j;
+		}
+		public void setWeb3j(Web3j web3j) {
+			this.web3j = web3j;
 		}
     }
 }
