@@ -1,6 +1,6 @@
 ﻿# 入门
 
-​		根据构建工具的不同，使用以下方式将相关依赖项添加到项目中：
+根据构建工具的不同，使用以下方式将相关依赖项添加到项目中：
 
 - 使用要求jdk1.8以上.
 
@@ -14,13 +14,12 @@
 </repository>
 ```
 
-
 > maven引用方式:
 ```
 <dependency>
       <groupId>com.platon.client</groupId>
       <artifactId>core</artifactId>
-      <version>0.7.3.4</version>
+      <version>0.7.5.1</version>
 </dependency>
 ```
 
@@ -33,9 +32,9 @@ repositories {
 }
 ```
 
->gradle引用方式:
+> gradle引用方式:
 ```
-compile "com.platon.client:core:0.7.3.4"
+compile "com.platon.client:core:0.7.5.1"
 ```
 
 # 使用API
@@ -53,109 +52,99 @@ compile "com.platon.client:core:0.7.3.4"
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100"
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract contract = StakingContract.load(web3j, credentials, chainId)
+StakingContract contract = StakingContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
-##### **StakingReturnTransaction**
+##### **staking**
 
 > 节点候选人申请质押
 
 * **入参**
-
-  - String：nodeId   节点id,16进制格式，0x开头
-  - BigInteger：amount   质押的von，质押金额必须大于等于1000000LAT
-  - StakingAmountType：stakingAmountType,枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
-  - String：benifitAddress   收益账户
+  - String：nodeId   节点id,16进制格式
+  - BigInteger：amount   质押的von，默认质押金额大于等于1000000LAT，根据治理参数调整
+  - StakingAmountType：stakingAmountType   枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
+  - String：benifitAddress   收益账户,用于接受出块奖励和质押奖励的收益账户
   - String：nodeName   被质押节点的名称
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥
   - String：webSite   节点的第三方主页(有长度限制，表示该节点的主页)
   - String：details   节点的描述(有长度限制，表示该节点的描述)
   - ProgramVersion：processVersion  程序的真实版本，治理rpc获取
   - String：blsPubKey   bls的公钥
-  - String：blsProof    bls的证明
+  - String：blsProof    bls的证明，治理rpc获取
 
 * **返回值**
 
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
-//表示使用账户自由金额
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
+BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-		//20bytes 用于接受出块奖励和质押奖励的收益账户
-    	String benifitAddress = "0xXXXXXXXXX";
-    	//外部Id(有长度限制，给第三方拉取节点描述的Id)目前为用户keybase账户公钥
-    	String externalId = "";
-    	//自定义节点名称
-        String nodeName = "integration-node1";
-        //节点的第三方主页(有长度限制，表示该节点的主页)
-        String webSite = "https://www.platon.network/#/";
-        //节点的描述(有长度限制，表示该节点的描述)
-        String details = "integration-node1-details";
-        //质押的von
-        BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT).add(BigDecimal.valueOf(1L));
-    	
-        PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
-                    .setNodeId(nodeId)
-                    .setAmount(new BigInteger(stakingAmount))
-                    .setStakingAmountType(stakingAmountType)
-                    .setBenifitAddress(benifitAddress)
-                    .setExternalId(externalId)
-                    .setNodeName(nodeName)
-                    .setWebSite(webSite)
-                    .setDetails(details)
-                    .setBlsPubKey(blsPubKey)
-                    .setProcessVersion(stakingContract.getProgramVersion())
-                    .setBlsProof(stakingContract.getAdminSchnorrNIZKProve())
-                    .build()).send(); 
-        BaseResponse baseResponse = stakingContract.getStakingResult(platonSendTransaction).send();
-        return baseResponse;
+String benifitAddress = "0x02c344817be3448c97a059473121a6679450b414";
+String externalId = "";
+String nodeName = "integration-node1";
+String webSite = "https://www.platon.network/#/";
+String details = "integration-node1-details";
+String blsPubKey = "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda7a75d569f591730481a8b91b5fad52ac26ac495522a069686df1061fc184c31771008c1fedfafd50ae794778811";
+
+PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
+        .setNodeId(nodeId)
+        .setAmount(stakingAmount.toBigInteger())
+        .setStakingAmountType(stakingAmountType)
+        .setBenifitAddress(benifitAddress)
+        .setExternalId(externalId)
+        .setNodeName(nodeName)
+        .setWebSite(webSite)
+        .setDetails(details)
+        .setBlsPubKey(blsPubKey)
+        .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
+        .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
+        .build()).send();
+TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **UnStakingReturnTransaction**
+##### **unStaking**
 > 节点撤销质押(一次性发起全部撤销，多次到账)
 
 * **入参**
-  - String：nodeId   节点id，16进制格式，0x开头
+  - String：nodeId   节点id，16进制格式
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 ```java
-//节点id
-String nodeId = "0x6bad331aa2ec6096b2b6034570e1761d687575b38c3afc3a3b5f892dac4c86d0fc59ead0f0933ae041c0b6b43a7261f1529bad5189be4fba343875548dc9efd3"; 
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 
-//调用接口
 PlatonSendTransaction platonSendTransaction = stakingContract.unStakingReturnTransaction(nodeId).send();
-
-BaseResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransaction).send();
+TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **UpdateStakingInfoReturnTransaction**
+##### **updateStaking**
 > 修改质押信息
 
 * **入参**
-  - String：nodeId   节点id,16进制格式,0x开头
+  - String：nodeId   节点id,16进制格式
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id),目前为keybase账户公钥
   - String：benifitAddress   收益账户
   - String：nodeName   被质押节点的名称
@@ -164,87 +153,80 @@ BaseResponse baseResponse = stakingContract.getUnStakingResult(platonSendTransac
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
-//修改后的收益地址
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 String benifitAddress = benefitCredentials.getAddress();
-		//外部Id(有长度限制，给第三方拉取节点描述的Id)目前为用户keybase账户公钥
-    	String externalId = "";
-    	//被质押节点的名称
-        String nodeName = "integration-node1-u";
-        //节点的第三方主页
-        String webSite = "https://www.platon.network/#/";
-        //节点的描述
-        String details = "integration-node1-details-u";
-    
-PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
-        		.setBenifitAddress(benifitAddress)
-        		.setExternalId(externalId)
-        		.setNodeId(nodeId)
-        		.setNodeName(nodeName)
-        		.setWebSite(webSite)
-        		.setDetails(details)
-        		.build()).send();
+String externalId = "";
+String nodeName = "integration-node1-u";
+String webSite = "https://www.platon.network/#/";
+String details = "integration-node1-details-u";
 
-BaseResponse baseResponse = stakingContract.getUpdateStakingInfoResult(platonSendTransaction).send();
+PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
+        .setBenifitAddress(benifitAddress)
+        .setExternalId(externalId)
+        .setNodeId(nodeId)
+        .setNodeName(nodeName)
+        .setWebSite(webSite)
+        .setDetails(details)
+        .build()).send();
+TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **AddStakingReturnTransaction**
+##### **addStaking**
 > 增持质押，增加已质押节点质押金
 
 * **入参**
-    - String：nodeId   节点id，16进制格式，0x开头
-    - StakingAmountType：stakingAmountType,枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
+    - String：nodeId   节点id，16进制格式
+    - StakingAmountType：stakingAmountType  枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
     - BigInteger：addStakingAmount   增持的金额
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse ： 通用应答包
-  - int：Code   结果标识，1为成功，0为失败
-  - String：Data   应答数据
-  - String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 ```java
-//节点id
-String nodeId = "0x6bad331aa2ec6096b2b6034570e1761d687575b38c3afc3a3b5f892dac4c86d0fc59ead0f0933ae041c0b6b43a7261f1529bad5189be4fba343875548dc9efd3"; 
-//表示使用账户自由金额还是账户的锁仓金额做质押
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-        BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT)
-//接口调用    	
-        PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, addStakingAmount.toBigInteger()).send();
-BaseResponse baseResponse = stakingContract.getAddStakingResult(platonSendTransaction).send();
+BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT);
+
+PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
+TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
-##### **GetStakingInfo**
+
+##### **getStakingInfo**
 
 > 查询当前节点的质押信息
 
 * **入参**
-
-  - String：nodeId   节点id，16进制格式，0x开头
+  - String：nodeId   节点id，16进制格式
 
 * **返回值**
 ```
-BaseResponse<Node> baseRespons
+CallResponse<Node> baseRespons
 ```
 
-- BaseResponse<Node>描述
-	- int： Code   结果标识，1为成功，0为失败
-	- Node：Data   Node对象数据
-	- String：ErrMsg   错误信息，失败时存在
-
+- CallResponse<Node>描述
+	- int： code   结果标识，0为成功
+	- Node：data   Node对象数据
+	- String：errMsg   错误信息，失败时存在
+	
 * **Node**：保存当前节点质押信息的对象
 
   - String：BenefitAddress	用于接受出块奖励和质押奖励的收益账户
@@ -275,9 +257,7 @@ BaseResponse<Node> baseRespons
 
   - BigInteger：StakingTxIndex   发起质押时的交易索引
 
-  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
-
-    4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
+  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
 
   - BigInteger：ValidatorTerm   验证人的任期
 
@@ -286,10 +266,83 @@ BaseResponse<Node> baseRespons
 * **Java SDK合约使用**
 
 ```java
-//节点id
-String nodeId = "0x6bad331aa2ec6096b2b6034570e1761d687575b38c3afc3a3b5f892dac4c86d0fc59ead0f0933ae041c0b6b43a7261f1529bad5189be4fba343875548dc9efd3"; 
-BaseResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
-Node node = baseResponse.data;
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
+CallResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
+```
+
+##### **getPackageReward**
+
+> 查询当前结算周期的区块奖励
+
+* **入参**
+
+  无
+
+* **返回值**
+
+```
+CallResponse<BigInteger> baseResponse
+```
+
+- CallResponse<BigInteger>描述
+	- int：code   结果标识，0为成功
+	- BigInteger：reward   当前结算周期的区块奖励
+	- String：errMsg   错误信息，失败时存在
+
+* **Java SDK合约使用**
+
+```java
+CallResponse<BigInteger> response = stakingContract.getPackageReward().send();
+```
+
+##### **getStakingReward**
+
+> 查询当前结算周期的质押奖励
+
+* **入参**
+
+  无
+
+* **返回值**
+
+```
+CallResponse<BigInteger> baseResponse
+```
+
+- CallResponse<List<Node>>描述
+	- int：code   结果标识，0为成功
+	- BigInteger：reward   当前结算周期的质押奖励
+	- String：errMsg   错误信息，失败时存在
+
+* **Java SDK合约使用**
+
+```java
+CallResponse<BigInteger> response = stakingContract.getStakingReward().send();
+```
+
+##### **getAvgPackTime**
+
+> 查询打包区块的平均时间
+
+* **入参**
+
+  无
+
+* **返回值**
+
+```
+CallResponse<BigInteger> baseResponse
+```
+
+- CallResponse<BigInteger>描述
+	- int：code   结果标识，0为成功
+	- BigInteger：data   打包区块的平均时间
+	- String：errMsg   错误信息，失败时存在
+
+* **Java SDK合约使用**
+
+```java
+CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```
 
 ### 委托相关接口
@@ -301,47 +354,44 @@ Node node = baseResponse.data;
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100"
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-delegateContract contract = DelegateContract.load(web3j, credentials, chainId);
+DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
-##### **DelegateReturnTransaction**
+##### **delegate**
 
 > 发起委托，委托已质押节点，委托给某个节点增加节点权重来获取收入 
 
 * **入参**
   - String：nodeId   节点id，16进制格式，0x开头
-  - StakingAmountType：stakingAmountType,枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
+  - StakingAmountType：stakingAmountType  枚举,FREE_AMOUNT_TYPE表示使用账户自由金额,RESTRICTING_AMOUNT_TYPE表示使用锁仓金额做质押
   - BigInteger：amount   委托的金额(按照最小单位算，1LAT = 10**18 von)
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse ： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
-//节点id
-String nodeId = "0x6bad331aa2ec6096b2b6034570e1761d687575b38c3afc3a3b5f892dac4c86d0fc59ead0f0933ae041c0b6b43a7261f1529bad5189be4fba343875548dc9efd3"; 
- //表示使用账户自由金额还是账户的锁仓金额做质押， 
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-		//委托的金额(按照最小单位算，1LAT = 10**18 von)
-        BigDecimal amount = Convert.toVon("500000", Unit.LAT);
-    	
-        PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
-        BaseResponse baseResponse = delegateContract.getDelegateResult(platonSendTransaction).send(); 
+BigDecimal amount = Convert.toVon("500000", Unit.LAT);
+
+PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
+TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **GetRelatedListByDelAddr**
+##### **getRelatedListByDelAddr**
 
 > 查询当前账户地址所委托的节点的NodeID和质押Id
 
@@ -350,13 +400,13 @@ StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
 
 * **返回值**
 ```
-BaseResponse<List<DelegationIdInfo>> baseRespons
+CallResponse<List<DelegationIdInfo>> baseRespons
 ```
 
-- BaseResponse<List<DelegationIdInfo>>描述
-	- int：Code   结果标识，1为成功，0为失败
-	- List<DelegationIdInfo>：Data   DelegationIdInfo对象列表
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<List<DelegationIdInfo>>描述
+	- int：code   结果标识，0为成功
+	- List<DelegationIdInfo>：data   DelegationIdInfo对象列表
+	- String：errMsg   错误信息，失败时存在
 
 * **DelegationIdInfo**：保存当前账户地址所委托的节点的NodeID和质押区块高度的对象
   - String：address   委托人的账户地址
@@ -366,29 +416,27 @@ BaseResponse<List<DelegationIdInfo>> baseRespons
 * **Java SDK合约使用**
 
 ```java
-BaseResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedListByDelAddr(delegateCredentials.getAddress()).send();
-List<DelegationIdInfo> DelegationIdInfoList = baseResponse.data;
+CallResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedListByDelAddr(delegateCredentials.getAddress()).send();
 ```
 
-##### **GetDelegateInfo**
+##### **getDelegateInfo**
 
 > 查询当前单个委托信息
 
 * **入参**
-
   - String：address   委托人的账户地址
   - String：nodeId   节点id，16进制格式，0x开头
   - BigInteger：stakingBlockNum   发起质押时的区块高度
 
 * **返回值**
 ```
-BaseResponse<Delegation>
+CallResponse<Delegation>
 ```
 
-- BaseResponse<Delegation>描述
-	- int：Code   结果标识，1为成功，0为失败
+- CallResponse<Delegation>描述
+	- int：code   结果标识，0为成功
 	- Delegation：Data   Delegation对象数据
-	- String：ErrMsg   错误信息，失败时存在
+	- String：errMsg   错误信息，失败时存在
 
 * **Delegation**：保存当前委托账户委托信息的对象
   - String：Address	委托人的账户地址
@@ -404,17 +452,14 @@ BaseResponse<Delegation>
 * **Java SDK合约使用**
 
 ```java
-//节点id
-String nodeId = "4fcc251cf6bf3ea53a748971a223f5676225ee4380b65c7889a2b491e1551d45fe9fcc19c6af54dcf0d5323b5aa8ee1d919791695082bae1f86dd282dba4150f";
-//委托地址
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 String address = "0xc1f330b214668beac2e6418dd651b09c759a4bf5";
-//质押区块高度
-BigInteger stakingNumber = new BigInteger("10888");
-BaseResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
-Delegation delegation = baseResponse.data;
+BigInteger stakingBlockNum = new BigInteger("10888");
+
+CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
 ```
 
-##### **UnDelegateReturnTransaction**
+##### **unDelegate**
 
 > 减持/撤销委托(全部减持就是撤销)
 
@@ -425,25 +470,23 @@ Delegation delegation = baseResponse.data;
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
-//节点id
-String nodeId = "0x6bad331aa2ec6096b2b6034570e1761d687575b38c3afc3a3b5f892dac4c86d0fc59ead0f0933ae041c0b6b43a7261f1529bad5189be4fba343875548dc9efd3"; 
-		//减持的金额
-        BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
-        //委托节点的质押块高，代表着某个node的某次质押的唯一标示
-        BigInteger stakingBlockNum = new BigInteger("12134");
-        PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
-BaseResponse baseResponse = delegateContract.getUnDelegateResult(platonSendTransaction).send();
+String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
+BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
+BigInteger stakingBlockNum = new BigInteger("12134");
+
+PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
+TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
 ### 节点相关合约
@@ -455,14 +498,14 @@ BaseResponse baseResponse = delegateContract.getUnDelegateResult(platonSendTrans
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100"
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-nodeContract contract = NodeContract.load(web3j, credentials, chainId);
+NodeContract contract = NodeContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
-##### **GetVerifierList**
+##### **getVerifierList**
 
 > 查询当前结算周期的验证人队列
 
@@ -473,13 +516,13 @@ nodeContract contract = NodeContract.load(web3j, credentials, chainId);
 * **返回值**
 
 ```
-BaseResponse<List<Node>> baseResponse
+CallResponse<List<Node>> baseResponse
 ```
 
-- BaseResponse<List<Node>>描述
-	- int：Code   结果标识，1为成功，0为失败
-	- List<Node>：Data   nodeList对象数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<List<Node>>描述
+	- int：code   结果标识，0为成功
+	- List<Node>：data   nodeList对象数据
+	- String：errMsg   错误信息，失败时存在
 
 * **Node**：保存单个当前结算周期验证节点信息的对象
 
@@ -522,11 +565,10 @@ BaseResponse<List<Node>> baseResponse
 * **Java SDK合约使用**
 
 ```java
-BaseResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
-List<Node> nodeList = baseResponse.data;
+CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
 ```
 
-##### **GetValidatorList**
+##### **getValidatorList**
 > 查询当前共识周期的验证人列表
 
 * **入参**
@@ -536,13 +578,13 @@ List<Node> nodeList = baseResponse.data;
 * **返回值**
 
 ```
-BaseResponse<List<Node>> baseResponse
+CallResponse<List<Node>> baseResponse
 ```
 
-- BaseResponse<List<Node>>描述
-	- int：Code   结果标识，1为成功，0为失败
-	- List<Node>：Data   nodeList对象数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<List<Node>>描述
+	- int：code   结果标识，0为成功
+	- List<Node>：data   nodeList对象数据
+	- String：errMsg   错误信息，失败时存在
 
 * **Node**：保存单个当前共识周期验证节点信息的对象
 
@@ -574,9 +616,7 @@ BaseResponse<List<Node>> baseResponse
 
   - BigInteger：StakingTxIndex   发起质押时的交易索引
 
-  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，          
-
-    4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
+  - BigInteger：Status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，4:节点的von不足最低质押门槛(只有倒数第三bit为1)，8:节点被举报双签，16:节点出块率低且达到移除条件(倒数第五位bit为1); 32: 节点主动发起撤销
 
   - BigInteger：ValidatorTerm   验证人的任期
 
@@ -585,11 +625,10 @@ BaseResponse<List<Node>> baseResponse
 * **Java SDK合约使用**
 
 ```java
-BaseResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
-List<Node> nodeList = baseResponse.data;
+CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
 ```
 
-##### **GetCandidateList**
+##### **getCandidateList**
 
 > 查询所有实时的候选人列表
 
@@ -600,13 +639,13 @@ List<Node> nodeList = baseResponse.data;
 * **返回值**
 
 ```
-BaseResponse<List<Node>> baseResponse
+CallResponse<List<Node>> baseResponse
 ```
 
-- BaseResponse<List<Node>>描述
-	- int：Code   结果标识，1为成功，0为失败
-	- List<Node>：Data   nodeList对象数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<List<Node>>描述
+	- int：code   结果标识，0为成功
+	- List<Node>：data   nodeList对象数据
+	- String：errMsg   错误信息，失败时存在
 
 * **Node**：保存单个候选节点信息对象
 
@@ -649,8 +688,7 @@ BaseResponse<List<Node>> baseResponse
 * **Java SDK合约使用**
 
 ```java
-BaseResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
-List<Node> nodeList = baseResponse.data;
+CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```
 
 ###  治理相关合约
@@ -661,60 +699,63 @@ List<Node> nodeList = baseResponse.data;
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100"
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
-##### **SubmitProposalReturnTransaction**
+##### **submitProposal**
 
 > 提交提案
 
 * **入参**
-  - Proposal：提交提案对象
+  - Proposal：提案对象
 
-* **提案类型描述**
-  - TextProposal：0x01，文本提案
-  - VersionProposal：0x02，升级提案
-  - CancelProposal：0x04，取消提案
+* **文本提案 Proposal.createSubmitTextProposalParam()**
+  - String：verifier 提交提案的验证人
+  - String：pIDID  PIPID
 
-* **提案状态定义**
-  - 对文本提案来说，有：0x01,0x02,0x03三种状态；
-  - 对升级提案来说，有：0x01,0x03,0x04,0x05,0x06四种状态。
-  - 对取消提案来说，有：0x01,0x02,0x03三种状态；
+* **升级提案 Proposal.createSubmitVersionProposalParam()**
+  - String：verifier 提交提案的验证人
+  - String：pIDID  PIPID
+  - BigInteger：newVersion  升级版本
+  - BigInteger：endVotingRounds   投票共识轮数量。说明：假设提交提案的交易，被打包进块时的共识轮序号时round1，则提案投票截止块高，就是round1 + endVotingRounds这个共识轮的第230个块高（假设一个共识轮出块250，ppos揭榜提前20个块高，250，20都是可配置的 ），其中0 < endVotingRounds <= 4840（约为2周，实际论述根据配置可计算），且为整数）
 
-* **状态说明**
-  - Voting：0x01，投票中
-  - Pass：0x02，投票通过
-  - Failed：0x03，投票失败
-  - PreActive：0x04，（升级提案）预生效
-  - Active：0x05，（升级提案）生效
-  - Canceled：0x06，（升级提案）取消
+* **参数提案 Proposal.createSubmitParamProposalParam()**
+  - String：verifier 提交提案的验证人
+  - String：pIDID  PIPID
+  - String：module  参数模块
+  - String：name  参数名称
+  - String：newValue 参数新值
+  
+* **取消提案 Proposal.createSubmitCancelProposalParam()**
+  - String：verifier 提交提案的验证人
+  - String：pIDID  PIPID
+  - BigInteger：endVotingRounds  投票共识轮数量。参考提交升级提案的说明，同时，此接口中此参数的值不能大于对应升级提案中的
+  - String：tobeCanceledProposalID  待取消的提案ID
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
-//创建提案
-Proposal proposal = Proposal.createSubmitTextProposalParam(proposalNodeId,String.valueOf(pid));
-//发送文本提案交易
+Proposal proposal = Proposal.createSubmitTextProposalParam(proposalNodeId,"1");
+
 PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
-//查询文本提案交易结果
-BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendTransaction, FunctionType.SUBMIT_TEXT_FUNC_TYPE).send();
+TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **VoteReturnTransaction**
+##### **vote**
 > 给提案投票
 
 * **入参**
@@ -725,26 +766,27 @@ BaseResponse baseResponse = proposalContract.getSubmitProposalResult(platonSendT
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**：
 
 ```java
-//节点ID
+ProgramVersion programVersion = web3j.getProgramVersion().send().getAdminProgramVersion();
+VoteOption voteOption =  VoteOption.YEAS;
 String proposalID = "";
-//声明的节点
-String verifier ="";
-PlatonSendTransaction platonSendTransaction = voteInfo.getVoteContract().voteReturnTransaction(proposalID, verifier, VoteOption.YEAS).send();
-BaseResponse baseResponse = voteInfo.getVoteContract().getVoteResult(platonSendTransaction).send();
+String verifier = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
+
+PlatonSendTransaction platonSendTransaction = proposalContract.voteReturnTransaction(programVersion, voteOption, proposalID, verifier).send();
+TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **GetProposal**
+##### **getProposal**
 >  查询提案
 
 * **入参**
@@ -752,18 +794,18 @@ BaseResponse baseResponse = voteInfo.getVoteContract().getVoteResult(platonSendT
 
 * **返回值**
 ```
-BaseResponse<Proposal>
+CallResponse<Proposal>
 ```
 
-- BaseResponse<Proposal>描述
-	- int：Code   结果标识，1为成功，0为失败
-	- Proposal：Data   Proposal对象数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<Proposal>描述
+	- int：code   结果标识，0为成功
+	- Proposal：data   Proposal对象数据
+	- String：errMsg   错误信息，失败时存在
 
 * **Proposal**：保存单个提案信息的对象
   - String:	   proposalId	提案ID
   - String:    proposer   提案节点ID
-  - int:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案
+  - int:    proposalType   提案类型， 0x01：文本提案； 0x02：升级提案；0x03参数提案  0x04取消提案
   - String:    piPid   提案PIPID
   - BigInteger:   submitBlock   提交提案的块高
   - BigInteger:   endVotingBlock   提案投票结束的块高
@@ -777,11 +819,10 @@ BaseResponse<Proposal>
 ```java
 //提案id
 String proposalID = "";
-BaseResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).send();
-Proposal proposal = baseResponse.data;
+CallResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).send();
 ```
 
-##### **GetTallyResult**
+##### **getTallyResult**
 > 查询提案结果
 
 * **入参**
@@ -789,13 +830,13 @@ Proposal proposal = baseResponse.data;
 
 * **返回值**
 ```
-BaseResponse<TallyResult>
+CallResponse<TallyResult>
 ```
 
-- BaseResponse<TallyResult>描述
-  - int：Code   结果标识，1为成功，0为失败
-  - TallyResult：Data   TallyResult对象数据
-  - String：ErrMsg   错误信息，失败时存在
+- CallResponse<TallyResult>描述
+  - int：code   结果标识，0为成功
+  - TallyResult：data   TallyResult对象数据
+  - String：errMsg   错误信息，失败时存在
 
 * **TallyResult**：保存单个提案结果的对象
   - String:   proposalID   提案ID
@@ -803,34 +844,40 @@ BaseResponse<TallyResult>
   - BigInteger:   nays   反对票票数
   - BigInteger:   abstentions   弃权票票数
   - BigInteger:   accuVerifiers   在整个投票期内有投票资格的验证人总数
-  - int:   status   提案状态
+  - int:   status   提案状态  
+  
+* **status**
+  - Voting：0x01，投票中
+  - Pass：0x02，投票通过
+  - Failed：0x03，投票失败
+  - PreActive：0x04，（升级提案）预生效
+  - Active：0x05，（升级提案）生效
+  - Canceled：0x06，被取消
 
 * **合约使用**
 
 ```java
 //提案id
 String proposalID ="";
-BaseResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposalID).send();
-TallyResult tallyResult = baseResponse.data;
+CallResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposalID).send();
 ```
 
-##### **GetProposalList**
+##### **getProposalList**
 > 查询提案列表
 
 * **入参**
 
   无
 
-
 * **返回值**
 ```
-BaseResponse<List<Proposal>>
+CallResponse<List<Proposal>>
 ```
 
-- BaseResponse<List<Proposal>>描述
-	- int：Code   结果标识，1为成功，0为失败
-	- List<Proposal>：Data   ProposalList对象数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<List<Proposal>>描述
+	- int：code   结果标识，0为成功
+	- List<Proposal>：data   ProposalList对象数据
+	- String：errMsg   错误信息，失败时存在
 
 * **Proposal**：保存单个提案的对象
   - String:	   proposalId	提案ID
@@ -847,10 +894,10 @@ BaseResponse<List<Proposal>>
 * **合约使用**
 
 ```java
-BaseResponse<List<Proposal>> baseResponse = proposalContract.getProposalList().send();
-List<Proposal> proposalList = baseResponse.data;
+CallResponse<List<Proposal>> baseResponse = proposalContract.getProposalList().send();
 ```
-##### **DeclareVersionReturnTransaction**
+
+##### **declareVersion**
 
 > 版本声明
 
@@ -860,23 +907,25 @@ List<Proposal> proposalList = baseResponse.data;
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
-String proposalNodeId = "";
-PlatonSendTransaction platonSendTransaction = proposalContract.declareVersionReturnTransaction(proposalNodeId).send();
-BaseResponse baseResponse = proposalContract.getDeclareVersionResult(platonSendTransaction).send();
+ProgramVersion programVersion = web3j.getProgramVersion().send().getAdminProgramVersion();
+String verifier = "";
+
+PlatonSendTransaction platonSendTransaction = proposalContract.declareVersionReturnTransaction(programVersion,verifier).send();
+TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **GetActiveVersion**
+##### **getActiveVersion**
 
 > 查询节点的链生效版本
 
@@ -886,19 +935,19 @@ BaseResponse baseResponse = proposalContract.getDeclareVersionResult(platonSendT
 
 * **返回值**
 ```
-BaseRespons
+CallResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse<BigInteger>： 通用应答包
+	- int：code   结果标识，0为成功
+	- BigInteger：data   版本信息
+	- String：errMsg   错误信息，失败时存在
 
 * **合约使用**
 
 ```java
-BaseResponse baseResponse = proposalContract.getActiveVersion().send();
-baseResponse.data;
+CallResponse<BigInteger> baseResponse = proposalContract.getActiveVersion().send();
+ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 
 ###  双签举报相关接口
@@ -910,41 +959,41 @@ baseResponse.data;
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "103"
+String chainId = "103";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
-##### **ReportDoubleSignReturnTransaction**
+##### **reportDoubleSign**
 
-> 提交提案
+> 举报双签
 
 * **入参**
-  - DuplicateSignType：DuplicateSignType   枚举，代表双签类型：prepareBlock，EprepareVote，viewChange
+  - DuplicateSignType：DuplicateSignType   枚举，代表双签类型：PREPARE_BLOCK，PREPARE_VOTE，VIEW_CHANGE
   - String：data   单个证据的json值，格式参照[RPC接口Evidences](#evidences_interface)
 
 * **返回值**
 ```
-BaseRespons
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
 ```java
 String data = "";	//举报证据
 PlatonSendTransaction platonSendTransaction = slashContract.reportDoubleSignReturnTransaction(DuplicateSignType.PREPARE_BLOCK, data).send();
-BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTransaction).send();
+
+TransactionResponse baseResponse = slashContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-
-##### **CheckDoubleSign**
+##### **checkDuplicateSign**
 
 > 查询节点是否已被举报过多签
 
@@ -955,19 +1004,18 @@ BaseResponse baseResponse = slashContract.getReportDoubleSignResult(platonSendTr
 
 * **返回值**
 ```
-BaseRespons
+CallResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- CallResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：data   Y, 可能为零交易Hash，即: 0x000...000
+	- String：errMsg   错误信息，失败时存在
 
 * **合约使用**
 
 ```java
-BaseResponse baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
-String hash = baseResponse.data;	//举报的交易Hash,可能为零交易Hash，即: 0x000...000
+CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
 ```
 
 ###  锁仓相关接口
@@ -979,14 +1027,14 @@ String hash = baseResponse.data;	//举报的交易Hash,可能为零交易Hash，
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100"
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
-##### **CreateRestrictingPlan**
+##### **createRestrictingPlan**
 
 > 创建锁仓计划
 
@@ -998,13 +1046,13 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 
 * **返回值**
 ```
-BaseResponse
+TransactionResponse
 ```
 
-- BaseResponse： 通用应答包
-	- int：Code   结果标识，1为成功，0为失败
-	- String：Data   应答数据
-	- String：ErrMsg   错误信息，失败时存在
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
 
 * **合约使用**
 
@@ -1012,11 +1060,12 @@ BaseResponse
 List<RestrictingPlan> restrictingPlans = new ArrayList<>();
 restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(100), new BigInteger("100000000000000000000")));
 restrictingPlans.add(new RestrictingPlan(BigInteger.valueOf(200), new BigInteger("200000000000000000000")));
- PlatonSendTransaction platonSendTransaction = restrictingPlanContract.createRestrictingPlanReturnTransaction(restrictingRecvCredentials.getAddress(), restrictingPlans).send();
-BaseResponse baseResponse = restrictingPlanContract.getCreateRestrictingPlanResult(platonSendTransaction).send();
+
+PlatonSendTransaction platonSendTransaction = restrictingPlanContract.createRestrictingPlanReturnTransaction(restrictingRecvCredentials.getAddress(), restrictingPlans).send();
+TransactionResponse baseResponse = restrictingPlanContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **GetRestrictingInfo**
+##### **getRestrictingInfo**
 
 > 获取锁仓计划
 
@@ -1026,13 +1075,13 @@ BaseResponse baseResponse = restrictingPlanContract.getCreateRestrictingPlanResu
 * **返回值**
 
 ```
-BaseResponse<RestrictingItem> baseResponse
+CallResponse<RestrictingItem> baseResponse
 ```
 
-- BaseResponse<RestrictingItem>描述
-	- int：Code   结果标识，1为成功，0为失败
+- CallResponse<RestrictingItem>描述
+	- int：code   结果标识，0为成功
 	- RestrictingItem：Data   RestrictingItem对象数据
-	- String：ErrMsg   错误信息，失败时存在
+	- String：errMsg   错误信息，失败时存在
 
 * **RestrictingItem**：保存锁仓信息对象
   - BigInteger：balance    锁仓余额
@@ -1046,8 +1095,7 @@ BaseResponse<RestrictingItem> baseResponse
 * **合约使用**
 
 ```java
-BaseResponse<RestrictingItem> baseResponse = restrictingPlanContract.getRestrictingInfo(restrictingRecvCredentials.getAddress()).send();
-RestrictingItem restrictingItem = baseResponse.data;
+CallResponse<RestrictingItem> baseResponse = restrictingPlanContract.getRestrictingInfo(restrictingRecvCredentials.getAddress()).send();
 ```
 
 ## 基础API
@@ -1197,7 +1245,7 @@ Request <?, PlatonProtocolVersion> request = currentValidWeb3j.platonProtocolVer
 String req = request.send().getProtocolVersion();
 ```
 
-### PlatonSyncing
+### platonSyncing
 
 > 返回一个对象，其中包含有关同步状态的数据或false
 
@@ -1298,16 +1346,11 @@ BigInteger req = request.send().getBlockNumber();
 > 返回查询地址余额
 
 * **参数**
-
     - String ： address 需要查询的地址
     - DefaultBlockParameter: 
-
       - DefaultBlockParameterName.LATEST  最新块高(默认)
-
       - DefaultBlockParameterName.EARLIEST 最低块高
-
       - DefaultBlockParameterName.PENDING 未打包交易
-
       - DefaultBlockParameter.valueOf(BigInteger  blockNumber) 指定块高
 
 * **返回值**
@@ -1321,10 +1364,10 @@ PlatonGetBalance属性中的BigInteger即为对应存储数据
 * **示例**
 
 ```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
 String address = "";
-Request <?, PlatonGetBalance> request = currentValidWeb3j.platonGetBalance(address,DefaultBlockParameterName.LATEST);
-BigInteger req = request.send().getBlockNumber();
+Request<?, PlatonGetBalance> request = web3j.platonGetBalance(address,DefaultBlockParameterName.LATEST);
+BigInteger req = request.send().getBalance();
 ```
 
 ### platonGetStorageAt
@@ -1451,7 +1494,6 @@ BigInteger req = request.send().getTransactionCount();
       -  DefaultBlockParameter.valueOf(BigInteger blockNumber) 指定块高
 
 * **返回值**
-
 ```java
 Request<?, PlatonGetCode>
 ```
@@ -1500,7 +1542,6 @@ String req = request.send().getSignature();
 >  发送服务代签名交易
 
 * **参数**
-
     - Transaction : Transaction: 交易结构
       - String : from : 交易发送地址
       - String : to : 交易接收方地址
