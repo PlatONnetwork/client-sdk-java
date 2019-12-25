@@ -61,10 +61,6 @@ public class Transfer extends ManagedTransaction {
 
         String resolvedAddress = ensResolver.resolve(toAddress);
 
-//        List<RlpType> result = new ArrayList<>();
-//        result.add(RlpString.create(Numeric.hexStringToByteArray(PlatOnTypeEncoder.encode(new Int64(0)))));
-//        String data = Hex.toHexString(RlpEncoder.encode(new RlpList(result)));
-
         return send(resolvedAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
     }
 
