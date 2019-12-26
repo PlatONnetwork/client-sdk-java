@@ -62,6 +62,12 @@ public class Node {
     @JSONField(name = "ValidatorTerm")
     private BigInteger validatorTerm;
 
+    @JSONField(name = "RewardPer")
+    private BigInteger rewardPer;
+
+    @JSONField(name = "NextRewardPer")
+    private BigInteger nextRewardPer;
+
     public String getNodeId() {
         return nodeId;
     }
@@ -131,11 +137,11 @@ public class Node {
     }
 
     public void setShares(String shares) {
-      	if(shares != null && shares.length()>0) {
-      		this.shares = Numeric.decodeQuantity(shares);
-    	}else {
-    		this.shares = BigInteger.ZERO;
-		}
+        if (shares != null && shares.length() > 0) {
+            this.shares = Numeric.decodeQuantity(shares);
+        } else {
+            this.shares = BigInteger.ZERO;
+        }
     }
 
     public BigInteger getReleased() {
@@ -143,11 +149,11 @@ public class Node {
     }
 
     public void setReleased(String released) {
-      	if(released != null && released.length()>0) {
-      		this.released = Numeric.decodeQuantity(released);
-      	}else {
-      		this.released = BigInteger.ZERO;
-		}
+        if (released != null && released.length() > 0) {
+            this.released = Numeric.decodeQuantity(released);
+        } else {
+            this.released = BigInteger.ZERO;
+        }
     }
 
     public BigInteger getReleasedHes() {
@@ -155,11 +161,11 @@ public class Node {
     }
 
     public void setReleasedHes(String releasedHes) {
-      	if(releasedHes != null && releasedHes.length()>0) {
-      		this.releasedHes = Numeric.decodeQuantity(releasedHes);
-      	}else {
-      		this.releasedHes = BigInteger.ZERO;
-		}
+        if (releasedHes != null && releasedHes.length() > 0) {
+            this.releasedHes = Numeric.decodeQuantity(releasedHes);
+        } else {
+            this.releasedHes = BigInteger.ZERO;
+        }
     }
 
     public BigInteger getRestrictingPlan() {
@@ -167,11 +173,11 @@ public class Node {
     }
 
     public void setRestrictingPlan(String restrictingPlan) {
-      	if(restrictingPlan != null && restrictingPlan.length()>0) {
-      		this.restrictingPlan = Numeric.decodeQuantity(restrictingPlan);
-      	}else {
-      		this.restrictingPlan = BigInteger.ZERO;
-		}
+        if (restrictingPlan != null && restrictingPlan.length() > 0) {
+            this.restrictingPlan = Numeric.decodeQuantity(restrictingPlan);
+        } else {
+            this.restrictingPlan = BigInteger.ZERO;
+        }
     }
 
     public BigInteger getRestrictingPlanHes() {
@@ -179,11 +185,11 @@ public class Node {
     }
 
     public void setRestrictingPlanHes(String restrictingPlanHes) {
-      	if(restrictingPlanHes != null && restrictingPlanHes.length()>0) {
-      		this.restrictingPlanHes = Numeric.decodeQuantity(restrictingPlanHes);
-      	}else {
-      		this.restrictingPlanHes = BigInteger.ZERO;
-		}
+        if (restrictingPlanHes != null && restrictingPlanHes.length() > 0) {
+            this.restrictingPlanHes = Numeric.decodeQuantity(restrictingPlanHes);
+        } else {
+            this.restrictingPlanHes = BigInteger.ZERO;
+        }
     }
 
     public String getExternalId() {
@@ -226,6 +232,22 @@ public class Node {
         this.validatorTerm = validatorTerm;
     }
 
+    public BigInteger getNextRewardPer() {
+        return nextRewardPer;
+    }
+
+    public void setNextRewardPer(BigInteger nextRewardPer) {
+        this.nextRewardPer = nextRewardPer;
+    }
+
+    public BigInteger getRewardPer() {
+        return rewardPer;
+    }
+
+    public void setRewardPer(BigInteger rewardPer) {
+        this.rewardPer = rewardPer;
+    }
+
     public Node() {
     }
 
@@ -249,6 +271,9 @@ public class Node {
                 ", nodeName='" + nodeName + '\'' +
                 ", website='" + website + '\'' +
                 ", details='" + details + '\'' +
+                ", validatorTerm=" + validatorTerm +
+                ", rewardPer=" + rewardPer +
+                ", nextRewardPer=" + nextRewardPer +
                 '}';
     }
 }

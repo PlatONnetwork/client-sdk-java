@@ -130,5 +130,12 @@ public class FunctionType {
      * 获取锁仓信息
      */
     public static final int GET_RESTRICTINGINFO_FUNC_TYPE = 4100;
-
+    /**
+     * 提取账户当前所有的可提取的委托奖励
+     */
+    public static final int WITHDRAW_DELEGATE_REWARD_FUNC_TYPE = 5000;
+    /**
+     * 查询账户在各节点未提取委托奖励
+     */
+    public static final int GET_DELEGATE_REWARD_FUNC_TYPE = 5100;
 }

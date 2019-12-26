@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bouncycastle.util.encoders.Hex;
-import org.web3j.abi.datatypes.BytesType;
-import org.web3j.abi.datatypes.IntType;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.*;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
@@ -233,6 +230,8 @@ public class PlatOnFunction {
                     result.add(((CustomStaticArray) parameter).getRlpEncodeData());
                 } else if (parameter instanceof CustomType) {
                     result.add(((CustomType) parameter).getRlpEncodeData());
+                } else if (parameter instanceof DynamicArray) {
+                    //TODO
                 }
             }
         }
