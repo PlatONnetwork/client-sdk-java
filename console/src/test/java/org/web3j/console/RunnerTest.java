@@ -37,7 +37,7 @@ public class RunnerTest extends TempFileProvider {
 		}
 
 		String sourceFile = tempDirPath + File.separator + packageName.replace('.', File.separatorChar) + File.separator
-				+ Strings.capitaliseFirstLetter("TokenERC20") + ".java";
+				+ Strings.capitaliseFirstLetter("HumanStandardToken") + ".java";
 
 		boolean condition = new File(sourceFile).exists();
 
