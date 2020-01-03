@@ -1,10 +1,9 @@
 package com.platon.sdk.contracts.ppos.dto.resp;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
-
-import org.web3j.utils.Numeric;
 
 public class Delegation {
 
@@ -49,10 +48,22 @@ public class Delegation {
     @JSONField(name = "RestrictingPlanHes")
     private BigInteger delegateLockedHes;
     /**
-     * 处于撤销计划中的von
+     * 待领取的委托收益von
      */
-    @JSONField(name = "Reduction")
-    private BigInteger delegateReduction;
+    @JSONField(name = "CumulativeIncome")
+    private BigInteger cumulativeIncome;
+
+    public BigInteger getCumulativeIncome() {
+        return cumulativeIncome;
+    }
+
+    public void setCumulativeIncome(String cumulativeIncome) {
+        if(cumulativeIncome != null && cumulativeIncome.length()>0) {
+            this.cumulativeIncome = Numeric.decodeQuantity(cumulativeIncome);
+        }else {
+            this.cumulativeIncome = BigInteger.ZERO;
+        }
+    }
 
     public String getDelegateAddress() {
         return delegateAddress;
@@ -134,18 +145,6 @@ public class Delegation {
 		}
     }
 
-    public BigInteger getDelegateReduction() {
-        return delegateReduction;
-    }
-    
-    public void setDelegateReduction(String delegateReduction) {
-      	if(delegateReduction != null && delegateReduction.length()>0) {
-      		this.delegateReduction = Numeric.decodeQuantity(delegateReduction);
-      	}else {
-      		this.delegateReduction = BigInteger.ZERO;
-		}
-    }
-
     @Override
     public String toString() {
         return "Delegation{" +
@@ -157,7 +156,7 @@ public class Delegation {
                 ", delegateReleasedHes=" + delegateReleasedHes +
                 ", delegateLocked=" + delegateLocked +
                 ", delegateLockedHes=" + delegateLockedHes +
-                ", delegateReduction=" + delegateReduction +
+                ", cumulativeIncome=" + cumulativeIncome +
                 '}';
     }
 }

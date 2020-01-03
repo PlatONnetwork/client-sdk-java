@@ -1,10 +1,9 @@
 package com.platon.sdk.contracts.ppos.dto.resp;
 
-import java.math.BigInteger;
-
+import com.alibaba.fastjson.annotation.JSONField;
 import org.web3j.utils.Numeric;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import java.math.BigInteger;
 
 public class Node {
 
@@ -16,6 +15,12 @@ public class Node {
 
     @JSONField(name = "BenefitAddress")
     private String benifitAddress;
+
+    @JSONField(name = "RewardPer")
+    private BigInteger rewardPer;
+
+    @JSONField(name = "NextRewardPer")
+    private BigInteger nextRewardPer;
 
     @JSONField(name = "StakingTxIndex")
     private BigInteger stakingTxIndex;
@@ -62,11 +67,61 @@ public class Node {
     @JSONField(name = "ValidatorTerm")
     private BigInteger validatorTerm;
 
-    @JSONField(name = "RewardPer")
-    private BigInteger rewardPer;
+    @JSONField(name = "DelegateEpoch")
+    private BigInteger delegateEpoch;
 
-    @JSONField(name = "NextRewardPer")
-    private BigInteger nextRewardPer;
+    @JSONField(name = "DelegateTotal")
+    private BigInteger delegateTotal;
+
+    @JSONField(name = "DelegateTotalHes")
+    private BigInteger delegateTotalHes;
+
+    @JSONField(name = "DelegateRewardTotal")
+    private BigInteger delegateRewardTotal;
+
+    public BigInteger getDelegateEpoch() {
+        return delegateEpoch;
+    }
+
+    public void setDelegateEpoch(BigInteger delegateEpoch) {
+        this.delegateEpoch = delegateEpoch;
+    }
+
+    public BigInteger getDelegateTotal() {
+        return delegateTotal;
+    }
+
+    public void setDelegateTotal(String delegateTotal) {
+        if (delegateTotal != null && delegateTotal.length() > 0) {
+            this.delegateTotal = Numeric.decodeQuantity(delegateTotal);
+        } else {
+            this.delegateTotal = BigInteger.ZERO;
+        }
+    }
+
+    public BigInteger getDelegateTotalHes() {
+        return delegateTotalHes;
+    }
+
+    public void setDelegateTotalHes(String delegateTotalHes) {
+        if (delegateTotalHes != null && delegateTotalHes.length() > 0) {
+            this.delegateTotalHes = Numeric.decodeQuantity(delegateTotalHes);
+        } else {
+            this.delegateTotalHes = BigInteger.ZERO;
+        }
+    }
+
+    public BigInteger getDelegateRewardTotal() {
+        return delegateRewardTotal;
+    }
+
+    public void setDelegateRewardTotal(String delegateRewardTotal) {
+        if (delegateRewardTotal != null && delegateRewardTotal.length() > 0) {
+            this.delegateRewardTotal = Numeric.decodeQuantity(delegateRewardTotal);
+        } else {
+            this.delegateRewardTotal = BigInteger.ZERO;
+        }
+    }
 
     public String getNodeId() {
         return nodeId;
@@ -257,6 +312,8 @@ public class Node {
                 "nodeId='" + nodeId + '\'' +
                 ", stakingAddress='" + stakingAddress + '\'' +
                 ", benifitAddress='" + benifitAddress + '\'' +
+                ", rewardPer=" + rewardPer +
+                ", nextRewardPer=" + nextRewardPer +
                 ", stakingTxIndex=" + stakingTxIndex +
                 ", programVersion=" + programVersion +
                 ", status=" + status +
@@ -272,8 +329,10 @@ public class Node {
                 ", website='" + website + '\'' +
                 ", details='" + details + '\'' +
                 ", validatorTerm=" + validatorTerm +
-                ", rewardPer=" + rewardPer +
-                ", nextRewardPer=" + nextRewardPer +
+                ", delegateEpoch=" + delegateEpoch +
+                ", delegateTotal=" + delegateTotal +
+                ", delegateTotalHes=" + delegateTotalHes +
+                ", delegateRewardTotal=" + delegateRewardTotal +
                 '}';
     }
 }

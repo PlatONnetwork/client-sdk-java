@@ -1,8 +1,15 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-
+import com.platon.sdk.contracts.ppos.abi.Function;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
+import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
+import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
+import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
+import com.platon.sdk.contracts.ppos.dto.resp.Node;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -14,15 +21,9 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
-import com.platon.sdk.contracts.ppos.abi.PlatOnFunction;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
-import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
-import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
-import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
-import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
-import com.platon.sdk.contracts.ppos.dto.resp.Node;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
 
 public class StakingContract extends BaseContract {
 	
@@ -78,7 +79,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<Node>> getStakingInfo(String nodeId) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_STAKINGINFO_FUNC_TYPE, 
+        Function function = new Function(FunctionType.GET_STAKINGINFO_FUNC_TYPE,
         		Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId))));
         return executeRemoteCallObjectValueReturn(function, Node.class);
     }
@@ -89,7 +90,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<BigInteger>> getPackageReward() {
-    	PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PACKAGEREWARD_FUNC_TYPE);
+    	Function function = new Function(FunctionType.GET_PACKAGEREWARD_FUNC_TYPE);
         return executeRemoteCallObjectValueReturn(function, BigInteger.class);
     }
     
@@ -99,7 +100,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<BigInteger>> getStakingReward() {
-    	PlatOnFunction function = new PlatOnFunction(FunctionType.GET_STAKINGREWARD_FUNC_TYPE);
+    	Function function = new Function(FunctionType.GET_STAKINGREWARD_FUNC_TYPE);
         return executeRemoteCallObjectValueReturn(function, BigInteger.class);
     }
     
@@ -109,7 +110,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<BigInteger>> getAvgPackTime() {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_AVGPACKTIME_FUNC_TYPE);
+        Function function = new Function(FunctionType.GET_AVGPACKTIME_FUNC_TYPE);
         return executeRemoteCallObjectValueReturn(function, BigInteger.class);
     }
 
@@ -120,8 +121,8 @@ public class StakingContract extends BaseContract {
      * @return
      * @see StakingParam
      */
-    public RemoteCall<TransactionResponse> staking(StakingParam stakingParam) throws Exception {
-        PlatOnFunction function = createStakingFunction(stakingParam, null);
+    public RemoteCall<TransactionResponse> staking(StakingParam stakingParam) {
+        Function function = createStakingFunction(stakingParam);
         return executeRemoteCallTransaction(function);
     }
 
@@ -133,9 +134,9 @@ public class StakingContract extends BaseContract {
      * @return
      * @see StakingParam
      */
-    public RemoteCall<TransactionResponse> staking(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = createStakingFunction(stakingParam, gasProvider);
-        return executeRemoteCallTransaction(function);
+    public RemoteCall<TransactionResponse> staking(StakingParam stakingParam, GasProvider gasProvider)  {
+        Function function = createStakingFunction(stakingParam);
+        return executeRemoteCallTransaction(function, gasProvider);
     }
 
     /**
@@ -144,9 +145,9 @@ public class StakingContract extends BaseContract {
      * @param stakingParam
      * @return
      */
-    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws Exception {
-        PlatOnFunction function = createStakingFunction(stakingParam, null);
-        return function.getGasProvider();
+    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, NoSupportFunctionType {
+        Function function = createStakingFunction(stakingParam);
+        return getDefaultGasProvider(function);
     }
 
 
@@ -157,8 +158,8 @@ public class StakingContract extends BaseContract {
      * @return
      * @see StakingParam
      */
-    public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam) throws Exception {
-        PlatOnFunction function = createStakingFunction(stakingParam, null);
+    public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam)  {
+        Function function = createStakingFunction(stakingParam);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -170,15 +171,15 @@ public class StakingContract extends BaseContract {
      * @return
      * @see StakingParam
      */
-    public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = createStakingFunction(stakingParam, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+    public RemoteCall<PlatonSendTransaction> stakingReturnTransaction(StakingParam stakingParam, GasProvider gasProvider) {
+        Function function = createStakingFunction(stakingParam);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private PlatOnFunction createStakingFunction(StakingParam stakingParam, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = new PlatOnFunction(
+    private Function createStakingFunction(StakingParam stakingParam)  {
+        Function function = new Function(
                 FunctionType.STAKING_FUNC_TYPE,
-                stakingParam.getSubmitInputParameters(), gasProvider);
+                stakingParam.getSubmitInputParameters());
         return function;
     }
 
@@ -189,7 +190,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> unStaking(String nodeId) {
-        PlatOnFunction function = createUnStakingFunction(nodeId, null);
+        Function function = createUnStakingFunction(nodeId);
         return executeRemoteCallTransaction(function);
     }
 
@@ -200,8 +201,8 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> unStaking(String nodeId, GasProvider gasProvider) {
-        PlatOnFunction function = createUnStakingFunction(nodeId, gasProvider);
-        return executeRemoteCallTransaction(function);
+        Function function = createUnStakingFunction(nodeId);
+        return executeRemoteCallTransaction(function, gasProvider);
     }
 
     /**
@@ -210,9 +211,9 @@ public class StakingContract extends BaseContract {
      * @param nodeId
      * @return
      */
-    public GasProvider getUnStakingGasProvider(String nodeId) {
-        PlatOnFunction function = createUnStakingFunction(nodeId, null);
-        return function.getGasProvider();
+    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, NoSupportFunctionType {
+        Function function = createUnStakingFunction(nodeId);
+        return getDefaultGasProvider(function);
     }
 
     /**
@@ -222,7 +223,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> unStakingReturnTransaction(String nodeId) {
-        PlatOnFunction function = createUnStakingFunction(nodeId, null);
+        Function function = createUnStakingFunction(nodeId);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -234,13 +235,13 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> unStakingReturnTransaction(String nodeId, GasProvider gasProvider) {
-        PlatOnFunction function = createUnStakingFunction(nodeId, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+        Function function = createUnStakingFunction(nodeId);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private PlatOnFunction createUnStakingFunction(String nodeId, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
-                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId))), gasProvider);
+    private Function createUnStakingFunction(String nodeId) {
+        Function function = new Function(FunctionType.WITHDREW_STAKING_FUNC_TYPE,
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId))));
         return function;
     }
 
@@ -251,7 +252,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> updateStakingInfo(UpdateStakingParam updateStakingParam) {
-        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);
+        Function function = createUpdateStakingFunction(updateStakingParam);
         return executeRemoteCallTransaction(function);
     }
 
@@ -263,8 +264,8 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> updateStakingInfo(UpdateStakingParam updateStakingParam, GasProvider gasProvider) {
-        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, gasProvider);
-        return executeRemoteCallTransaction(function);
+        Function function = createUpdateStakingFunction(updateStakingParam);
+        return executeRemoteCallTransaction(function,gasProvider);
     }
 
     /**
@@ -273,9 +274,9 @@ public class StakingContract extends BaseContract {
      * @param updateStakingParam
      * @return
      */
-    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) {
-        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);
-        return function.getGasProvider();
+    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, NoSupportFunctionType {
+        Function function = createUpdateStakingFunction(updateStakingParam);
+        return getDefaultGasProvider(function);
     }
 
     /**
@@ -285,7 +286,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> updateStakingInfoReturnTransaction(UpdateStakingParam updateStakingParam) {
-        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, null);
+        Function function = createUpdateStakingFunction(updateStakingParam);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -296,13 +297,13 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> updateStakingInfoReturnTransaction(UpdateStakingParam updateStakingParam, GasProvider gasProvider) {
-        PlatOnFunction function = createUpdateStakingFunction(updateStakingParam, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+        Function function = createUpdateStakingFunction(updateStakingParam);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private PlatOnFunction createUpdateStakingFunction(UpdateStakingParam updateStakingParam, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
-                updateStakingParam.getSubmitInputParameters(), gasProvider);
+    private Function createUpdateStakingFunction(UpdateStakingParam updateStakingParam) {
+        Function function = new Function(FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE,
+                updateStakingParam.getSubmitInputParameters());
         return function;
     }
 
@@ -315,7 +316,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> addStaking(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, null);
+        Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
         return executeRemoteCallTransaction(function);
     }
 
@@ -329,8 +330,8 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> addStaking(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, gasProvider);
-        return executeRemoteCallTransaction(function);
+        Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
+        return executeRemoteCallTransaction(function, gasProvider);
     }
 
     /**
@@ -341,9 +342,9 @@ public class StakingContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, null);
-        return function.getGasProvider();
+    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType {
+        Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
+        return getDefaultGasProvider(function);
     }
 
     /**
@@ -355,7 +356,7 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> addStakingReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, null);
+        Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -369,15 +370,15 @@ public class StakingContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> addStakingReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = createAddStakingFunction(nodeId, stakingAmountType, amount, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+        Function function = createAddStakingFunction(nodeId, stakingAmountType, amount );
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private PlatOnFunction createAddStakingFunction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.ADD_STAKING_FUNC_TYPE,
+    private Function createAddStakingFunction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
+        Function function = new Function(FunctionType.ADD_STAKING_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(nodeId)),
                         new Uint16(stakingAmountType.getValue()),
-                        new Uint256(amount)), gasProvider);
+                        new Uint256(amount)));
         return function;
     }
 }
