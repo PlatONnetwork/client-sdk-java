@@ -120,7 +120,7 @@ public class StakingContractTest {
                     .setRewardPer(rewardPer)
                     .build()).send();
             TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
-            System.out.println(baseResponse.toString());  //
+            System.out.println(baseResponse.toString());  //394
         } catch (Exception e) {
             e.printStackTrace();
         }

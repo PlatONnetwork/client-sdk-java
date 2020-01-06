@@ -1,19 +1,5 @@
 package org.web3j.ppos;
 
-import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
-import org.junit.Test;
-import org.web3j.Scenario;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
-import org.web3j.tx.Transfer;
-import org.web3j.utils.Convert;
-import org.web3j.utils.Convert.Unit;
-
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
 import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
@@ -22,6 +8,19 @@ import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
 import com.platon.sdk.contracts.ppos.dto.resp.Delegation;
 import com.platon.sdk.contracts.ppos.dto.resp.DelegationIdInfo;
 import com.platon.sdk.contracts.ppos.dto.resp.Node;
+import org.junit.Test;
+import org.web3j.Scenario;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
+import org.web3j.tx.Transfer;
+import org.web3j.utils.Convert;
+import org.web3j.utils.Convert.Unit;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class StakingScenario extends Scenario {
 
@@ -149,6 +148,7 @@ public class StakingScenario extends Scenario {
         String nodeName = "integration-node1-u";
         String webSite = "https://www.platon.network/#/";
         String details = "integration-node1-details-u";
+        BigInteger rewardPer = BigInteger.valueOf(2000L);
 
         PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
                 .setBenifitAddress(benifitAddress)
@@ -157,6 +157,7 @@ public class StakingScenario extends Scenario {
                 .setNodeName(nodeName)
                 .setWebSite(webSite)
                 .setDetails(details)
+                .setRewardPer(rewardPer)
                 .build()).send();
 
         TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -171,6 +172,7 @@ public class StakingScenario extends Scenario {
         String webSite = "https://www.platon.network/#/";
         String details = "integration-node1-details";
         BigDecimal stakingAmount = Convert.toVon("5000000", Unit.LAT).add(BigDecimal.valueOf(1L));
+        BigInteger rewardPer = BigInteger.valueOf(1000L);
 
         PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
                 .setNodeId(nodeId)
@@ -184,6 +186,7 @@ public class StakingScenario extends Scenario {
                 .setBlsPubKey(blsPubKey)
                 .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
                 .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
+                .setRewardPer(rewardPer)
                 .build()).send();
         TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;

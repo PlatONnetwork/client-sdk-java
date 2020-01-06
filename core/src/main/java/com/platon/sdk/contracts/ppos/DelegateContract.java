@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class DelegateContract extends BaseContract {
 	
@@ -239,7 +238,7 @@ public class DelegateContract extends BaseContract {
      * @return
      * @throws TransactionException
      */
-    public Optional<BigInteger> decodeUnDelegateLog(TransactionReceipt transactionReceipt) throws TransactionException {
+    public BigInteger decodeUnDelegateLog(TransactionReceipt transactionReceipt) throws TransactionException {
         List<Log> logs = transactionReceipt.getLogs();
         if(logs==null||logs.isEmpty()){
             throw new TransactionException("TransactionReceipt logs is empty");
@@ -259,11 +258,7 @@ public class DelegateContract extends BaseContract {
             throw new TransactionException("TransactionResponse code is 0");
         }
 
-        if(rlpList.size() == 1){
-            return  Optional.ofNullable(null);
-        }else{
-            return  Optional.of(((RlpString)rlpList.get(1)).asPositiveBigInteger());
-        }
+        return  ((RlpString)((RlpList)RlpDecoder.decode(((RlpString)rlpList.get(1)).getBytes())).getValues().get(0)).asPositiveBigInteger();
     }
 
     /**

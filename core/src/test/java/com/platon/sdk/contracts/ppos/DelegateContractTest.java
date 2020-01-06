@@ -18,7 +18,6 @@ import org.web3j.utils.Convert.Unit;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 委托相关接口，包括，
@@ -33,7 +32,7 @@ public class DelegateContractTest {
 
 
     private String chainId = "103";
-    private BigInteger stakingNb = BigInteger.valueOf(815L);
+    private BigInteger stakingNb = BigInteger.valueOf(187L);
 
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
 
@@ -72,7 +71,7 @@ public class DelegateContractTest {
             TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 
             if(baseResponse.isStatusOk()){
-                Optional<BigInteger>  value = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+                BigInteger  value = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
                 System.out.println(value);
             }
 
