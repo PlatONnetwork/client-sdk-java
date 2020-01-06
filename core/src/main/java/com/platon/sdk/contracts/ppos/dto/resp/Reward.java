@@ -38,6 +38,10 @@ public class Reward {
         }
     }
 
+    public void setRewardBigIntegerValue(BigInteger reward) {
+        this.reward = reward;
+    }
+
     @Override
     public String toString() {
         return "Reward{" +

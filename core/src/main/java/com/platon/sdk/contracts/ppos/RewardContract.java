@@ -10,6 +10,7 @@ import com.platon.sdk.contracts.ppos.dto.common.ErrorCode;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.resp.Reward;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
+import org.web3j.abi.datatypes.BytesType;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
@@ -26,6 +27,7 @@ import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -170,7 +172,7 @@ public class RewardContract extends BaseContract {
                     Reward reward = new Reward();
                     reward.setNodeId(((RlpString)rlpL.getValues().get(0)).asString());
                     reward.setStakingNum(((RlpString)rlpL.getValues().get(1)).asPositiveBigInteger());
-                    reward.setReward(((RlpString)rlpL.getValues().get(1)).asPositiveBigInteger().toString(16));
+                    reward.setRewardBigIntegerValue((((RlpString)rlpL.getValues().get(2)).asPositiveBigInteger()));
                     rewards.add(reward);
                 });
 
@@ -180,14 +182,15 @@ public class RewardContract extends BaseContract {
     /**
      * 查询当前账户地址所委托的节点的NodeID和质押Id
      *
+     * @param address 查询的地址
      * @param nodeList 节点id列表
      * @return
      */
-    public RemoteCall<CallResponse<List<Reward>>> getDelegateReward(List<String> nodeList) {
+    public RemoteCall<CallResponse<List<Reward>>> getDelegateReward(String address,List<String> nodeList) {
         List<NodeId> bytesTypeList = nodeList.stream().map(nodeId ->  new NodeId(nodeId)).collect(Collectors.toList());
         CustomStaticArray<NodeId> dynamicArray =  new CustomStaticArray<>(bytesTypeList);
         Function function = new Function(FunctionType.GET_DELEGATE_REWARD_FUNC_TYPE,
-                Arrays.asList(dynamicArray));
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(address)), dynamicArray));
         return executeRemoteCallListValueReturn(function, Reward.class);
     }
 }

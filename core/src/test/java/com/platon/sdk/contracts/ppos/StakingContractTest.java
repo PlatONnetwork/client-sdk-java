@@ -1,8 +1,11 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
+import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
+import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
+import com.platon.sdk.contracts.ppos.dto.resp.Node;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
@@ -14,13 +17,8 @@ import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
 
-import com.platon.sdk.contracts.ppos.StakingContract;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
-import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
-import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
-import com.platon.sdk.contracts.ppos.dto.resp.Node;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class StakingContractTest {
 
@@ -58,7 +56,7 @@ public class StakingContractTest {
     @Test
     public void getStakingInfo() {
     	try {
-    		CallResponse<Node> baseResponse = stakingContract.getStakingInfo("0x15245d4dceeb7552b52d70e56c53fc86aa030eab6b7b325e430179902884fca3d684b0e896ea421864a160e9c18418e4561e9a72f911e2511c29204a857de71a").send();
+    		CallResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
     		System.out.println(baseResponse);
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -105,7 +103,7 @@ public class StakingContractTest {
             String webSite = "www.baidu.com";
             String details = "chendai-node3-details";
             BigDecimal stakingAmount = Convert.toVon("5000000", Unit.LAT);
-            
+            BigInteger rewardPer = BigInteger.valueOf(1000L);
         	
             PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
                     .setNodeId(nodeId)
@@ -118,10 +116,11 @@ public class StakingContractTest {
                     .setDetails(details)
                     .setBlsPubKey(blsPubKey)
                     .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
-                    .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve()) 
+                    .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
+                    .setRewardPer(rewardPer)
                     .build()).send();
             TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
-            System.out.println(baseResponse.toString());  // 438552‬
+            System.out.println(baseResponse.toString());  //
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -135,6 +134,7 @@ public class StakingContractTest {
             String nodeName = "chendai-node3-u";
             String webSite = "www.baidu.com-u";
             String details = "chendai-node3-details-u";
+            BigInteger rewardPer = BigInteger.valueOf(2000L);
 
             PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
             		.setBenifitAddress(benifitAddress)
@@ -143,6 +143,7 @@ public class StakingContractTest {
             		.setNodeName(nodeName)
             		.setWebSite(webSite)
             		.setDetails(details)
+                    .setRewardPer(rewardPer)
             		.build()).send();
 
             TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();

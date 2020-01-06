@@ -208,7 +208,7 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
     private GasProvider getDefaultGasProviderRemote(Function function) throws IOException {
-        Transaction transaction = Transaction.createEthCallTransaction("", contractAddress,  EncoderUtils.functionEncoder(function));
+        Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress,  EncoderUtils.functionEncoder(function));
         BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
         BigInteger gasPrice = getDefaultGasPrice(function.getType());
         GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);

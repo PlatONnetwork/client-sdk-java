@@ -1,9 +1,10 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
+import com.platon.sdk.contracts.ppos.dto.resp.Delegation;
+import com.platon.sdk.contracts.ppos.dto.resp.DelegationIdInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
@@ -14,11 +15,10 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert.Unit;
 
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
-import com.platon.sdk.contracts.ppos.dto.resp.Delegation;
-import com.platon.sdk.contracts.ppos.dto.resp.DelegationIdInfo;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 委托相关接口，包括，
@@ -30,9 +30,11 @@ public class DelegateContractTest {
 
     private String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
     private String delegateAddress = "0x45886ffccf2c6726f44deec15446f9a53c007848";
+
+
     private String chainId = "103";
-    private BigInteger stakingNb = BigInteger.valueOf(438552L);
-    
+    private BigInteger stakingNb = BigInteger.valueOf(815L);
+
     private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
 
     private Credentials deleteCredentials;
@@ -55,7 +57,7 @@ public class DelegateContractTest {
     @Test
     public void delegate() {
         try {
-            PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("1000000000000000000000000")).send();
+            PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
             TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
             System.out.println(baseResponse);
         } catch (Exception e) {
@@ -66,8 +68,14 @@ public class DelegateContractTest {
     @Test
     public void unDelegate() {
         try {
-            PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingNb, new BigInteger("500000000000000000000000")).send();
+            PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingNb, new BigInteger("200000000000000000000")).send();
             TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+
+            if(baseResponse.isStatusOk()){
+                Optional<BigInteger>  value = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+                System.out.println(value);
+            }
+
             System.out.println(baseResponse.toString());
         } catch (Exception e) {
             e.printStackTrace();
