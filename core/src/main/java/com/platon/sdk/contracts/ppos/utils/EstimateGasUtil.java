@@ -49,7 +49,23 @@ public class EstimateGasUtil {
      * @return
      */
     public static boolean isSupportLocal(int type) {
-        return  false;
+        switch (type) {
+            case FunctionType.STAKING_FUNC_TYPE:
+            case FunctionType.UPDATE_STAKING_INFO_FUNC_TYPE:
+            case FunctionType.ADD_STAKING_FUNC_TYPE:
+            case FunctionType.WITHDREW_STAKING_FUNC_TYPE:
+            case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
+            case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
+            case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+            case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
+            case FunctionType.VOTE_FUNC_TYPE:
+            case FunctionType.DECLARE_VERSION_FUNC_TYPE:
+            case FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE:
+            case FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
