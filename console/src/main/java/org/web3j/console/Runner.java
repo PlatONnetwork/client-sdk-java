@@ -12,7 +12,7 @@ import org.web3j.utils.Version;
  */
 public class Runner {
 
-    private static String USAGE = "Usage: client-sdk version|wallet|solidity|truffle|wasm ...";
+    private static String USAGE = "Usage: platon-web3j version|wallet|solidity|truffle ...";
 
     private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
             + "              _      _____ _     _        \n"
@@ -40,9 +40,9 @@ public class Runner {
                 case "truffle":
                     TruffleJsonFunctionWrapperGenerator.run(tail(args));
                     break;
-//                case "wasm":
-//                	SophiaFunctionWrapperGenerator.run(tail(args));
-//                    break;
+               /*case "wasm":
+                	SophiaFunctionWrapperGenerator.run(tail(args));
+                    break;*/
                 case "version":
                     Console.exitSuccess("Version: " + Version.getVersion() + "\n"
                             + "Build timestamp: " + Version.getTimestamp());

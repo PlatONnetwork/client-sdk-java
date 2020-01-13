@@ -41,7 +41,7 @@ import org.web3j.utils.Numeric;
 /**
  * Solidity contract type abstraction for interacting with smart contracts via native Java types.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings("rawtypes")
 public abstract class Contract extends ManagedTransaction {
 
     //https://www.reddit.com/r/ethereum/comments/5g8ia6/attention_miners_we_recommend_raising_gas_limit/
@@ -497,7 +497,7 @@ public abstract class Contract extends ManagedTransaction {
 
         List<String> topics = log.getTopics();
         String encodedEventSignature = EventEncoder.encode(event);
-        if (!topics.get(0).equals(encodedEventSignature)) {
+        if (topics == null || topics.size() == 0 || !topics.get(0).equals(encodedEventSignature)) {
             return null;
         }
 
