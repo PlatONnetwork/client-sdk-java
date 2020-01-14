@@ -1,9 +1,14 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.List;
-
+import com.alibaba.fastjson.annotation.JSONField;
+import com.platon.sdk.contracts.ppos.abi.Function;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.ErrorCode;
+import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
+import com.platon.sdk.contracts.ppos.utils.EncoderUtils;
+import com.platon.sdk.contracts.ppos.utils.EstimateGasUtil;
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.crypto.Credentials;
 import org.web3j.exceptions.MessageDecodingException;
@@ -25,15 +30,14 @@ import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.ReadonlyTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.exceptions.ContractCallException;
+import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.JSONUtil;
 import org.web3j.utils.Numeric;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.platon.sdk.contracts.ppos.abi.PlatOnFunction;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ErrorCode;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
 
 
 /**
@@ -62,18 +66,18 @@ public abstract class BaseContract extends ManagedTransaction {
         return contractAddress;
     }
     
-    protected <T> RemoteCall<CallResponse<T>> executeRemoteCallObjectValueReturn(PlatOnFunction function, Class<T> returnType) {
+    protected <T> RemoteCall<CallResponse<T>> executeRemoteCallObjectValueReturn(Function function, Class<T> returnType) {
         return new RemoteCall<>(() -> executeCallObjectValueReturn(function, returnType));
     }
     
-    protected <T> RemoteCall<CallResponse<List<T>>> executeRemoteCallListValueReturn(PlatOnFunction function, Class<T> returnType) {
+    protected <T> RemoteCall<CallResponse<List<T>>> executeRemoteCallListValueReturn(Function function, Class<T> returnType) {
         return new RemoteCall<>(() -> executeCallListValueReturn(function, returnType));
     }
    
-    private <T> CallResponse<T> executeCallObjectValueReturn(PlatOnFunction function, Class<T> returnType) throws IOException {
+    private <T> CallResponse<T> executeCallObjectValueReturn(Function function, Class<T> returnType) throws IOException {
     	PlatonCall ethCall = web3j.platonCall(
                 Transaction.createEthCallTransaction(
-                		transactionManager.getFromAddress(), contractAddress, function.getEncodeData()),
+                		transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
                 DefaultBlockParameterName.LATEST)
                 .send();
     	
@@ -114,10 +118,10 @@ public abstract class BaseContract extends ManagedTransaction {
 		}
     }
    
-    private <T> CallResponse<List<T>> executeCallListValueReturn(PlatOnFunction function, Class<T> returnType) throws IOException {
+    private <T> CallResponse<List<T>> executeCallListValueReturn(Function function, Class<T> returnType) throws IOException {
     	PlatonCall ethCall = web3j.platonCall(
                 Transaction.createEthCallTransaction(
-                		transactionManager.getFromAddress(), contractAddress, function.getEncodeData()),
+                		transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
                 DefaultBlockParameterName.LATEST)
                 .send();
     	
@@ -169,10 +173,13 @@ public abstract class BaseContract extends ManagedTransaction {
 			return "CallRet [code=" + code + ", ret=" + ret + "]";
 		}    	
     }
+
+    protected RemoteCall<PlatonSendTransaction> executeRemoteCallTransactionStep1(Function function, GasProvider gasProvider) {
+        return new RemoteCall<>(() -> executeTransactionStep1(function, BigInteger.ZERO,gasProvider));
+    }
     
-    
-    protected RemoteCall<PlatonSendTransaction> executeRemoteCallTransactionStep1(PlatOnFunction function) {
-    	return new RemoteCall<>(() -> executeTransactionStep1(function, BigInteger.ZERO));
+    protected RemoteCall<PlatonSendTransaction> executeRemoteCallTransactionStep1(Function function) {
+    	return new RemoteCall<>(() -> executeTransactionStep1(function, BigInteger.ZERO, getDefaultGasProvider(function)));
 	}
     
     private RemoteCall<TransactionResponse> executeRemoteCallTransactionStep2(PlatonSendTransaction ethSendTransaction) {
@@ -182,26 +189,76 @@ public abstract class BaseContract extends ManagedTransaction {
     public RemoteCall<TransactionResponse> getTransactionResponse(PlatonSendTransaction ethSendTransaction) throws IOException, TransactionException {
     	return executeRemoteCallTransactionStep2(ethSendTransaction);
     }
-   
-    protected RemoteCall<TransactionResponse> executeRemoteCallTransaction(PlatOnFunction function) {
-    	return new RemoteCall<>(() -> executeTransaction(function, BigInteger.ZERO));
-	}
-    
-    private TransactionResponse executeTransaction(PlatOnFunction function, BigInteger weiValue)throws TransactionException, IOException {
-    	GasProvider gasProvider = function.getGasProvider();
 
-    	TransactionReceipt receipt = send(contractAddress, function.getEncodeData(), weiValue,
+    protected RemoteCall<TransactionResponse> executeRemoteCallTransaction(Function function) {
+    	return new RemoteCall<>(() -> executeTransaction(function, BigInteger.ZERO, getDefaultGasProvider(function)));
+	}
+
+    protected RemoteCall<TransactionResponse> executeRemoteCallTransaction(Function function, GasProvider gasProvider) {
+        return new RemoteCall<>(() -> executeTransaction(function, BigInteger.ZERO, gasProvider));
+    }
+
+
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, NoSupportFunctionType {
+        if(EstimateGasUtil.isSupportLocal(function.getType())){
+            return  getDefaultGasProviderLocal(function);
+        } else {
+            return  getDefaultGasProviderRemote(function);
+        }
+    }
+
+    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException {
+        Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress,  EncoderUtils.functionEncoder(function));
+        BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
+        BigInteger gasPrice = getDefaultGasPrice(function.getType());
+        GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
+        return  gasProvider;
+    }
+
+    private GasProvider getDefaultGasProviderLocal(Function function) throws IOException, NoSupportFunctionType {
+        BigInteger gasLimit = EstimateGasUtil.getGasLimit(function);
+        BigInteger gasPrice = getDefaultGasPrice(function.getType());
+        GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
+        return  gasProvider;
+    }
+
+    /**
+     * 获得默认的gasPrice
+     *
+     * @param type
+     * @return
+     * @throws IOException
+     */
+    private BigInteger getDefaultGasPrice(int type) throws IOException {
+        switch (type) {
+            case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
+                return BigInteger.valueOf(1500000).multiply(BigInteger.valueOf(1000000000));
+            case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
+                return BigInteger.valueOf(2100000).multiply(BigInteger.valueOf(1000000000));
+            case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+                return BigInteger.valueOf(2000000).multiply(BigInteger.valueOf(1000000000));
+            case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
+                return BigInteger.valueOf(3000000).multiply(BigInteger.valueOf(1000000000));
+            default:
+                return web3j.platonGasPrice().send().getGasPrice();
+        }
+    }
+
+
+
+
+    private TransactionResponse executeTransaction(Function function, BigInteger weiValue, GasProvider gasProvider)throws TransactionException, IOException {
+
+    	TransactionReceipt receipt = send(contractAddress, EncoderUtils.functionEncoder(function), weiValue,
              gasProvider.getGasPrice(),
              gasProvider.getGasLimit());
 
     	return getResponseFromTransactionReceipt(receipt);
     }
     
-    private PlatonSendTransaction executeTransactionStep1( PlatOnFunction function, BigInteger weiValue) throws TransactionException, IOException {
+    private PlatonSendTransaction executeTransactionStep1(Function function, BigInteger weiValue, GasProvider gasProvider) throws TransactionException, IOException {
 
-        GasProvider gasProvider = function.getGasProvider();
-
-        PlatonSendTransaction sendTransaction =  sendPlatonRawTransaction(contractAddress, function.getEncodeData(), weiValue,
+        PlatonSendTransaction sendTransaction =  sendPlatonRawTransaction(contractAddress,  EncoderUtils.functionEncoder(function), weiValue,
                 gasProvider.getGasPrice(),
                 gasProvider.getGasLimit());
         
