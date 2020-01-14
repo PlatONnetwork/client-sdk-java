@@ -1,9 +1,15 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-
+import com.platon.sdk.contracts.ppos.abi.Function;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
+import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.dto.enums.VoteOption;
+import com.platon.sdk.contracts.ppos.dto.resp.GovernParam;
+import com.platon.sdk.contracts.ppos.dto.resp.Proposal;
+import com.platon.sdk.contracts.ppos.dto.resp.TallyResult;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint32;
@@ -17,15 +23,10 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
-import com.platon.sdk.contracts.ppos.abi.PlatOnFunction;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
-import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
-import com.platon.sdk.contracts.ppos.dto.enums.VoteOption;
-import com.platon.sdk.contracts.ppos.dto.resp.GovernParam;
-import com.platon.sdk.contracts.ppos.dto.resp.Proposal;
-import com.platon.sdk.contracts.ppos.dto.resp.TallyResult;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProposalContract extends BaseContract {
 
@@ -81,7 +82,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<Proposal>> getProposal(String proposalId) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROPOSAL_FUNC_TYPE,
+        Function function = new Function(FunctionType.GET_PROPOSAL_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId))));
         return executeRemoteCallObjectValueReturn(function, Proposal.class);
     }
@@ -93,7 +94,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<TallyResult>> getTallyResult(String proposalId) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_TALLY_RESULT_FUNC_TYPE,
+        Function function = new Function(FunctionType.GET_TALLY_RESULT_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId))));
         return executeRemoteCallObjectValueReturn(function, TallyResult.class);
     }
@@ -104,7 +105,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<List<Proposal>>> getProposalList() {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PROPOSAL_LIST_FUNC_TYPE,
+        Function function = new Function(FunctionType.GET_PROPOSAL_LIST_FUNC_TYPE,
                 Arrays.asList());
         return executeRemoteCallListValueReturn(function, Proposal.class);
     }
@@ -118,8 +119,8 @@ public class ProposalContract extends BaseContract {
      * @param verifier       投票验证人
      * @return
      */
-    public RemoteCall<TransactionResponse> vote(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws Exception {
-        PlatOnFunction function = createVoteFunction(programVersion, proposalID, verifier, voteOption, null);
+    public RemoteCall<TransactionResponse> vote(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier)  {
+        Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
         return executeRemoteCallTransaction(function);
     }
 
@@ -133,9 +134,9 @@ public class ProposalContract extends BaseContract {
      * @param gasProvider
      * @return
      */
-    public RemoteCall<TransactionResponse> vote(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = createVoteFunction(programVersion, proposalID, verifier, voteOption, gasProvider);
-        return executeRemoteCallTransaction(function);
+    public RemoteCall<TransactionResponse> vote(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier, GasProvider gasProvider)  {
+        Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
+        return executeRemoteCallTransaction(function,gasProvider);
     }
 
     /**
@@ -147,9 +148,9 @@ public class ProposalContract extends BaseContract {
      * @param verifier       投票验证人
      * @return
      */
-    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws Exception {
-        PlatOnFunction function = createVoteFunction(programVersion, proposalID, verifier, voteOption, null);
-        return function.getGasProvider();
+    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, NoSupportFunctionType {
+        Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
+        return getDefaultGasProvider(function);
     }
 
     /**
@@ -159,8 +160,8 @@ public class ProposalContract extends BaseContract {
      * @param verifier       投票验证人
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> voteReturnTransaction(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws Exception {
-        PlatOnFunction function = createVoteFunction(programVersion, proposalID, verifier, voteOption, null);
+    public RemoteCall<PlatonSendTransaction> voteReturnTransaction(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) {
+        Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -172,17 +173,17 @@ public class ProposalContract extends BaseContract {
      * @param gasProvider
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> voteReturnTransaction(ProgramVersion programVersion, String proposalID, String verifier, VoteOption voteOption, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = createVoteFunction(programVersion, proposalID, verifier, voteOption, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+    public RemoteCall<PlatonSendTransaction> voteReturnTransaction(ProgramVersion programVersion, String proposalID, String verifier, VoteOption voteOption, GasProvider gasProvider)  {
+        Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private PlatOnFunction createVoteFunction(ProgramVersion programVersion, String proposalID, String verifier, VoteOption voteOption, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.VOTE_FUNC_TYPE,
+    private Function createVoteFunction(ProgramVersion programVersion, String proposalID, String verifier, VoteOption voteOption) {
+        Function function = new Function(FunctionType.VOTE_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                         new BytesType(Numeric.hexStringToByteArray(proposalID)), new Uint8(voteOption.getValue()),
                         new Uint32(programVersion.getProgramVersion()),
-                        new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign()))), gasProvider);
+                        new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign()))));
         return function;
     }
 
@@ -192,8 +193,8 @@ public class ProposalContract extends BaseContract {
      * @param verifier 声明的节点，只能是验证人/候选人
      * @return
      */
-    public RemoteCall<TransactionResponse> declareVersion(ProgramVersion programVersion, String verifier) throws Exception {
-        PlatOnFunction function = createDeclareVersionFunction(programVersion, verifier, null);
+    public RemoteCall<TransactionResponse> declareVersion(ProgramVersion programVersion, String verifier)  {
+        Function function = createDeclareVersionFunction(programVersion, verifier);
         return executeRemoteCallTransaction(function);
     }
 
@@ -205,9 +206,9 @@ public class ProposalContract extends BaseContract {
      * @param gasProvider
      * @return
      */
-    public RemoteCall<TransactionResponse> declareVersion(ProgramVersion programVersion, String verifier, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = createDeclareVersionFunction(programVersion, verifier, gasProvider);
-        return executeRemoteCallTransaction(function);
+    public RemoteCall<TransactionResponse> declareVersion(ProgramVersion programVersion, String verifier, GasProvider gasProvider) {
+        Function function = createDeclareVersionFunction(programVersion, verifier);
+        return executeRemoteCallTransaction(function, gasProvider);
     }
 
     /**
@@ -217,9 +218,9 @@ public class ProposalContract extends BaseContract {
      * @param verifier
      * @return
      */
-    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws Exception {
-        PlatOnFunction function = createDeclareVersionFunction(programVersion, verifier, null);
-        return function.getGasProvider();
+    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, NoSupportFunctionType {
+        Function function = createDeclareVersionFunction(programVersion, verifier);
+        return getDefaultGasProvider(function);
     }
 
     /**
@@ -227,8 +228,8 @@ public class ProposalContract extends BaseContract {
      * @param verifier       声明的节点，只能是验证人/候选人
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(ProgramVersion programVersion, String verifier) throws Exception {
-        PlatOnFunction function = createDeclareVersionFunction(programVersion, verifier, null);
+    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(ProgramVersion programVersion, String verifier)  {
+        Function function = createDeclareVersionFunction(programVersion, verifier);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -237,16 +238,16 @@ public class ProposalContract extends BaseContract {
      * @param gasProvider
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(ProgramVersion programVersion, String verifier, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = createDeclareVersionFunction(programVersion, verifier, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+    public RemoteCall<PlatonSendTransaction> declareVersionReturnTransaction(ProgramVersion programVersion, String verifier, GasProvider gasProvider) {
+        Function function = createDeclareVersionFunction(programVersion, verifier);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
     
-    private PlatOnFunction createDeclareVersionFunction(ProgramVersion programVersion, String verifier, GasProvider gasProvider) throws Exception {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.DECLARE_VERSION_FUNC_TYPE,
+    private Function createDeclareVersionFunction(ProgramVersion programVersion, String verifier)  {
+        Function function = new Function(FunctionType.DECLARE_VERSION_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(verifier)),
                         new Uint32(programVersion.getProgramVersion()),
-                        new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign()))), gasProvider);
+                        new BytesType(Numeric.hexStringToByteArray(programVersion.getProgramVersionSign()))));
         return function;
     }
 
@@ -257,7 +258,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> submitProposal(Proposal proposal) {
-        PlatOnFunction function = createSubmitProposalFunction(proposal, null);
+        Function function = createSubmitProposalFunction(proposal);
         return executeRemoteCallTransaction(function);
     }
 
@@ -269,8 +270,8 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> submitProposal(Proposal proposal, GasProvider gasProvider) {
-        PlatOnFunction function = createSubmitProposalFunction(proposal, gasProvider);
-        return executeRemoteCallTransaction(function);
+        Function function = createSubmitProposalFunction(proposal);
+        return executeRemoteCallTransaction(function,gasProvider);
     }
 
     /**
@@ -279,9 +280,9 @@ public class ProposalContract extends BaseContract {
      * @param proposal
      * @return
      */
-    public GasProvider getSubmitProposalGasProvider(Proposal proposal) {
-        PlatOnFunction function = createSubmitProposalFunction(proposal, null);
-        return function.getGasProvider();
+    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, NoSupportFunctionType {
+        Function function = createSubmitProposalFunction(proposal);
+        return getDefaultGasProvider(function);
     }
 
     /**
@@ -291,7 +292,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> submitProposalReturnTransaction(Proposal proposal) {
-        PlatOnFunction function = createSubmitProposalFunction(proposal, null);
+        Function function = createSubmitProposalFunction(proposal);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -303,16 +304,16 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> submitProposalReturnTransaction(Proposal proposal, GasProvider gasProvider) {
-        PlatOnFunction function = createSubmitProposalFunction(proposal, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+        Function function = createSubmitProposalFunction(proposal);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private PlatOnFunction createSubmitProposalFunction(Proposal proposal, GasProvider gasProvider) {
+    private Function createSubmitProposalFunction(Proposal proposal) {
         if (proposal == null) {
             throw new NullPointerException("proposal must not be null");
         }
-        PlatOnFunction function = new PlatOnFunction(proposal.getSubmitFunctionType(),
-                proposal.getSubmitInputParameters(), gasProvider);
+        Function function = new Function(proposal.getSubmitFunctionType(),
+                proposal.getSubmitInputParameters());
         return function;
     }
 
@@ -322,7 +323,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<BigInteger>> getActiveVersion() {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_ACTIVE_VERSION);
+        Function function = new Function(FunctionType.GET_ACTIVE_VERSION);
         return executeRemoteCallObjectValueReturn(function, BigInteger.class);
     }
 
@@ -334,7 +335,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<String>> getGovernParamValue(String module, String name) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_GOVERN_PARAM_VALUE, Arrays.asList(new Utf8String(module), new Utf8String(name)));
+        Function function = new Function(FunctionType.GET_GOVERN_PARAM_VALUE, Arrays.asList(new Utf8String(module), new Utf8String(name)));
         return executeRemoteCallObjectValueReturn(function, String.class);
     }
 
@@ -346,7 +347,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<List<BigInteger>>> getAccuVerifiersCount(String proposalId, String blockHash) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_ACCUVERIFIERS_COUNT, Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId)), new BytesType(Numeric.hexStringToByteArray(blockHash))));
+        Function function = new Function(FunctionType.GET_ACCUVERIFIERS_COUNT, Arrays.asList(new BytesType(Numeric.hexStringToByteArray(proposalId)), new BytesType(Numeric.hexStringToByteArray(blockHash))));
         return executeRemoteCallListValueReturn(function, BigInteger.class);
     }
 
@@ -356,7 +357,7 @@ public class ProposalContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<List<GovernParam>>> getParamList(String module) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_PARAM_LIST, Arrays.asList(new Utf8String(module)));
+        Function function = new Function(FunctionType.GET_PARAM_LIST, Arrays.asList(new Utf8String(module)));
         return executeRemoteCallListValueReturn(function, GovernParam.class);
     }
 }

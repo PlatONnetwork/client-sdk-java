@@ -63,6 +63,11 @@ public class StakingParam implements Cloneable {
      */
     private String blsProof;
 
+    /**
+     * 奖励分成比例，采用BasePoint 1BP=0.01%
+     */
+    private BigInteger rewardPer;
+
     public String getNodeId() {
         return nodeId;
     }
@@ -150,7 +155,14 @@ public class StakingParam implements Cloneable {
     public void setBlsProof(String blsProof) {
         this.blsProof = blsProof;
     }
-    
+
+    public BigInteger getRewardPer() {
+        return rewardPer;
+    }
+
+    public void setRewardPer(BigInteger rewardPer) {
+        this.rewardPer = rewardPer;
+    }
     
     public StakingParam(Builder builder) {
         this.nodeId = builder.nodeId;
@@ -164,6 +176,7 @@ public class StakingParam implements Cloneable {
         this.processVersion = builder.processVersion;
         this.blsPubKey = builder.blsPubKey;
         this.blsProof = builder.blsProof;
+        this.rewardPer = builder.rewardPer;
     }
 
     public List<Type> getSubmitInputParameters() {
@@ -175,6 +188,7 @@ public class StakingParam implements Cloneable {
                 , new Utf8String(webSite)
                 , new Utf8String(details)
                 , new Int256(amount)
+                , new Uint16(rewardPer)
                 , new Uint32(processVersion.getProgramVersion())
                 , new BytesType(Numeric.hexStringToByteArray(processVersion.getProgramVersionSign()))
                 , new BytesType(Numeric.hexStringToByteArray(blsPubKey))
@@ -205,6 +219,7 @@ public class StakingParam implements Cloneable {
         private ProgramVersion processVersion;
         private String blsPubKey;
         private String blsProof;
+        private BigInteger rewardPer;
 
         public Builder setNodeId(String nodeId) {
             this.nodeId = nodeId;
@@ -258,6 +273,11 @@ public class StakingParam implements Cloneable {
         
         public Builder setBlsProof(String blsProof) {
             this.blsProof = blsProof;
+            return this;
+        }
+
+        public Builder setRewardPer(BigInteger rewardPer) {
+            this.rewardPer = rewardPer;
             return this;
         }
 

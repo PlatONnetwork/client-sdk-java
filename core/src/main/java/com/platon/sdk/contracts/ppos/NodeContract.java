@@ -1,16 +1,15 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.util.List;
-
-import org.web3j.crypto.Credentials;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.RemoteCall;
-
-import com.platon.sdk.contracts.ppos.abi.PlatOnFunction;
+import com.platon.sdk.contracts.ppos.abi.Function;
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
 import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.resp.Node;
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.RemoteCall;
+
+import java.util.List;
 
 public class NodeContract extends BaseContract {
 	
@@ -50,7 +49,7 @@ public class NodeContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<List<Node>>> getVerifierList() {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_VERIFIERLIST_FUNC_TYPE);
+        Function function = new Function(FunctionType.GET_VERIFIERLIST_FUNC_TYPE);
         return executeRemoteCallListValueReturn(function, Node.class);
     }
 
@@ -60,7 +59,7 @@ public class NodeContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<List<Node>>> getValidatorList() {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_VALIDATORLIST_FUNC_TYPE);
+        Function function = new Function(FunctionType.GET_VALIDATORLIST_FUNC_TYPE);
         return executeRemoteCallListValueReturn(function, Node.class);
     }
 
@@ -70,7 +69,7 @@ public class NodeContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<List<Node>>> getCandidateList() {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.GET_CANDIDATELIST_FUNC_TYPE);
+        Function function = new Function(FunctionType.GET_CANDIDATELIST_FUNC_TYPE);
         return executeRemoteCallListValueReturn(function, Node.class);
     }
 }
