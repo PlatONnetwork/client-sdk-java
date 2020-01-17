@@ -62,6 +62,12 @@ public class WalletUtilsTest {
     }
 
     @Test
+    public void testGeneratePlatONWalletFileByKeyPair() throws Exception {
+        String fileName = WalletUtils.generatePlatONWalletFile(PASSWORD,KEY_PAIR,tempDir);
+        testGeneratedNewWalletFile(fileName);
+    }
+
+    @Test
     public void testGeneratePlatONWalletFile() throws Exception {
         String fileName = WalletUtils.generatePlatONWalletFile(PASSWORD, tempDir);
         testGeneratedNewWalletFile(fileName);

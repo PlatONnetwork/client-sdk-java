@@ -63,13 +63,7 @@ public class WalletUtils {
             InvalidAlgorithmParameterException, CipherException, IOException {
         ECKeyPair ecKeyPair = Keys.createEcKeyPair();
 
-        WalletFile walletFile = Wallet.createPlatON(password,ecKeyPair);
-
-        String fileName = getWalletFileName(walletFile);
-        File destination = new File(destinationDirectory, fileName);
-
-        objectMapper.writeValue(destination, walletFile);
-
+        String fileName  = generatePlatONWalletFile(password, ecKeyPair, destinationDirectory);
         return fileName;
     }
 
@@ -91,6 +85,24 @@ public class WalletUtils {
         byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
         ECKeyPair ecKeyPair = ECKeyPair.create(sha256(seed));
 
+        String fileName  = generatePlatONWalletFile(password, ecKeyPair, destinationDirectory);
+
+        return new Bip39Wallet(fileName, mnemonic);
+    }
+
+    /**
+     * Create platON standard wallet with ecKeyPair
+     *
+     * @param password
+     * @param ecKeyPair
+     * @param destinationDirectory
+     * @return
+     * @throws CipherException
+     * @throws IOException
+     */
+    public static String generatePlatONWalletFile(String password, ECKeyPair ecKeyPair, File destinationDirectory)
+            throws CipherException, IOException {
+
         WalletFile walletFile = Wallet.createPlatON(password,ecKeyPair);
 
         String fileName = getWalletFileName(walletFile);
@@ -98,7 +110,7 @@ public class WalletUtils {
 
         objectMapper.writeValue(destination, walletFile);
 
-        return new Bip39Wallet(fileName, mnemonic);
+        return fileName;
     }
 
     public static String generateNewWalletFile(String password, File destinationDirectory)
