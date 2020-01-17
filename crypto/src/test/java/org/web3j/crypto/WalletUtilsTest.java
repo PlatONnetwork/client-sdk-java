@@ -1,24 +1,18 @@
 package org.web3j.crypto;
 
-import java.io.File;
-import java.nio.file.Files;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import org.web3j.utils.Numeric;
 
+import java.io.File;
+import java.nio.file.Files;
+
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.web3j.crypto.Hash.sha256;
-import static org.web3j.crypto.SampleKeys.CREDENTIALS;
-import static org.web3j.crypto.SampleKeys.KEY_PAIR;
-import static org.web3j.crypto.SampleKeys.PASSWORD;
+import static org.web3j.crypto.SampleKeys.*;
 import static org.web3j.crypto.WalletUtils.isValidAddress;
 import static org.web3j.crypto.WalletUtils.isValidPrivateKey;
 
@@ -65,6 +59,22 @@ public class WalletUtilsTest {
     public void testGenerateLightNewWalletFile() throws Exception {
         String fileName = WalletUtils.generateLightNewWalletFile(PASSWORD, tempDir);
         testGeneratedNewWalletFile(fileName);
+    }
+
+    @Test
+    public void testGeneratePlatONWalletFile() throws Exception {
+        String fileName = WalletUtils.generatePlatONWalletFile(PASSWORD, tempDir);
+        testGeneratedNewWalletFile(fileName);
+    }
+
+    @Test
+    public void testGeneratePlatONBip39Wallet() throws Exception {
+        Bip39Wallet wallet = WalletUtils.generatePlatONBip39Wallet(PASSWORD, tempDir);
+
+        byte[] seed = MnemonicUtils.generateSeed(wallet.getMnemonic(), PASSWORD);
+        Credentials credentials = Credentials.create(ECKeyPair.create(sha256(seed)));
+
+        assertEquals(credentials, WalletUtils.loadBip39Credentials(PASSWORD, wallet.getMnemonic()));
     }
 
     private void testGeneratedNewWalletFile(String fileName) throws Exception {
