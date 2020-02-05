@@ -1,23 +1,22 @@
 package org.web3j.crypto;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.UUID;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.generators.SCrypt;
+import org.bouncycastle.crypto.params.KeyParameter;
+import org.web3j.utils.Numeric;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.bouncycastle.crypto.digests.SHA256Digest;
-import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
-import org.bouncycastle.crypto.generators.SCrypt;
-import org.bouncycastle.crypto.params.KeyParameter;
-
-import org.web3j.utils.Numeric;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.web3j.crypto.SecureRandomUtils.secureRandom;
@@ -52,6 +51,9 @@ public class Wallet {
 
     private static final int N_STANDARD = 1 << 18;
     private static final int P_STANDARD = 1;
+
+    private static final int N_PLATON = 1 << 14;
+    private static final int P_PLATON = 1;
 
     private static final int R = 8;
     private static final int DKLEN = 32;
@@ -92,6 +94,11 @@ public class Wallet {
     public static WalletFile createLight(String password, ECKeyPair ecKeyPair)
             throws CipherException {
         return create(password, ecKeyPair, N_LIGHT, P_LIGHT);
+    }
+
+    public static WalletFile createPlatON(String password, ECKeyPair ecKeyPair)
+            throws CipherException {
+        return create(password, ecKeyPair, N_PLATON, P_PLATON);
     }
 
     private static WalletFile createWalletFile(
