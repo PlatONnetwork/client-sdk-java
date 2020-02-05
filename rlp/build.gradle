@@ -2,5 +2,6 @@
 description 'Ethereum Recursive Length Prefix (RLP) encoding for serializing objects'
 
 dependencies {
+    compileOnly "org.projectlombok:lombok:1.18.10"
     compile project(':utils')
 }
