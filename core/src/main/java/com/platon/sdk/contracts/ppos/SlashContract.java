@@ -1,8 +1,12 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-
+import com.platon.sdk.contracts.ppos.abi.Function;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
+import com.platon.sdk.contracts.ppos.dto.common.DuplicateSignType;
+import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint32;
@@ -15,12 +19,9 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
-import com.platon.sdk.contracts.ppos.abi.PlatOnFunction;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
-import com.platon.sdk.contracts.ppos.dto.common.DuplicateSignType;
-import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
 
 public class SlashContract extends BaseContract {
 
@@ -76,7 +77,7 @@ public class SlashContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data) {
-        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, null);
+        Function function = createReportDoubleSignFunction(duplicateSignType, data);
         return executeRemoteCallTransaction(function);
     }
 
@@ -88,8 +89,8 @@ public class SlashContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> reportDoubleSign(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {
-        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, gasProvider);
-        return executeRemoteCallTransaction(function);
+        Function function = createReportDoubleSignFunction(duplicateSignType, data);
+        return executeRemoteCallTransaction(function, gasProvider);
     }
 
     /**
@@ -98,9 +99,9 @@ public class SlashContract extends BaseContract {
      * @param data
      * @return
      */
-    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) {
-    	 PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, null);
-    	 return function.getGasProvider();
+    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, NoSupportFunctionType {
+    	 Function function = createReportDoubleSignFunction(duplicateSignType, data);
+    	 return getDefaultGasProvider(function);
     }
 
     /**
@@ -110,7 +111,7 @@ public class SlashContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data) {
-        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, null);
+        Function function = createReportDoubleSignFunction(duplicateSignType, data);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -122,13 +123,13 @@ public class SlashContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> reportDoubleSignReturnTransaction(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {
-        PlatOnFunction function = createReportDoubleSignFunction(duplicateSignType, data, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+        Function function = createReportDoubleSignFunction(duplicateSignType, data);
+        return executeRemoteCallTransactionStep1(function, gasProvider);
     }
     
-    private PlatOnFunction createReportDoubleSignFunction(DuplicateSignType duplicateSignType, String data, GasProvider gasProvider) {          
-        PlatOnFunction function = new PlatOnFunction(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
-                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)), gasProvider);
+    private Function createReportDoubleSignFunction(DuplicateSignType duplicateSignType, String data) {
+        Function function = new Function(FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE,
+                Arrays.asList(new Uint32(BigInteger.valueOf(duplicateSignType.getValue())), new Utf8String(data)));
         return function;
     }
 
@@ -141,7 +142,7 @@ public class SlashContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<String>> checkDoubleSign(DuplicateSignType doubleSignType, String address, BigInteger blockNumber) {
-        PlatOnFunction function = new PlatOnFunction(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
+        Function function = new Function(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(doubleSignType.getValue())
                         , new BytesType(Numeric.hexStringToByteArray(address))
                         , new Uint64(blockNumber)));

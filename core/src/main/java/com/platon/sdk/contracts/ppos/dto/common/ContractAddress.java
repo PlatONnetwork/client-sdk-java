@@ -30,5 +30,9 @@ public class ContractAddress {
      * 提案相关接口
      */
     public static final String PROPOSAL_CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000005";
+    /**
+     * 奖励相关接口
+     */
+    public static final String REWARD_CONTRACT_ADDRESS = "0x1000000000000000000000000000000000000006";
 
 }

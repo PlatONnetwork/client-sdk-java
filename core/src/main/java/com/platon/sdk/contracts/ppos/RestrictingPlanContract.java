@@ -1,8 +1,14 @@
 package com.platon.sdk.contracts.ppos;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.platon.sdk.contracts.ppos.abi.CustomStaticArray;
+import com.platon.sdk.contracts.ppos.abi.Function;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
+import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
+import com.platon.sdk.contracts.ppos.dto.resp.RestrictingPlan;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -12,14 +18,9 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
-import com.platon.sdk.contracts.ppos.abi.CustomStaticArray;
-import com.platon.sdk.contracts.ppos.abi.PlatOnFunction;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
-import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
-import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
-import com.platon.sdk.contracts.ppos.dto.resp.RestrictingPlan;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class RestrictingPlanContract extends BaseContract {
 
@@ -78,7 +79,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> createRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
-        PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, null);
+        Function function = createRestrictingPlanFunction(account, restrictingPlanList);
         return executeRemoteCallTransaction(function);
     }
 
@@ -93,8 +94,8 @@ public class RestrictingPlanContract extends BaseContract {
      * @return
      */
     public RemoteCall<TransactionResponse> createRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList, GasProvider gasProvider) {
-        PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, gasProvider);
-        return executeRemoteCallTransaction(function);
+        Function function = createRestrictingPlanFunction(account, restrictingPlanList);
+        return executeRemoteCallTransaction(function, gasProvider);
     }
 
     /**
@@ -104,9 +105,9 @@ public class RestrictingPlanContract extends BaseContract {
      * @param restrictingPlanList
      * @return
      */
-    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
-    	PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, null);
-    	return function.getGasProvider();
+    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, NoSupportFunctionType {
+    	Function function = createRestrictingPlanFunction(account, restrictingPlanList);
+    	return getDefaultGasProvider(function);
     }
 
     /**
@@ -117,7 +118,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> createRestrictingPlanReturnTransaction(String account, List<RestrictingPlan> restrictingPlanList) {
-    	PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, null);
+    	Function function = createRestrictingPlanFunction(account, restrictingPlanList);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -130,14 +131,14 @@ public class RestrictingPlanContract extends BaseContract {
      * @return
      */
     public RemoteCall<PlatonSendTransaction> createRestrictingPlanReturnTransaction(String account, List<RestrictingPlan> restrictingPlanList, GasProvider gasProvider) {
-        PlatOnFunction function = createRestrictingPlanFunction(account, restrictingPlanList, gasProvider);
-        return executeRemoteCallTransactionStep1(function);
+        Function function = createRestrictingPlanFunction(account, restrictingPlanList);
+        return executeRemoteCallTransactionStep1(function,  gasProvider);
     }
     
-    private PlatOnFunction createRestrictingPlanFunction(String account, List<RestrictingPlan> restrictingPlanList, GasProvider gasProvider) {          
-    	PlatOnFunction function = new PlatOnFunction(
+    private Function createRestrictingPlanFunction(String account, List<RestrictingPlan> restrictingPlanList) {
+    	Function function = new Function(
                 FunctionType.CREATE_RESTRICTINGPLAN_FUNC_TYPE,
-                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray<RestrictingPlan>(restrictingPlanList)), gasProvider);
+                Arrays.asList(new BytesType(Numeric.hexStringToByteArray(account)), new CustomStaticArray<RestrictingPlan>(restrictingPlanList)));
         return function;
     }
 
@@ -148,7 +149,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @return
      */
     public RemoteCall<CallResponse<RestrictingItem>> getRestrictingInfo(String account) {
-    	PlatOnFunction function = new PlatOnFunction(
+    	Function function = new Function(
                 FunctionType.GET_RESTRICTINGINFO_FUNC_TYPE,
                 Arrays.asList(new BytesType(Numeric.hexStringToByteArray(account))));
         return executeRemoteCallObjectValueReturn(function, RestrictingItem.class);

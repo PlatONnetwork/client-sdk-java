@@ -2,8 +2,6 @@ package com.platon.sdk.contracts.ppos.dto.resp;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.platon.sdk.contracts.ppos.abi.CustomType;
-
-import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
@@ -45,16 +43,6 @@ public class RestrictingPlan extends CustomType {
 
     public void setAmount(String amount) {
         this.amount = Numeric.decodeQuantity(amount);
-    }
-
-    @Override
-    public Object getValue() {
-        return null;
-    }
-
-    @Override
-    public String getTypeAsString() {
-        return null;
     }
 
     @Override
