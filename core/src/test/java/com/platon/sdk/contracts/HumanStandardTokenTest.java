@@ -1,5 +1,6 @@
 package com.platon.sdk.contracts;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.PlatonGetCode;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import com.platon.sdk.contracts.HumanStandardToken.TransferEventResponse;
 
@@ -23,7 +25,7 @@ public class HumanStandardTokenTest extends BaseContractTest {
 	private Logger logger = LoggerFactory.getLogger(HumanStandardTokenTest.class);
 
 	// The solidity smart contract 'HumanStandardToken' address
-	String contractAddress = "0xd20106f57b2a7c75290ade3631045ec50a26c0aa";
+	String contractAddress = "0xe9f3243bd7084e73bb78ce62ce586b097213411e";
 	String toAddress = "0x31ac3dad7fa96b62d58b2be229575db40aa28b2c";
 
 	@Test
@@ -42,6 +44,12 @@ public class HumanStandardTokenTest extends BaseContractTest {
 		} catch (Exception e) {
 			logger.error("Deploy smart contract [HumanStandardToken] error: " + e.getMessage(), e);
 		}
+	}
+	
+	@Test
+	public void getCode() throws IOException {
+		PlatonGetCode platonGetCode = web3j.platonGetCode(contractAddress, DefaultBlockParameterName.LATEST).send();
+		logger.info("code >>> {}", platonGetCode.getCode());
 	}
 
 	@Test

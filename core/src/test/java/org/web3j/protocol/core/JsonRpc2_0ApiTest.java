@@ -83,8 +83,10 @@ public class JsonRpc2_0ApiTest {
 	@Before
 	public void init() {
 		chainId = 100L;
-		nodeUrl = "http://10.10.8.21:8804";
-		privateKey = "11e20dc277fafc4bc008521adda4b79c2a9e403131798c94eacb071005d43532";
+		// nodeUrl = "http://10.10.8.21:8804";
+		nodeUrl = "http://10.1.1.1:8801";
+		// privateKey = "11e20dc277fafc4bc008521adda4b79c2a9e403131798c94eacb071005d43532";
+		privateKey = "3e9516bc43b09dd2754040ad228b9a6c6253c87aa6895318438c7c46002050a6";
 
 		credentials = Credentials.create(privateKey);
 		address = credentials.getAddress();
@@ -327,7 +329,7 @@ public class JsonRpc2_0ApiTest {
 	@Test
 	public void platonGetBlockTransactionCountByHash() {
 		try {
-			String blockHash = "0x9b6b76349f2c9fd9fa9c9dd84ba593b48d9993403baa6de5a4454ec61825add1";
+			String blockHash = "0x667ab25b762d374dc4c2263acb2273f32a8511390d5fc23b5b2bc4dc1164258a";
 			PlatonGetBlockTransactionCountByHash platonGetBlockTransactionCountByNumber = web3j.platonGetBlockTransactionCountByHash(blockHash)
 					.send();
 			logger.info("PlatonGetBlockTransactionCountByNumber >>> " + JSON.toJSONString(platonGetBlockTransactionCountByNumber));
@@ -559,7 +561,7 @@ public class JsonRpc2_0ApiTest {
 	 */
 	@Test
 	public void platonGetBlockByHash() {
-		String blockHash = "0x0a0d04b01aa6e04b96eb2343eb4e0d5a3d9dda0c11a41799d1c7b8f4a9a07a02";
+		String blockHash = "0x667ab25b762d374dc4c2263acb2273f32a8511390d5fc23b5b2bc4dc1164258a";
 		try {
 			PlatonBlock platonBlock = web3j.platonGetBlockByHash(blockHash, true).send();
 			logger.info("platonBlock hash >>> " + platonBlock.getBlock().getHash());

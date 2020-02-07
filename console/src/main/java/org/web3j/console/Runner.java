@@ -5,6 +5,7 @@ import static org.web3j.utils.Collection.tail;
 import org.web3j.codegen.Console;
 import org.web3j.codegen.SolidityFunctionWrapperGenerator;
 import org.web3j.codegen.TruffleJsonFunctionWrapperGenerator;
+import org.web3j.codegen.WasmFunctionWrapperGenerator;
 import org.web3j.utils.Version;
 
 /**
@@ -12,7 +13,7 @@ import org.web3j.utils.Version;
  */
 public class Runner {
 
-    private static String USAGE = "Usage: platon-web3j version|wallet|solidity|truffle ...";
+    private static String USAGE = "Usage: platon-web3j version|wallet|solidity|truffle|wasm ...";
 
     private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
             + "              _      _____ _     _        \n"
@@ -40,9 +41,10 @@ public class Runner {
                 case "truffle":
                     TruffleJsonFunctionWrapperGenerator.run(tail(args));
                     break;
-               /*case "wasm":
-                	SophiaFunctionWrapperGenerator.run(tail(args));
-                    break;*/
+               case "wasm":
+            	    WasmFunctionWrapperGenerator.run(tail(args));
+                	// SophiaFunctionWrapperGenerator.run(tail(args));
+                    break;
                 case "version":
                     Console.exitSuccess("Version: " + Version.getVersion() + "\n"
                             + "Build timestamp: " + Version.getTimestamp());
