@@ -51,6 +51,16 @@ public final class RLPCodec {
 		if (clazz == Long.class || clazz == long.class)
 			return (T) Long.valueOf(element.asLong());
 
+		if (clazz == Float.class || clazz == float.class) {
+			Float val = Float.intBitsToFloat(element.asBigInteger().intValue());
+			return (T) val;
+		}
+
+		if (clazz == Double.class || clazz == double.class) {
+			Double val = Double.longBitsToDouble(element.asBigInteger().longValue());
+			return (T) val;
+		}
+
 		if (clazz == byte[].class)
 			return (T) element.asBytes();
 
@@ -61,6 +71,9 @@ public final class RLPCodec {
 		// big integer is non-null, since we cannot differ between zero and null
 		if (clazz == BigInteger.class)
 			return (T) element.asBigInteger();
+
+		if (clazz == Int64.class)
+			return (T) Int64.of(element.asBigInteger());
 
 		if (element.isNull())
 			return null;

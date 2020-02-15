@@ -85,6 +85,9 @@ public interface RLPElement {
 		if (t instanceof BigInteger)
 			return RLPItem.fromBigInteger((BigInteger) t);
 
+		if (t instanceof Int64)
+			return RLPItem.fromBigInteger(((Int64) t).getUnsingedValue());
+
 		if (t instanceof byte[])
 			return RLPItem.fromBytes((byte[]) t);
 
@@ -106,6 +109,14 @@ public interface RLPElement {
 
 		if (t.getClass() == long.class || t instanceof Long) {
 			return RLPItem.fromLong((long) t);
+		}
+		
+		if (t.getClass() == float.class || t instanceof Float) {
+			return RLPItem.fromBigInteger(new BigInteger(Integer.toUnsignedString(Float.floatToIntBits((float) t))));
+		}
+		
+		if (t.getClass() == double.class || t instanceof Double) {
+			return RLPItem.fromBigInteger(new BigInteger(Long.toUnsignedString(Double.doubleToLongBits((double) t))));
 		}
 
 		if (t instanceof Map) {
