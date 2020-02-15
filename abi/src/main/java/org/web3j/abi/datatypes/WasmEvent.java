@@ -4,10 +4,10 @@ import java.util.List;
 
 public class WasmEvent {
 	private String name;
-	private List<?> indexedParameters;
-	private List<?> nonIndexedParameters;
+	private List<Class<?>> indexedParameters;
+	private List<Class<?>> nonIndexedParameters;
 
-	public WasmEvent(String name, List<?> indexedParameters, List<?> nonIndexedParameters) {
+	public WasmEvent(String name, List<Class<?>> indexedParameters, List<Class<?>> nonIndexedParameters) {
 		this.name = name;
 		this.indexedParameters = indexedParameters;
 		this.nonIndexedParameters = nonIndexedParameters;
@@ -21,19 +21,19 @@ public class WasmEvent {
 		this.name = name;
 	}
 
-	public List<?> getIndexedParameters() {
+	public List<Class<?>> getIndexedParameters() {
 		return indexedParameters;
 	}
 
-	public void setIndexedParameters(List<?> indexedParameters) {
+	public void setIndexedParameters(List<Class<?>> indexedParameters) {
 		this.indexedParameters = indexedParameters;
 	}
 
-	public List<?> getNonIndexedParameters() {
+	public List<Class<?>> getNonIndexedParameters() {
 		return nonIndexedParameters;
 	}
 
-	public void setNonIndexedParameters(List<?> nonIndexedParameters) {
+	public void setNonIndexedParameters(List<Class<?>> nonIndexedParameters) {
 		this.nonIndexedParameters = nonIndexedParameters;
 	}
 

@@ -1,6 +1,7 @@
 package org.web3j.abi.datatypes.generated;
 
 import java.math.BigInteger;
+import com.platon.rlp.Int64;
 
 public final class WasmAbiTypes {
 	private WasmAbiTypes() {
@@ -18,131 +19,274 @@ public final class WasmAbiTypes {
 		case "uint8":
 			return Byte.class;
 		case "int8":
-			return Byte.class;
+			return Int64.class;
 		case "uint16":
 			return Integer.class;
 		case "int16":
-			return Integer.class;
+			return Int64.class;
 		case "uint24":
 			return Integer.class;
 		case "int24":
-			return Integer.class;
+			return Int64.class;
 		case "uint32":
 			return Integer.class;
 		case "int32":
-			return Integer.class;
+			return Int64.class;
 		case "uint40":
 			return Long.class;
 		case "int40":
-			return Long.class;
+			return Int64.class;
 		case "uint48":
 			return Long.class;
 		case "int48":
-			return Long.class;
+			return Int64.class;
 		case "uint56":
 			return Long.class;
 		case "int56":
-			return Long.class;
+			return Int64.class;
 		case "uint64":
 			return Long.class;
 		case "int64":
-			return Long.class;
+			return Int64.class;
 		case "uint72":
 			return BigInteger.class;
-		case "int72":
-			return BigInteger.class;
+		/*case "int72":
+			return BigInteger.class;*/
 		case "uint80":
 			return BigInteger.class;
-		case "int80":
-			return BigInteger.class;
+		/*case "int80":
+			return BigInteger.class;*/
 		case "uint88":
 			return BigInteger.class;
-		case "int88":
-			return BigInteger.class;
+		/*case "int88":
+			return BigInteger.class;*/
 		case "uint96":
 			return BigInteger.class;
-		case "int96":
-			return BigInteger.class;
+		/*case "int96":
+			return BigInteger.class;*/
 		case "uint104":
 			return BigInteger.class;
-		case "int104":
-			return BigInteger.class;
+		/*case "int104":
+			return BigInteger.class;*/
 		case "uint112":
 			return BigInteger.class;
-		case "int112":
-			return BigInteger.class;
+		/*case "int112":
+			return BigInteger.class;*/
 		case "uint120":
 			return BigInteger.class;
-		case "int120":
-			return BigInteger.class;
+		/*case "int120":
+			return BigInteger.class;*/
 		case "uint128":
 			return BigInteger.class;
-		case "int128":
-			return BigInteger.class;
+		/*case "int128":
+			return BigInteger.class;*/
 		case "uint136":
 			return BigInteger.class;
-		case "int136":
-			return BigInteger.class;
+		/*case "int136":
+			return BigInteger.class;*/
 		case "uint144":
 			return BigInteger.class;
-		case "int144":
-			return BigInteger.class;
+		/*case "int144":
+			return BigInteger.class;*/
 		case "uint152":
 			return BigInteger.class;
-		case "int152":
-			return BigInteger.class;
+		/*case "int152":
+			return BigInteger.class;*/
 		case "uint160":
 			return BigInteger.class;
-		case "int160":
-			return BigInteger.class;
+		/*case "int160":
+			return BigInteger.class;*/
 		case "uint168":
 			return BigInteger.class;
-		case "int168":
-			return BigInteger.class;
+		/*case "int168":
+			return BigInteger.class;*/
 		case "uint176":
 			return BigInteger.class;
-		case "int176":
-			return BigInteger.class;
+		/*case "int176":
+			return BigInteger.class;*/
 		case "uint184":
 			return BigInteger.class;
-		case "int184":
-			return BigInteger.class;
+		/*case "int184":
+			return BigInteger.class;*/
 		case "uint192":
 			return BigInteger.class;
-		case "int192":
-			return BigInteger.class;
+		/*case "int192":
+			return BigInteger.class;*/
 		case "uint200":
 			return BigInteger.class;
-		case "int200":
-			return BigInteger.class;
+		/*case "int200":
+			return BigInteger.class;*/
 		case "uint208":
 			return BigInteger.class;
-		case "int208":
-			return BigInteger.class;
+		/*case "int208":
+			return BigInteger.class;*/
 		case "uint216":
 			return BigInteger.class;
-		case "int216":
-			return BigInteger.class;
+		/*case "int216":
+			return BigInteger.class;*/
 		case "uint224":
 			return BigInteger.class;
-		case "int224":
-			return BigInteger.class;
+		/*case "int224":
+			return BigInteger.class;*/
 		case "uint232":
 			return BigInteger.class;
-		case "int232":
-			return BigInteger.class;
+		/*case "int232":
+			return BigInteger.class;*/
 		case "uint240":
 			return BigInteger.class;
-		case "int240":
-			return BigInteger.class;
+		/*case "int240":
+			return BigInteger.class;*/
 		case "uint248":
 			return BigInteger.class;
-		case "int248":
-			return BigInteger.class;
+		/*case "int248":
+			return BigInteger.class;*/
 		case "uint256":
 			return BigInteger.class;
-		case "int256":
+		/*
+		 * case "int256": return BigInteger.class;
+		 */
+		default:
+			throw new UnsupportedOperationException("Unsupported type encountered: " + type);
+		}
+	}
+	
+	public static Class<?> getRawType(String type) {
+		switch (type) {
+		case "address":
+			return String.class;
+		case "bool":
+			return boolean.class;
+		case "string":
+			return String.class;
+		case "uint8":
+			return byte.class;
+		case "int8":
+			return Int64.class;
+		case "uint16":
+			return int.class;
+		case "int16":
+			return Int64.class;
+		case "uint24":
+			return int.class;
+		case "int24":
+			return Int64.class;
+		case "uint32":
+			return int.class;
+		case "int32":
+			return Int64.class;
+		case "uint40":
+			return long.class;
+		case "int40":
+			return Int64.class;
+		case "uint48":
+			return long.class;
+		case "int48":
+			return Int64.class;
+		case "uint56":
+			return long.class;
+		case "int56":
+			return Int64.class;
+		case "uint64":
+			return long.class;
+		case "int64":
+			return Int64.class;
+		case "uint72":
 			return BigInteger.class;
+		/*case "int72":
+			return BigInteger.class;*/
+		case "uint80":
+			return BigInteger.class;
+		/*case "int80":
+			return BigInteger.class;*/
+		case "uint88":
+			return BigInteger.class;
+		/*case "int88":
+			return BigInteger.class;*/
+		case "uint96":
+			return BigInteger.class;
+		/*case "int96":
+			return BigInteger.class;*/
+		case "uint104":
+			return BigInteger.class;
+		/*case "int104":
+			return BigInteger.class;*/
+		case "uint112":
+			return BigInteger.class;
+		/*case "int112":
+			return BigInteger.class;*/
+		case "uint120":
+			return BigInteger.class;
+		/*case "int120":
+			return BigInteger.class;*/
+		case "uint128":
+			return BigInteger.class;
+		/*case "int128":
+			return BigInteger.class;*/
+		case "uint136":
+			return BigInteger.class;
+		/*case "int136":
+			return BigInteger.class;*/
+		case "uint144":
+			return BigInteger.class;
+		/*case "int144":
+			return BigInteger.class;*/
+		case "uint152":
+			return BigInteger.class;
+		/*case "int152":
+			return BigInteger.class;*/
+		case "uint160":
+			return BigInteger.class;
+		/*case "int160":
+			return BigInteger.class;*/
+		case "uint168":
+			return BigInteger.class;
+		/*case "int168":
+			return BigInteger.class;*/
+		case "uint176":
+			return BigInteger.class;
+		/*case "int176":
+			return BigInteger.class;*/
+		case "uint184":
+			return BigInteger.class;
+		/*case "int184":
+			return BigInteger.class;*/
+		case "uint192":
+			return BigInteger.class;
+		/*case "int192":
+			return BigInteger.class;*/
+		case "uint200":
+			return BigInteger.class;
+		/*case "int200":
+			return BigInteger.class;*/
+		case "uint208":
+			return BigInteger.class;
+		/*case "int208":
+			return BigInteger.class;*/
+		case "uint216":
+			return BigInteger.class;
+		/*case "int216":
+			return BigInteger.class;*/
+		case "uint224":
+			return BigInteger.class;
+		/*case "int224":
+			return BigInteger.class;*/
+		case "uint232":
+			return BigInteger.class;
+		/*case "int232":
+			return BigInteger.class;*/
+		case "uint240":
+			return BigInteger.class;
+		/*case "int240":
+			return BigInteger.class;*/
+		case "uint248":
+			return BigInteger.class;
+		/*case "int248":
+			return BigInteger.class;*/
+		case "uint256":
+			return BigInteger.class;
+		/*
+		 * case "int256": return BigInteger.class;
+		 */
 		default:
 			throw new UnsupportedOperationException("Unsupported type encountered: " + type);
 		}
