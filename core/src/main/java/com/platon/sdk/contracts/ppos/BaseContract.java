@@ -37,6 +37,7 @@ import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -143,6 +144,12 @@ public abstract class BaseContract extends ManagedTransaction {
         	callResponse.setCode(callRet.getCode());
         	callResponse.setErrMsg(callRet.getRet().toString());
         }
+
+        if(callRet.getCode() == ErrorCode.OBJECT_NOT_FOUND){
+            callResponse.setCode(ErrorCode.SUCCESS);
+            callResponse.setData(Collections.emptyList());
+        }
+
         return callResponse;
     }
     

@@ -1,5 +1,10 @@
 package org.web3j.crypto;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.web3j.utils.Numeric;
+
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -9,12 +14,6 @@ import java.security.SecureRandom;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.web3j.utils.Numeric;
 
 import static org.web3j.crypto.Hash.sha256;
 import static org.web3j.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
@@ -45,6 +44,73 @@ public class WalletUtils {
             InvalidAlgorithmParameterException, CipherException, IOException {
 
         return generateNewWalletFile(password, destinationDirectory, false);
+    }
+
+    /**
+     * create a platON standard wallet
+     *
+     * @param password
+     * @param destinationDirectory
+     * @return
+     * @throws NoSuchAlgorithmException
+     * @throws NoSuchProviderException
+     * @throws InvalidAlgorithmParameterException
+     * @throws CipherException
+     * @throws IOException
+     */
+    public static String generatePlatONWalletFile(String password, File destinationDirectory)
+            throws NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException, CipherException, IOException {
+        ECKeyPair ecKeyPair = Keys.createEcKeyPair();
+
+        String fileName  = generatePlatONWalletFile(password, ecKeyPair, destinationDirectory);
+        return fileName;
+    }
+
+    /**
+     * create a platON standard Bip39 wallet
+     *
+     * @param password
+     * @param destinationDirectory
+     * @return
+     * @throws CipherException
+     * @throws IOException
+     */
+    public static Bip39Wallet generatePlatONBip39Wallet(String password, File destinationDirectory)
+            throws CipherException, IOException {
+        byte[] initialEntropy = new byte[16];
+        secureRandom.nextBytes(initialEntropy);
+
+        String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, password);
+        ECKeyPair ecKeyPair = ECKeyPair.create(sha256(seed));
+
+        String fileName  = generatePlatONWalletFile(password, ecKeyPair, destinationDirectory);
+
+        return new Bip39Wallet(fileName, mnemonic);
+    }
+
+    /**
+     * Create platON standard wallet with ecKeyPair
+     *
+     * @param password
+     * @param ecKeyPair
+     * @param destinationDirectory
+     * @return
+     * @throws CipherException
+     * @throws IOException
+     */
+    public static String generatePlatONWalletFile(String password, ECKeyPair ecKeyPair, File destinationDirectory)
+            throws CipherException, IOException {
+
+        WalletFile walletFile = Wallet.createPlatON(password,ecKeyPair);
+
+        String fileName = getWalletFileName(walletFile);
+        File destination = new File(destinationDirectory, fileName);
+
+        objectMapper.writeValue(destination, walletFile);
+
+        return fileName;
     }
 
     public static String generateNewWalletFile(String password, File destinationDirectory)
