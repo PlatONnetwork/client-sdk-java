@@ -14,16 +14,21 @@ import javax.lang.model.element.Modifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.web3j.abi.WasmEventEncoder;
 import org.web3j.abi.WasmFunctionEncoder;
-// import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.WasmEvent;
 import org.web3j.abi.datatypes.WasmFunction;
 import org.web3j.abi.datatypes.generated.WasmAbiTypes;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.ObjectMapperFactory;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.request.PlatonFilter;
+import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.WasmAbiDefinition;
+import org.web3j.protocol.core.methods.response.WasmAbiDefinition.NamedType;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.WasmContract;
 import org.web3j.tx.gas.GasProvider;
@@ -34,12 +39,15 @@ import org.web3j.utils.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import rx.functions.Func1;
 
 @SuppressWarnings("rawtypes")
 public class WasmFunctionWrapper extends Generator {
@@ -52,13 +60,13 @@ public class WasmFunctionWrapper extends Generator {
 	private static final String CONTRACT_ADDRESS = "contractAddress";
 	private static final String GAS_PRICE = "gasPrice";
 	private static final String GAS_LIMIT = "gasLimit";
-	// private static final String FILTER = "filter";
-	// private static final String START_BLOCK = "startBlock";
-	// private static final String END_BLOCK = "endBlock";
+	private static final String FILTER = "filter";
+	private static final String START_BLOCK = "startBlock";
+	private static final String END_BLOCK = "endBlock";
 	private static final String WEI_VALUE = "weiValue";
 	private static final String FUNC_NAME_PREFIX = "FUNC_";
 
-	// private static final ClassName LOG = ClassName.get(Log.class);
+	private static final ClassName LOG = ClassName.get(Log.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(WasmFunctionWrapper.class);
 
 	private static final String CODEGEN_WARNING = "<p>Auto generated code.\n" + "<p><strong>Do not modify!</strong>\n" + "<p>Please use the "
@@ -197,8 +205,7 @@ public class WasmFunctionWrapper extends Generator {
 				MethodSpec ms = buildFunction(functionDefinition, customTypes);
 				methodSpecs.add(ms);
 			} else if (functionDefinition.getType().equals("Event")) {
-				// TODO
-				// methodSpecs.addAll(buildEventFunctions(functionDefinition, classBuilder, customTypes));
+				methodSpecs.addAll(buildEventFunctions(functionDefinition, classBuilder, customTypes));
 			} else if (functionDefinition.getType().equals("struct")) {
 				classBuilder.addType(buildStruct(functionDefinition, customTypes));
 			}
@@ -478,6 +485,204 @@ public class WasmFunctionWrapper extends Generator {
 		}
 	}
 
+	List<MethodSpec> buildEventFunctions(WasmAbiDefinition functionDefinition, TypeSpec.Builder classBuilder, Set<String> customTypes) {
+		String functionName = functionDefinition.getName();
+		String responseClassName = Strings.capitaliseFirstLetter(functionName) + "EventResponse";
+
+		List<NamedType> inputs = functionDefinition.getInput();
+		int topic = functionDefinition.getTopic();
+
+		List<NamedTypeName> indexedParameters = new ArrayList<>();
+		List<NamedTypeName> nonIndexedParameters = new ArrayList<>();
+
+		for (int i = 0; i < inputs.size(); i++) {
+			NamedType namedType = inputs.get(i);
+			String name = namedType.getName();
+			String type = namedType.getType();
+
+			String tmpType;
+			Matcher matcher = pattern.matcher(type);
+			if (matcher.find()) {
+				tmpType = matcher.group(1);
+			} else {
+				tmpType = type;
+			}
+			TypeName typeName;
+			if (null != tmpType && customTypes.contains(tmpType)) {
+				typeName = buildCustomTypeName(type);
+			} else {
+				typeName = buildTypeName(type);
+			}
+
+			boolean isIndexed = i < topic ? true : false;
+
+			NamedTypeName parameter = new NamedTypeName(name, typeName, isIndexed);
+			if (isIndexed) {
+				indexedParameters.add(parameter);
+			} else {
+				nonIndexedParameters.add(parameter);
+			}
+		}
+
+		classBuilder.addField(createEventDefinition(functionName, indexedParameters, nonIndexedParameters));
+		classBuilder.addType(buildEventResponseObject(responseClassName, indexedParameters, nonIndexedParameters));
+
+		List<MethodSpec> methods = new ArrayList<>();
+		methods.add(buildEventTransactionReceiptFunction(responseClassName, functionName, indexedParameters, nonIndexedParameters));
+		methods.add(buildEventObservableFunction(responseClassName, functionName, indexedParameters, nonIndexedParameters));
+		methods.add(buildDefaultEventObservableFunction(responseClassName, functionName));
+		return methods;
+	}
+
+	private FieldSpec createEventDefinition(String name, List<NamedTypeName> indexedParameters, List<NamedTypeName> nonIndexedParameters) {
+
+		CodeBlock initializer = buildVariableLengthEventInitializer(name, indexedParameters, nonIndexedParameters);
+
+		return FieldSpec.builder(WasmEvent.class, buildEventDefinitionName(name)).addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+				.initializer(initializer).build();
+	}
+
+	private static CodeBlock buildVariableLengthEventInitializer(String eventName, List<NamedTypeName> indexedParameters,
+			List<NamedTypeName> nonIndexedParameters) {
+
+		List<Object> objects = new ArrayList<>();
+		objects.add(WasmEvent.class);
+		objects.add(eventName);
+		objects.add(Arrays.class);
+
+		String indexedParamStr = "";
+		for (int i = 0; i < indexedParameters.size(); i++) {
+			if (i > 0) {
+				indexedParamStr += " , ";
+			}
+			indexedParamStr += "$T.class";
+			objects.add(indexedParameters.get(i).getTypeName());
+		}
+
+		objects.add(Arrays.class);
+		String nonIndexedParamStr = "";
+		for (int i = 0; i < nonIndexedParameters.size(); i++) {
+			if (i > 0) {
+				nonIndexedParamStr += " , ";
+			}
+			nonIndexedParamStr += "$T.class";
+			objects.add(nonIndexedParameters.get(i).getTypeName());
+		}
+
+		return CodeBlock.builder()
+				.addStatement("new $T($S, $T.asList(" + indexedParamStr + "), $T.asList(" + nonIndexedParamStr + "))", objects.toArray()).build();
+
+	}
+
+	private String buildEventDefinitionName(String eventName) {
+		return eventName.toUpperCase() + "_EVENT";
+	}
+
+	TypeSpec buildEventResponseObject(String className, List<NamedTypeName> indexedParameters, List<NamedTypeName> nonIndexedParameters) {
+
+		TypeSpec.Builder builder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+
+		builder.addField(LOG, "log", Modifier.PUBLIC);
+
+		for (NamedTypeName namedType : indexedParameters) {
+			builder.addField(ClassName.get(String.class), namedType.getName(), Modifier.PUBLIC);
+		}
+
+		for (NamedTypeName namedType : nonIndexedParameters) {
+			builder.addField(namedType.getTypeName(), namedType.getName(), Modifier.PUBLIC);
+		}
+
+		return builder.build();
+	}
+
+	MethodSpec buildEventTransactionReceiptFunction(String responseClassName, String functionName, List<NamedTypeName> indexedParameters,
+			List<NamedTypeName> nonIndexedParameters) {
+
+		ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get("", responseClassName));
+
+		String generatedFunctionName = "get" + Strings.capitaliseFirstLetter(functionName) + "Events";
+		MethodSpec.Builder transactionMethodBuilder = MethodSpec.methodBuilder(generatedFunctionName).addModifiers(Modifier.PUBLIC)
+				.addParameter(TransactionReceipt.class, "transactionReceipt").returns(parameterizedTypeName);
+
+		transactionMethodBuilder
+				.addStatement("$T valueList = extractEventParametersWithLog(" + buildEventDefinitionName(functionName) + ", " + "transactionReceipt)",
+						ParameterizedTypeName.get(List.class, WasmContract.WasmEventValuesWithLog.class))
+				.addStatement("$1T responses = new $1T(valueList.size())",
+						ParameterizedTypeName.get(ClassName.get(ArrayList.class), ClassName.get("", responseClassName)))
+				.beginControlFlow("for ($T eventValues : valueList)", WasmContract.WasmEventValuesWithLog.class)
+				.addStatement("$1T typedResponse = new $1T()", ClassName.get("", responseClassName))
+				.addCode(buildTypedResponse("typedResponse", indexedParameters, nonIndexedParameters, false))
+				.addStatement("responses.add(typedResponse)").endControlFlow();
+
+		transactionMethodBuilder.addStatement("return responses");
+		return transactionMethodBuilder.build();
+	}
+
+	CodeBlock buildTypedResponse(String objectName, List<NamedTypeName> indexedParameters, List<NamedTypeName> nonIndexedParameters,
+			boolean observable) {
+
+		CodeBlock.Builder builder = CodeBlock.builder();
+		if (observable) {
+			builder.addStatement("$L.log = log", objectName);
+		} else {
+			builder.addStatement("$L.log = eventValues.getLog()", objectName);
+		}
+		for (int i = 0; i < indexedParameters.size(); i++) {
+			builder.addStatement("$L.$L = ($T) eventValues.getIndexedValues().get($L)", objectName, indexedParameters.get(i).getName(), String.class,
+					i);
+		}
+
+		for (int i = 0; i < nonIndexedParameters.size(); i++) {
+			builder.addStatement("$L.$L = ($T) eventValues.getNonIndexedValues().get($L)", objectName, nonIndexedParameters.get(i).getName(),
+					nonIndexedParameters.get(i).getTypeName(), i);
+		}
+		return builder.build();
+	}
+
+	MethodSpec buildEventObservableFunction(String responseClassName, String functionName, List<NamedTypeName> indexedParameters,
+			List<NamedTypeName> nonIndexedParameters) {
+
+		String generatedFunctionName = Strings.lowercaseFirstLetter(functionName) + "EventObservable";
+		ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(rx.Observable.class),
+				ClassName.get("", responseClassName));
+
+		MethodSpec.Builder observableMethodBuilder = MethodSpec.methodBuilder(generatedFunctionName).addModifiers(Modifier.PUBLIC)
+				.addParameter(PlatonFilter.class, FILTER).returns(parameterizedTypeName);
+
+		TypeSpec converter = TypeSpec.anonymousClassBuilder("")
+				.addSuperinterface(
+						ParameterizedTypeName.get(ClassName.get(Func1.class), ClassName.get(Log.class), ClassName.get("", responseClassName)))
+				.addMethod(MethodSpec.methodBuilder("call").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).addParameter(Log.class, "log")
+						.returns(ClassName.get("", responseClassName))
+						.addStatement("$T eventValues = extractEventParametersWithLog(" + buildEventDefinitionName(functionName) + ", log)",
+								WasmContract.WasmEventValuesWithLog.class)
+						.addStatement("$1T typedResponse = new $1T()", ClassName.get("", responseClassName))
+						.addCode(buildTypedResponse("typedResponse", indexedParameters, nonIndexedParameters, true))
+						.addStatement("return typedResponse").build())
+				.build();
+
+		observableMethodBuilder.addStatement("return web3j.platonLogObservable(filter).map($L)", converter);
+
+		return observableMethodBuilder.build();
+	}
+
+	MethodSpec buildDefaultEventObservableFunction(String responseClassName, String functionName) {
+
+		String generatedFunctionName = Strings.lowercaseFirstLetter(functionName) + "EventObservable";
+		ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(rx.Observable.class),
+				ClassName.get("", responseClassName));
+
+		MethodSpec.Builder observableMethodBuilder = MethodSpec.methodBuilder(generatedFunctionName).addModifiers(Modifier.PUBLIC)
+				.addParameter(DefaultBlockParameter.class, START_BLOCK).addParameter(DefaultBlockParameter.class, END_BLOCK)
+				.returns(parameterizedTypeName);
+
+		observableMethodBuilder.addStatement("$1T filter = new $1T($2L, $3L, " + "getContractAddress())", PlatonFilter.class, START_BLOCK, END_BLOCK)
+				.addStatement("filter.addSingleTopic($T.encode(" + buildEventDefinitionName(functionName) + "))", WasmEventEncoder.class)
+				.addStatement("return " + generatedFunctionName + "(filter)");
+
+		return observableMethodBuilder.build();
+	}
+
 	static TypeName buildCustomTypeName(String type) {
 		Matcher matcher = pattern.matcher(type);
 		if (matcher.find()) {
@@ -502,7 +707,7 @@ public class WasmFunctionWrapper extends Generator {
 	static TypeName buildTypeName(String type) {
 		Matcher matcher = pattern.matcher(type);
 		if (matcher.find()) {
-			Class<?> baseType = WasmAbiTypes.getType(matcher.group(1));
+			Class<?> baseType = WasmAbiTypes.getRawType(matcher.group(1));
 			String firstArrayDimension = matcher.group(2);
 			String secondArrayDimension = matcher.group(3);
 
@@ -514,7 +719,7 @@ public class WasmFunctionWrapper extends Generator {
 			}
 			return typeName;
 		} else if (type.startsWith("bytes")) {
-			return ArrayTypeName.of(Byte.class);
+			return ArrayTypeName.of(byte.class);
 		} else {
 			Class<?> cls = WasmAbiTypes.getType(type);
 			return ClassName.get(cls);
@@ -529,5 +734,29 @@ public class WasmFunctionWrapper extends Generator {
 
 	private static String funcNameToConst(String funcName) {
 		return FUNC_NAME_PREFIX + funcName.toUpperCase();
+	}
+
+	public static class NamedTypeName {
+		private final TypeName typeName;
+		private final String name;
+		private final boolean indexed;
+
+		NamedTypeName(String name, TypeName typeName, boolean indexed) {
+			this.name = name;
+			this.typeName = typeName;
+			this.indexed = indexed;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public TypeName getTypeName() {
+			return typeName;
+		}
+
+		public boolean isIndexed() {
+			return indexed;
+		}
 	}
 }
