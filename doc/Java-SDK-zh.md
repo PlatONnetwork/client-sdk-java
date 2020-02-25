@@ -2335,7 +2335,7 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
 
 * **duplicatePrepare**
 
-```json
+```text
 {
     "prepare_a":{
         "epoch":0, 			//共识轮epoch值
@@ -2357,7 +2357,7 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
 
 * **duplicateVote**
 
-```json 
+```text 
 {
     "voteA":{
         "epoch":0, 			//共识轮epoch值
@@ -2379,7 +2379,7 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
 
 * **duplicateViewchange**
 
-```json
+```text
 {
     "viewA":{
         "epoch":0, 			//共识轮epoch值
