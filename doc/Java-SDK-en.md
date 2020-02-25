@@ -2509,7 +2509,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，Output a hex-encoded solidity binary file to provide transaction requests.
 `abi`，Output a solidity application binary interface (`ABI`) file, which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the solidity smart contract.
 
-* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://github.com/PlatONnetwork/platon-truffle/tree/feature/evm)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.1.0/index.html))：
+* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://github.com/PlatONnetwork/platon-truffle/tree/feature/evm)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.1.0/index.html))：
 
 > **step1.** Initialize the project with platon-truffle
 
