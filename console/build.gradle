@@ -11,4 +11,5 @@ dependencies {
 
 // Build command line library release with target distShadowZip
 mainClassName = 'org.web3j.console.Runner'
-applicationName = 'client-sdk'
+//applicationName = 'client-sdk'
+applicationName = 'platon-web3j'
