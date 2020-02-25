@@ -2338,7 +2338,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicatePrepare**
 
-```json
+```
 {
     "prepare_a": {
         "epoch": 0, // epoch value of consensus round
@@ -2360,7 +2360,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicateVote**
 
-```json
+```
 {
     "voteA": {
         "epoch": 0, // epoch value of consensus round
@@ -2382,7 +2382,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicateViewchange**
 
-```json
+```
 {
     "viewA": {
         "epoch": 0, // epoch value of consensus round
