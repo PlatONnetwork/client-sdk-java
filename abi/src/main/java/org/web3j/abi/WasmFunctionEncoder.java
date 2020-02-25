@@ -14,17 +14,25 @@ public class WasmFunctionEncoder {
 	public static String encode(WasmFunction function) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add(function.getName());
-		parameters.addAll(function.getInputParameters());
+
+		for (Object o : function.getInputParameters()) {
+			if (!o.equals(Void.class)) {
+				parameters.add(o);
+			}
+		}
 
 		byte[] data = RLPCodec.encode(parameters);
-
 		return Numeric.toHexStringNoPrefix(data);
 	}
 
 	public static String encodeConstructor(String code, List<?> inputParameters) {
 		List<Object> parameters = new ArrayList<>();
 		parameters.add(DEPLOY_METHOD_NAME);
-		parameters.addAll(inputParameters);
+		for (Object o : inputParameters) {
+			if (!o.equals(Void.class)) {
+				parameters.add(o);
+			}
+		}
 		byte[] parameterData = RLPCodec.encode(parameters);
 
 		byte[] codeBinary = Numeric.hexStringToByteArray(code);

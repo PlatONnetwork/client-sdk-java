@@ -16,6 +16,7 @@ import org.web3j.abi.WasmEventValues;
 import org.web3j.abi.WasmFunctionEncoder;
 import org.web3j.abi.WasmReturnDecoder;
 import org.web3j.abi.datatypes.WasmEvent;
+import org.web3j.abi.datatypes.WasmEventParameter;
 import org.web3j.abi.datatypes.WasmFunction;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -33,6 +34,8 @@ import org.web3j.utils.Numeric;
 
 import com.platon.rlp.RLPCodec;
 import com.platon.rlp.RLPList;
+import com.platon.rlp.datatypes.Int;
+import com.platon.rlp.datatypes.Uint;
 
 /**
  * Wasm contract type abstraction for interacting with smart contracts via native Java types.
@@ -136,7 +139,11 @@ public abstract class WasmContract extends ManagedTransaction {
 				.send();
 
 		String value = ethCall.getValue();
-		return WasmReturnDecoder.decode(value, clazz);
+		if (null != function.getOutputParameterizedType()) {
+			return WasmReturnDecoder.decode(value, clazz, function.getOutputParameterizedType());
+		} else {
+			return WasmReturnDecoder.decode(value, clazz);
+		}
 	}
 
 	protected <T> RemoteCall<T> executeRemoteCall(WasmFunction function, Class<T> returnType) {
@@ -242,31 +249,46 @@ public abstract class WasmContract extends ManagedTransaction {
 	}
 
 	public static WasmEventValues staticExtractEventParameters(WasmEvent event, Log log) {
-
 		String eventSignature = WasmEventEncoder.encode(event);
 		List<String> topics = log.getTopics();
 		if (null == topics || topics.isEmpty() || !topics.get(0).equals(eventSignature)) {
 			return null;
 		}
 
-		// The value of the index parameters is hashed(SHA3)
-		// get from topics
+		// The indexed parameters of wasm event
 		List<String> indexedValues = new ArrayList<>();
-		int count = 0;
-		for (String tmp : topics) {
-			if (count > 0) {
-				indexedValues.add(tmp);
+		List<WasmEventParameter> indexedParameters = event.getIndexedParameters();
+		if (null != indexedParameters && !indexedParameters.isEmpty()) {
+			for (int i = 0; i < indexedParameters.size(); i++) {
+				String topicData = topics.get(i + 1);
+				WasmEventParameter wasmEventParameter = indexedParameters.get(i);
+				Class<?> clazz = wasmEventParameter.getType();
+				if (Uint.class.isAssignableFrom(clazz) || Int.class.isAssignableFrom(clazz)) {
+					try {
+						byte[] data = Numeric.hexStringToByteArray(topicData);
+						String value = new BigInteger(data).toString();
+						indexedValues.add(value);
+					} catch (Exception e) {
+						indexedValues.add(topicData);
+					}
+				} else {
+					indexedValues.add(topicData);
+				}
 			}
-			count++;
 		}
 
+		// The unindexed parameters of wasm event
 		List<Object> nonIndexedValues = new ArrayList<>();
-		List<Class<?>> nonIndexedParameters = event.getNonIndexedParameters();
-		String data = log.getData();
-		if (null != data && !data.equals("")) {
-			RLPList rlpList = RLPCodec.decode(Numeric.hexStringToByteArray(data), RLPList.class);
+		List<WasmEventParameter> nonIndexedParameters = event.getNonIndexedParameters();
+		if (null != log.getData() && !log.getData().equals("")) {
+			RLPList rlpList = RLPCodec.decode(Numeric.hexStringToByteArray(log.getData()), RLPList.class);
 			for (int i = 0; i < rlpList.size(); i++) {
-				nonIndexedValues.add(RLPCodec.decode(rlpList.get(i).getEncoded(), nonIndexedParameters.get(i)));
+				WasmEventParameter wasmEventParameter = nonIndexedParameters.get(i);
+				if (wasmEventParameter.getParameterizedType() == null) {
+					nonIndexedValues.add(RLPCodec.decode(rlpList.get(i).getEncoded(), wasmEventParameter.getType()));
+				} else {
+					nonIndexedValues.add(RLPCodec.decodeContainer(rlpList.get(i).getEncoded(), wasmEventParameter.getParameterizedType()));
+				}
 			}
 		}
 
