@@ -1,25 +1,27 @@
-# Getting Started
+# Java SDK Development Guide
 
-Depending on the build tool, add related dependencies to your project using:
+## Development library import
 
-- Use requires jdk1.8 or above.
+Depending on the build tool, use the following methods to add related dependencies to your project：
 
-## maven
+- Use requirements above jdk1.8.
+
+### maven
 
 > Project configuration:
-```
+```xml
 <repository>
-	 <id>platon-public</id>
-	 <url>https://sdk.platon.network/nexus/content/groups/public/</url>
+	<id>platon-public</id>
+	<url>https://sdk.platon.network/nexus/content/groups/public/</url>
 </repository>
 ```
 
-> maven reference way:
-```
+> maven reference:
+```xml
 <dependency>
-      <groupId>com.platon.client</groupId>
-      <artifactId>core</artifactId>
-      <version>0.7.5.1</version>
+	<groupId>com.platon.client</groupId>
+	<artifactId>core</artifactId>
+	<version>0.8.0.0</version>
 </dependency>
 ```
 
@@ -28,27 +30,35 @@ Depending on the build tool, add related dependencies to your project using:
 > Project configuration:
 ```
 repositories {
-     maven { url "https://sdk.platon.network/nexus/content/groups/public/" }
+	maven { url "https://sdk.platon.network/nexus/content/groups/public/" }
 }
 ```
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.7.5.1"
+compile "com.platon.client:core:0.8.0.0"
 ```
 
-# Use API
+## System contract call
 
-Encapsulates some APIs for developers to use, including the following two parts:
-- System contracts: including contract interfaces related to economic models and governance
-- Basic API: including network, transaction, query, node information, economic model parameter configuration and other related interfaces
+System contracts mainly include economic model and governance related contracts：
+* staking contract
+* delegate contract
+* reward contract
+* node contract
+* proposal contract
+* slash contract
+* restrictingPlan contract
 
-## System contract
+For the introduction and use of the above system contract, please refer to the following contract interface description.
+
 
 ### Pledge related interface
+
 > Interfaces related to pledge contracts in the PlatON economic model
 
 #### Loading pledge contract
+
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
@@ -64,6 +74,7 @@ StakingContract contract = StakingContract.load(web3j, credentials, chainId);
 > Node candidate applies for pledge
 
 - **Introduction**
+
   - String: nodeId node id, hexadecimal format
   - BigInteger: amount of von pledged, the pledged amount must be greater than or equal to 1,000,000 LAT
   - StakingAmountType: stakingAmountType, enumeration, FREE_AMOUNT_TYPE means use the free amount of the account, RESTRICTING_AMOUNT_TYPE means use the amount of the lock to make a pledge
@@ -75,10 +86,11 @@ StakingContract contract = StakingContract.load(web3j, credentials, chainId);
   - ProgramVersion: the real version of the processVersion program, governing rpc acquisition
   - String: blsPubKey bls public key
   - String: Proof of blsProof bls
+  - BigInteger：rewardPer   delegate of reward，1=0.01%   10000=100%
 
 - **return value**
 
-```
+```java
 TransactionResponse
 ```
 
@@ -99,6 +111,7 @@ String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
 String details = "integration-node1-details";
 String blsPubKey = "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda7a75d569f591730481a8b91b5fad52ac26ac495522a069686df1061fc184c31771008c1fedfafd50ae794778811";
+BigInteger rewardPer = BigInteger.valueOf(1000L);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
         .setNodeId(nodeId)
@@ -112,18 +125,22 @@ PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTrans
         .setBlsPubKey(blsPubKey)
         .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
         .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
+        .setRewardPer(rewardPer)
         .build()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
 ##### **unStaking**
+
 > Node revocation pledge(initiate all revocations at one time, multiple accounts)
 
 - **Introduction**
+
   - String: nodeId node id, hexadecimal format
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -133,6 +150,7 @@ TransactionResponse
   - TransactionReceipt：transactionReceipt  Receipt of the transaction
 
 - **Contract use**
+
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 
@@ -141,18 +159,22 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
 ```
 
 ##### **updateStaking**
+
 > Modify pledge information
 
 - **Introduction**
+
   - String: nodeId node id, hexadecimal format, starting with 0x
   - String: externalId External Id(with a length limit, the ID described by the third-party pull node), currently the keybase account public key
   - String: benefitAddress revenue account
   - String: nodeName The name of the node being pledged
   - String: the third-party homepage of the webSite node
   - String: description of the details node(there is a length limitation, indicating the description of the node)
+  - BigInteger：rewardPer   delegate of reward，1=0.01%   10000=100%
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -170,6 +192,7 @@ String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
 String details = "integration-node1-details-u";
+BigInteger rewardPer = BigInteger.valueOf(1000L);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
         .setBenifitAddress(benifitAddress)
@@ -178,29 +201,34 @@ PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoR
         .setNodeName(nodeName)
         .setWebSite(webSite)
         .setDetails(details)
+        .setRewardPer(rewardPer)
         .build()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **AddStakingReturnTransaction**
+##### **addStaking**
+
 > Increase pledge and increase pledged deposits of pledged nodes
 
 - **Introduction**
+
   - String: nodeId node id, hexadecimal format, starting with 0x
   - StakingAmountType: stakingAmountType, enumeration, FREE_AMOUNT_TYPE means use the free amount of the account, RESTRICTING_AMOUNT_TYPE means use the amount of the lock to make a pledge
   - BigInteger: addStakingAmount
 
 - **return value**
-```
-BaseRespons
+
+```java
+TransactionResponse
 ```
 
-- BaseResponse: General Response Packet
+- TransactionResponse: General Response Packet
   - int: Code result identification, 0 is success
-  - String: Data response data
   - String: ErrMsg error message, exists on failure
+  - String: Data response data
 
 * **Contract use**
+
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
@@ -215,10 +243,12 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
 > Query the pledge information of the current node
 
 * **Introduction**
+
   - String: nodeId node id, hexadecimal format, starting with 0x
 
 * **return value**
-```
+
+```java
 CallResponse<Node> baseRespons
 ```
 
@@ -247,7 +277,7 @@ CallResponse<Node> baseRespons
 
   - BigInteger: RestrictingPlanHes initiated the hedging period of the locked amount of the pledged account
 
-  - BigInteger: Shares the current candidate's total pledge plus the number of entrusted vons
+  - BigInteger: Shares the current candidate's total pledge plus the number of entrusted VON
 
   - String: StakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
 
@@ -262,6 +292,18 @@ CallResponse<Node> baseRespons
   - BigInteger: ValidatorTerm
 
   - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+ 
+  - BigInteger：delegateEpoch  The node's last delegate settlement cycle
+  
+  - BigInteger：delegateTotal  The total number of delegate nodes
+  
+  - BigInteger：delegateTotalHes  Total number of inactive nodes delegate
+  
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+  
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+  
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
 
@@ -305,7 +347,7 @@ CallResponse<BigInteger> response = stakingContract.getPackageReward().send();
 
 * **return value**
 
-```
+```java
 CallResponse<BigInteger> baseResponse
 ```
 
@@ -328,9 +370,9 @@ CallResponse<BigInteger> response = stakingContract.getStakingReward().send();
 
   no
 
-* **Java SDK contract use**
+* **return value**
 
-```
+```java
 CallResponse<BigInteger> baseResponse
 ```
 
@@ -366,12 +408,14 @@ DelegateContract delegateContract = DelegateContract.load(web3j, credentials, ch
 > Initiate a commission, commission a node that has been pledged, and commission a node to increase the weight of the node to obtain revenue
 
 - **Introduction**
+
   - String: nodeId node id, hexadecimal format, starting with 0x
   - StakingAmountType: stakingAmountType, enumeration, FREE_AMOUNT_TYPE means use the free amount of the account, RESTRICTING_AMOUNT_TYPE means use the amount of the lock to make a pledge
-  - BigInteger: amount of amount commissioned(based on the smallest unit, 1LAT = 10**18 von)
+  - BigInteger: amount of amount commissioned(based on the smallest unit, 1LAT = 10**18 VON)
 
 - **return value**
-```
+
+``` java
 TransactionResponse
 ```
 
@@ -396,10 +440,12 @@ TransactionResponse baseResponse = delegateContract.getTransactionResponse(plato
 > Query the NodeID and Pledged Id of the node entrusted by the current account address
 
 * **Introduction**
+
   - String: address Account address of the principal
 
 * **return value**
-```
+
+```java
 CallResponse<List<DelegationIdInfo>> baseRespons
 ```
 
@@ -424,16 +470,18 @@ CallResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedL
 > Query current single commission information
 
 - **Introduction**
+
   - String: address Account address of the principal
   - String: nodeId node id, in hexadecimal format, starting with 0x
   - BigInteger: block height when stakingBlockNum initiated pledge
 
 - **return value**
-```
+
+```java
 CallResponse<Delegation>
 ```
 
-- BaseResponse<Delegation>
+- CallResponse<Delegation>
   - int: Code result identification, 0 is success
   - Delegation: Data delegation object data
   - String: ErrMsg error message, exists on failure
@@ -448,6 +496,7 @@ CallResponse<Delegation>
   - BigInteger: RestrictingPlan initiates a lock-in period of the entrusted account
   - BigInteger: RestrictingPlanHes initiated the hedging period of the locked account of the entrusted account
   - BigInteger: Reduction von in revocation plan
+  - BigInteger：cumulativeIncome  Delegate income to be received
 
 - **Java SDK contract use**
 
@@ -464,12 +513,14 @@ CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId,
 > Reduction / revocation of commission(all reductions are revocation)
 
 - **Introduction**
+
   - String: nodeId node id, hexadecimal format, starting with 0x
   - BigInteger: The stakingBlockNum entrusted node has a high pledge block, which represents a unique sign of a pledge of a node
   - BigInteger: the commission amount of stakingAmount reduction(based on the smallest unit, 1LAT = 10**18 von)
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -477,6 +528,10 @@ TransactionResponse
   - int: Code result identification, 0 is success
   - String: ErrMsg error message, exists on failure
   - TransactionReceipt：transactionReceipt  Receipt of the transaction
+
+* **Decode transaction receipt**
+
+   - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
 
 - **Contract use**
 
@@ -487,6 +542,92 @@ BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+
+if(baseResponse.isStatusOk()){ 
+       BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+}
+```
+
+### Reward related interface
+
+> Contract-related contract interfaces in the PlatON economic model
+
+#### Load reward contract
+
+```java
+//Java 8
+Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
+String chainId = "100";
+Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
+```
+
+#### Interface Description
+
+##### **withdrawDelegateReward**
+
+> Withdraw all currently available commissioned rewards on the account 
+
+* **Introduction**
+
+  no
+
+* **return value**
+
+```java
+TransactionResponse
+```
+
+- TransactionResponse: General Response Packet
+  - int: Code result identification, 0 is success
+  - String: ErrMsg error message, exists on failure
+  - TransactionReceipt：transactionReceipt  Receipt of the transaction
+
+* **Decode transaction receipt**
+   - String：nodeId    node id
+   - BigInteger：stakingNum  node staking block number
+   - BigInteger：reward  received benefits
+
+* **Contract use**
+
+```java
+PlatonSendTransaction platonSendTransaction = rewardContract.withdrawDelegateRewardReturnTransaction().send();
+TransactionResponse baseResponse = rewardContract.getTransactionResponse(platonSendTransaction).send();
+if(baseResponse.isStatusOk()){
+    List<Reward> rewardList = rewardContract.decodeWithdrawDelegateRewardLog(baseResponse.getTransactionReceipt());
+}
+```
+
+##### **getDelegateReward**
+
+> Check the current account to get the reward details
+
+* **Introduction**
+  - String：address   client s account address
+  - List<String>： nodeList  Node list, if all is checked
+
+* **return value**
+
+```java
+CallResponse<List<Reward>> baseRespons
+```
+
+- CallResponse<List<Reward>>description
+	- int：code   result identification, 0 is success
+	- List<Reward>：data   rewardList object data
+	- String：errMsg   Error message, exists on failure
+
+* **Reward**：Reward details
+   - String：nodeId   
+   - BigInteger：stakingNum  Node pledge block is high
+   - BigInteger：reward  received benefits
+
+* **Java SDK contract use**
+
+```java
+List<String> nodeList = new ArrayList<>();
+nodeList.add(nodeId);
+CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(delegateAddress, nodeList).send();
 ```
 
 ### Node-related contracts
@@ -515,7 +656,7 @@ NodeContract contract = NodeContract.load(web3j, credentials, chainId);
 
 * **return value**
 
-```
+```java
 CallResponse<List<Node>> baseResponse
 ```
 
@@ -560,7 +701,15 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger: ValidatorTerm
 
-  - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
+  - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 * **Java SDK contract use**
 
@@ -577,7 +726,7 @@ CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
 
 - **return value**
 
-```
+```java
 CallResponse<List<Node>> baseResponse
 ```
 
@@ -620,7 +769,15 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger: ValidatorTerm
 
-  - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
+  - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+ 
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
 
@@ -638,7 +795,7 @@ CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
 
 - **return value**
 
-```
+```java
 CallResponse<List<Node>> baseResponse
 ```
 
@@ -685,6 +842,18 @@ CallResponse<List<Node>> baseResponse
 
   - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
 
+  - BigInteger：delegateEpoch  The node's last commissioned settlement cycle
+  
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+  
+  - BigInteger：delegateTotalHes  Total number of inactive nodes commissioned
+  
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+  
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+  
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
+
 - **Java SDK contract use**
 
 ```java
@@ -696,6 +865,7 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 > Contract interface related to PlatON governance
 
 #### Load governance contract
+
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
@@ -711,6 +881,7 @@ ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
 > Submit a Proposal
 
 - **Introduction**
+
   - Proposal：proposal
 
 * **TextProposal Proposal.createSubmitTextProposalParam()**
@@ -737,7 +908,8 @@ ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
   - String：tobeCanceledProposalID  Proposal ID to be cancelled
 
 * **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -756,16 +928,19 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
 ```
 
 ##### **vote**
+
 > Vote on proposals
 
 - **Introduction**
+
   - ProgramVersion: the real version of the ProgramVersion program, managed by the rpc interface admin_getProgramVersion
   - VoteOption: voteOption voting type, YEAS in favor, NAYS against, ABSTENTIONS abstaining
   - String: proposalID proposal ID
   - String: verifier declared node, can only be validator / candidate
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -787,13 +962,16 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
 ```
 
 ##### **getProposal**
+
 > Query Proposal
 
 * **Introduction**
+
   - String: proposalID proposal id
 
 * **return value**
-```
+
+```java
 CallResponse<Proposal>
 ```
 
@@ -823,13 +1001,16 @@ CallResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).s
 ```
 
 ##### **getTallyResult**
+
 > Query Proposal Results
 
 - **Introduction**
+
   - String: proposalID proposal ID
 
 - **return value**
-```
+
+```java
 CallResponse<TallyResult>
 ```
 
@@ -863,6 +1044,7 @@ CallResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposa
 ```
 
 ##### **getProposalList**
+
 > Query proposal list
 
 - **Introduction**
@@ -870,7 +1052,8 @@ CallResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposa
   no
 
 - **return value**
-```
+
+```java
 CallResponse<List<Proposal>>
 ```
 
@@ -902,11 +1085,13 @@ CallResponse<List<Proposal>> baseResponse = proposalContract.getProposalList().s
 > Release statement
 
 - **Introduction**
+
   - ProgramVersion: the real version of the ProgramVersion program, managed by the rpc interface admin_getProgramVersion
   - String: verifier declared node, can only be validator / candidate
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -934,11 +1119,12 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
   no
 
 - **return value**
-```
+
+```java
 CallResponse
 ```
 
-- BaseResponse: General Response Packet
+- CallResponse: General Response Packet
   - int: Code result identification, 0 is success
   - String: Data response data
   - String: ErrMsg error message, exists on failure
@@ -971,11 +1157,13 @@ SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 > Submit a Proposal
 
 - **Introduction**
+
   - DuplicateSignType: DuplicateSignType enumeration, representing double sign types: prepareBlock, EprepareVote, viewChange
   - String: data json value of a single evidence, format refer to [RPC interface Evidences](# evidences_interface)
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -998,12 +1186,14 @@ TransactionResponse baseResponse = slashContract.getTransactionResponse(platonSe
 > Query whether a node has been reported as oversigned
 
 - **Introduction**
+
   - DuplicateSignType: DuplicateSignType enumeration, representing double sign types: prepareBlock, EprepareVote, viewChange
   - String: address of the node reported by address
   - BigInteger: blockNumber multi-sign block height
 
 - **return value**
-```
+
+```java
 CallResponse
 ```
 
@@ -1039,13 +1229,15 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 > Create Lockup Plan
 
 - **Introduction**
+
   - String: address lock position is released to the account
   - List<RestrictingPlan>: plan Locked plan list(array)
     - epoch: indicates a multiple of the settlement cycle. The product of the number of blocks produced per settlement cycle indicates the release of locked funds at the height of the target block. If account is the incentive pool address, the period value is a multiple of 120(that is, 30 * 4). In addition, period, the number of blocks per cycle must be at least greater than the highest irreversible block height.
     - amount: indicates the amount to be released on the target block.
 
 - **return value**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -1070,11 +1262,12 @@ TransactionResponse baseResponse = restrictingPlanContract.getTransactionRespons
 > Get Locked Up Plan
 
 - **Introduction**
+
   - String: address lock position is released to the account
 
 - **return value**
 
-```
+```java
 CallResponse<RestrictingItem> baseResponse
 ```
 
@@ -1091,13 +1284,16 @@ CallResponse<RestrictingItem> baseResponse
 - **RestrictingInfo**: Object that saves information of a single lock entry
   - BigInteger: blockNumber releases block height
   - BigInteger: amount released
+
 - **Contract use**
 
 ```java
 CallResponse<RestrictingItem> baseResponse = restrictingPlanContract.getRestrictingInfo(restrictingRecvCredentials.getAddress()).send();
 ```
 
-## Basic API
+## Basic API usage
+
+The basic `API` includes network, transaction, query, node information, economic model parameter configuration and other related interfaces. For details, refer to the following` API` instructions.
 
 ### web3ClientVersion
 
@@ -1232,7 +1428,6 @@ BigInteger req = request.send().getQuantity();
 
 ```java
 Request<?, PlatonProtocolVersion>
-
 ```
 
 The String in the PlatonProtocolVersion property is the corresponding stored data
@@ -1337,9 +1532,8 @@ The BigInteger in the PlatonBlockNumber property is the corresponding stored dat
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, PlatonBlockNumber> request = currentValidWeb3j.platonBlockNumber();
-BigInteger req = request.send(). GetBlockNumber();
-
+Request <?, PlatonBlockNumber> request = currentValidWeb3j.platonBlockNumber();
+BigInteger req = request.send().getBlockNumber();
 ```
 
 ### platonGetBalance
@@ -1407,6 +1601,7 @@ String req = request.send().getData();
 
 - **parameters**
   - String: blockHash block hash
+
 - **return value**
 
 ```java
@@ -1486,6 +1681,7 @@ BigInteger req = request.send().getTransactionCount();
 
 - **parameters**
   - String: address
+
   - DefaultBlockParameter:
     - DefaultBlockParameterName.LATEST latest block height(default)
     - DefaultBlockParameterName.EARLIEST minimum block height
@@ -1987,7 +2183,6 @@ org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.prot
 filter.addSingleTopic("");
 Request<?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
 List<LogResult> = request.send(). GetLogs();
-
 ```
 
 ### platonPendingTransactions
@@ -2076,6 +2271,7 @@ String req  = request.send().getStoredValue();
   - String: databaseName: database name
   - String: keyName: key name
   - String: dataToStore: binary data to be stored
+
 - **return value**
 
 ```java
@@ -2142,7 +2338,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicatePrepare**
 
-```json
+```
 {
     "prepare_a": {
         "epoch": 0, // epoch value of consensus round
@@ -2164,7 +2360,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicateVote**
 
-```json
+```
 {
     "voteA": {
         "epoch": 0, // epoch value of consensus round
@@ -2186,7 +2382,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicateViewchange**
 
-```json
+```
 {
     "viewA": {
         "epoch": 0, // epoch value of consensus round
@@ -2295,5 +2491,188 @@ The String in the DebugEconomicConfig property is the corresponding stored data
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request<?, DebugEconomicConfig> req = currentValidWeb3j.getEconomicConfig();
-String debugEconomicConfig = req.send(). GetEconomicConfigStr();
+String debugEconomicConfig = req.send().getEconomicConfigStr();
+```
+
+## Solidity contract call
+
+When deploying a Solidity smart contract on the blockchain, it must first be compiled into a bytecode format and then sent as part of the transaction. The Java SDK will help you generate a Java wrapper class for Solidity smart contracts, which can easily deploy Solidity smart contracts and call transaction methods, events, and constant methods in Solidity smart contracts.
+
+### Compile solidity source code
+
+* Compile solidity source code with `solc` compiler([solc download](https://github.com/PlatONnetwork/solidity/releases))：
+
+```shell
+$ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
+```
+
+`bin`，Output a hex-encoded solidity binary file to provide transaction requests.
+`abi`，Output a solidity application binary interface (`ABI`) file, which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the solidity smart contract.
+
+* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://github.com/PlatONnetwork/platon-truffle/tree/feature/evm)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.1.0/index.html))：
+
+> **step1.** Initialize the project with platon-truffle
+
+```
+Initialize a project on the server where platon-truffle is installed。
+mkdir HelloWorld
+cd HelloWorld
+truffle init
+Prompt indicates success：
+
+  ✔ Preparing to download
+  ✔ Downloading
+  ✔ Cleaning up temporary files
+  ✔ Setting up box
+
+  Unbox successful. Sweet!
+
+  Commands:
+
+    Compile:        truffle compile
+    Migrate:        truffle migrate
+    Test contracts: truffle test
+```
+
+> **step2.** Put HelloWorld.sol in HelloWorld / contracts directory
+
+```
+guest@guest:~/HelloWorld/contracts$ ls
+HelloWorld.sol  Migrations.sol
+```
+
+> **step3.** Modify truffle-config.js file and change the compiler version to "^ 0.5.13"
+
+```
+compilers: {
+    solc: {
+       version: "^0.5.13",    // Fetch exact version from solc-bin (default: truffle's version)
+      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
+      // settings: {          // See the solidity docs for advice about optimization and evmVersion
+      //  optimizer: {
+      //    enabled: false,
+      //    runs: 200
+      //  },
+      //  evmVersion: "byzantium"
+       }
+    }
+}
+```
+
+> **step4.** Execute truffle compile to compile the contract
+
+```
+guest@guest:~/HelloWorld$ truffle compile
+
+Compiling your contracts...
+
+ Compiling ./contracts/HelloWorld.sol
+ Compiling ./contracts/Migrations.sol
+
+ compilation warnings encountered:
+
+Warning: This is a pre-release compiler version, please do not use it in production.
+
+ Artifacts written to /home/guest/hudenian/HelloWorld/build/contracts
+ Compiled successfully using:
+    solc: 0.5.13-develop.2020.1.2+commit.9ff23752.mod.Emscripten.clang
+```
+
+### Solidity Smart Contract Java Packaging Class
+
+The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
+
+* Generate Java wrapper classes via command line tools:
+
+```shell
+$ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
+```
+
+* Directly call the tool class in the Java SDK to generate a Java wrapper class:
+
+```java
+String args[] = {"generate", "/path/to/<smart-contract>.bin", "/path/to/<smart-contract>.abi", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
+org.web3j.codegen.SolidityFunctionWrapperGenerator.run(args);
+```
+
+The `bin` and` abi` files are generated after compiling the solidity source code.
+
+The main functions supported by the Java wrapper class corresponding to the Solidity smart contract:
+- Build and deploy
+- Determine contract validity
+- Invoking transactions and events
+- Call constant method
+
+#### Building and deploying smart contracts
+
+The construction and deployment of smart contracts use the deploy method in the wrapper class：
+
+```java
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <transactionManager>, contractGasProvider,
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+```
+
+This method will deploy smart contracts on the blockchain. After successful deployment, it will return a wrapper class instance of the smart contract, which contains the address of the smart contract.
+
+If your smart contract accepts LAT transfers on the structure, you need to initialize the parameter value <initialValue>.
+
+You can also create an instance of the Java wrapper class corresponding to the smart contract by using the address of the smart contract:
+
+```java
+YourSmartContract contract = YourSmartContract.load(
+        "0x<address>|<ensName>", web3j, transactionManager, contractGasProvider);
+```
+
+#### Smart contract validity
+
+Using this method, the validity of the smart contract can be verified. `True` will only be returned if the bytecode deployed in the contract address matches the bytecode in the smart contract package.
+
+```java
+contract.isValid();  // returns false if the contract bytecode does not match what's deployed
+                     // at the provided address
+```
+
+#### TransactionManager
+The Java SDK provides a transaction manager `TransactionManager` to control how you connect to the PlatON client. `RawTransactionManager` is used by default.
+`RawTransactionManager` needs to specify the chain ID. Prevent transactions on one chain from being rebroadcasted to another chain:
+
+```java
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+```
+
+You can get the chain ID with the following request:
+
+```java
+web3j.netVersion().send().getNetVersion();
+```
+
+In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
+In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
+
+#### Invoking transactions and events
+For all transactions methods, only the transaction receipt associated with the transaction is returned.
+
+```java
+TransactionReceipt transactionReceipt = contract.someMethod(<param1>, ...).send();
+```
+
+With transaction receipts, you can extract indexed and non-indexed event parameters.
+
+```java
+List<SomeEventResponse> events = contract.getSomeEvents(transactionReceipt);
+```
+
+Alternatively, you can use Observable filters to listen to events associated with smart contracts:
+
+```java
+contract.someEventObservable(startBlock, endBlock).subscribe(event -> ...);
+```
+
+#### Call constant method
+
+Constant methods only do queries without changing the state of the smart contract.
+
+```java
+Type result = contract.someMethod(<param1>, ...).send();
 ```
