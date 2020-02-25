@@ -19,7 +19,7 @@
 <dependency>
       <groupId>com.platon.client</groupId>
       <artifactId>core</artifactId>
-      <version>0.7.5.1</version>
+      <version>0.7.6.4</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.client:core:0.7.5.1"
+compile "com.platon.client:core:0.7.6.4"
 ```
 
 # 使用API
@@ -75,6 +75,7 @@ StakingContract contract = StakingContract.load(web3j, credentials, chainId);
   - ProgramVersion：processVersion  程序的真实版本，治理rpc获取
   - String：blsPubKey   bls的公钥
   - String：blsProof    bls的证明，治理rpc获取
+  - BigInteger：rewardPer   委托所得到的奖励分成比例，1=0.01%   10000=100%
 
 * **返回值**
 
@@ -99,6 +100,7 @@ String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
 String details = "integration-node1-details";
 String blsPubKey = "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda7a75d569f591730481a8b91b5fad52ac26ac495522a069686df1061fc184c31771008c1fedfafd50ae794778811";
+BigInteger rewardPer = BigInteger.valueOf(1000L);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
         .setNodeId(nodeId)
@@ -112,6 +114,7 @@ PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTrans
         .setBlsPubKey(blsPubKey)
         .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
         .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
+        .setRewardPer(rewardPer)
         .build()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
@@ -150,6 +153,7 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
   - String：nodeName   被质押节点的名称
   - String：webSite   节点的第三方主页(有长度限制，表示该节点的主页)
   - String：details   节点的描述(有长度限制，表示该节点的描述)
+  - BigInteger：rewardPer   委托所得到的奖励分成比例，1=0.01%   10000=100%
 
 * **返回值**
 ```
@@ -170,6 +174,7 @@ String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
 String details = "integration-node1-details-u";
+BigInteger rewardPer = BigInteger.valueOf(1000L);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
         .setBenifitAddress(benifitAddress)
@@ -178,6 +183,7 @@ PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoR
         .setNodeName(nodeName)
         .setWebSite(webSite)
         .setDetails(details)
+        .setRewardPer(rewardPer)
         .build()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
@@ -262,6 +268,18 @@ CallResponse<Node> baseRespons
   - BigInteger：ValidatorTerm   验证人的任期
 
   - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
+  
+  - BigInteger：delegateEpoch  节点最后一次被委托的结算周期
+  
+  - BigInteger：delegateTotal  节点被委托的生效总数量
+  
+  - BigInteger：delegateTotalHes  节点被委托的未生效总数量
+  
+  - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
+  
+  - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
+  
+  - BigInteger：rewardPer 当前结算周期奖励分成比例
 
 * **Java SDK合约使用**
 
@@ -448,6 +466,7 @@ CallResponse<Delegation>
   - BigInteger：RestrictingPlan   发起委托账户的锁仓金额的锁定期委托的von
   - BigInteger：RestrictingPlanHes   发起委托账户的锁仓金额的犹豫期质押的von
   - BigInteger：Reduction   处于撤销计划中的von
+  - BigInteger：cumulativeIncome  待领取的委托收益
 
 * **Java SDK合约使用**
 
@@ -477,16 +496,103 @@ TransactionResponse
 	- int：code   结果标识，0为成功
 	- String：errMsg   错误信息，失败时存在
 	- TransactionReceipt：transactionReceipt  交易的回执
+	
+* **解交易回执**
+   - BigInteger：reward   获得解除委托时所提取的委托收益
+
+* **合约使用**
+   
+   ```java
+   String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
+   BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
+   BigInteger stakingBlockNum = new BigInteger("12134");
+   
+   PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
+   TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+   
+   if(baseResponse.isStatusOk()){ 
+       BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+   }
+   ```
+
+### 奖励相关接口
+
+> PlatON经济模型中奖励相关的合约接口
+
+#### 加载奖励合约
+
+```java
+//Java 8
+Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
+String chainId = "100";
+Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
+```
+
+#### 接口说明
+
+##### **withdrawDelegateReward**
+
+> 提取账户当前所有的可提取的委托奖励 
+
+* **入参**
+
+  无
+
+* **返回值**
+```
+TransactionResponse
+```
+
+- TransactionResponse： 通用应答包
+	- int：code   结果标识，0为成功
+	- String：errMsg   错误信息，失败时存在
+	- TransactionReceipt：transactionReceipt  交易的回执
+	
+* **解交易回执**
+   - String：nodeId    节点ID
+   - BigInteger：stakingNum  节点的质押块高
+   - BigInteger：reward  领取到的收益
 
 * **合约使用**
 
 ```java
-String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
-BigInteger stakingBlockNum = new BigInteger("12134");
+PlatonSendTransaction platonSendTransaction = rewardContract.withdrawDelegateRewardReturnTransaction().send();
+TransactionResponse baseResponse = rewardContract.getTransactionResponse(platonSendTransaction).send();
+if(baseResponse.isStatusOk()){
+    List<Reward> rewardList = rewardContract.decodeWithdrawDelegateRewardLog(baseResponse.getTransactionReceipt());
+}
+```
 
-PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
-TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+##### **getDelegateReward**
+
+> 查询当前账号可提取奖励明细
+
+* **入参**
+  - String：address   委托人的账户地址
+  - List<String>： nodeList  节点列表，如果为空查全部
+
+* **返回值**
+```
+CallResponse<List<Reward>> baseRespons
+```
+
+- CallResponse<List<Reward>>描述
+	- int：code   结果标识，0为成功
+	- List<Reward>：data   Reward对象列表
+	- String：errMsg   错误信息，失败时存在
+
+* **Reward**：奖励明细
+   - String：nodeId    节点ID
+   - BigInteger：stakingNum  节点的质押块高
+   - BigInteger：reward  领取到的收益
+
+* **Java SDK合约使用**
+
+```java
+List<String> nodeList = new ArrayList<>();
+nodeList.add(nodeId);
+CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(delegateAddress, nodeList).send();
 ```
 
 ### 节点相关合约
@@ -519,7 +625,7 @@ NodeContract contract = NodeContract.load(web3j, credentials, chainId);
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node>>描述
+- CallResponse<List<Node>>
 	- int：code   结果标识，0为成功
 	- List<Node>：data   nodeList对象数据
 	- String：errMsg   错误信息，失败时存在
@@ -561,6 +667,14 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：ValidatorTerm   验证人的任期
 
   - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
+
+  - BigInteger：delegateTotal  节点被委托的生效总数量
+
+  - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
+
+  - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
+
+  - BigInteger：rewardPer 当前结算周期奖励分成比例
 
 * **Java SDK合约使用**
 
@@ -621,6 +735,14 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：ValidatorTerm   验证人的任期
 
   - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
+
+  - BigInteger：delegateTotal  节点被委托的生效总数量
+
+  - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
+
+  - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
+ 
+  - BigInteger：rewardPer 当前结算周期奖励分成比例
 
 * **Java SDK合约使用**
 
@@ -684,6 +806,18 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：ValidatorTerm   验证人的任期
 
   - String：Website   节点的第三方主页(有长度限制，表示该节点的主页)
+
+  - BigInteger：delegateEpoch  节点最后一次被委托的结算周期
+  
+  - BigInteger：delegateTotal  节点被委托的生效总数量
+  
+  - BigInteger：delegateTotalHes  节点被委托的未生效总数量
+  
+  - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
+  
+  - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
+  
+  - BigInteger：rewardPer 当前结算周期奖励分成比例
 
 * **Java SDK合约使用**
 
@@ -1494,6 +1628,7 @@ BigInteger req = request.send().getTransactionCount();
       -  DefaultBlockParameter.valueOf(BigInteger blockNumber) 指定块高
 
 * **返回值**
+
 ```java
 Request<?, PlatonGetCode>
 ```
