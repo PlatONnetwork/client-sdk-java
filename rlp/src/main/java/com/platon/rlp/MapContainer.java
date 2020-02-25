@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import java.util.Collection;
 import java.util.Map;
 
+import com.platon.rlp.datatypes.Pair;
+
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
@@ -19,10 +21,10 @@ public class MapContainer<M extends Map<K, V>, K, V> implements Container<V> {
 		return ContainerType.MAP;
 	}
 
-	Container keyType;
-	Container valueType;
+	public Container keyType;
+	public Container valueType;
 
-	MapContainer(Class mapType) {
+	public MapContainer(Class mapType) {
 		this.mapType = mapType;
 	}
 
@@ -39,5 +41,10 @@ public class MapContainer<M extends Map<K, V>, K, V> implements Container<V> {
 	@Override
 	public MapContainer<? extends Map<?, V>, ?, V> asMap() {
 		return this;
+	}
+
+	@Override
+	public PairContainer<? extends Pair<?, V>, ?, V> asPair() {
+		throw new RuntimeException("not a pair container");
 	}
 }

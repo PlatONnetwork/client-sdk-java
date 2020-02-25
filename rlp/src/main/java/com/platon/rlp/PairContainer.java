@@ -1,23 +1,28 @@
 package com.platon.rlp;
 
-import lombok.Builder;
-
 import java.util.Collection;
 import java.util.Map;
 
 import com.platon.rlp.datatypes.Pair;
 
-@Builder
-public class Raw<V> implements Container<V> {
-	Class<V> rawType;
+@SuppressWarnings("rawtypes")
+public class PairContainer<P extends Pair<K, V>, K, V> implements Container<V> {
+	Class mapType;
 
 	public ContainerType getType() {
-		return ContainerType.RAW;
+		return ContainerType.PAIR;
+	}
+
+	public Container keyType;
+	public Container valueType;
+
+	public PairContainer(Class mapType) {
+		this.mapType = mapType;
 	}
 
 	@Override
 	public Class<V> asRaw() {
-		return rawType;
+		throw new RuntimeException("not a raw type");
 	}
 
 	@Override
@@ -29,17 +34,8 @@ public class Raw<V> implements Container<V> {
 	public MapContainer<? extends Map<?, V>, ?, V> asMap() {
 		throw new RuntimeException("not a map container");
 	}
-	
-	@Override
+
 	public PairContainer<? extends Pair<?, V>, ?, V> asPair() {
-		throw new RuntimeException("not a pair container");
-	}
-
-	Raw() {
-
-	}
-
-	public Raw(Class<V> rawType) {
-		this.rawType = rawType;
+		return this;
 	}
 }
