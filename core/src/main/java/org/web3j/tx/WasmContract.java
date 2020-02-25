@@ -11,14 +11,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.web3j.abi.EventEncoder;
-import org.web3j.abi.EventValues;
-import org.web3j.abi.FunctionReturnDecoder;
-import org.web3j.abi.TypeReference;
+import org.web3j.abi.WasmEventEncoder;
+import org.web3j.abi.WasmEventValues;
 import org.web3j.abi.WasmFunctionEncoder;
 import org.web3j.abi.WasmReturnDecoder;
-import org.web3j.abi.datatypes.Event;
-import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.WasmEvent;
 import org.web3j.abi.datatypes.WasmFunction;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -34,10 +31,12 @@ import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
+import com.platon.rlp.RLPCodec;
+import com.platon.rlp.RLPList;
+
 /**
  * Wasm contract type abstraction for interacting with smart contracts via native Java types.
  */
-@SuppressWarnings("rawtypes")
 public abstract class WasmContract extends ManagedTransaction {
 
 	public static final String FUNC_DEPLOY = "deploy";
@@ -130,7 +129,7 @@ public abstract class WasmContract extends ManagedTransaction {
 
 	protected <T> T executeCall(WasmFunction function, Class<T> clazz) throws IOException {
 		String encodedFunction = WasmFunctionEncoder.encode(function);
-		
+
 		PlatonCall ethCall = web3j
 				.platonCall(Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress, encodedFunction),
 						defaultBlockParameter)
@@ -242,40 +241,44 @@ public abstract class WasmContract extends ManagedTransaction {
 		return new RemoteCall<>(() -> deploy(type, web3j, transactionManager, contractGasProvider, encodedConstructor, BigInteger.ZERO));
 	}
 
-	public static EventValues staticExtractEventParameters(Event event, Log log) {
+	public static WasmEventValues staticExtractEventParameters(WasmEvent event, Log log) {
 
+		String eventSignature = WasmEventEncoder.encode(event);
 		List<String> topics = log.getTopics();
-		String encodedEventSignature = EventEncoder.encode(event);
-		if (topics == null || topics.size() == 0 || !topics.get(0).equals(encodedEventSignature)) {
+		if (null == topics || topics.isEmpty() || !topics.get(0).equals(eventSignature)) {
 			return null;
 		}
 
-		List<Type> indexedValues = new ArrayList<>();
-		List<Type> nonIndexedValues = FunctionReturnDecoder.decode(log.getData(), event.getNonIndexedParameters());
-
-		List<TypeReference<Type>> indexedParameters = event.getIndexedParameters();
-		for (int i = 0; i < indexedParameters.size(); i++) {
-			Type value = FunctionReturnDecoder.decodeIndexedValue(topics.get(i + 1), indexedParameters.get(i));
-			indexedValues.add(value);
+		// The value of the index parameters is hashed(SHA3)
+		// get from topics
+		List<String> indexedValues = new ArrayList<>();
+		int count = 0;
+		for (String tmp : topics) {
+			if (count > 0) {
+				indexedValues.add(tmp);
+			}
+			count++;
 		}
-		return new EventValues(indexedValues, nonIndexedValues);
+
+		List<Object> nonIndexedValues = new ArrayList<>();
+		List<Class<?>> nonIndexedParameters = event.getNonIndexedParameters();
+		String data = log.getData();
+		if (null != data && !data.equals("")) {
+			RLPList rlpList = RLPCodec.decode(Numeric.hexStringToByteArray(data), RLPList.class);
+			for (int i = 0; i < rlpList.size(); i++) {
+				nonIndexedValues.add(RLPCodec.decode(rlpList.get(i).getEncoded(), nonIndexedParameters.get(i)));
+			}
+		}
+
+		return new WasmEventValues(indexedValues, nonIndexedValues);
 	}
 
-	protected EventValues extractEventParameters(Event event, Log log) {
-		return staticExtractEventParameters(event, log);
+	protected WasmEventValuesWithLog extractEventParametersWithLog(WasmEvent event, Log log) {
+		final WasmEventValues eventValues = staticExtractEventParameters(event, log);
+		return (eventValues == null) ? null : new WasmEventValuesWithLog(eventValues, log);
 	}
 
-	protected List<EventValues> extractEventParameters(Event event, TransactionReceipt transactionReceipt) {
-		return transactionReceipt.getLogs().stream().map(log -> extractEventParameters(event, log)).filter(Objects::nonNull)
-				.collect(Collectors.toList());
-	}
-
-	protected EventValuesWithLog extractEventParametersWithLog(Event event, Log log) {
-		final EventValues eventValues = staticExtractEventParameters(event, log);
-		return (eventValues == null) ? null : new EventValuesWithLog(eventValues, log);
-	}
-
-	protected List<EventValuesWithLog> extractEventParametersWithLog(Event event, TransactionReceipt transactionReceipt) {
+	protected List<WasmEventValuesWithLog> extractEventParametersWithLog(WasmEvent event, TransactionReceipt transactionReceipt) {
 		return transactionReceipt.getLogs().stream().map(log -> extractEventParametersWithLog(event, log)).filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
@@ -305,23 +308,20 @@ public abstract class WasmContract extends ManagedTransaction {
 		return addr == null ? getStaticDeployedAddress(networkId) : addr;
 	}
 
-	/**
-	 * Adds a log field to {@link EventValues}.
-	 */
-	public static class EventValuesWithLog {
-		private final EventValues eventValues;
+	public static class WasmEventValuesWithLog {
+		private final WasmEventValues eventValues;
 		private final Log log;
 
-		private EventValuesWithLog(EventValues eventValues, Log log) {
+		private WasmEventValuesWithLog(WasmEventValues eventValues, Log log) {
 			this.eventValues = eventValues;
 			this.log = log;
 		}
 
-		public List<Type> getIndexedValues() {
+		public List<String> getIndexedValues() {
 			return eventValues.getIndexedValues();
 		}
 
-		public List<Type> getNonIndexedValues() {
+		public List<?> getNonIndexedValues() {
 			return eventValues.getNonIndexedValues();
 		}
 
