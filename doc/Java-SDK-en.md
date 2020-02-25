@@ -615,14 +615,14 @@ CallResponse<List<Reward>> baseRespons
 - CallResponse<List<Reward>>description
 	- int：code   result identification, 0 is success
 	- List<Reward>：data   rewardList object data
-	- String：errMsg   错误信息，失败时存在
+	- String：errMsg   Error message, exists on failure
 
-* **Reward**：奖励明细
-   - String：nodeId    节点ID
-   - BigInteger：stakingNum  节点的质押块高
-   - BigInteger：reward  领取到的收益
+* **Reward**：Reward details
+   - String：nodeId   
+   - BigInteger：stakingNum  Node pledge block is high
+   - BigInteger：reward  received benefits
 
-* **Java SDK合约使用**
+* **Java SDK contract use**
 
 ```java
 List<String> nodeList = new ArrayList<>();
@@ -1291,7 +1291,7 @@ CallResponse<RestrictingItem> baseResponse
 CallResponse<RestrictingItem> baseResponse = restrictingPlanContract.getRestrictingInfo(restrictingRecvCredentials.getAddress()).send();
 ```
 
-## Basic API
+## Basic API usage
 
 The basic `API` includes network, transaction, query, node information, economic model parameter configuration and other related interfaces. For details, refer to the following` API` instructions.
 
@@ -2647,7 +2647,7 @@ You can get the chain ID with the following request:
 web3j.netVersion().send().getNetVersion();
 ```
 
-In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.此外，还有一个`ReadonlyTransactionManager`，用于只从智能合约中查询数据，而不与它进行交易。
+In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
 In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
 
 #### Invoking transactions and events
