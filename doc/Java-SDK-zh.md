@@ -1090,7 +1090,8 @@ CallResponse<List<Proposal>> baseResponse = proposalContract.getProposalList().s
   - String：verifier   声明的节点，只能是验证人/候选人
 
 * **返回值**
-```
+
+```java
 TransactionResponse
 ```
 
@@ -1118,7 +1119,8 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
   无
 
 * **返回值**
-```
+
+```java
 CallResponse
 ```
 
@@ -1260,6 +1262,7 @@ TransactionResponse baseResponse = restrictingPlanContract.getTransactionRespons
 > 获取锁仓计划
 
 * **入参**
+
   - String：address   锁仓释放到账账户
 
 * **返回值**
