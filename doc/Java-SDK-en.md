@@ -19,7 +19,7 @@ Depending on the build tool, add related dependencies to your project using:
 <dependency>
       <groupId>com.platon.client</groupId>
       <artifactId>core</artifactId>
-      <version>0.7.5.1</version>
+      <version>0.7.6.4</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.7.5.1"
+compile "com.platon.client:core:0.7.6.4"
 ```
 
 # Use API
@@ -75,6 +75,7 @@ StakingContract contract = StakingContract.load(web3j, credentials, chainId);
   - ProgramVersion: the real version of the processVersion program, governing rpc acquisition
   - String: blsPubKey bls public key
   - String: Proof of blsProof bls
+  - BigInteger：rewardPer   delegate of reward，1=0.01%   10000=100%
 
 - **return value**
 
@@ -99,6 +100,7 @@ String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
 String details = "integration-node1-details";
 String blsPubKey = "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda7a75d569f591730481a8b91b5fad52ac26ac495522a069686df1061fc184c31771008c1fedfafd50ae794778811";
+BigInteger rewardPer = BigInteger.valueOf(1000L);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTransaction(new StakingParam.Builder()
         .setNodeId(nodeId)
@@ -112,6 +114,7 @@ PlatonSendTransaction platonSendTransaction = stakingContract.stakingReturnTrans
         .setBlsPubKey(blsPubKey)
         .setProcessVersion(web3j.getProgramVersion().send().getAdminProgramVersion())
         .setBlsProof(web3j.getSchnorrNIZKProve().send().getAdminSchnorrNIZKProve())
+        .setRewardPer(rewardPer)
         .build()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
@@ -150,6 +153,7 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
   - String: nodeName The name of the node being pledged
   - String: the third-party homepage of the webSite node
   - String: description of the details node(there is a length limitation, indicating the description of the node)
+  - BigInteger：rewardPer   delegate of reward，1=0.01%   10000=100%
 
 - **return value**
 ```
@@ -170,6 +174,7 @@ String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
 String details = "integration-node1-details-u";
+BigInteger rewardPer = BigInteger.valueOf(1000L);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
         .setBenifitAddress(benifitAddress)
@@ -178,11 +183,12 @@ PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoR
         .setNodeName(nodeName)
         .setWebSite(webSite)
         .setDetails(details)
+        .setRewardPer(rewardPer)
         .build()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
-##### **AddStakingReturnTransaction**
+##### **addStaking**
 > Increase pledge and increase pledged deposits of pledged nodes
 
 - **Introduction**
@@ -262,6 +268,18 @@ CallResponse<Node> baseRespons
   - BigInteger: ValidatorTerm
 
   - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+ 
+  - BigInteger：delegateEpoch  The node's last delegate settlement cycle
+  
+  - BigInteger：delegateTotal  The total number of delegate nodes
+  
+  - BigInteger：delegateTotalHes  Total number of inactive nodes delegate
+  
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+  
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+  
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
 
@@ -448,6 +466,7 @@ CallResponse<Delegation>
   - BigInteger: RestrictingPlan initiates a lock-in period of the entrusted account
   - BigInteger: RestrictingPlanHes initiated the hedging period of the locked account of the entrusted account
   - BigInteger: Reduction von in revocation plan
+  - BigInteger：cumulativeIncome  Delegate income to be received
 
 - **Java SDK contract use**
 
@@ -478,6 +497,9 @@ TransactionResponse
   - String: ErrMsg error message, exists on failure
   - TransactionReceipt：transactionReceipt  Receipt of the transaction
 
+* **Decode transaction receipt**
+   - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
+
 - **Contract use**
 
 ```java
@@ -487,6 +509,90 @@ BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+
+if(baseResponse.isStatusOk()){ 
+       BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+}
+```
+
+### Reward related interface
+
+> Contract-related contract interfaces in the PlatON economic model
+
+#### Load reward contract
+
+```java
+//Java 8
+Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
+String chainId = "100";
+Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
+```
+
+#### Interface Description
+
+##### **withdrawDelegateReward**
+
+> Withdraw all currently available commissioned rewards on the account 
+
+* **Introduction**
+
+  no
+
+* **return value**
+```
+TransactionResponse
+```
+
+- TransactionResponse: General Response Packet
+  - int: Code result identification, 0 is success
+  - String: ErrMsg error message, exists on failure
+  - TransactionReceipt：transactionReceipt  Receipt of the transaction
+
+* **Decode transaction receipt**
+   - String：nodeId    node id
+   - BigInteger：stakingNum  node staking block number
+   - BigInteger：reward  received benefits
+
+* **Contract use**
+
+```java
+PlatonSendTransaction platonSendTransaction = rewardContract.withdrawDelegateRewardReturnTransaction().send();
+TransactionResponse baseResponse = rewardContract.getTransactionResponse(platonSendTransaction).send();
+if(baseResponse.isStatusOk()){
+    List<Reward> rewardList = rewardContract.decodeWithdrawDelegateRewardLog(baseResponse.getTransactionReceipt());
+}
+```
+
+##### **getDelegateReward**
+
+> Check the current account to get the reward details
+
+* **Introduction**
+  - String：address   client s account address
+  - List<String>： nodeList  Node list, if all is checked
+
+* **return value**
+```
+CallResponse<List<Reward>> baseRespons
+```
+
+- CallResponse<List<Reward>>description
+	- int：code   result identification, 0 is success
+	- List<Reward>：data   rewardList object data
+	- String：errMsg   错误信息，失败时存在
+
+* **Reward**：奖励明细
+   - String：nodeId    节点ID
+   - BigInteger：stakingNum  节点的质押块高
+   - BigInteger：reward  领取到的收益
+
+* **Java SDK合约使用**
+
+```java
+List<String> nodeList = new ArrayList<>();
+nodeList.add(nodeId);
+CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(delegateAddress, nodeList).send();
 ```
 
 ### Node-related contracts
@@ -560,7 +666,15 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger: ValidatorTerm
 
-  - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
+  - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 * **Java SDK contract use**
 
@@ -620,7 +734,15 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger: ValidatorTerm
 
-  - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
+  - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+ 
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
 
@@ -684,6 +806,18 @@ CallResponse<List<Node>> baseResponse
   - BigInteger: ValidatorTerm
 
   - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - BigInteger：delegateEpoch  The node's last commissioned settlement cycle
+  
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+  
+  - BigInteger：delegateTotalHes  Total number of inactive nodes commissioned
+  
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+  
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
+  
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
 
@@ -1091,6 +1225,7 @@ CallResponse<RestrictingItem> baseResponse
 - **RestrictingInfo**: Object that saves information of a single lock entry
   - BigInteger: blockNumber releases block height
   - BigInteger: amount released
+
 - **Contract use**
 
 ```java
@@ -1232,7 +1367,6 @@ BigInteger req = request.send().getQuantity();
 
 ```java
 Request<?, PlatonProtocolVersion>
-
 ```
 
 The String in the PlatonProtocolVersion property is the corresponding stored data
@@ -1337,9 +1471,8 @@ The BigInteger in the PlatonBlockNumber property is the corresponding stored dat
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, PlatonBlockNumber> request = currentValidWeb3j.platonBlockNumber();
-BigInteger req = request.send(). GetBlockNumber();
-
+Request <?, PlatonBlockNumber> request = currentValidWeb3j.platonBlockNumber();
+BigInteger req = request.send().getBlockNumber();
 ```
 
 ### platonGetBalance
@@ -1407,6 +1540,7 @@ String req = request.send().getData();
 
 - **parameters**
   - String: blockHash block hash
+
 - **return value**
 
 ```java
@@ -1486,6 +1620,7 @@ BigInteger req = request.send().getTransactionCount();
 
 - **parameters**
   - String: address
+
   - DefaultBlockParameter:
     - DefaultBlockParameterName.LATEST latest block height(default)
     - DefaultBlockParameterName.EARLIEST minimum block height
@@ -1987,7 +2122,6 @@ org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.prot
 filter.addSingleTopic("");
 Request<?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
 List<LogResult> = request.send(). GetLogs();
-
 ```
 
 ### platonPendingTransactions
@@ -2076,6 +2210,7 @@ String req  = request.send().getStoredValue();
   - String: databaseName: database name
   - String: keyName: key name
   - String: dataToStore: binary data to be stored
+
 - **return value**
 
 ```java
