@@ -1,5 +1,6 @@
 package org.web3j.abi.datatypes;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public class WasmFunction {
@@ -7,11 +8,19 @@ public class WasmFunction {
 	private int type;
 	private List<?> inputParameters;
 	private Class<?> outputParameter;
+	private ParameterizedType outputParameterizedType;
 
 	public WasmFunction(String name, List<?> inputParameters, Class<?> outputParameter) {
 		this.name = name;
 		this.inputParameters = inputParameters;
 		this.outputParameter = outputParameter;
+	}
+
+	public WasmFunction(String name, List<?> inputParameters, Class<?> outputParameter, ParameterizedType outputParameterizedType) {
+		this.name = name;
+		this.inputParameters = inputParameters;
+		this.outputParameter = outputParameter;
+		this.outputParameterizedType = outputParameterizedType;
 	}
 
 	public String getName() {
@@ -44,6 +53,14 @@ public class WasmFunction {
 
 	public void setOutputParameter(Class<?> outputParameter) {
 		this.outputParameter = outputParameter;
+	}
+
+	public ParameterizedType getOutputParameterizedType() {
+		return outputParameterizedType;
+	}
+
+	public void setOutputParameterizedType(ParameterizedType outputParameterizedType) {
+		this.outputParameterizedType = outputParameterizedType;
 	}
 
 }

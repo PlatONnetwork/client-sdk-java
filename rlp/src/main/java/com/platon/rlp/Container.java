@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.platon.rlp.datatypes.Pair;
+
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public interface Container<V> {
 	Set<Class<? extends Map>> SUPPORTED_MAPS = new HashSet<>(
@@ -17,6 +19,7 @@ public interface Container<V> {
 
 	static Container<?> fromField(Field field) {
 		Container<?> container = fromType(field.getGenericType());
+
 		Class clazz = null;
 		if (field.isAnnotationPresent(RLPDecoding.class)) {
 			clazz = field.getAnnotation(RLPDecoding.class).as();
@@ -60,6 +63,10 @@ public interface Container<V> {
 			return new MapContainer(clazz);
 		}
 
+		if (Pair.class.isAssignableFrom(clazz)) {
+			return new PairContainer(clazz);
+		}
+
 		return new Raw(clazz);
 	}
 
@@ -67,8 +74,10 @@ public interface Container<V> {
 		if (type instanceof Class) {
 			return fromClass((Class) type);
 		}
+
 		if (!(type instanceof ParameterizedType))
 			throw new RuntimeException("type variable " + type + " is not allowed in rlp decoding");
+		
 		ParameterizedType parameterizedType = (ParameterizedType) type;
 		Type[] types = parameterizedType.getActualTypeArguments();
 		Class clazz = (Class) parameterizedType.getRawType();
@@ -87,6 +96,12 @@ public interface Container<V> {
 			con.contentType = fromType(types[0]);
 			return con;
 		}
+		case PAIR: {
+			PairContainer pair = container.asPair();
+			pair.keyType = fromType(types[0]);
+			pair.valueType = fromType(types[1]);
+			return pair;
+		}
 		default:
 			throw new RuntimeException("this is unreachable");
 		}
@@ -99,4 +114,6 @@ public interface Container<V> {
 	CollectionContainer<? extends Collection<V>, V> asCollection();
 
 	MapContainer<? extends Map<?, V>, ?, V> asMap();
+
+	PairContainer<? extends Pair<?, V>, ?, V> asPair();
 }
