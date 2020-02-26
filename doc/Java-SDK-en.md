@@ -1,4 +1,3 @@
-# Java SDK Development Guide
 
 ## Development library import
 
@@ -25,7 +24,7 @@ Depending on the build tool, use the following methods to add related dependenci
 </dependency>
 ```
 
-## gradle
+### gradle
 
 > Project configuration:
 ```
@@ -292,7 +291,7 @@ CallResponse<Node> baseRespons
   - BigInteger: ValidatorTerm
 
   - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
- 
+
   - BigInteger：delegateEpoch  The node's last delegate settlement cycle
   
   - BigInteger：delegateTotal  The total number of delegate nodes
@@ -776,7 +775,7 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
 
   - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
- 
+
   - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
@@ -2338,68 +2337,109 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicatePrepare**
 
-```
+```text
 {
-    "prepare_a": {
-        "epoch": 0, // epoch value of consensus round
-        "view_number": 0, // View value of consensus round
-        "block_hash": "0xf41006b64e9109098723a37f9246a76c236cd97c67a334cfb4d54bc36a3f1306",
-        // block hash
-        "block_number": 500, // block number
-        "block_index": 0, // The index value of the block in a round view
-        "validate_node": {
-            "index": 0, // The index value of the validator in a round of epoch
-            "address": "0x0550184a50db8162c0cfe9296f06b2b1db019331", // Verifier address
-            "NodeID": "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050", // Verifier nodeID
-            "blsPubKey": "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda717771fffccfcfcfccfcfcfcfc6cfc6c6c6c6c3c6c6c3c3c3c3c3c3c3c3c3c3c3c2c3c3c3c3c3c3c1c2c1c2c1c2c2c1c2c2c2c2c2c2c2c2c2c2c2c2c2c2c5c2c2c2c2c2f5cd6b8c32f271
-        },
-        "signature": "0xa7205d571b16696b3a9b68e4b9ccef001c751d860d0427760f650853fe563f5191f2292dd67ccd6c89ed050182f19b9200000000000000000000000000000000" // Signature of the message
-    }
- }
+  "prepareA": {
+    "epoch": 0,            //epoch value of consensus round
+    "viewNumber": 0,       //View value of consensus round
+    "blockHash": "0x06abdbaf7a0a5cb1deddf69de5b23d6bc3506fdadbdcfc32333a1220da1361ba",    //block hash
+    "blockNumber": 16013,       //block number
+    "blockIndex": 0,        //The index value of the block in a round view
+    "blockData": "0xe1a507a57c1e9d8cade361fefa725d7a271869aea7fd923165c872e7c0c2b3f2",     //Block rlp encoding value
+    "validateNode": {            
+      "index": 0,     //The index value of the validator in a round of epoch
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",    //Verifier address
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",    //Verifier nodeID
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"    //Validator bls public key
+    },
+    "signature": "0x1afdf43596e07d0f5b59ae8f45d30d21a9c5ac793071bfb6382ae151081a901fd3215e0b9645040c9071d0be08eb200900000000000000000000000000000000"     //message signing
+  },
+  "prepareB": {
+    "epoch": 0,
+    "viewNumber": 0,
+    "blockHash": "0x74e3744545e95f4defc82d731504a39994b8013575491f83f7520cf796347b8f",
+    "blockNumber": 16013,
+    "blockIndex": 0,
+    "blockData": "0xb11be0a3634e29281403d690c1a0bc38e96ea34b3aea0b0da2883800f610c3b7",
+    "validateNode": {
+      "index": 0,
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
+    },
+    "signature": "0x16795379ca8e28953e74b23d1c384dda760579ad70c5e490225403664a8d4490cabb1dc64a2e0967b5f0c1e9dbd6578c00000000000000000000000000000000"
+  }
+}
 ```
 
 - **duplicateVote**
 
-```
+```text 
 {
-    "voteA": {
-        "epoch": 0, // epoch value of consensus round
-        "view_number": 0, // View value of consensus round
-        "block_hash": "0xf41006b64e9109098723a37f9246a76c236cd97c67a334cfb4d54bc36a3f1306",
-        // block hash
-        "block_number": 500, // block number
-        "block_index": 0, // The index value of the block in a round view
-        "validate_node": {
-            "index": 0, // The index value of the validator in a round of epoch
-            "address": "0x0550184a50db8162c0cfe9296f06b2b1db019331", // Verifier address
-            "NodeID": "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050", // Verifier nodeID
-            "blsPubKey": "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda717771fffccfcfcfccfcfcfcfc6cfc6c6c6c6c3c6c6c3c3c3c3c3c3c3c3c3c3c3c2c3c3c3c3c3c3c1c2c1c2c1c2c2c1c2c2c2c2c2c2c2c2c2c2c2c2c2c2c5c2c2c2c2c2f5cd6b8c32f271
-        },
-        "signature": "0xa7205d571b16696b3a9b68e4b9ccef001c751d860d0427760f650853fe563f5191f2292dd67ccd6c89ed050182f19b9200000000000000000000000000000000" // Signature of the message
-    }
- }
+  "voteA": {
+    "epoch": 0,   //epoch value of consensus round
+    "viewNumber": 0,    //View value of consensus round
+    "blockHash": "0x58b5976a471f86c4bd198984827bd594dce6ac861ef15bbbb1555e7b2edc2fc9",   //block hash
+    "blockNumber": 16013,   //block number
+    "blockIndex": 0,    //The index value of the block in a round view
+    "validateNode": { 
+      "index": 0,    //The index value of the validator in a round of epoch
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",  //Verifier address
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",   //Verifier nodeID
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"    //Validator bls public key
+    },
+    "signature": "0x071350aed09f226e218715357ffb7523ba41271dd1d82d4dded451ee6509cd71f6888263b0b14bdfb33f88c04f76790d00000000000000000000000000000000"    //message signing
+  },
+  "voteB": {
+    "epoch": 0,
+    "viewNumber": 0,
+    "blockHash": "0x422515ca50b9aa01c46dffee53f3bef0ef29884bfd014c3b6170c05d5cf67696",
+    "blockNumber": 16013,
+    "blockIndex": 0,
+    "validateNode": {
+      "index": 0,
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
+    },
+    "signature": "0x9bf6c01643058c0c828c35dc3277666edd087cb439c5f6a78ba065d619f812fb42c5ee881400a7a42dd8366bc0c5c88100000000000000000000000000000000"
+  }
+}
 ```
 
 - **duplicateViewchange**
 
-```
+```text
 {
-    "viewA": {
-        "epoch": 0, // epoch value of consensus round
-        "view_number": 0, // View value of consensus round
-        "block_hash": "0xf41006b64e9109098723a37f9246a76c236cd97c67a334cfb4d54bc36a3f1306",
-        // block hash
-        "block_number": 500, // block number
-        "block_index": 0, // The index value of the block in a round view
-        "validate_node": {
-            "index": 0, // The index value of the validator in a round of epoch
-            "address": "0x0550184a50db8162c0cfe9296f06b2b1db019331", // Verifier address
-            "NodeID": "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050", // Verifier nodeID
-            "blsPubKey": "5ccd6b8c32f2713faa6c9a46e5fb61ad7b7400e53fabcbc56bdc0c16fbfffe09ad6256982c7059e7383a9187ad93a002a7cda717771fffccfcfcfccfcfcfcfc6cfc6c6c6c6c3c6c6c3c3c3c3c3c3c3c3c3c3c3c2c3c3c3c3c3c3c1c2c1c2c1c2c2c1c2c2c2c2c2c2c2c2c2c2c2c2c2c2c5c2c2c2c2c2f5cd6b8c32f271
-        },
-        "signature": "0xa7205d571b16696b3a9b68e4b9ccef001c751d860d0427760f650853fe563f5191f2292dd67ccd6c89ed050182f19b9200000000000000000000000000000000" // Signature of the message
-    }
- }
+  "viewA": {
+    "epoch": 0,     //epoch value of consensus round
+    "viewNumber": 0,    //View value of consensus round
+    "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",   //block hash
+    "blockNumber": 16013,   //block number
+    "blockIndex": 0,    //The index value of the block in a round view
+    "validateNode": {
+      "index": 0,     //The index value of the validator in a round of epoch
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",   //Verifier address
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",   //Verifier nodeID
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"   //Validator bls public key
+    },
+    "signature": "0x9c8ba2654c6b8334b1b94d3b421c5901242973afcb9d87c4ab6d82c2aee8e212a08f2ae000c9203f05f414ca578cda9000000000000000000000000000000000"  //message signing
+  },
+  "viewB": {
+    "epoch": 0,
+    "viewNumber": 0,
+    "blockHash": "0x2a60ed6f04ccb9e468fbbfdda98b535653c42a16f1d7ccdfbd5d73ae1a2f4bf1",
+    "blockNumber": 16013,
+    "blockIndex": 0,
+    "validateNode": {
+      "index": 0,
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
+    },
+    "signature": "0xed69663fb943ce0e0dd90df1b65e96514051e82df48b3867516cc7e505234b9ca707fe43651870d9141354a7a993e09000000000000000000000000000000000"
+  }
+}
 ```
 
 - **return value**
