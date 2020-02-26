@@ -1,4 +1,3 @@
-# Java SDK Development Guide
 
 ## Development library import
 
@@ -25,7 +24,7 @@ Depending on the build tool, use the following methods to add related dependenci
 </dependency>
 ```
 
-## gradle
+### gradle
 
 > Project configuration:
 ```
@@ -292,7 +291,7 @@ CallResponse<Node> baseRespons
   - BigInteger: ValidatorTerm
 
   - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
- 
+
   - BigInteger：delegateEpoch  The node's last delegate settlement cycle
   
   - BigInteger：delegateTotal  The total number of delegate nodes
@@ -776,7 +775,7 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
 
   - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
- 
+
   - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
