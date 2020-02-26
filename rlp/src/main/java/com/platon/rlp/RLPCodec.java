@@ -5,12 +5,23 @@ import lombok.NonNull;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.platon.rlp.datatypes.Int16;
+import com.platon.rlp.datatypes.Int32;
+import com.platon.rlp.datatypes.Int64;
+import com.platon.rlp.datatypes.Int8;
+import com.platon.rlp.datatypes.Pair;
+import com.platon.rlp.datatypes.Uint16;
+import com.platon.rlp.datatypes.Uint32;
+import com.platon.rlp.datatypes.Uint64;
+import com.platon.rlp.datatypes.Uint8;
 
 import static com.platon.rlp.RLPConstants.*;
 import static com.platon.rlp.RLPElement.readRLPTree;
@@ -72,8 +83,29 @@ public final class RLPCodec {
 		if (clazz == BigInteger.class)
 			return (T) element.asBigInteger();
 
+		if (clazz == Int8.class)
+			return (T) Int8.of(element.asBigInteger());
+
+		if (clazz == Int16.class)
+			return (T) Int16.of(element.asBigInteger());
+
+		if (clazz == Int32.class)
+			return (T) Int32.of(element.asBigInteger());
+
 		if (clazz == Int64.class)
 			return (T) Int64.of(element.asBigInteger());
+
+		if (clazz == Uint8.class)
+			return (T) Uint8.of(element.asBigInteger());
+
+		if (clazz == Uint16.class)
+			return (T) Uint16.of(element.asBigInteger());
+
+		if (clazz == Uint32.class)
+			return (T) Uint32.of(element.asBigInteger());
+
+		if (clazz == Uint64.class)
+			return (T) Uint64.of(element.asBigInteger());
 
 		if (element.isNull())
 			return null;
@@ -264,20 +296,31 @@ public final class RLPCodec {
 		return new RLPList(s.map(RLPElement::readRLPTree).collect(Collectors.toList()));
 	}
 
-	static RLPElement encodeMap(Map m, Comparator keyOrdering) {
-		RLPList list = RLPList.createEmpty(m.size() * 2);
+	/*
+	 * static RLPElement encodeMap(Map m, Comparator keyOrdering) { RLPList list = RLPList.createEmpty(m.size() * 2); Stream<Map.Entry> entires =
+	 * m.entrySet().stream(); if (keyOrdering != null) entires = entires.sorted((x, y) -> keyOrdering.compare(x.getKey(), y.getKey()));
+	 * entires.forEach(x -> { list.add(readRLPTree(x.getKey())); list.add(readRLPTree(x.getValue())); }); return list; }
+	 */
+
+	static RLPElement encodeMap(Map m) {
+		RLPList list = RLPList.createEmpty(m.size());
 		Stream<Map.Entry> entires = m.entrySet().stream();
-		if (keyOrdering != null)
-			entires = entires.sorted((x, y) -> keyOrdering.compare(x.getKey(), y.getKey()));
 		entires.forEach(x -> {
-			list.add(readRLPTree(x.getKey()));
-			list.add(readRLPTree(x.getValue()));
+			RLPList tmpList = RLPList.createEmpty(2);
+			tmpList.add(readRLPTree(x.getKey()));
+			tmpList.add(readRLPTree(x.getValue()));
+			list.add(tmpList);
 		});
 		return list;
 	}
 
 	public static Object decodeContainer(byte[] encoded, Container container) {
 		return decodeContainer(RLPElement.fromEncoded(encoded), container);
+	}
+
+	public static Object decodeContainer(byte[] encoded, ParameterizedType type) {
+		Container container = Container.fromType(type);
+		return decodeContainer(encoded, container);
 	}
 
 	public static Object decodeContainer(RLPElement element, Container container) {
@@ -304,10 +347,25 @@ public final class RLPCodec {
 			Map map = (Map) RLPUtils.newInstance(getDefaultImpl(mapContainer.mapType));
 			if (element.isNull())
 				return map;
-			for (int i = 0; i < element.size(); i += 2) {
-				map.put(decodeContainer(element.get(i), mapContainer.keyType), decodeContainer(element.get(i + 1), mapContainer.valueType));
+
+			for (int i = 0; i < element.size(); i++) {
+				map.put(decodeContainer(element.get(i).get(0), mapContainer.keyType), decodeContainer(element.get(i).get(1), mapContainer.valueType));
 			}
+			/*
+			 * for (int i = 0; i < element.size(); i += 2) { map.put(decodeContainer(element.get(i), mapContainer.keyType),
+			 * decodeContainer(element.get(i + 1), mapContainer.valueType)); }
+			 */
 			return map;
+
+		case PAIR:
+			PairContainer pairContainer = container.asPair();
+			Pair pair = RLPUtils.newInstance(Pair.class);
+			if (element.isNull())
+				return pair;
+
+			pair.setKey(decodeContainer(element.get(0), pairContainer.keyType));
+			pair.setValue(decodeContainer(element.get(1), pairContainer.valueType));
+			return pair;
 		}
 
 		throw new RuntimeException("unreachable");

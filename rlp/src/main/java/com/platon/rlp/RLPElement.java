@@ -6,6 +6,15 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.platon.rlp.datatypes.Int16;
+import com.platon.rlp.datatypes.Int32;
+import com.platon.rlp.datatypes.Int64;
+import com.platon.rlp.datatypes.Int8;
+import com.platon.rlp.datatypes.Uint16;
+import com.platon.rlp.datatypes.Uint32;
+import com.platon.rlp.datatypes.Uint64;
+import com.platon.rlp.datatypes.Uint8;
+
 import static com.platon.rlp.RLPItem.NULL;
 import static com.platon.rlp.RLPItem.ONE;
 
@@ -85,8 +94,29 @@ public interface RLPElement {
 		if (t instanceof BigInteger)
 			return RLPItem.fromBigInteger((BigInteger) t);
 
+		if (t instanceof Int8)
+			return RLPItem.fromBigInteger(((Int8) t).getUnsingedValue());
+
+		if (t instanceof Int16)
+			return RLPItem.fromBigInteger(((Int16) t).getUnsingedValue());
+
+		if (t instanceof Int32)
+			return RLPItem.fromBigInteger(((Int32) t).getUnsingedValue());
+
 		if (t instanceof Int64)
 			return RLPItem.fromBigInteger(((Int64) t).getUnsingedValue());
+		
+		if (t instanceof Uint8)
+			return RLPItem.fromBigInteger(((Uint8) t).getValue());
+
+		if (t instanceof Uint16)
+			return RLPItem.fromBigInteger(((Uint16) t).getValue());
+
+		if (t instanceof Uint32)
+			return RLPItem.fromBigInteger(((Uint32) t).getValue());
+
+		if (t instanceof Uint64)
+			return RLPItem.fromBigInteger(((Uint64) t).getValue());
 
 		if (t instanceof byte[])
 			return RLPItem.fromBytes((byte[]) t);
@@ -110,17 +140,18 @@ public interface RLPElement {
 		if (t.getClass() == long.class || t instanceof Long) {
 			return RLPItem.fromLong((long) t);
 		}
-		
+
 		if (t.getClass() == float.class || t instanceof Float) {
 			return RLPItem.fromBigInteger(new BigInteger(Integer.toUnsignedString(Float.floatToIntBits((float) t))));
 		}
-		
+
 		if (t.getClass() == double.class || t instanceof Double) {
 			return RLPItem.fromBigInteger(new BigInteger(Long.toUnsignedString(Double.doubleToLongBits((double) t))));
 		}
 
 		if (t instanceof Map) {
-			return RLPCodec.encodeMap((Map) t, null);
+			return RLPCodec.encodeMap((Map) t);
+			// return RLPCodec.encodeMap((Map) t, null);
 		}
 
 		if (t.getClass().isArray()) {
@@ -166,7 +197,8 @@ public interface RLPElement {
 			comparator = RLPUtils.getKeyOrdering(f);
 			if (Map.class.isAssignableFrom(f.getType())) {
 				Map m = (Map) o;
-				return RLPCodec.encodeMap(m, comparator);
+				return RLPCodec.encodeMap(m);
+				// return RLPCodec.encodeMap(m, comparator);
 			}
 
 			return readRLPTree(o);
