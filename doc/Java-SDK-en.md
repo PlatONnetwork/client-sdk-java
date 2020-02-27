@@ -1,5 +1,5 @@
 
-## Development library import
+## Development Library Import
 
 Depending on the build tool, use the following methods to add related dependencies to your project：
 
@@ -38,7 +38,7 @@ repositories {
 compile "com.platon.client:core:0.8.0.0"
 ```
 
-## System contract call
+## System Contract Call
 
 System contracts mainly include economic model and governance related contracts：
 * staking contract
@@ -1290,7 +1290,7 @@ CallResponse<RestrictingItem> baseResponse
 CallResponse<RestrictingItem> baseResponse = restrictingPlanContract.getRestrictingInfo(restrictingRecvCredentials.getAddress()).send();
 ```
 
-## Basic API usage
+## Basic API Usage
 
 The basic `API` includes network, transaction, query, node information, economic model parameter configuration and other related interfaces. For details, refer to the following` API` instructions.
 
@@ -2412,32 +2412,34 @@ Each type contains multiple evidences, so it is an array structure, and you need
 ```text
 {
   "viewA": {
-    "epoch": 0,     //epoch value of consensus round
-    "viewNumber": 0,    //View value of consensus round
-    "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",   //block hash
-    "blockNumber": 16013,   //block number
-    "blockIndex": 0,    //The index value of the block in a round view
+    "epoch": 0,  
+    "viewNumber": 0, 
+    "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",  //区块hash
+    "blockNumber": 16013, 
     "validateNode": {
-      "index": 0,     //The index value of the validator in a round of epoch
-      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",   //Verifier address
-      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",   //Verifier nodeID
-      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"   //Validator bls public key
+      "index": 0,  
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4", 
+      "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
+      "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
     },
-    "signature": "0x9c8ba2654c6b8334b1b94d3b421c5901242973afcb9d87c4ab6d82c2aee8e212a08f2ae000c9203f05f414ca578cda9000000000000000000000000000000000"  //message signing
+    "signature": "0x9c8ba2654c6b8334b1b94d3b421c5901242973afcb9d87c4ab6d82c2aee8e212a08f2ae000c9203f05f414ca578cda9000000000000000000000000000000000",
+    "blockEpoch": 0,
+    "blockView": 0
   },
   "viewB": {
     "epoch": 0,
     "viewNumber": 0,
     "blockHash": "0x2a60ed6f04ccb9e468fbbfdda98b535653c42a16f1d7ccdfbd5d73ae1a2f4bf1",
     "blockNumber": 16013,
-    "blockIndex": 0,
     "validateNode": {
       "index": 0,
       "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
       "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
     },
-    "signature": "0xed69663fb943ce0e0dd90df1b65e96514051e82df48b3867516cc7e505234b9ca707fe43651870d9141354a7a993e09000000000000000000000000000000000"
+    "signature": "0xed69663fb943ce0e0dd90df1b65e96514051e82df48b3867516cc7e505234b9ca707fe43651870d9141354a7a993e09000000000000000000000000000000000",
+    "blockEpoch": 0,
+    "blockView": 0
   }
 }
 ```
@@ -2534,11 +2536,11 @@ Request<?, DebugEconomicConfig> req = currentValidWeb3j.getEconomicConfig();
 String debugEconomicConfig = req.send().getEconomicConfigStr();
 ```
 
-## Solidity contract call
+## Solidity Contract Call
 
 When deploying a Solidity smart contract on the blockchain, it must first be compiled into a bytecode format and then sent as part of the transaction. The Java SDK will help you generate a Java wrapper class for Solidity smart contracts, which can easily deploy Solidity smart contracts and call transaction methods, events, and constant methods in Solidity smart contracts.
 
-### Compile solidity source code
+### Compile Solidity Source Code
 
 * Compile solidity source code with `solc` compiler([solc download](https://github.com/PlatONnetwork/solidity/releases))：
 
@@ -2643,7 +2645,7 @@ The main functions supported by the Java wrapper class corresponding to the Soli
 - Invoking transactions and events
 - Call constant method
 
-#### Building and deploying smart contracts
+#### Building And Deploying Smart Contracts
 
 The construction and deployment of smart contracts use the deploy method in the wrapper class：
 
@@ -2664,7 +2666,7 @@ YourSmartContract contract = YourSmartContract.load(
         "0x<address>|<ensName>", web3j, transactionManager, contractGasProvider);
 ```
 
-#### Smart contract validity
+#### Smart Contract Validity
 
 Using this method, the validity of the smart contract can be verified. `True` will only be returned if the bytecode deployed in the contract address matches the bytecode in the smart contract package.
 
@@ -2690,7 +2692,7 @@ web3j.netVersion().send().getNetVersion();
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
 In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
 
-#### Invoking transactions and events
+#### Invoking Transactions And Events
 For all transactions methods, only the transaction receipt associated with the transaction is returned.
 
 ```java
@@ -2709,7 +2711,7 @@ Alternatively, you can use Observable filters to listen to events associated wit
 contract.someEventObservable(startBlock, endBlock).subscribe(event -> ...);
 ```
 
-#### Call constant method
+#### Call Constant Method
 
 Constant methods only do queries without changing the state of the smart contract.
 
