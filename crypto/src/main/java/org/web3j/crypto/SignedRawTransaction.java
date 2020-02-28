@@ -1,9 +1,9 @@
 package org.web3j.crypto;
 
+import org.web3j.utils.Numeric;
+
 import java.math.BigInteger;
 import java.security.SignatureException;
-
-import org.web3j.utils.Numeric;
 
 public class SignedRawTransaction extends RawTransaction {
 
@@ -29,7 +29,7 @@ public class SignedRawTransaction extends RawTransaction {
         if (null == chainId) {
             encodedTransaction = TransactionEncoder.encode(this);
         } else {
-            encodedTransaction = TransactionEncoder.encode(this, chainId.byteValue());
+            encodedTransaction = TransactionEncoder.encode(this, chainId);
         }
         BigInteger v = Numeric.toBigInt(getSignatureData().getV());
         byte[] r = signatureData.getR();
