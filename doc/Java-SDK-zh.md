@@ -2412,32 +2412,34 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
 ```text
 {
   "viewA": {
-    "epoch": 0,     //共识轮epoch值
-    "viewNumber": 0,    //共识轮view值
-    "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",   //区块hash
-    "blockNumber": 16013,   //区块number
-    "blockIndex": 0,    //区块在一轮view中的索引值
+    "epoch": 0,  
+    "viewNumber": 0, 
+    "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",  //区块hash
+    "blockNumber": 16013, 
     "validateNode": {
-      "index": 0,     //区块在一轮view中的索引值
-      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
+      "index": 0,  
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4", 
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
       "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
     },
-    "signature": "0x9c8ba2654c6b8334b1b94d3b421c5901242973afcb9d87c4ab6d82c2aee8e212a08f2ae000c9203f05f414ca578cda9000000000000000000000000000000000"
+    "signature": "0x9c8ba2654c6b8334b1b94d3b421c5901242973afcb9d87c4ab6d82c2aee8e212a08f2ae000c9203f05f414ca578cda9000000000000000000000000000000000",
+    "blockEpoch": 0,
+    "blockView": 0
   },
   "viewB": {
     "epoch": 0,
     "viewNumber": 0,
     "blockHash": "0x2a60ed6f04ccb9e468fbbfdda98b535653c42a16f1d7ccdfbd5d73ae1a2f4bf1",
     "blockNumber": 16013,
-    "blockIndex": 0,
     "validateNode": {
       "index": 0,
       "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
       "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
     },
-    "signature": "0xed69663fb943ce0e0dd90df1b65e96514051e82df48b3867516cc7e505234b9ca707fe43651870d9141354a7a993e09000000000000000000000000000000000"
+    "signature": "0xed69663fb943ce0e0dd90df1b65e96514051e82df48b3867516cc7e505234b9ca707fe43651870d9141354a7a993e09000000000000000000000000000000000",
+    "blockEpoch": 0,
+    "blockView": 0
   }
 }
 ```
