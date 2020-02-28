@@ -22,6 +22,7 @@ import com.platon.rlp.datatypes.Uint16;
 import com.platon.rlp.datatypes.Uint32;
 import com.platon.rlp.datatypes.Uint64;
 import com.platon.rlp.datatypes.Uint8;
+import com.platon.rlp.datatypes.WasmAddress;
 
 import static com.platon.rlp.RLPConstants.*;
 import static com.platon.rlp.RLPElement.readRLPTree;
@@ -74,6 +75,9 @@ public final class RLPCodec {
 
 		if (clazz == byte[].class)
 			return (T) element.asBytes();
+
+		if (clazz == WasmAddress.class)
+			return (T) new WasmAddress(element.asBytes());
 
 		// String is non-null, since we cannot differ between null empty string and null
 		if (clazz == String.class)

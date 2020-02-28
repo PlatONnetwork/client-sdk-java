@@ -14,6 +14,7 @@ import com.platon.rlp.datatypes.Uint16;
 import com.platon.rlp.datatypes.Uint32;
 import com.platon.rlp.datatypes.Uint64;
 import com.platon.rlp.datatypes.Uint8;
+import com.platon.rlp.datatypes.WasmAddress;
 
 import static com.platon.rlp.RLPItem.NULL;
 import static com.platon.rlp.RLPItem.ONE;
@@ -105,7 +106,7 @@ public interface RLPElement {
 
 		if (t instanceof Int64)
 			return RLPItem.fromBigInteger(((Int64) t).getUnsingedValue());
-		
+
 		if (t instanceof Uint8)
 			return RLPItem.fromBigInteger(((Uint8) t).getValue());
 
@@ -120,6 +121,9 @@ public interface RLPElement {
 
 		if (t instanceof byte[])
 			return RLPItem.fromBytes((byte[]) t);
+
+		if (t instanceof WasmAddress) 
+			return RLPItem.fromBytes(((WasmAddress) t).getValue());
 
 		if (t instanceof String)
 			return RLPItem.fromString((String) t);
