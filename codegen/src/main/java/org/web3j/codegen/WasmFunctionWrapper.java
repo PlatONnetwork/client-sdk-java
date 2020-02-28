@@ -40,6 +40,7 @@ import org.web3j.utils.Version;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.platon.rlp.datatypes.Pair;
+import com.platon.rlp.datatypes.WasmAddress;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -258,7 +259,7 @@ public class WasmFunctionWrapper extends Generator {
 			boolean withGasProvider) {
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("deploy").addModifiers(Modifier.PUBLIC, Modifier.STATIC)
 				.returns(buildRemoteCall(ClassName.get("", className))).addParameter(Web3j.class, WEB3J).addParameter(authType, authName);
-		
+
 		if (isPayable && !withGasProvider) {
 			return builder.addParameter(BigInteger.class, GAS_PRICE).addParameter(BigInteger.class, GAS_LIMIT).addParameter(BigInteger.class,
 					INITIAL_VALUE);
@@ -334,7 +335,7 @@ public class WasmFunctionWrapper extends Generator {
 			fieldSpecs.add(FieldSpec.builder(buildTypeName(type, customTypes), name, Modifier.PUBLIC).build());
 		}
 		typeBuilder.addFields(fieldSpecs);
-		
+
 		return typeBuilder.build();
 	}
 
@@ -565,10 +566,10 @@ public class WasmFunctionWrapper extends Generator {
 		}
 		return builder.build();
 	}
-	
+
 	MethodSpec buildEventTransactionReceiptFunction(String responseClassName, String functionName, List<NamedTypeName> indexedParameters,
 			List<NamedTypeName> nonIndexedParameters) {
-		
+
 		ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get("", responseClassName));
 
 		String generatedFunctionName = "get" + Strings.capitaliseFirstLetter(functionName) + "Events";
@@ -743,7 +744,12 @@ public class WasmFunctionWrapper extends Generator {
 
 			LOGGER.debug("buildTypeName >>> FixedHash >>> name:{},size:{},array length:{}", name, size, arrayLen);
 
-			TypeName typeName = ArrayTypeName.of(byte.class);
+			TypeName typeName;
+			if (null != size && Integer.parseInt(size) == 20) {
+				typeName = ClassName.get(WasmAddress.class);
+			} else {
+				typeName = ArrayTypeName.of(byte.class);
+			}
 			if (arrayLen != null) {
 				typeName = ArrayTypeName.of(typeName);
 			}
