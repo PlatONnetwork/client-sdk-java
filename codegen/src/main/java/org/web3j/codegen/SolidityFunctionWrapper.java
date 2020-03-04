@@ -86,9 +86,9 @@ public class SolidityFunctionWrapper extends Generator {
     private static final String CODEGEN_WARNING = "<p>Auto generated code.\n"
             + "<p><strong>Do not modify!</strong>\n"
             + "<p>Please use the "
-            + "<a href=\"https://docs.web3j.io/command_line.html\">web3j command line tools</a>,\n"
+            + "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/releases\">platon-web3j command line tools</a>,\n"
             + "or the " + SolidityFunctionWrapperGenerator.class.getName() + " in the \n"
-            + "<a href=\"https://github.com/web3j/web3j/tree/master/codegen\">"
+            + "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen\">"
             + "codegen module</a> to update.\n";
 
     private final boolean useNativeJavaTypes;
