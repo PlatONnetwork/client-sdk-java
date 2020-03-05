@@ -39,6 +39,8 @@ public final class WasmAbiTypes {
 			return Uint64.class;
 		case "int64":
 			return Int64.class;
+		case "uint128":
+			return BigInteger.class;
 		case "uint160":
 			return BigInteger.class;
 		case "uint256":

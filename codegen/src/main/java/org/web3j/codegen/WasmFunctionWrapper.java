@@ -73,9 +73,12 @@ public class WasmFunctionWrapper extends Generator {
 	private static final ClassName LOG = ClassName.get(Log.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(WasmFunctionWrapper.class);
 
-	private static final String CODEGEN_WARNING = "<p>Auto generated code.\n" + "<p><strong>Do not modify!</strong>\n" + "<p>Please use the "
-			+ "<a href=\"https://docs.web3j.io/command_line.html\">web3j command line tools</a>,\n" + "or the "
-			+ SolidityFunctionWrapperGenerator.class.getName() + " in the \n" + "<a href=\"https://github.com/web3j/web3j/tree/master/codegen\">"
+	private static final String CODEGEN_WARNING = "<p>Auto generated code.\n" 
+			+ "<p><strong>Do not modify!</strong>\n" 
+			+ "<p>Please use the "
+			+ "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/releases\">platon-web3j command line tools</a>,\n" 
+			+ "or the "+ WasmFunctionWrapperGenerator.class.getName() + " in the \n" 
+			+ "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen\">"
 			+ "codegen module</a> to update.\n";
 
 	private static final String regex = "(\\w+)(?:\\[(.*?)\\])(?:\\[(.*?)\\])?";
@@ -140,7 +143,7 @@ public class WasmFunctionWrapper extends Generator {
 		} catch (IOException | NullPointerException e) {
 			version = Version.DEFAULT;
 		}
-		return "\n<p>Generated with web3j version " + version + ".\n";
+		return "\n<p>Generated with platon-web3j version " + version + ".\n";
 	}
 
 	private List<FieldSpec> createBinaryDefinition(String binary) {
