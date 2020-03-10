@@ -1,4 +1,4 @@
-﻿
+
 ## 开发库导入
 
 根据构建工具的不同，使用以下方式将相关依赖项添加到项目中：
@@ -533,7 +533,7 @@ TransactionResponse
    - BigInteger：reward   获得解除委托时所提取的委托收益
 
 * **合约使用**
-   
+  
    ```java
    String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
    BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
@@ -775,7 +775,7 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
 
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
- 
+
   - BigInteger：rewardPer 当前结算周期奖励分成比例
 
 * **Java SDK合约使用**
@@ -2663,7 +2663,126 @@ YourSmartContract contract = YourSmartContract.deploy(
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "0x<address>|<ensName>", web3j, transactionManager, contractGasProvider);
+        "0x<address>", web3j, transactionManager, contractGasProvider);
+```
+
+#### 智能合约有效性
+
+使用此方法，可以验证智能合约的有效性。只有在合约地址中部署的字节码与智能合约封装包中的字节码匹配时才会返回`true`。
+
+```java
+contract.isValid();  // returns false if the contract bytecode does not match what's deployed
+                     // at the provided address
+```
+
+#### 交易管理器
+Java SDK提供了一个交易管理器`TransactionManager`来控制你连接到PlatON客户端的方式。默认采用`RawTransactionManager`。
+`RawTransactionManager`需要指定链ID。防止一个链的交易被重新广播到另一个链上：
+
+```java
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+```
+
+你可以通过以下请求来获得链ID：
+
+```java
+web3j.netVersion().send().getNetVersion();
+```
+
+除了`RawTransactionManager`之外，Java SDK还提供了一个客户端交易管理器`ClientTransactionManager`，它将你的交易签名工作交给你正在连接的PlatON客户端。
+此外，还有一个`ReadonlyTransactionManager`，用于只从智能合约中查询数据，而不与它进行交易。
+
+#### 调用交易和事件
+对于所有交易的方法，只返回与交易关联的交易收据。
+
+```java
+TransactionReceipt transactionReceipt = contract.someMethod(<param1>, ...).send();
+```
+
+通过交易收据，可以提取索引和非索引的事件参数。
+
+```java
+List<SomeEventResponse> events = contract.getSomeEvents(transactionReceipt);
+```
+
+或者，你可以使用可观察的过滤器Observable filter，监听与智能合约相关联的事件：
+
+```java
+contract.someEventObservable(startBlock, endBlock).subscribe(event -> ...);
+```
+
+#### 调用常量方法
+
+常量方法只做查询，而不改变智能合约的状态。
+
+```java
+Type result = contract.someMethod(<param1>, ...).send();
+```
+
+## Wasm合约调用
+
+将Wasm智能合约部署到区块链上时，必须先将其编译成字节码的格式，然后将其作为交易的一部分发送。Java SDK 将帮你生成Wasm智能合约对应的Java包装类，可以方便的部署Wasm智能合约以及调用Wasm智能合约中的交易方法、事件和常量方法。
+
+### 编译Wasm合约源代码
+
+* 通过`CDT`编译器编译Wasm合约源代码([CDT下载](https://github.com/PlatONnetwork/PlatON-CDT))
+
+CDT安装成功以后，可通过如下命令编译Wasm合约源代码：
+
+```shell
+$ platon-cpp <contract>.cpp 
+```
+
+编译成功以后，会生成`<contract>.wasm`和`<contract>.abi.json`文件
+`wasm`，输出Wasm合约的二进制文件以提供交易请求。
+`abi.json`，详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成Wasm智能合约对应的Java包装类。
+
+* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://github.com/PlatONnetwork/platon-truffle/tree/feature/wasm)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.1.0/index.html))
+
+### Wasm智能合约Java包装类
+
+Java SDK支持从`abi.json`文件中自动生成Wasm智能合约对应的Java包装类。
+
+* 通过命令行工具生成Java包装类：
+
+```shell
+$ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-contract>.abi.json -o /path/to/src/main/java -p com.your.organisation.name
+```
+
+* 直接调用Java SDK中的工具类生成Java包装类：
+
+```java
+String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-contract>.abi.json", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
+org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
+```
+
+其中`wasm`和`abi.json`文件是编译wasm源代码以后生成的。
+
+Wasm智能合约对应的Java包装类支持的主要功能：
+- 构建与部署
+- 确定合约有效性
+- 调用交易和事件
+- 调用常量方法
+
+#### 构建与部署智能合约
+
+智能合约的构建和部署使用包装类中的deploy方法：
+
+```java
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <transactionManager>, contractGasProvider,
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+```
+
+这个方法将在区块链上部署智能合约。部署成功以后，它将会返回一个智能合约的包装类实例，包含智能合约的地址。
+
+如果你的智能合约在构造上接受LAT转账，则需要初始化参数值<initialValue>。
+
+通过智能合约的地址也可以创建智能合约对应的Java包装类的实例：
+
+```java
+YourSmartContract contract = YourSmartContract.load(
+        "0x<address>", web3j, transactionManager, contractGasProvider);
 ```
 
 #### 智能合约有效性
