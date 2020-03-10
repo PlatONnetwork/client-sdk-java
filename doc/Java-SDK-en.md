@@ -2663,7 +2663,127 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "0x<address>|<ensName>", web3j, transactionManager, contractGasProvider);
+        "0x<address>", web3j, transactionManager, contractGasProvider);
+```
+
+#### Smart Contract Validity
+
+Using this method, the validity of the smart contract can be verified. `True` will only be returned if the bytecode deployed in the contract address matches the bytecode in the smart contract package.
+
+```java
+contract.isValid();  // returns false if the contract bytecode does not match what's deployed
+                     // at the provided address
+```
+
+#### TransactionManager
+The Java SDK provides a transaction manager `TransactionManager` to control how you connect to the PlatON client. `RawTransactionManager` is used by default.
+`RawTransactionManager` needs to specify the chain ID. Prevent transactions on one chain from being rebroadcasted to another chain:
+
+```java
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+```
+
+You can get the chain ID with the following request:
+
+```java
+web3j.netVersion().send().getNetVersion();
+```
+
+In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
+In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
+
+#### Invoking Transactions And Events
+For all transactions methods, only the transaction receipt associated with the transaction is returned.
+
+```java
+TransactionReceipt transactionReceipt = contract.someMethod(<param1>, ...).send();
+```
+
+With transaction receipts, you can extract indexed and non-indexed event parameters.
+
+```java
+List<SomeEventResponse> events = contract.getSomeEvents(transactionReceipt);
+```
+
+Alternatively, you can use Observable filters to listen to events associated with smart contracts:
+
+```java
+contract.someEventObservable(startBlock, endBlock).subscribe(event -> ...);
+```
+
+#### Call Constant Method
+
+Constant methods only do queries without changing the state of the smart contract.
+
+```java
+Type result = contract.someMethod(<param1>, ...).send();
+```
+
+## Wasm Contract Call
+
+When deploying a Wasm smart contract on the blockchain, it must first be compiled into a bytecode format and then sent as part of the transaction. The Java SDK will help you generate a Java wrapper class for Wasm smart contracts, which can easily deploy Wasm smart contracts and call transaction methods, events, and constant methods in Wasm smart contracts.
+
+### Compile Wasm Source Code
+
+* Compile Wasm contract source code with `CDT` compiler([CDT download](https://github.com/PlatONnetwork/PlatON-CDT))：
+
+After the CDT installation is successful, you can compile the Wasm contract source code with the following command:
+
+```shell
+$ platon-cpp <contract>.cpp 
+```
+
+After successful compilation, `<contract> .wasm` and` <contract> .abi.json` files will be generated.
+
+`wasm`，Output binary file of Wasm contract to provide transaction request.
+`abi.json`，Which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the Wasm smart contract.
+
+* Compile Wasm source code with `platon-truffle`([platon-truffle development tool installation reference](https://github.com/PlatONnetwork/platon-truffle/tree/feature/wasm)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.1.0/index.html))
+
+### Wasm Smart Contract Java Packaging Class
+
+The Java SDK supports automatic generation of Java wrapper classes for Wasm smart contracts from an `abi` file.
+
+* Generate Java wrapper classes via command line tools:
+
+```shell
+$ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-contract>.abi.json -o /path/to/src/main/java -p com.your.organisation.name
+```
+
+* Directly call the tool class in the Java SDK to generate a Java wrapper class:
+
+```java
+String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-contract>.abi.json", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
+org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
+```
+
+The `wasm` and` abi.json` files are generated after compiling the Wasm contract source code.
+
+The main functions supported by the Java wrapper class corresponding to the Wasm smart contract:
+- Build and deploy
+- Determine contract validity
+- Invoking transactions and events
+- Call constant method
+
+#### Building And Deploying Smart Contracts
+
+The construction and deployment of smart contracts use the deploy method in the wrapper class：
+
+```java
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <transactionManager>, contractGasProvider,
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+```
+
+This method will deploy smart contracts on the blockchain. After successful deployment, it will return a wrapper class instance of the smart contract, which contains the address of the smart contract.
+
+If your smart contract accepts LAT transfers on the structure, you need to initialize the parameter value <initialValue>.
+
+You can also create an instance of the Java wrapper class corresponding to the smart contract by using the address of the smart contract:
+
+```java
+YourSmartContract contract = YourSmartContract.load(
+        "0x<address>", web3j, transactionManager, contractGasProvider);
 ```
 
 #### Smart Contract Validity
