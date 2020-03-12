@@ -60,26 +60,23 @@ public class WasmFunctionWrapper extends Generator {
 	private static final String CREDENTIALS = "credentials";
 	private static final String CONTRACT_GAS_PROVIDER = "contractGasProvider";
 	private static final String TRANSACTION_MANAGER = "transactionManager";
-	private static final String INITIAL_VALUE = "initialWeiValue";
+	private static final String INITIAL_VALUE = "initialVonValue";
 	private static final String CONTRACT_ADDRESS = "contractAddress";
 	private static final String GAS_PRICE = "gasPrice";
 	private static final String GAS_LIMIT = "gasLimit";
 	private static final String FILTER = "filter";
 	private static final String START_BLOCK = "startBlock";
 	private static final String END_BLOCK = "endBlock";
-	private static final String WEI_VALUE = "weiValue";
+	private static final String VON_VALUE = "vonValue";
 	private static final String FUNC_NAME_PREFIX = "FUNC_";
 
 	private static final ClassName LOG = ClassName.get(Log.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(WasmFunctionWrapper.class);
 
-	private static final String CODEGEN_WARNING = "<p>Auto generated code.\n" 
-			+ "<p><strong>Do not modify!</strong>\n" 
-			+ "<p>Please use the "
-			+ "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/releases\">platon-web3j command line tools</a>,\n" 
-			+ "or the "+ WasmFunctionWrapperGenerator.class.getName() + " in the \n" 
-			+ "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen\">"
-			+ "codegen module</a> to update.\n";
+	private static final String CODEGEN_WARNING = "<p>Auto generated code.\n" + "<p><strong>Do not modify!</strong>\n" + "<p>Please use the "
+			+ "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/releases\">platon-web3j command line tools</a>,\n" + "or the "
+			+ WasmFunctionWrapperGenerator.class.getName() + " in the \n"
+			+ "<a href=\"https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen\">" + "codegen module</a> to update.\n";
 
 	private static final String regex = "(\\w+)(?:\\[(.*?)\\])(?:\\[(.*?)\\])?";
 	private static final String regex_map = "(map)(?:\\<(.*?)),(?:(.*?)\\>$)";
@@ -212,18 +209,29 @@ public class WasmFunctionWrapper extends Generator {
 			if (functionDefinition.getType().equals("Action")) {
 				if (functionDefinition.getName().equals("init")) {
 					constructor = true;
-					methodSpecs.add(buildDeploy(className, functionDefinition, Credentials.class, CREDENTIALS, true, customTypes));
-					methodSpecs.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes));
+
+					methodSpecs.add(buildDeploy(className, functionDefinition, Credentials.class, CREDENTIALS, true, customTypes, false));
+					methodSpecs
+							.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes, false));
+
+					methodSpecs.add(buildDeploy(className, functionDefinition, Credentials.class, CREDENTIALS, true, customTypes, true));
+					methodSpecs
+							.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes, true));
 					continue;
 				}
-				MethodSpec ms = buildFunction(functionDefinition, customTypes);
-				methodSpecs.add(ms);
+
+				methodSpecs.add(buildFunction(functionDefinition, customTypes, false));
+				if (!functionDefinition.isConstant()) {
+					methodSpecs.add(buildFunction(functionDefinition, customTypes, true));
+				}
 			} else if (functionDefinition.getType().equals("Event")) {
 				methodSpecs.addAll(buildEventFunctions(functionDefinition, classBuilder, customTypes));
 			} else if (functionDefinition.getType().equals("struct")) {
 				classBuilder.addType(buildStruct(functionDefinition, customTypes));
 			}
 		}
+
+		// no init method
 		if (!constructor) {
 			MethodSpec.Builder credentialsMethodBuilder = getDeployMethodSpec(className, Credentials.class, CREDENTIALS, false, true);
 			methodSpecs.add(buildDeployNoParams(credentialsMethodBuilder, className, CREDENTIALS, false, true));
@@ -246,8 +254,7 @@ public class WasmFunctionWrapper extends Generator {
 	}
 
 	private MethodSpec buildDeploy(String className, WasmAbiDefinition functionDefinition, Class authType, String authName, boolean withGasProvider,
-			Set<String> customTypes) {
-		boolean isPayable = functionDefinition.isPayable();
+			Set<String> customTypes, boolean isPayable) {
 		MethodSpec.Builder methodBuilder = getDeployMethodSpec(className, authType, authName, isPayable, withGasProvider);
 		String inputParams = addParameters(methodBuilder, functionDefinition.getInput(), customTypes);
 
@@ -383,7 +390,7 @@ public class WasmFunctionWrapper extends Generator {
 		}
 	}
 
-	MethodSpec buildFunction(WasmAbiDefinition functionDefinition, Set<String> customTypes) throws ClassNotFoundException {
+	MethodSpec buildFunction(WasmAbiDefinition functionDefinition, Set<String> customTypes, boolean isPayable) throws ClassNotFoundException {
 		String functionName = functionDefinition.getName();
 		MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(functionName).addModifiers(Modifier.PUBLIC);
 		String inputParams = addParameters(methodBuilder, functionDefinition.getInput(), customTypes);
@@ -397,7 +404,7 @@ public class WasmFunctionWrapper extends Generator {
 		if (functionDefinition.isConstant()) {
 			buildConstantFunction(functionDefinition, methodBuilder, outputParameterTypes, inputParams, customTypes);
 		} else {
-			buildTransactionFunction(functionDefinition, methodBuilder, inputParams);
+			buildTransactionFunction(functionDefinition, methodBuilder, inputParams, isPayable);
 		}
 
 		return methodBuilder.build();
@@ -434,8 +441,8 @@ public class WasmFunctionWrapper extends Generator {
 		return ParameterizedTypeName.get(ClassName.get(RemoteCall.class), typeName);
 	}
 
-	private void buildTransactionFunction(WasmAbiDefinition functionDefinition, MethodSpec.Builder methodBuilder, String inputParams)
-			throws ClassNotFoundException {
+	private void buildTransactionFunction(WasmAbiDefinition functionDefinition, MethodSpec.Builder methodBuilder, String inputParams,
+			boolean isPayable) throws ClassNotFoundException {
 
 		if (functionDefinition.hasOutputs()) {
 			// CHECKSTYLE:OFF
@@ -444,15 +451,15 @@ public class WasmFunctionWrapper extends Generator {
 			// CHECKSTYLE:ON
 		}
 
-		if (functionDefinition.isPayable()) {
-			methodBuilder.addParameter(BigInteger.class, WEI_VALUE);
+		if (isPayable) {
+			methodBuilder.addParameter(BigInteger.class, VON_VALUE);
 		}
 		String functionName = functionDefinition.getName();
 		methodBuilder.returns(buildRemoteCall(TypeName.get(TransactionReceipt.class)));
 		methodBuilder.addStatement("final $T function = new $T($N, $T.asList($L), Void.class)", WasmFunction.class, WasmFunction.class,
 				funcNameToConst(functionName), Arrays.class, inputParams);
-		if (functionDefinition.isPayable()) {
-			methodBuilder.addStatement("return executeRemoteCallTransaction(function, $N)", WEI_VALUE);
+		if (isPayable) {
+			methodBuilder.addStatement("return executeRemoteCallTransaction(function, $N)", VON_VALUE);
 		} else {
 			methodBuilder.addStatement("return executeRemoteCallTransaction(function)");
 		}
