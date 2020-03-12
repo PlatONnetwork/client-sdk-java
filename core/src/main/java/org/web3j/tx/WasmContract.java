@@ -154,14 +154,14 @@ public abstract class WasmContract extends ManagedTransaction {
 		return executeTransaction(function, BigInteger.ZERO);
 	}
 
-	private TransactionReceipt executeTransaction(WasmFunction function, BigInteger weiValue) throws IOException, TransactionException {
+	private TransactionReceipt executeTransaction(WasmFunction function, BigInteger vonValue) throws IOException, TransactionException {
 		String data = WasmFunctionEncoder.encode(function);
-		return executeTransaction(data, weiValue);
+		return executeTransaction(data, vonValue);
 	}
 
-	TransactionReceipt executeTransaction(String data, BigInteger weiValue) throws TransactionException, IOException {
+	TransactionReceipt executeTransaction(String data, BigInteger vonValue) throws TransactionException, IOException {
 
-		TransactionReceipt receipt = send(contractAddress, data, weiValue, gasProvider.getGasPrice(), gasProvider.getGasLimit());
+		TransactionReceipt receipt = send(contractAddress, data, vonValue, gasProvider.getGasPrice(), gasProvider.getGasLimit());
 
 		if (!receipt.isStatusOK()) {
 			throw new TransactionException(String.format("Transaction has failed with status: %s. " + "Gas used: %d. (not-enough gas?)",
@@ -175,8 +175,8 @@ public abstract class WasmContract extends ManagedTransaction {
 		return new RemoteCall<>(() -> executeTransaction(function));
 	}
 
-	protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(WasmFunction function, BigInteger weiValue) {
-		return new RemoteCall<>(() -> executeTransaction(function, weiValue));
+	protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(WasmFunction function, BigInteger vonValue) {
+		return new RemoteCall<>(() -> executeTransaction(function, vonValue));
 	}
 
 	private static <T extends WasmContract> T create(T contract, String encodedConstructor, BigInteger value)
