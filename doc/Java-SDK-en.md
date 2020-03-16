@@ -1,5 +1,5 @@
 
-## Development Library Import
+## Import Development Library
 
 Depending on the build tool, use the following methods to add related dependencies to your project：
 
@@ -52,11 +52,11 @@ System contracts mainly include economic model and governance related contracts�
 For the introduction and use of the above system contract, please refer to the following contract interface description.
 
 
-### Pledge related interface
+### Pledge Related Interface
 
-> Interfaces related to pledge contracts in the PlatON economic model
+> Interfaces related to pledge contracts in the PlatON economic model.
 
-#### Loading pledge contract
+#### Loading Pledge Contract
 
 ```java
 //Java 8
@@ -386,11 +386,11 @@ CallResponse<BigInteger> baseResponse
 CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```
 
-### Delegation related interface
+### Delegation Related Interface
 
 > Principal related contract interface in PlatON economic model
 
-#### Load delegate contract
+#### Load Delegate Contract
 
 ```java
 //Java 8
@@ -546,11 +546,11 @@ if(baseResponse.isStatusOk()){
 }
 ```
 
-### Reward related interface
+### Reward Related Interface
 
 > Contract-related contract interfaces in the PlatON economic model
 
-#### Load reward contract
+#### Load Reward Contract
 
 ```java
 //Java 8
@@ -628,11 +628,11 @@ nodeList.add(nodeId);
 CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(delegateAddress, nodeList).send();
 ```
 
-### Node-related contracts
+### Node-related Contracts
 
 > Principal related contract interface in PlatON economic model
 
-#### Load node contract
+#### Load Node Contract
 
 ```java
 //Java 8
@@ -834,7 +834,7 @@ CallResponse<List<Node>> baseResponse
 CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```
 
-### Governance related contracts
+### Governance Related Contracts
 
 > Contract interface related to PlatON governance
 
@@ -1110,11 +1110,11 @@ CallResponse<BigInteger> baseResponse = proposalContract.getActiveVersion().send
 ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 
-### Double sign report related interface
+### Double Sign Report Related Interface
 
 > PlatON report contract related punishment interface
 
-#### Load report contract
+#### Load Report Contract
 
 ```
 //Java 8
@@ -1182,11 +1182,11 @@ CallResponse
 CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
 ```
 
-### Lock related interface
+### Lock Related Interface
 
 > PlatON report contract related punishment interface
 
-#### Loading the hedging contract
+#### Loading The Hedging Contract
 
 ```java
 //Java 8
@@ -2301,8 +2301,8 @@ String req = request.send(). GetStoredValue();
 
 - **Export parameters**
 
-Parameters | Type | Description |
-| ------- | ------ | ---------- |
+|Parameters | Type | Description |   
+|:------- |:------ |:---------- |
 | jsonrpc | string | rpc version number |
 | id | int | id serial number |
 | result | string | Evidence String |
@@ -2551,7 +2551,7 @@ Prompt indicates success：
     Test contracts: truffle test
 ```
 
-> **step2.** Put HelloWorld.sol in HelloWorld / contracts directory
+> **step2.** Put HelloWorld.sol in `HelloWorld/contracts` directory
 
 ```
 guest@guest:~/HelloWorld/contracts$ ls
