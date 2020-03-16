@@ -20,7 +20,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.8.0.0</version>
+	<version>0.8.0.1</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.8.0.0"
+compile "com.platon.client:core:0.8.0.1"
 ```
 
 ## System Contract Call
@@ -486,15 +486,14 @@ CallResponse<Delegation>
   - String: ErrMsg error message, exists on failure
 
 - **Delegation**: the object to save the delegation information of the current delegation account
-  - String: Address The account address of the principal
-  - String: NodeId Node Id of the validator
-  - BigInteger: block height when StakingBlockNum initiated pledge
-  - BigInteger: DelegateEpoch's settlement cycle at the time of the most recent delegation to this candidate
-  - BigInteger: Released to initiate a free amount lock-in period of the commissioned account
-  - BigInteger: ReleasedHes initiated the free amount of the hesitation period commissioned by the commissioned account von
-  - BigInteger: RestrictingPlan initiates a lock-in period of the entrusted account
-  - BigInteger: RestrictingPlanHes initiated the hedging period of the locked account of the entrusted account
-  - BigInteger: Reduction von in revocation plan
+  - String: delegateAddress The account address of the principal
+  - String: nodeId Node Id of the validator
+  - BigInteger: stakingBlockNum height when StakingBlockNum initiated pledge
+  - BigInteger: delegateEpoch delegateEpoch's settlement cycle at the time of the most recent delegation to this candidate
+  - BigInteger: delegateReleased to initiate a free amount lock-in period of the commissioned account
+  - BigInteger: delegateReleasedHes initiated the free amount of the hesitation period commissioned by the commissioned account von
+  - BigInteger: delegateLocked initiates a lock-in period of the entrusted account
+  - BigInteger: delegateLockedHes initiated the hedging period of the locked account of the entrusted account
   - BigInteger：cumulativeIncome  Delegate income to be received
 
 - **Java SDK contract use**
@@ -666,49 +665,37 @@ CallResponse<List<Node>> baseResponse
 
 * **Node**: object for saving node information for a single current settlement cycle
 
-  - String: BenefitAddress is used to accept the block reward and pledged reward income account
+  - String: nodeId The node Id of the pledge(also called the candidate's node Id)
 
-  - String: The description of the Details node(the length is limited, indicating the description of the node)
+  - String: stakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
 
-  - String: NodeId The node Id of the pledge(also called the candidate's node Id)
+  - String: benefitAddress is used to accept the block reward and pledged reward income account
 
-  - String: NodeName The name of the node being pledged(the length is limited, indicating the name of the node)
-
-  - BigInteger: ProgramVersion The real version number of the PlatON process of the pledged node(the interface for obtaining the version number is provided by the governance)
-
-  - BigInteger: Released von who initiated a free amount locked period pledged account
-
-  - BigInteger: ReleasedHes initiated the free amount of the hesitation period of the pledged account
-
-  - BigInteger: RestrictingPlan initiates the lock-up period of the locked account amount of the pledged account.
-
-  - BigInteger: RestrictingPlanHes initiated the hedging period of the locked amount of the pledged account
-
-  - BigInteger: Shares the current candidate's total pledge plus the number of entrusted vons
-
-  - String: StakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
-
-  - BigInteger: block height when StakingBlockNum initiated pledge
-
-  - BigInteger: StakingEpoch's current settlement cycle when the pledge amount is changed
-
-  - BigInteger: StakingTxIndex transaction index when pledge is initiated
-
-  - BigInteger: Status of the status candidate, 0: node is available, 1: node is unavailable, 2: node block rate is low but the removal condition is not met,
-
-    4: The node's von is insufficient to the minimum pledge threshold(only the penultimate bit is 1), 8: the node is reported to be double signed, 16: the node block rate is low and the removal condition is reached(the penultimate bit is 1); : Node initiates cancellation
-
-  - BigInteger: ValidatorTerm
-
-  - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
-
-  - BigInteger：delegateTotal  The total number of commissioned nodes
-
-  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
   - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
 
-  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
+  - BigInteger: stakingTxIndex transaction index when pledge is initiated
+
+  - BigInteger: programVersion The real version number of the PlatON process of the pledged node(the interface for obtaining the version number is provided by the governance)
+
+  - BigInteger: stakingBlockNum block height when StakingBlockNum initiated pledge
+
+  - BigInteger: shares the current candidate's total pledge plus the number of entrusted vons
+
+  - String：externalId   External Id (with a length limit, the ID described by the third party to pull the node) is currently the public key of the keybase account, and the node icon is obtained through the public key.
+
+  - String: nodeName The name of the node being pledged(the length is limited, indicating the name of the node)
+
+  - String: website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - String: details The description of the Details node(the length is limited, indicating the description of the node)
+
+  - BigInteger: validatorTerm
+  
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
 
 * **Java SDK contract use**
 
@@ -736,47 +723,37 @@ CallResponse<List<Node>> baseResponse
 
 - **Node**: object that saves the information of a single current consensus cycle verification node
 
-  - String: BenefitAddress is used to accept the block reward and pledged reward income account
+  - String: nodeId The node Id of the pledge(also called the candidate's node Id)
 
-  - String: The description of the Details node(the length is limited, indicating the description of the node)
+  - String: stakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
 
-  - String: NodeId The node Id of the pledge(also called the candidate's node Id)
+  - String: benefitAddress is used to accept the block reward and pledged reward income account
 
-  - String: NodeName The name of the node being pledged(the length is limited, indicating the name of the node)
-
-  - BigInteger: ProgramVersion The real version number of the PlatON process of the pledged node(the interface for obtaining the version number is provided by the governance)
-
-  - BigInteger: Released von who initiated a free amount locked period pledged account
-
-  - BigInteger: ReleasedHes initiated the free amount of the hesitation period of the pledged account
-
-  - BigInteger: RestrictingPlan initiates the lock-up period of the locked account amount of the pledged account.
-
-  - BigInteger: RestrictingPlanHes initiated the hedging period of the locked amount of the pledged account
-
-  - BigInteger: Shares the current candidate's total pledge plus the number of entrusted vons
-
-  - String: StakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
-
-  - BigInteger: block height when StakingBlockNum initiated pledge
-
-  - BigInteger: StakingEpoch's current settlement cycle when the pledge amount is changed
-
-  - BigInteger: StakingTxIndex transaction index when pledge is initiated
-
-  - BigInteger: Status of the status candidate, 0: node is available, 1: node is unavailable, 2: node block rate is low but the removal condition is not met, 4: The node's von is less than the minimum pledge threshold(only the penultimate bit is 1),8: The node is reported with double sign, 16: The node's block generation rate is low and the removal condition is reached(the penultimate bit is 1); 32: The node actively initiates the cancellation
-
-  - BigInteger: ValidatorTerm
-
-  - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
-
-  - BigInteger：delegateTotal  The total number of commissioned nodes
-
-  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
   - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
 
-  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
+  - BigInteger: stakingTxIndex transaction index when pledge is initiated
+
+  - BigInteger: programVersion The real version number of the PlatON process of the pledged node(the interface for obtaining the version number is provided by the governance)
+
+  - BigInteger: stakingBlockNum block height when StakingBlockNum initiated pledge
+
+  - BigInteger: shares the current candidate's total pledge plus the number of entrusted vons
+
+  - String：externalId   External Id (with a length limit, the ID described by the third party to pull the node) is currently the public key of the keybase account, and the node icon is obtained through the public key.
+
+  - String: nodeName The name of the node being pledged(the length is limited, indicating the name of the node)
+
+  - String: website The third-party homepage of the Website node(the length of the node is the homepage of the node)
+
+  - String: details The description of the Details node(the length is limited, indicating the description of the node)
+
+  - BigInteger: validatorTerm
+  
+  - BigInteger：delegateTotal  The total number of commissioned nodes
+
+  - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
 
 - **Java SDK contract use**
 
@@ -805,53 +782,51 @@ CallResponse<List<Node>> baseResponse
 
 - **Node**: holds a single candidate node information object
 
-  - String: BenefitAddress is used to accept the block reward and pledged reward income account
+  - String: nodeId The node Id of the pledge(also called the candidate's node Id)
 
-  - String: The description of the Details node(the length is limited, indicating the description of the node)
+  - String: stakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
 
-  - String: NodeId The node Id of the pledge(also called the candidate's node Id)
+  - String: benefitAddress is used to accept the block reward and pledged reward income account
 
-  - String: NodeName The name of the node being pledged(the length is limited, indicating the name of the node)
+  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
-  - BigInteger: ProgramVersion The real version number of the PlatON process of the pledged node(the interface for obtaining the version number is provided by the governance)
+  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
 
-  - BigInteger: Released von who initiated a free amount locked period pledged account
+  - BigInteger: stakingTxIndex transaction index when pledge is initiated
 
-  - BigInteger: ReleasedHes initiated the free amount of the hesitation period of the pledged account
+  - BigInteger: programVersion The real version number of the PlatON process of the pledged node(the interface for obtaining the version number is provided by the governance)
 
-  - BigInteger: RestrictingPlan initiates the lock-up period of the locked account amount of the pledged account.
+  - BigInteger：status   Candidate status，0: node available，1: node is unavailable ，2:Nodes that have a low block yield but do not meet the removal conditions，4:The node's VON is less than the minimum pledge threshold. 8: The node is reported to have double sign.，16:Node block rate is low and removal conditions are met, 32: node initiates cancellation
 
-  - BigInteger: RestrictingPlanHes initiated the hedging period of the locked amount of the pledged account
+  - BigInteger：stakingEpoch   settlement cycle when current pledge amount is changed
 
-  - BigInteger: Shares the current candidate's total pledge plus the number of entrusted vons
+  - BigInteger: stakingBlockNum block height when StakingBlockNum initiated pledge
 
-  - String: StakingAddress The account used when initiating the pledge(when the pledge is cancelled, von will be returned to the account or the account's lock information)
+  - BigInteger: shares the current candidate's total pledge plus the number of entrusted vons
 
-  - BigInteger: block height when StakingBlockNum initiated pledge
+  - BigInteger：released   VON that initiates a free amount locked period pledged account
 
-  - BigInteger: StakingEpoch's current settlement cycle when the pledge amount is changed
+  - BigInteger：releasedHes   VON to initiate a free amount of pledged account
 
-  - BigInteger: StakingTxIndex transaction index when pledge is initiated
+  - BigInteger：restrictingPlan   VON that initiated the lock-up amount of the pledged account's lock-up period
 
-  - BigInteger: Status of the status candidate, 0: node is available, 1: node is unavailable, 2: node block rate is low but the removal condition is not met,
+  - BigInteger：restrictingPlanHes   VON that initiates the hesitation period of the locked amount of the pledged account
 
-    4: The node's von is insufficient to the minimum pledge threshold(only the penultimate bit is 1), 8: the node is reported to be double signed, 16: the node block rate is low and the removal condition is reached(the penultimate bit is 1); : Node initiates cancellation
+  - String：externalId   External Id (with a length limit, the ID described by the third party to pull the node) is currently the public key of the keybase account, and the node icon is obtained through the public key.
 
-  - BigInteger: ValidatorTerm
+  - String: nodeName The name of the node being pledged(the length is limited, indicating the name of the node)
 
-  - String: The third-party homepage of the Website node(the length of the node is the homepage of the node)
+  - String: website The third-party homepage of the Website node(the length of the node is the homepage of the node)
 
-  - BigInteger：delegateEpoch  The node's last commissioned settlement cycle
+  - String: details The description of the Details node(the length is limited, indicating the description of the node)
+
+  - BigInteger：delegateEpoch The node's last commissioned settlement cycle
   
   - BigInteger：delegateTotal  The total number of commissioned nodes
   
   - BigInteger：delegateTotalHes  Total number of inactive nodes commissioned
-  
+
   - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
-  
-  - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
-  
-  - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
 
@@ -2624,7 +2599,7 @@ Warning: This is a pre-release compiler version, please do not use it in product
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.8.0.1-20200316/platon-web3j-0.8.0.1.zip)）:
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -2633,6 +2608,9 @@ $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-c
 * Directly call the tool class in the Java SDK to generate a Java wrapper class:
 
 ```java
+// Import console module via maven or gradle
+compile "com.platon.client:console:{version}"
+
 String args[] = {"generate", "/path/to/<smart-contract>.bin", "/path/to/<smart-contract>.abi", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
 org.web3j.codegen.SolidityFunctionWrapperGenerator.run(args);
 ```

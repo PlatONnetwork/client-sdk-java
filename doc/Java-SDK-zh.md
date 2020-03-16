@@ -666,29 +666,29 @@ CallResponse<List<Node>> baseResponse
 * **Node**：保存单个当前结算周期验证节点信息的对象
 
   - String：nodeId   被质押的节点Id(也叫候选人的节点Id)
-  
+
   - String：stakingAddress   发起质押时使用的账户(撤销质押时，VON会被退回该账户或者该账户的锁仓信息中)
 
   - String：benifitAddress	用于接受出块奖励和质押奖励的收益账户
-  
+
   - BigInteger：rewardPer 当前结算周期奖励分成比例
-    
+
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
-  
+
   - BigInteger：stakingTxIndex   发起质押时的交易索引 
 
   - BigInteger：programVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
-  
+
   - BigInteger：stakingBlockNum    发起质押时的区块高度 
-  
+
   - BigInteger：shares   当前候选人总共质押加被委托的VON数目  
-    
+
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥，节点图标是通过该公钥获取。
 
   - String：nodeName   被质押节点的名称(有长度限制，表示该节点的名称)
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
-  
+
   - String：details   节点的描述(有长度限制，表示该节点的描述) 
 
   - BigInteger：validatorTerm   验证人的任期
@@ -724,35 +724,35 @@ CallResponse<List<Node>> baseResponse
 * **Node**：保存单个当前共识周期验证节点信息的对象
 
   - String：nodeId   被质押的节点Id(也叫候选人的节点Id)
-  
+
   - String：stakingAddress   发起质押时使用的账户(撤销质押时，VON会被退回该账户或者该账户的锁仓信息中)
 
   - String：benifitAddress	用于接受出块奖励和质押奖励的收益账户
-  
+
   - BigInteger：rewardPer 当前结算周期奖励分成比例
-    
+
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
-  
+
   - BigInteger：stakingTxIndex   发起质押时的交易索引 
 
   - BigInteger：programVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
-  
+
   - BigInteger：stakingBlockNum    发起质押时的区块高度 
-  
+
   - BigInteger：shares   当前候选人总共质押加被委托的VON数目  
-    
+
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥，节点图标是通过该公钥获取。
 
   - String：nodeName   被质押节点的名称(有长度限制，表示该节点的名称)
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
-  
+
   - String：details   节点的描述(有长度限制，表示该节点的描述) 
 
   - BigInteger：validatorTerm   验证人的任期
   
   - BigInteger：delegateTotal  节点被委托的生效总数量
-  
+
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
 
 * **Java SDK合约使用**
@@ -783,27 +783,27 @@ CallResponse<List<Node>> baseResponse
 * **Node**：保存单个候选节点信息对象
 
   - String：nodeId   被质押的节点Id(也叫候选人的节点Id)
-  
+
   - String：stakingAddress   发起质押时使用的账户(撤销质押时，VON会被退回该账户或者该账户的锁仓信息中)
 
   - String：benifitAddress	用于接受出块奖励和质押奖励的收益账户
-  
+
   - BigInteger：rewardPer 当前结算周期奖励分成比例
-    
+
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
-  
+
   - BigInteger：stakingTxIndex   发起质押时的交易索引 
 
   - BigInteger：programVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
-  
+
   - BigInteger：status   候选人的状态，0: 节点可用，1: 节点不可用 ，2:节点出块率低但没有达到移除条件的，4:节点的VON不足最低质押门槛，8:节点被举报双签，16:节点出块率低且达到移除条件, 32: 节点主动发起撤销
-  
+
   - BigInteger：stakingEpoch   当前变更质押金额时的结算周期
-  
+
   - BigInteger：stakingBlockNum    发起质押时的区块高度 
-  
+
   - BigInteger：shares   当前候选人总共质押加被委托的VON数目  
-  
+
   - BigInteger：released   发起质押账户的自由金额的锁定期质押的VON
 
   - BigInteger：releasedHes   发起质押账户的自由金额的犹豫期质押的VON
@@ -811,21 +811,21 @@ CallResponse<List<Node>> baseResponse
   - BigInteger：restrictingPlan   发起质押账户的锁仓金额的锁定期质押的VON
 
   - BigInteger：restrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的VON  
-    
+
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥，节点图标是通过该公钥获取。
 
   - String：nodeName   被质押节点的名称(有长度限制，表示该节点的名称)
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
-  
+
   - String：details   节点的描述(有长度限制，表示该节点的描述) 
-  
+
   - BigInteger：delegateEpoch  节点最后一次被委托的结算周期
   
   - BigInteger：delegateTotal  节点被委托的生效总数量
   
   - BigInteger：delegateTotalHes  节点被委托的未生效总数量
-  
+
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
 
 * **Java SDK合约使用**
