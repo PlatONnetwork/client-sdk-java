@@ -24,20 +24,21 @@ import java.util.List;
  */
 public class RestrictingPlanContractTest {
 
-    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.76:6794"));
-
     private String benifitAddress = "0x493301712671Ada586ba6Ca7891F436D29185889";
 
     private RestrictingPlanContract restrictingPlanContract;
 
     private Credentials credentials;
 
+    private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
+    String chainId = "103";
+
     @Before
     public void init() {
 
-        credentials = Credentials.create("0x6fe419582271a4dcf01c51b89195b77b228377fde4bde6e04ef126a0b4373f79");
+        credentials = Credentials.create("0xa689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b");
 
-        restrictingPlanContract = RestrictingPlanContract.load(web3j, credentials, "100");
+        restrictingPlanContract = RestrictingPlanContract.load(web3j, credentials, chainId);
     }
 
     /**

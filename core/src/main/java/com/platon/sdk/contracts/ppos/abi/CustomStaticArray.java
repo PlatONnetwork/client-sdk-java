@@ -30,7 +30,7 @@ public class CustomStaticArray<T extends CustomType> implements Type<List<T>> {
 
     @Override
     public List<T> getValue() {
-        return null;
+        return list;
     }
 
     @Override
