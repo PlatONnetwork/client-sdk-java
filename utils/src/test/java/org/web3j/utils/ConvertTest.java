@@ -20,9 +20,9 @@ public class ConvertTest {
                 is(new BigDecimal("21000000")));
         assertThat(Convert.fromVon("21000000000000", Convert.Unit.GVON),
                 is(new BigDecimal("21000")));
-        assertThat(Convert.fromVon("21000000000000", Convert.Unit.SZABO),
+        assertThat(Convert.fromVon("21000000000000", Convert.Unit.MICROLAT),
                 is(new BigDecimal("21")));
-        assertThat(Convert.fromVon("21000000000000", Convert.Unit.FINNEY),
+        assertThat(Convert.fromVon("21000000000000", Convert.Unit.MILLILAT),
                 is(new BigDecimal("0.021")));
         assertThat(Convert.fromVon("21000000000000", Convert.Unit.LAT),
                 is(new BigDecimal("0.000021")));
@@ -40,8 +40,8 @@ public class ConvertTest {
         assertThat(Convert.toVon("21", Convert.Unit.KVON), is(new BigDecimal("21000")));
         assertThat(Convert.toVon("21", Convert.Unit.MVON), is(new BigDecimal("21000000")));
         assertThat(Convert.toVon("21", Convert.Unit.GVON), is(new BigDecimal("21000000000")));
-        assertThat(Convert.toVon("21", Convert.Unit.SZABO), is(new BigDecimal("21000000000000")));
-        assertThat(Convert.toVon("21", Convert.Unit.FINNEY),
+        assertThat(Convert.toVon("21", Convert.Unit.MICROLAT), is(new BigDecimal("21000000000000")));
+        assertThat(Convert.toVon("21", Convert.Unit.MILLILAT),
                 is(new BigDecimal("21000000000000000")));
         assertThat(Convert.toVon("21", Convert.Unit.LAT),
                 is(new BigDecimal("21000000000000000000")));
