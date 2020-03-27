@@ -255,6 +255,9 @@ public class EconomicConfig {
          */
         private BigInteger maxEvidenceAge;
 
+        private BigInteger zeroProduceCumulativeTime;
+        private BigInteger zeroProduceNumberThreshold;
+
         public Slashing() {
         }
 
@@ -290,6 +293,22 @@ public class EconomicConfig {
             this.maxEvidenceAge = maxEvidenceAge;
         }
 
+        public BigInteger getZeroProduceCumulativeTime() {
+            return zeroProduceCumulativeTime;
+        }
+
+        public void setZeroProduceCumulativeTime(BigInteger zeroProduceCumulativeTime) {
+            this.zeroProduceCumulativeTime = zeroProduceCumulativeTime;
+        }
+
+        public BigInteger getZeroProduceNumberThreshold() {
+            return zeroProduceNumberThreshold;
+        }
+
+        public void setZeroProduceNumberThreshold(BigInteger zeroProduceNumberThreshold) {
+            this.zeroProduceNumberThreshold = zeroProduceNumberThreshold;
+        }
+
         @Override
         public String toString() {
             return "Slashing{" +
@@ -297,6 +316,8 @@ public class EconomicConfig {
                     ", duplicateSignReportReward=" + duplicateSignReportReward +
                     ", slashBlocksReward=" + slashBlocksReward +
                     ", maxEvidenceAge=" + maxEvidenceAge +
+                    ", zeroProduceCumulativeTime=" + zeroProduceCumulativeTime +
+                    ", zeroProduceNumberThreshold=" + zeroProduceNumberThreshold +
                     '}';
         }
     }
