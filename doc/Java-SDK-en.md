@@ -20,7 +20,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.8.0.1</version>
+	<version>0.11.0.1</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.8.0.1"
+compile "com.platon.client:core:0.11.0.1"
 ```
 
 ## System Contract Call
@@ -2599,7 +2599,7 @@ Warning: This is a pre-release compiler version, please do not use it in product
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.8.0.1-20200316/platon-web3j-0.8.0.1.zip)）:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.11.0.1-20200410/platon-web3j-0.11.0.1.zip)）:
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name

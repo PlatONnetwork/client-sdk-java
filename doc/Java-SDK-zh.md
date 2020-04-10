@@ -20,7 +20,7 @@
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.8.0.1</version>
+	<version>0.11.0.1</version>
 </dependency>
 ```
 
@@ -35,7 +35,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.client:core:0.8.0.1"
+compile "com.platon.client:core:0.11.0.1"
 ```
 
 ## 系统合约调用
@@ -2603,7 +2603,7 @@ Warning: This is a pre-release compiler version, please do not use it in product
 
 Java SDK支持从`abi`文件中自动生成Solidity智能合约对应的Java包装类。
 
-* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/sdk/0.8.0.1-20200316/platon-web3j-0.8.0.1.zip)）：
+* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/sdk/0.11.0.1-20200410/platon-web3j-0.11.0.1.zip)）：
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
