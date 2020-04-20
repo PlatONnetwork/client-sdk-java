@@ -52,7 +52,7 @@ public abstract class BaseContract extends ManagedTransaction {
 
     protected BaseContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
         super(web3j, transactionManager);
-        this.contractAddress = ensResolver.resolve(contractAddress);
+        this.contractAddress = contractAddress;
     }
 
     protected BaseContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {

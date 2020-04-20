@@ -59,9 +59,7 @@ public class Transfer extends ManagedTransaction {
                             + " = " + weiValue + " Wei");
         }
 
-        String resolvedAddress = ensResolver.resolve(toAddress);
-
-        return send(resolvedAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
+        return send(toAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(
