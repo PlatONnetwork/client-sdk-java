@@ -78,14 +78,32 @@ public class ProposalScenario extends Scenario {
         CallResponse<TallyResult> getTallyResultResponse = getTallyResult(textProposalHash);
         assertTrue(getTallyResultResponse.toString(), getTallyResultResponse.isStatusOk());
 
+        //提交参数提案
+        TransactionResponse createParamProposalResponse = createParamProposal();
+        assertTrue(createParamProposalResponse.toString(), createParamProposalResponse.isStatusOk());
+        String paramProposalHash = createParamProposalResponse.getTransactionReceipt().getTransactionHash();
+
+        //给提案投票(2003)
+        for (VoteInfo voteInfo : voteInfos) {
+            TransactionResponse voteBaseResponse = vote(voteInfo, paramProposalHash);
+            assertTrue(voteBaseResponse.toString(), voteBaseResponse.isStatusOk());
+        }
+
+        //查询提案(2100)
+        getProposalResponse = getProposal(paramProposalHash);
+        assertTrue(getProposalResponse.toString(), getProposalResponse.isStatusOk());
+
+        //判断等待投票结果
+        waitResult(getProposalResponse);
+
+        //查询提案结果(2101)
+        getTallyResultResponse = getTallyResult(paramProposalHash);
+        assertTrue(getTallyResultResponse.toString(), getTallyResultResponse.isStatusOk());
+
         //提交升级提案(2001)
         TransactionResponse createVersionProposalResponse = createVersionProposal();
         assertTrue(createVersionProposalResponse.toString(), createVersionProposalResponse.isStatusOk());
         String versionProposalHash = createVersionProposalResponse.getTransactionReceipt().getTransactionHash();
-
-        //提交参数提案
-        TransactionResponse createParamProposalResponse = createParamProposal();
-        assertTrue(createParamProposalResponse.toString(), createParamProposalResponse.isStatusOk());
 
         //查询提案列表(2102)
         CallResponse<List<Proposal>> getProposalListResponse = getProposalList();
@@ -157,7 +175,7 @@ public class ProposalScenario extends Scenario {
     public TransactionResponse createParamProposal() throws Exception {
         String module = "staking";
         String name = "operatingThreshold";
-        String value = "200000"+System.currentTimeMillis();
+        String value = "20000000000000000000";
         Proposal proposal = Proposal.createSubmitParamProposalParam(proposalNodeId, String.valueOf(new Date().getTime()), module, name, value);
         PlatonSendTransaction platonSendTransaction = proposalContract.submitProposalReturnTransaction(proposal).send();
         TransactionResponse baseResponse = proposalContract.getTransactionResponse(platonSendTransaction).send();
