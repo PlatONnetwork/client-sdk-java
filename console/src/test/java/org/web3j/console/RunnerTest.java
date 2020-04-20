@@ -17,8 +17,8 @@ import org.web3j.utils.Strings;
  */
 public class RunnerTest extends TempFileProvider {
 	private Logger logger = LoggerFactory.getLogger(RunnerTest.class);
-	private String bin = "contract/build/HumanStandardToken.bin";
-	private String abi = "contract/build/HumanStandardToken.abi";
+	private String bin = "contract/HumanStandardToken.bin";
+	private String abi = "contract/HumanStandardToken.abi";
 
 	@Test
 	public void generateJavaCode() {
