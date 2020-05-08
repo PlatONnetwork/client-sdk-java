@@ -7,7 +7,7 @@ public class NetworkParameters {
 
     static {
 
-        MainNetParams = new NetworkParameters("lat" ,
+        MainNetParams = new NetworkParameters(Hrp.LAT.getHrp(),
                 "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp7pn3ep",
                 "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzsjx8h7",
                 "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrdyjj2v",
@@ -19,7 +19,7 @@ public class NetworkParameters {
     }
 
     public static NetworkParameters createTestNetParams(long chainId){
-        return new NetworkParameters("lax" ,
+        return new NetworkParameters(Hrp.LAX.getHrp() ,
                 "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp3yp7hw",
                 "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzlh5ge3",
                 "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrzpqayr",
@@ -87,5 +87,18 @@ public class NetworkParameters {
 
     public long getChainId() {
         return chainId;
+    }
+
+    public enum Hrp {
+        LAT("lat"),
+        LAX("lax");
+
+        private String hrp;
+        Hrp(String hrp){
+            this.hrp = hrp;
+        }
+        public String getHrp(){
+            return this.hrp;
+        }
     }
 }

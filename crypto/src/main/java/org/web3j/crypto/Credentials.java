@@ -1,6 +1,9 @@
 package org.web3j.crypto;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.utils.Numeric;
+
+import java.util.Objects;
 
 /**
  * Credentials wrapper.
@@ -8,24 +11,33 @@ import org.web3j.utils.Numeric;
 public class Credentials {
 
     private final ECKeyPair ecKeyPair;
-    private final String address;
+    private final String latAddress;
+    private final String laxAddress;
 
-    private Credentials(ECKeyPair ecKeyPair, String address) {
+    private Credentials(ECKeyPair ecKeyPair, String latAddress, String laxAddress) {
         this.ecKeyPair = ecKeyPair;
-        this.address = address;
+        this.latAddress = latAddress;
+        this.laxAddress = laxAddress;
     }
 
     public ECKeyPair getEcKeyPair() {
         return ecKeyPair;
     }
 
-    public String getAddress() {
-        return address;
+    public String getAddress(NetworkParameters networkParameters) {
+        networkParameters.getHrp();
+        if(NetworkParameters.Hrp.LAT.getHrp().equals(networkParameters.getHrp())){
+            return latAddress;
+        }else {
+            return laxAddress;
+        }
     }
 
     public static Credentials create(ECKeyPair ecKeyPair) {
         String address = Numeric.prependHexPrefix(Keys.getAddress(ecKeyPair));
-        return new Credentials(ecKeyPair, address);
+        String latAddress = Bech32.encode(NetworkParameters.Hrp.LAT.getHrp(),address);
+        String laxAddress = Bech32.encode(NetworkParameters.Hrp.LAX.getHrp(),address);
+        return new Credentials(ecKeyPair, latAddress, laxAddress);
     }
 
     public static Credentials create(String privateKey, String publicKey) {
@@ -38,26 +50,16 @@ public class Credentials {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Credentials that = (Credentials) o;
-
-        if (ecKeyPair != null ? !ecKeyPair.equals(that.ecKeyPair) : that.ecKeyPair != null) {
-            return false;
-        }
-
-        return address != null ? address.equals(that.address) : that.address == null;
+        return Objects.equals(ecKeyPair, that.ecKeyPair) &&
+                Objects.equals(latAddress, that.latAddress) &&
+                Objects.equals(laxAddress, that.laxAddress);
     }
 
     @Override
     public int hashCode() {
-        int result = ecKeyPair != null ? ecKeyPair.hashCode() : 0;
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        return result;
+        return Objects.hash(ecKeyPair, latAddress, laxAddress);
     }
 }
