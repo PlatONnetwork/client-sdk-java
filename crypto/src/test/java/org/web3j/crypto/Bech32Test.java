@@ -11,16 +11,13 @@ public class Bech32Test {
     public void addressEncodetOnTestNet() {
         String hex = "0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818";
         String bech32Address = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(), hex);
-        assertThat(bech32Address, is("lax1fyeszufxwxk62p46djncj86rd553skpptsj8v6"));
+        assertThat(bech32Address, is("lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390"));
     }
 
     @Test
     public void addressEncodetOnMainNet() {
         String hex = "0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818";
         String bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
-        assertThat(bech32Address, is("lat1fyeszufxwxk62p46djncj86rd553skppy4qgz4"));
+        assertThat(bech32Address, is("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq"));
     }
-
-    // lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390
-    // lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq
 }

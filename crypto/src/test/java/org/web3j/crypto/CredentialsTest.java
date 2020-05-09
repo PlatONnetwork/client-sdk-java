@@ -4,6 +4,7 @@ import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class CredentialsTest {
@@ -22,8 +23,10 @@ public class CredentialsTest {
     }
 
     private void verify(Credentials credentials) {
-        //TODO TEST
-        assertThat(credentials.getAddress(NetworkParameters.MainNetParams), is(SampleKeys.ADDRESS));
+        Address address = new Address();
+        address.setTestnet(Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(),SampleKeys.ADDRESS));
+        address.setMainnet(Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(),SampleKeys.ADDRESS));
+        assertEquals(credentials.getAddress(NetworkParameters.MainNetParams), address.getMainnet());
         assertThat(credentials.getEcKeyPair(), is(SampleKeys.KEY_PAIR));
     }
 }
