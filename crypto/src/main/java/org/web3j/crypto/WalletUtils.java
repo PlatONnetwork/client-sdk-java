@@ -3,6 +3,7 @@ package org.web3j.crypto;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.platon.sdk.utlis.Bech32;
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.utils.Files;
 import org.web3j.utils.Numeric;

@@ -1,5 +1,6 @@
 package org.web3j.crypto;
 
+import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.utils.Numeric;
 
