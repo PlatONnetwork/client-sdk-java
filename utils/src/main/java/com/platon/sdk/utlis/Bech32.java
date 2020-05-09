@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.web3j.crypto;
+package com.platon.sdk.utlis;
 
 import org.web3j.utils.Numeric;
 
@@ -23,6 +23,10 @@ import java.util.Arrays;
 import java.util.Locale;
 
 public class Bech32 {
+
+    private static final int ADDRESS_SIZE = 160;
+    private static final int ADDRESS_LENGTH_IN_HEX = ADDRESS_SIZE >> 2;
+
     /** The Bech32 character set for encoding. */
     private static final String CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
@@ -141,6 +145,11 @@ public class Bech32 {
     public static byte[] addressDecode(final String str) throws RuntimeException {
         Bech32.Bech32Data bech32Data  = decode(str);
         return convertBits(bech32Data.data, 5, 8, false);
+    }
+
+    public static String addressDecodeHex(final String str) throws RuntimeException {
+        byte[] bytes = addressDecode(str);
+        return Numeric.toHexStringWithPrefixZeroPadded( Numeric.toBigInt(bytes),ADDRESS_LENGTH_IN_HEX);
     }
 
 

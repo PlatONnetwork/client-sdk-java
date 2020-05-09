@@ -4,7 +4,7 @@ import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint16;
-import org.web3j.crypto.Bech32;
+import com.platon.sdk.utlis.Bech32;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;

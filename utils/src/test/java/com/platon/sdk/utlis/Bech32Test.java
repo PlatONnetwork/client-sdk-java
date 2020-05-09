@@ -1,5 +1,6 @@
-package org.web3j.crypto;
+package com.platon.sdk.utlis;
 
+import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 

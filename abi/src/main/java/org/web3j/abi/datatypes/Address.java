@@ -2,6 +2,7 @@ package org.web3j.abi.datatypes;
 
 import java.math.BigInteger;
 
+import com.platon.sdk.utlis.Bech32;
 import org.web3j.abi.datatypes.generated.Uint160;
 import org.web3j.utils.Numeric;
 
@@ -26,7 +27,7 @@ public class Address implements Type<String> {
     }
 
     public Address(String hexValue) {
-        this(Numeric.toBigInt(hexValue));
+        this(Numeric.toBigInt(Bech32.addressDecodeHex(hexValue)));
     }
 
     public Uint160 toUint160() {
