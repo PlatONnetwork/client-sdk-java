@@ -3,6 +3,7 @@ package org.web3j.crypto;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.web3j.utils.Files;
 import org.web3j.utils.Numeric;
 
 import java.io.File;
@@ -14,6 +15,8 @@ import java.security.SecureRandom;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.web3j.crypto.Hash.sha256;
 import static org.web3j.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
@@ -179,9 +182,19 @@ public class WalletUtils {
         return loadCredentials(password, new File(source));
     }
 
+    private static final Pattern OLD_ADDRESS_PATTERN = Pattern.compile(".*address\":[\\s]*\".*");
     public static Credentials loadCredentials(String password, File source)
             throws IOException, CipherException {
-        WalletFile walletFile = objectMapper.readValue(source, WalletFile.class);
+        // 统一把source文件中的address值替换为“{}”，兼容新旧格式钱包文件的加载
+        String fileContent = Files.readString(source);
+        WalletFile walletFile;
+        Matcher matcher = OLD_ADDRESS_PATTERN.matcher(fileContent);
+        if(!matcher.find()){
+            walletFile = objectMapper.readValue(fileContent, WalletFile.class);
+        }else {
+            String fileContent2 = fileContent.replaceFirst("address\":.*?,","address\":{},");
+            walletFile = objectMapper.readValue(fileContent2, WalletFile.class);
+        }
         return Credentials.create(Wallet.decrypt(password, walletFile));
     }
 

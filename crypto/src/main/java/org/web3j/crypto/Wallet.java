@@ -1,5 +1,6 @@
 package org.web3j.crypto;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.generators.SCrypt;
@@ -106,7 +107,13 @@ public class Wallet {
             int n, int p) {
 
         WalletFile walletFile = new WalletFile();
-        walletFile.setAddress(Keys.getAddress(ecKeyPair));
+        String hexAddress = Keys.getAddress(ecKeyPair);
+        String mainNetAddress = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hexAddress);
+        String testNetAddress = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(), hexAddress);
+        Address address = new Address();
+        address.setMainnet(mainNetAddress);
+        address.setTestnet(testNetAddress);
+        walletFile.setAddress(address);
 
         WalletFile.Crypto crypto = new WalletFile.Crypto();
         crypto.setCipher(CIPHER);
