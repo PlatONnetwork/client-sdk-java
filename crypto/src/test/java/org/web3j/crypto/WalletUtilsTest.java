@@ -119,6 +119,21 @@ public class WalletUtilsTest {
         assertThat(credentials, equalTo(CREDENTIALS));
     }
 
+    /**
+     * 加载旧格式钱包文件
+     * @throws Exception
+     */
+    @Test
+    public void testLoadCredentialsFromOldFormatFile() throws Exception {
+        Credentials credentials = WalletUtils.loadCredentials(
+                PASSWORD,
+                new File(WalletUtilsTest.class.getResource(
+                        "/keyfiles/old-format-wallet--ef678007d18427e6022059dbc264f27507cd1ffc.json")
+                        .getFile()));
+
+        assertThat(credentials, equalTo(CREDENTIALS));
+    }
+
     @Test
     public void testLoadCredentialsFromString() throws Exception {
         Credentials credentials = WalletUtils.loadCredentials(
@@ -127,6 +142,16 @@ public class WalletUtilsTest {
                         "/keyfiles/"
                         + "UTC--2016-11-03T05-55-06."
                         + "340672473Z--ef678007d18427e6022059dbc264f27507cd1ffc").getFile());
+
+        assertThat(credentials, equalTo(CREDENTIALS));
+    }
+
+    @Test
+    public void testLoadCredentialsFromOldFormatString() throws Exception {
+        Credentials credentials = WalletUtils.loadCredentials(
+                PASSWORD,
+                WalletUtilsTest.class.getResource(
+                        "/keyfiles/old-format-wallet--ef678007d18427e6022059dbc264f27507cd1ffc.json").getFile());
 
         assertThat(credentials, equalTo(CREDENTIALS));
     }

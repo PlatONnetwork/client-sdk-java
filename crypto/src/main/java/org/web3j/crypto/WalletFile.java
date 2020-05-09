@@ -1,7 +1,5 @@
 package org.web3j.crypto;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -12,11 +10,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.io.IOException;
+
 /**
  * Ethereum wallet file.
  */
 public class WalletFile {
-    private String address;
+    private Address address;
     private Crypto crypto;
     private String id;
     private int version;
@@ -24,11 +24,11 @@ public class WalletFile {
     public WalletFile() {
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
