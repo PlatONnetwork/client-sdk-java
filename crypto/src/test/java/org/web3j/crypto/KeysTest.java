@@ -1,15 +1,14 @@
 package org.web3j.crypto;
 
+import org.junit.Test;
+import org.web3j.utils.Numeric;
+import org.web3j.utils.Strings;
+
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Arrays;
-
-import org.junit.Test;
-
-import org.web3j.utils.Numeric;
-import org.web3j.utils.Strings;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -50,7 +49,7 @@ public class KeysTest {
     @Test
     public void testGetAddressString() {
         assertThat(Keys.getAddress(SampleKeys.PUBLIC_KEY_STRING),
-                is(SampleKeys.ADDRESS_NO_PREFIX));
+                is(SampleKeys.HEX_ADDRESS_NO_PREFIX));
     }
 
     @Test
@@ -65,7 +64,7 @@ public class KeysTest {
     @Test
     public void testGetAddressBigInteger() {
         assertThat(Keys.getAddress(SampleKeys.PUBLIC_KEY),
-                is(SampleKeys.ADDRESS_NO_PREFIX));
+                is(SampleKeys.HEX_ADDRESS_NO_PREFIX));
     }
 
     @Test

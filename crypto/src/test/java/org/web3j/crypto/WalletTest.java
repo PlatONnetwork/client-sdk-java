@@ -1,7 +1,6 @@
 package org.web3j.crypto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 import org.web3j.utils.Numeric;
 
@@ -25,11 +24,8 @@ public class WalletTest {
     }
 
     private void testCreate(WalletFile walletFile) throws Exception {
-        Address address = new Address();
-        address.setTestnet(Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(),SampleKeys.ADDRESS));
-        address.setMainnet(Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(),SampleKeys.ADDRESS));
-        assertEquals(walletFile.getAddress().getMainnet(),address.getMainnet());
-        assertEquals(walletFile.getAddress().getTestnet(),address.getTestnet());
+        assertEquals(walletFile.getAddress().getMainnet(),SampleKeys.BECH32_ADDRESS.getMainnet());
+        assertEquals(walletFile.getAddress().getTestnet(),SampleKeys.BECH32_ADDRESS.getTestnet());
     }
 
     @Test

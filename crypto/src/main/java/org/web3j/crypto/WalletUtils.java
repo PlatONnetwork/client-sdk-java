@@ -3,6 +3,7 @@ package org.web3j.crypto;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bouncycastle.util.encoders.Hex;
 import org.web3j.utils.Files;
 import org.web3j.utils.Numeric;
 
@@ -253,7 +254,14 @@ public class WalletUtils {
     }
 
     public static boolean isValidAddress(String input) {
-        String cleanInput = Numeric.cleanHexPrefix(input);
+        String cleanInput;
+        try{
+            byte [] bytes = Bech32.addressDecode(input);
+            String hexAddress = Hex.toHexString(bytes);
+            cleanInput = Numeric.cleanHexPrefix(hexAddress);
+        }catch (Exception e){
+            return false;
+        }
 
         try {
             Numeric.toBigIntNoPrefix(cleanInput);

@@ -3,6 +3,11 @@ package org.web3j.crypto;
 public class Address {
     private String mainnet;
     private String testnet;
+    public Address(){};
+    public Address(String mainnetAddress, String testnetAddress) {
+        this.mainnet=mainnetAddress;
+        this.testnet=testnetAddress;
+    }
 
     public String getMainnet() {
         return mainnet;

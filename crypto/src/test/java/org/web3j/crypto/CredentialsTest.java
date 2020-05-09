@@ -23,10 +23,8 @@ public class CredentialsTest {
     }
 
     private void verify(Credentials credentials) {
-        Address address = new Address();
-        address.setTestnet(Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(),SampleKeys.ADDRESS));
-        address.setMainnet(Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(),SampleKeys.ADDRESS));
-        assertEquals(credentials.getAddress(NetworkParameters.MainNetParams), address.getMainnet());
+        assertEquals(credentials.getAddress(NetworkParameters.MainNetParams),SampleKeys.BECH32_ADDRESS.getMainnet());
+        assertEquals(credentials.getAddress(NetworkParameters.TestNetParams),SampleKeys.BECH32_ADDRESS.getTestnet());
         assertThat(credentials.getEcKeyPair(), is(SampleKeys.KEY_PAIR));
     }
 }

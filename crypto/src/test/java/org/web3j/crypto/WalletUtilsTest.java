@@ -210,11 +210,10 @@ public class WalletUtilsTest {
 
     @Test
     public void testIsValidAddress() {
-        assertTrue(isValidAddress(SampleKeys.ADDRESS));
-        assertTrue(isValidAddress(SampleKeys.ADDRESS_NO_PREFIX));
+        assertTrue(isValidAddress(BECH32_ADDRESS.getMainnet()));
 
         assertFalse(isValidAddress(""));
-        assertFalse(isValidAddress(SampleKeys.ADDRESS + 'a'));
-        assertFalse(isValidAddress(SampleKeys.ADDRESS.substring(1)));
+        assertFalse(isValidAddress(BECH32_ADDRESS.getMainnet() + 'a'));
+        assertFalse(isValidAddress(BECH32_ADDRESS.getMainnet().substring(1)));
     }
 }

@@ -1,20 +1,15 @@
 package org.web3j.tx;
 
-import java.io.IOException;
-
 import org.junit.Before;
-
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.SampleKeys;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.PlatonGasPrice;
-import org.web3j.protocol.core.methods.response.PlatonGetTransactionCount;
-import org.web3j.protocol.core.methods.response.PlatonGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.core.methods.response.*;
 import org.web3j.utils.TxHashVerifier;
+
+import java.io.IOException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -63,7 +58,7 @@ public abstract class ManagedTransactionTester {
         Request<?, PlatonGetTransactionCount> transactionCountRequest = mock(Request.class);
         when(transactionCountRequest.send())
                 .thenReturn(ethGetTransactionCount);
-        when(web3j.platonGetTransactionCount(SampleKeys.ADDRESS, DefaultBlockParameterName.PENDING))
+        when(web3j.platonGetTransactionCount(SampleKeys.HEX_ADDRESS, DefaultBlockParameterName.PENDING))
                 .thenReturn((Request) transactionCountRequest);
     }
 
