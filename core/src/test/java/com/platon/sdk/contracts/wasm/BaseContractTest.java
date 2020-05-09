@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts.evm;
+package com.platon.sdk.contracts.wasm;
 
 import java.math.BigInteger;
 
@@ -12,9 +12,11 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.GasProvider;
 
+import com.platon.sdk.utlis.NetworkParameters;
+
 public abstract class BaseContractTest {
 	protected static final BigInteger GAS_LIMIT = BigInteger.valueOf(4700000);
-	protected static final BigInteger GAS_PRICE = BigInteger.valueOf(1000000000L);
+	protected static final BigInteger GAS_PRICE = BigInteger.valueOf(10000000000L);
 
 	protected static final long chainId = 103;
 	protected static final String nodeUrl = "http://192.168.120.141:6789";
@@ -30,7 +32,7 @@ public abstract class BaseContractTest {
 	@Before
 	public void init() {
 		credentials = Credentials.create(privateKey);
-		address = credentials.getAddress(chainId);
+		address = credentials.getAddress(NetworkParameters.TestNetParams);
 		web3jService = new HttpService(nodeUrl);
 		web3j = Web3j.build(web3jService);
 		transactionManager = new RawTransactionManager(web3j, credentials, chainId);

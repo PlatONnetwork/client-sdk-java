@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.platon.sdk.utlis.Bech32;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonGetCode;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -25,8 +27,8 @@ public class HumanStandardTokenTest extends BaseContractTest {
 	private Logger logger = LoggerFactory.getLogger(HumanStandardTokenTest.class);
 
 	// The solidity smart contract 'HumanStandardToken' address
-	String contractAddress = "0xe9f3243bd7084e73bb78ce62ce586b097213411e";
-	String toAddress = "0x31ac3dad7fa96b62d58b2be229575db40aa28b2c";
+	String contractAddress = "lax10v789t4vqm0gn8ck9vchymha39xvu2276ad7az";
+	String toAddress = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(),"0x31ac3dad7fa96b62d58b2be229575db40aa28b2c");
 
 	@Test
 	public void deploy() {

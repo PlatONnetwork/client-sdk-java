@@ -1,4 +1,4 @@
-package com.platon.sdk.contract.wasm;
+package com.platon.sdk.contracts.wasm;
 
 import java.math.BigInteger;
 import java.util.Arrays;
