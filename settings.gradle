@@ -1,4 +1,4 @@
-rootProject.name = 'base'
+rootProject.name = 'client-sdk-java'
 
 include 'abi'
 include 'codegen'
