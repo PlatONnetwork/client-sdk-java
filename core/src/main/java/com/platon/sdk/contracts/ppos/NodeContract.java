@@ -2,9 +2,9 @@ package com.platon.sdk.contracts.ppos;
 
 import com.platon.sdk.contracts.ppos.abi.Function;
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.resp.Node;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
@@ -12,34 +12,34 @@ import org.web3j.protocol.core.RemoteCall;
 import java.util.List;
 
 public class NodeContract extends BaseContract {
-	
+
 	/**
 	 * 加载合约, 默认ReadonlyTransactionManager事务管理
-	 * 
+	 *
 	 * @param web3j
 	 * @return
 	 */
-    public static NodeContract load(Web3j web3j) {
-        return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, web3j);
+    public static NodeContract load(Web3j web3j, long chainId) {
+        return new NodeContract(NetworkParameters.getPposContractAddressOfStaking(chainId), web3j);
     }
-    
+
     /**
      * 加载合约, 默认RawTransactionManager事务管理
-     * 
+     *
      * @param web3j
      * @param credentials
      * @param chainId
      * @return
      */
-    public static NodeContract load(Web3j web3j, Credentials credentials, String chainId) {
-        return new NodeContract(ContractAddress.NODE_CONTRACT_ADDRESS, chainId, web3j, credentials);
+    public static NodeContract load(Web3j web3j, Credentials credentials, long chainId) {
+        return new NodeContract(NetworkParameters.getPposContractAddressOfStaking(chainId), chainId, web3j, credentials);
     }
 
     private NodeContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
     }
 
-    private NodeContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
+    private NodeContract(String contractAddress, long chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
     }
 

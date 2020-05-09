@@ -10,6 +10,7 @@ import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint32;
+import org.web3j.crypto.Bech32;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.utils.Numeric;
 
@@ -181,7 +182,7 @@ public class StakingParam implements Cloneable {
 
     public List<Type> getSubmitInputParameters() {
         return Arrays.<Type>asList(new Uint16(stakingAmountType.getValue())
-                , new BytesType(Numeric.hexStringToByteArray(benifitAddress))
+                , new BytesType(Bech32.addressDecode(benifitAddress))
                 , new BytesType(Numeric.hexStringToByteArray(nodeId))
                 , new Utf8String(externalId)
                 , new Utf8String(nodeName)

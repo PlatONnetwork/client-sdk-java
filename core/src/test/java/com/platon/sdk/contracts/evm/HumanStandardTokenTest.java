@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts;
+package com.platon.sdk.contracts.evm;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.PlatonGetCode;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import com.platon.sdk.contracts.HumanStandardToken.TransferEventResponse;
+import com.platon.sdk.contracts.evm.HumanStandardToken.TransferEventResponse;
 
 import rx.Observable;
 import rx.Observer;

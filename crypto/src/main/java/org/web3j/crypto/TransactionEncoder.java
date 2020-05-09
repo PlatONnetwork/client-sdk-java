@@ -12,6 +12,8 @@ import org.web3j.rlp.RlpType;
 import org.web3j.utils.Bytes;
 import org.web3j.utils.Numeric;
 
+import static org.web3j.utils.Numeric.hexStringToByteArray;
+
 /**
  * Create RLP encoded transaction, implementation as per p4 of the
  * <a href="http://gavwood.com/paper.pdf">yellow paper</a>.
@@ -88,7 +90,7 @@ public class TransactionEncoder {
         if (to != null && to.length() > 0) {
             // addresses that start with zeros should be encoded with the zeros included, not
             // as numeric values
-            result.add(RlpString.create(Numeric.hexStringToByteArray(to)));
+            result.add(RlpString.create(Bech32.addressDecode(to)));
         } else {
             result.add(RlpString.create(""));
         }
@@ -96,7 +98,7 @@ public class TransactionEncoder {
         result.add(RlpString.create(rawTransaction.getValue()));
 
         // value field will already be hex encoded, so we need to convert into binary first
-        byte[] data = Numeric.hexStringToByteArray(rawTransaction.getData());
+        byte[] data = hexStringToByteArray(rawTransaction.getData());
         result.add(RlpString.create(data));
 
         if (signatureData != null) {

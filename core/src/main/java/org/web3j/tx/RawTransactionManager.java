@@ -33,7 +33,7 @@ public class RawTransactionManager extends TransactionManager {
     protected TxHashVerifier txHashVerifier = new TxHashVerifier();
 
     public RawTransactionManager(Web3j web3j, Credentials credentials, long chainId) {
-        super(web3j, credentials.getAddress());
+        super(web3j, credentials.getAddress(chainId));
 
         this.web3j = web3j;
         this.credentials = credentials;
@@ -44,7 +44,7 @@ public class RawTransactionManager extends TransactionManager {
     public RawTransactionManager(
             Web3j web3j, Credentials credentials, long chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
-        super(transactionReceiptProcessor, credentials.getAddress());
+        super(transactionReceiptProcessor, credentials.getAddress(chainId));
 
         this.web3j = web3j;
         this.credentials = credentials;
@@ -54,7 +54,7 @@ public class RawTransactionManager extends TransactionManager {
 
     public RawTransactionManager(
             Web3j web3j, Credentials credentials, long chainId, int attempts, long sleepDuration) {
-        super(web3j, attempts, sleepDuration, credentials.getAddress());
+        super(web3j, attempts, sleepDuration, credentials.getAddress(chainId));
 
         this.web3j = web3j;
         this.credentials = credentials;
@@ -73,11 +73,11 @@ public class RawTransactionManager extends TransactionManager {
 
     protected BigInteger getNonce() throws IOException {
         PlatonGetTransactionCount ethGetTransactionCount = web3j.platonGetTransactionCount(
-                credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
+                credentials.getAddress(chainId), DefaultBlockParameterName.PENDING).send();
 
         if (ethGetTransactionCount.getTransactionCount().intValue() == 0) {
             ethGetTransactionCount = web3j.platonGetTransactionCount(
-                    credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
+                    credentials.getAddress(chainId), DefaultBlockParameterName.LATEST).send();
         }
 
         return ethGetTransactionCount.getTransactionCount();

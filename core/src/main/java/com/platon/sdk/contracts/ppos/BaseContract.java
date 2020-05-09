@@ -50,13 +50,13 @@ public abstract class BaseContract extends ManagedTransaction {
     protected String contractAddress;
     protected TransactionReceipt transactionReceipt;
 
-    protected BaseContract(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
+    protected BaseContract(String contractAddress,  Web3j web3j, TransactionManager transactionManager) {
         super(web3j, transactionManager);
         this.contractAddress = contractAddress;
     }
 
-    protected BaseContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
-        this(contractAddress, web3j, new RawTransactionManager(web3j, credentials, Long.valueOf(chainId)));
+    protected BaseContract(String contractAddress, long chainId, Web3j web3j, Credentials credentials) {
+        this(contractAddress, web3j, new RawTransactionManager(web3j, credentials, chainId));
     }
 
     protected BaseContract(String contractAddress, Web3j web3j) {

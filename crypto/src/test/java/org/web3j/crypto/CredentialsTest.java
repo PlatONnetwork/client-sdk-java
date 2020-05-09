@@ -1,5 +1,6 @@
 package org.web3j.crypto;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -21,7 +22,8 @@ public class CredentialsTest {
     }
 
     private void verify(Credentials credentials) {
-        assertThat(credentials.getAddress(), is(SampleKeys.ADDRESS));
+        //TODO TEST
+        assertThat(credentials.getAddress(NetworkParameters.MainNetParams), is(SampleKeys.ADDRESS));
         assertThat(credentials.getEcKeyPair(), is(SampleKeys.KEY_PAIR));
     }
 }

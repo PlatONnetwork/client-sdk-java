@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts;
+package com.platon.sdk.contracts.evm;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +22,8 @@ import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
 import com.alibaba.fastjson.JSON;
-import com.platon.sdk.contracts.PayWages.AddUserEventResponse;
-import com.platon.sdk.contracts.PayWages.TransferEventResponse;
+import com.platon.sdk.contracts.evm.PayWages.AddUserEventResponse;
+import com.platon.sdk.contracts.evm.PayWages.TransferEventResponse;
 
 /**
  * The smart contract is used to test transfers.

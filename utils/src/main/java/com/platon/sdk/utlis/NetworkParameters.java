@@ -6,7 +6,6 @@ public class NetworkParameters {
     public final static NetworkParameters TestNetParams;
 
     static {
-
         MainNetParams = new NetworkParameters(Hrp.LAT.getHrp(),
                 "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp7pn3ep",
                 "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzsjx8h7",
@@ -28,6 +27,55 @@ public class NetworkParameters {
                 "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxsakwkt",
                 chainId);
     }
+
+    public static String getPposContractAddressOfRestrctingPlan(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getPposContractAddressOfRestrctingPlan();
+        }else {
+            return NetworkParameters.TestNetParams.getPposContractAddressOfRestrctingPlan();
+        }
+    }
+
+    public static String getPposContractAddressOfStaking(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getPposContractAddressOfStaking();
+        }else {
+            return NetworkParameters.TestNetParams.getPposContractAddressOfStaking();
+        }
+    }
+
+    public static String getPposContractAddressOfIncentivePool(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getPposContractAddressOfIncentivePool();
+        }else {
+            return NetworkParameters.TestNetParams.getPposContractAddressOfIncentivePool();
+        }
+    }
+
+    public static String getPposContractAddressOfSlash(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getPposContractAddressOfSlash();
+        }else {
+            return NetworkParameters.TestNetParams.getPposContractAddressOfSlash();
+        }
+    }
+
+    public static String getPposContractAddressOfProposal(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getPposContractAddressOfProposal();
+        }else {
+            return NetworkParameters.TestNetParams.getPposContractAddressOfProposal();
+        }
+    }
+
+    public static String getPposContractAddressOfReward(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getPposContractAddressOfReward();
+        }else {
+            return NetworkParameters.TestNetParams.getPposContractAddressOfReward();
+        }
+    }
+
 
     //bech32 hrp
     private final String hrp;

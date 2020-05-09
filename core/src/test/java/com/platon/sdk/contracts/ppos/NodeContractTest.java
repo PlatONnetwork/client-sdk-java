@@ -12,12 +12,13 @@ import java.util.List;
 public class NodeContractTest {
 
 	private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
+    long chainId = 103;
 
     private NodeContract nodeContract;
 
     @Before
     public void init() {
-        nodeContract = NodeContract.load(web3j);
+        nodeContract = NodeContract.load(web3j,chainId);
     }
 
 
@@ -36,7 +37,7 @@ public class NodeContractTest {
     }
 
     /**
-               *  查询当前共识周期的验证人列表
+     *  查询当前共识周期的验证人列表
      */
     @Test
     public void getValidatorList() {
@@ -50,7 +51,7 @@ public class NodeContractTest {
     }
 
     /**
-                *  查询所有实时的候选人列表
+     *  查询所有实时的候选人列表
      */
     @Test
     public void getCandidateList() {

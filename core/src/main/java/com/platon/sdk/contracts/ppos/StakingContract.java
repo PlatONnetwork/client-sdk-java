@@ -3,13 +3,13 @@ package com.platon.sdk.contracts.ppos;
 import com.platon.sdk.contracts.ppos.abi.Function;
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
 import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.common.ContractAddress;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
 import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
 import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
 import com.platon.sdk.contracts.ppos.dto.resp.Node;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -33,8 +33,8 @@ public class StakingContract extends BaseContract {
 	 * @param web3j
 	 * @return
 	 */
-    public static StakingContract load(Web3j web3j) {
-        return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, web3j);
+    public static StakingContract load(Web3j web3j, long chainId) {
+        return new StakingContract(NetworkParameters.getPposContractAddressOfStaking(chainId), web3j);
     }
     
     /**
@@ -44,8 +44,8 @@ public class StakingContract extends BaseContract {
      * @param transactionManager
      * @return
      */
-    public static StakingContract load(Web3j web3j, TransactionManager transactionManager) {
-    	return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, web3j, transactionManager);
+    public static StakingContract load(Web3j web3j, TransactionManager transactionManager,long chainId) {
+    	return new StakingContract(NetworkParameters.getPposContractAddressOfStaking(chainId), web3j, transactionManager);
     }
 
     /**
@@ -56,15 +56,15 @@ public class StakingContract extends BaseContract {
      * @param chainId
      * @return
      */
-    public static StakingContract load(Web3j web3j, Credentials credentials, String chainId) {
-    	return new StakingContract(ContractAddress.STAKING_CONTRACT_ADDRESS, chainId, web3j, credentials);
+    public static StakingContract load(Web3j web3j, Credentials credentials, long chainId) {
+    	return new StakingContract(NetworkParameters.getPposContractAddressOfStaking(chainId), chainId, web3j, credentials);
     }
     
     private StakingContract(String contractAddress, Web3j web3j) {
         super(contractAddress, web3j);
     }
 
-    private StakingContract(String contractAddress, String chainId, Web3j web3j, Credentials credentials) {
+    private StakingContract(String contractAddress, long chainId, Web3j web3j, Credentials credentials) {
         super(contractAddress, chainId, web3j, credentials);
     }
 

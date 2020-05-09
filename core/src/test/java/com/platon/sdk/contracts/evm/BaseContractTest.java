@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts;
+package com.platon.sdk.contracts.evm;
 
 import java.math.BigInteger;
 
@@ -33,7 +33,7 @@ public abstract class BaseContractTest {
 	@Before
 	public void init() {
 		credentials = Credentials.create(privateKey);
-		address = credentials.getAddress();
+		address = credentials.getAddress(chainId);
 		web3jService = new HttpService(nodeUrl);
 		web3j = Web3j.build(web3jService);
 		transactionManager = new RawTransactionManager(web3j, credentials, chainId);

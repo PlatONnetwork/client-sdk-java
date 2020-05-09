@@ -36,8 +36,8 @@ public class WalletUpdater extends WalletManager {
     private void run(String walletFileLocation) {
         File walletFile = new File(walletFileLocation);
         Credentials credentials = getCredentials(walletFile);
-
-        console.printf("Wallet for address " + credentials.getAddress() + " loaded\n");
+        //TODO
+//        console.printf("Wallet for address " + credentials.getAddress() + " loaded\n");
 
         String newPassword = getPassword("Please enter a new wallet file password: ");
 

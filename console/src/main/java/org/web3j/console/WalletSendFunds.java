@@ -36,7 +36,7 @@ public class WalletSendFunds extends WalletManager {
     private void run(String walletFileLocation,String chainId, String destinationAddress) {
         File walletFile = new File(walletFileLocation);
         Credentials credentials = getCredentials(walletFile);
-        console.printf("Wallet for address " + credentials.getAddress() + " loaded\n");
+        console.printf("Wallet for address " + credentials.getAddress(Long.valueOf(chainId)) + " loaded\n");
 
         if (!WalletUtils.isValidAddress(destinationAddress)) {
             exitError("Invalid destination address specified");
@@ -55,7 +55,7 @@ public class WalletSendFunds extends WalletManager {
 
         console.printf("Funds have been successfully transferred from %s to %s%n"
                         + "Transaction hash: %s%nMined block number: %s%n",
-                credentials.getAddress(),
+                credentials.getAddress(Long.valueOf(chainId)),
                 destinationAddress,
                 transactionReceipt.getTransactionHash(),
                 transactionReceipt.getBlockNumber());
@@ -108,7 +108,7 @@ public class WalletSendFunds extends WalletManager {
         console.printf("Commencing transfer (this may take a few minutes) ");
         try {
             Future<TransactionReceipt> future = Transfer.sendFunds(
-                    web3j, credentials, destinationAddress,chainId, amountInWei, Convert.Unit.LAT)
+                    web3j, credentials, Long.valueOf(chainId), destinationAddress,amountInWei, Convert.Unit.LAT)
                     .sendAsync();
 
             while (!future.isDone()) {
