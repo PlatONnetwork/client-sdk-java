@@ -1,14 +1,14 @@
 package org.web3j.crypto;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-
 import org.web3j.utils.Numeric;
+
+import java.io.IOException;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class WalletTest {
@@ -24,7 +24,8 @@ public class WalletTest {
     }
 
     private void testCreate(WalletFile walletFile) throws Exception {
-        assertThat(walletFile.getAddress(), is(SampleKeys.ADDRESS_NO_PREFIX));
+        assertEquals(walletFile.getAddress().getMainnet(),SampleKeys.BECH32_ADDRESS.getMainnet());
+        assertEquals(walletFile.getAddress().getTestnet(),SampleKeys.BECH32_ADDRESS.getTestnet());
     }
 
     @Test

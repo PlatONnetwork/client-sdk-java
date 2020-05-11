@@ -1,16 +1,12 @@
 package org.web3j.crypto;
 
-import java.math.BigInteger;
-
 import org.junit.Ignore;
 import org.junit.Test;
-
 import org.web3j.utils.Numeric;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import java.math.BigInteger;
+
+import static org.junit.Assert.*;
 
 public class TransactionDecoderTest {
 
@@ -64,8 +60,8 @@ public class TransactionDecoderTest {
         byte[] encodedTransaction = TransactionEncoder.encode(rawTransaction);
         BigInteger key = Sign.signedMessageToKey(encodedTransaction, signatureData);
         assertEquals(key, SampleKeys.PUBLIC_KEY);
-        assertEquals(SampleKeys.ADDRESS, signedResult.getFrom());
-        signedResult.verify(SampleKeys.ADDRESS);
+        assertEquals(SampleKeys.HEX_ADDRESS, signedResult.getFrom());
+        signedResult.verify(SampleKeys.HEX_ADDRESS);
         assertNull(signedResult.getChainId());
     }
 
@@ -94,8 +90,8 @@ public class TransactionDecoderTest {
         assertEquals("", result.getData());
         assertTrue(result instanceof SignedRawTransaction);
         SignedRawTransaction signedResult = (SignedRawTransaction) result;
-        assertEquals(SampleKeys.ADDRESS, signedResult.getFrom());
-        signedResult.verify(SampleKeys.ADDRESS);
+        assertEquals(SampleKeys.HEX_ADDRESS, signedResult.getFrom());
+        signedResult.verify(SampleKeys.HEX_ADDRESS);
         assertEquals(chainId, signedResult.getChainId());
     }
 

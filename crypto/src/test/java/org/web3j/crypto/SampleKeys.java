@@ -1,8 +1,10 @@
 package org.web3j.crypto;
 
-import java.math.BigInteger;
-
+import com.platon.sdk.utlis.Bech32;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.utils.Numeric;
+
+import java.math.BigInteger;
 
 /**
  * Keys generated for unit testing purposes.
@@ -14,8 +16,12 @@ public class SampleKeys {
     static final String PUBLIC_KEY_STRING =
             "0x506bc1dc099358e5137292f4efdd57e400f29ba5132aa5d12b18dac1c1f6aab"
             + "a645c0b7b58158babbfa6c6cd5a48aa7340a8749176b120e8516216787a13dc76";
-    public static final String ADDRESS = "0xef678007d18427e6022059dbc264f27507cd1ffc";
-    public static final String ADDRESS_NO_PREFIX = Numeric.cleanHexPrefix(ADDRESS);
+    public static final String HEX_ADDRESS = "0xef678007d18427e6022059dbc264f27507cd1ffc";
+    public static final String HEX_ADDRESS_NO_PREFIX = Numeric.cleanHexPrefix(HEX_ADDRESS);
+    public static final Address BECH32_ADDRESS = new Address(
+        Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(),HEX_ADDRESS),
+        Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(),HEX_ADDRESS)
+    );
 
     public static final String PASSWORD = "Insecure Pa55w0rd";
 
