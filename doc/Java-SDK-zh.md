@@ -20,7 +20,7 @@
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.11.0.1</version>
+	<version>0.13.0.2</version>
 </dependency>
 ```
 
@@ -35,7 +35,48 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.client:core:0.11.0.1"
+compile "com.platon.client:core:0.13.0.2"
+```
+
+## 基础api
+
+### 钱包相关
+
+* **生成一个PlatON标准的钱包 n=16384 p=1 r=8**
+```java
+String fileName = WalletUtils.generatePlatONWalletFile(PASSWORD, tempDir);
+```
+
+* **生成一个标准的钱包 n=262144 p=1 r=8**
+```java
+String fileName = WalletUtils.generateNewWalletFile(PASSWORD, tempDir);
+```
+
+* **生成一个轻量的钱包 n=4096 p=6 r=8**
+```java
+String fileName = WalletUtils.generateLightNewWalletFile(PASSWORD, tempDir);
+```
+
+* **加载钱包**
+```java
+Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir, fileName));
+```
+
+### 凭证相关
+* **从钱包文件创建凭证**
+```java
+Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir, fileName));
+```
+
+* **从私钥创建凭证**
+```java
+Credentials credentials = Credentials.create("0xXXXXXXXXXXXXXX...");
+```
+
+* **从凭证中获取地址**
+```java
+long chainId = 100L;
+String bech32Address = credentials.getAddress(chainId);
 ```
 
 ## 系统合约调用
@@ -2764,7 +2805,7 @@ YourSmartContract contract = YourSmartContract.deploy(
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "0x<address>", web3j, transactionManager, contractGasProvider);
+        "<address>", web3j, transactionManager, contractGasProvider);
 ```
 
 #### 智能合约有效性

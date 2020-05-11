@@ -173,13 +173,11 @@ public class EconomicConfig {
          */
         private BigInteger maxValidators;
         /**
-         * 犹豫期(多少个结算周期)
-         */
-        private BigInteger hesitateRatio;
-        /**
          * 退出质押后von被冻结的周期(单位： 结算周期，退出表示主动撤销和被动失去资格)
          */
         private BigInteger unStakeFreezeDuration;
+        private BigInteger rewardPerMaxChangeRange;
+        private BigInteger rewardPerChangeInterval;
 
         public Staking() {
         }
@@ -208,14 +206,6 @@ public class EconomicConfig {
             this.maxValidators = maxValidators;
         }
 
-        public BigInteger getHesitateRatio() {
-            return hesitateRatio;
-        }
-
-        public void setHesitateRatio(BigInteger hesitateRatio) {
-            this.hesitateRatio = hesitateRatio;
-        }
-
         public BigInteger getUnStakeFreezeDuration() {
             return unStakeFreezeDuration;
         }
@@ -224,14 +214,31 @@ public class EconomicConfig {
             this.unStakeFreezeDuration = unStakeFreezeDuration;
         }
 
+        public BigInteger getRewardPerMaxChangeRange() {
+            return  rewardPerMaxChangeRange;
+        }
+
+        public void setRewardPerMaxChangeRange(BigInteger rewardPerMaxChangeRange) {
+            this.rewardPerMaxChangeRange = rewardPerMaxChangeRange;
+        }
+
+        public BigInteger getRewardPerChangeInterval() {
+           return rewardPerChangeInterval;
+        }
+
+        public void setRewardPerChangeInterval(BigInteger rewardPerChangeInterval) {
+            this.rewardPerChangeInterval = rewardPerChangeInterval;
+        }
+
         @Override
         public String toString() {
             return "Staking{" +
                     "stakeThreshold=" + stakeThreshold +
                     ", operatingThreshold=" + operatingThreshold +
                     ", maxValidators=" + maxValidators +
-                    ", hesitateRatio=" + hesitateRatio +
                     ", unStakeFreezeDuration=" + unStakeFreezeDuration +
+                    ", rewardPerMaxChangeRange=" + rewardPerMaxChangeRange +
+                    ", rewardPerChangeInterval=" + rewardPerChangeInterval +
                     '}';
         }
     }

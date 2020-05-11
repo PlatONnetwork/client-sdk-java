@@ -137,14 +137,14 @@ public class SlashContract extends BaseContract {
      * 查询节点是否已被举报过多签
      *
      * @param doubleSignType 代表双签类型，1：prepare，2：viewChange
-     * @param address        举报的节点地址
+     * @param nodeId         举报的节点Id
      * @param blockNumber    多签的块高
      * @return
      */
-    public RemoteCall<CallResponse<String>> checkDoubleSign(DuplicateSignType doubleSignType, String address, BigInteger blockNumber) {
+    public RemoteCall<CallResponse<String>> checkDoubleSign(DuplicateSignType doubleSignType, String nodeId, BigInteger blockNumber) {
         Function function = new Function(FunctionType.CHECK_DOUBLESIGN_FUNC_TYPE,
                 Arrays.asList(new Uint32(doubleSignType.getValue())
-                        , new BytesType(Numeric.hexStringToByteArray(address))
+                        , new BytesType(Numeric.hexStringToByteArray(nodeId))
                         , new Uint64(blockNumber)));
         return executeRemoteCallObjectValueReturn(function, String.class);
     }
