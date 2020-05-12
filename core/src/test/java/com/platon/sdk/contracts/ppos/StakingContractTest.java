@@ -49,7 +49,7 @@ public class StakingContractTest {
     
     @Test
     public void transfer() throws Exception {
-//    	Transfer.sendFunds(web3j, superCredentials, chainId, stakingCredentials.getAddress(chainId), new BigDecimal("1"), Unit.LAT).send();
+    	Transfer.sendFunds(web3j, superCredentials, chainId, stakingCredentials.getAddress(chainId), new BigDecimal("1"), Unit.LAT).send();
     	System.out.println("stakingCredentials balance="+ web3j.platonGetBalance(stakingCredentials.getAddress(chainId), DefaultBlockParameterName.LATEST).send().getBalance());
     }
 

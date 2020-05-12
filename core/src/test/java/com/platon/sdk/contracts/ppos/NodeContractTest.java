@@ -29,7 +29,9 @@ public class NodeContractTest {
     public void getVerifierList() {
         try {
             CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
-            System.out.println(baseResponse);
+            baseResponse.getData().stream().forEach(
+                 item -> System.out.println(item.getNodeId())
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,7 +45,9 @@ public class NodeContractTest {
     public void getValidatorList() {
         try {
         	CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
-            System.out.println(baseResponse);
+            baseResponse.getData().stream().forEach(
+                    item -> System.out.println(item.getNodeId())
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +61,9 @@ public class NodeContractTest {
     public void getCandidateList() {
         try {
         	CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
-            System.out.println(baseResponse);
+            baseResponse.getData().stream().forEach(
+                    item -> System.out.println(item.getNodeId())
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
