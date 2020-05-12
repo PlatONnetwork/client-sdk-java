@@ -91,8 +91,7 @@ public class NetworkParameters {
     private final String pposContractAddressOfProposal;
     //委托收益合约地址
     private final String pposContractAddressOfReward;
-    //委托收益合约地址
-    private final long chainId;
+    private long chainId;
 
     private NetworkParameters(String hrp, String pposContractAddressOfRestrctingPlan, String pposContractAddressOfStaking, String pposContractAddressOfIncentivePool, String pposContractAddressOfSlash, String pposContractAddressOfProposal, String pposContractAddressOfReward, long chainId) {
         this.hrp = hrp;
@@ -135,6 +134,10 @@ public class NetworkParameters {
 
     public long getChainId() {
         return chainId;
+    }
+
+    public void setChainId(long chainId) {
+        this.chainId = chainId;
     }
 
     public enum Hrp {

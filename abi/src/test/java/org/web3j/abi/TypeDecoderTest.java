@@ -2,6 +2,8 @@ package org.web3j.abi;
 
 import java.math.BigInteger;
 
+import com.platon.sdk.utlis.Bech32;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 
 import org.web3j.abi.datatypes.Address;
@@ -232,7 +234,7 @@ public class TypeDecoderTest {
     public void testAddress() {
         assertThat(TypeDecoder.decodeAddress(
                 "000000000000000000000000be5422d15f39373eb0a97ff8c10fbd0e40e29338"),
-                is(new Address("0xbe5422d15f39373eb0a97ff8c10fbd0e40e29338")));
+                is(new Address("lat1he2z952l8ymnav9f0luvzraapeqw9yec8247zy")));
     }
 
     @Test

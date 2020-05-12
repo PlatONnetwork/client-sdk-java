@@ -65,7 +65,7 @@ public class RunnerTest extends TempFileProvider {
 		}
 
 		String sourceFile = tempDirPath + File.separator + packageName.replace('.', File.separatorChar) + File.separator
-				+ Strings.capitaliseFirstLetter("HumanStandardToken") + ".java";
+				+ Strings.capitaliseFirstLetter("ContractDistory") + ".java";
 
 		boolean condition = new File(sourceFile).exists();
 
