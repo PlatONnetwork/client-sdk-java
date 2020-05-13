@@ -68,7 +68,7 @@ public class TransactionEncoderTest {
 
     private static RawTransaction createEtherTransaction() {
         return RawTransaction.createEtherTransaction(
-                BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, "0xadd5355",
+                BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, "lat1x0yc7gxaw0tmk82n8392xdcl9vcvd6773zg2s0",
                 BigInteger.valueOf(Long.MAX_VALUE));
     }
 

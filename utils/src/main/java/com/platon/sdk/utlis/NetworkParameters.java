@@ -28,6 +28,14 @@ public class NetworkParameters {
                 chainId);
     }
 
+    public static String getHrp(long chainId) {
+        if(NetworkParameters.MainNetParams.getChainId() == chainId){
+            return NetworkParameters.MainNetParams.getHrp();
+        }else {
+            return NetworkParameters.TestNetParams.getHrp();
+        }
+    }
+
     public static String getPposContractAddressOfRestrctingPlan(long chainId) {
         if(NetworkParameters.MainNetParams.getChainId() == chainId){
             return NetworkParameters.MainNetParams.getPposContractAddressOfRestrctingPlan();

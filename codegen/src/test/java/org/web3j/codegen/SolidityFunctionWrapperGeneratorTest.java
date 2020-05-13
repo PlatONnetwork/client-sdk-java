@@ -31,7 +31,7 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
     public void setUp() throws Exception {
         super.setUp();
 
-        URL url = SolidityFunctionWrapperGeneratorTest.class.getClass().getResource("/solidity");
+        URL url = SolidityFunctionWrapperGeneratorTest.class.getClassLoader().getResource("solidity");
         solidityBaseDir = url.getPath();
     }
 

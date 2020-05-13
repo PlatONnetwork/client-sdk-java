@@ -2,12 +2,17 @@ package org.web3j.crypto;
 
 import java.math.BigInteger;
 
+import com.platon.sdk.utlis.Bech32;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
 import org.web3j.utils.Numeric;
 
 public class TransactionDecoder {
+
+    private static final int CHAIN_ID_INC = 35;
+    private static final int LOWER_REAL_V = 27;
 
     public static RawTransaction decode(String hexTransaction) {
         byte[] transaction = Numeric.hexStringToByteArray(hexTransaction);
@@ -39,8 +44,17 @@ public class TransactionDecoder {
                             32);
             final Sign.SignatureData signatureData = new Sign.SignatureData(v, r, s);
             return new SignedRawTransaction(
-                    nonce, gasPrice, gasLimit, to, value, data, signatureData);
+                    nonce, gasPrice, gasLimit, Bech32.addressEncode(NetworkParameters.getHrp(getChainId(v)),to), value, data, signatureData);
         }
+    }
+
+    public static Long getChainId(byte[] inputV) {
+        BigInteger bv = Numeric.toBigInt(inputV);
+        long v = bv.longValue();
+        if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
+            return null;
+        }
+        return (v - CHAIN_ID_INC) / 2;
     }
     
 }

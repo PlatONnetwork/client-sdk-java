@@ -2,6 +2,7 @@ package org.web3j.tx;
 
 import java.math.BigDecimal;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class RawTransactionManagerTest extends ManagedTransactionTester {
         prepareTransaction(transactionReceipt);
 
         TransactionManager transactionManager =
-                new RawTransactionManager(web3j, SampleKeys.CREDENTIALS);
+                new RawTransactionManager(web3j, SampleKeys.CREDENTIALS, NetworkParameters.MainNetParams.getChainId());
         Transfer transfer = new Transfer(web3j, transactionManager);
         transfer.sendFunds(ADDRESS, BigDecimal.ONE, Convert.Unit.LAT).send();
     }

@@ -1,5 +1,7 @@
 package org.web3j.tx;
 
+import com.platon.sdk.utlis.Bech32;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Before;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.SampleKeys;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 public abstract class ManagedTransactionTester {
 
-    static final String ADDRESS = "0x3d6cb163f7c72d20b0fcd6baae5889329d138a4a";
+    static final String ADDRESS = "lat184ktzclhcukjpv8u66a2ukyfx2w38zj2prhd65";
     static final String TRANSACTION_HASH = "0xHASH";
     protected Web3j web3j;
     protected TxHashVerifier txHashVerifier;

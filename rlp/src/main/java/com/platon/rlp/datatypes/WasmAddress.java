@@ -2,6 +2,7 @@ package com.platon.rlp.datatypes;
 
 import java.math.BigInteger;
 
+import com.platon.sdk.utlis.Bech32;
 import org.web3j.utils.Numeric;
 
 public class WasmAddress {
@@ -20,7 +21,7 @@ public class WasmAddress {
 	}
 
 	public WasmAddress(String hexValue) {
-		this(Numeric.hexStringToByteArray(hexValue));
+		this(Numeric.toBigInt(Bech32.addressDecodeHex(hexValue)));
 	}
 
 	public WasmAddress(BigInteger value) {

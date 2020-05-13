@@ -1,5 +1,7 @@
 package org.web3j.crypto;
 
+import com.platon.sdk.utlis.Bech32;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -36,7 +38,8 @@ public class SignedRawTransaction extends RawTransaction {
         byte[] s = signatureData.getS();
         Sign.SignatureData signatureDataV = new Sign.SignatureData(getRealV(v), r, s);
         BigInteger key = Sign.signedMessageToKey(encodedTransaction, signatureDataV);
-        return "0x" + Keys.getAddress(key);
+
+        return  Bech32.addressEncode(NetworkParameters.getHrp(chainId),"0x" + Keys.getAddress(key) );
     }
 
     public void verify(String from) throws SignatureException {
@@ -60,7 +63,11 @@ public class SignedRawTransaction extends RawTransaction {
     }
 
     public Long getChainId() {
-        BigInteger bv = Numeric.toBigInt(getSignatureData().getV());
+        return getChainId(getSignatureData().getV());
+    }
+
+    public Long getChainId(byte[] inputV) {
+        BigInteger bv = Numeric.toBigInt(inputV);
         long v = bv.longValue();
         if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
             return null;
