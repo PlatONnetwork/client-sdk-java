@@ -1,7 +1,6 @@
 package com.platon.sdk.contracts.wasm;
 
-import java.math.BigInteger;
-
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Before;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -12,10 +11,10 @@ import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.GasProvider;
 
-import com.platon.sdk.utlis.NetworkParameters;
+import java.math.BigInteger;
 
 public abstract class BaseContractTest {
-	protected static final BigInteger GAS_LIMIT = BigInteger.valueOf(4700000);
+	protected static final BigInteger GAS_LIMIT = BigInteger.valueOf(4712388L);
 	protected static final BigInteger GAS_PRICE = BigInteger.valueOf(10000000000L);
 
 	protected static final long chainId = 103;
@@ -23,7 +22,7 @@ public abstract class BaseContractTest {
 	protected static final String privateKey = "a689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b";
 
 	protected Credentials credentials;
-	protected String address;
+	protected String credentialsAddress;
 	protected Web3j web3j;
 	protected Web3jService web3jService;
 	protected TransactionManager transactionManager;
@@ -32,7 +31,7 @@ public abstract class BaseContractTest {
 	@Before
 	public void init() {
 		credentials = Credentials.create(privateKey);
-		address = credentials.getAddress(NetworkParameters.TestNetParams);
+		credentialsAddress = credentials.getAddress(NetworkParameters.TestNetParams);
 		web3jService = new HttpService(nodeUrl);
 		web3j = Web3j.build(web3jService);
 		transactionManager = new RawTransactionManager(web3j, credentials, chainId);

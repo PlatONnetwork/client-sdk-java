@@ -7,14 +7,14 @@ import org.web3j.utils.Numeric;
 import com.platon.rlp.RLPCodec;
 
 public class WasmReturnDecoder {
-	public static <T> T decode(String input, Class<T> clazz) {
+	public static <T> T decode(String input, Class<T> clazz, long chainId) {
 		byte[] data = Numeric.hexStringToByteArray(input);
-		return RLPCodec.decode(data, clazz);
+		return RLPCodec.decode(data, clazz, chainId);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T decode(String input, Class<T> clazz, ParameterizedType parameterizedType) {
+	public static <T> T decode(String input, Class<T> clazz, ParameterizedType parameterizedType, long chainId) {
 		byte[] data = Numeric.hexStringToByteArray(input);
-		return (T) RLPCodec.decodeContainer(data, parameterizedType);
+		return (T) RLPCodec.decodeContainer(data, parameterizedType, chainId);
 	}
 }

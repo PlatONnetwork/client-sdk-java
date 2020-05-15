@@ -62,6 +62,7 @@ public class WasmFunctionWrapper extends Generator {
 	private static final String TRANSACTION_MANAGER = "transactionManager";
 	private static final String INITIAL_VALUE = "initialVonValue";
 	private static final String CONTRACT_ADDRESS = "contractAddress";
+	private static final String CHAINID = "chainId";
 	private static final String GAS_PRICE = "gasPrice";
 	private static final String GAS_LIMIT = "gasLimit";
 	private static final String FILTER = "filter";
@@ -168,12 +169,14 @@ public class WasmFunctionWrapper extends Generator {
 	}
 
 	private static MethodSpec buildConstructor(Class authType, String authName) {
-		MethodSpec.Builder toReturn = MethodSpec.constructorBuilder().addModifiers(Modifier.PROTECTED).addParameter(String.class, CONTRACT_ADDRESS)
-				.addParameter(Web3j.class, WEB3J).addParameter(authType, authName);
-
-		toReturn.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER).addStatement("super($N, $N, $N, $N, $N)", BINARY, CONTRACT_ADDRESS, WEB3J,
-				authName, CONTRACT_GAS_PROVIDER);
-
+		MethodSpec.Builder toReturn = MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PROTECTED)
+				.addParameter(String.class, CONTRACT_ADDRESS)
+				.addParameter(Web3j.class, WEB3J)
+				.addParameter(authType, authName)
+				.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER)
+				.addParameter(Long.class, CHAINID)
+				.addStatement("super($N, $N, $N, $N, $N, $N)", BINARY, CONTRACT_ADDRESS, WEB3J, authName, CONTRACT_GAS_PROVIDER, CHAINID);
 		return toReturn.build();
 	}
 
@@ -211,12 +214,10 @@ public class WasmFunctionWrapper extends Generator {
 					constructor = true;
 
 					methodSpecs.add(buildDeploy(className, functionDefinition, Credentials.class, CREDENTIALS, true, customTypes, false));
-					methodSpecs
-							.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes, false));
+					methodSpecs.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes, false));
 
 					methodSpecs.add(buildDeploy(className, functionDefinition, Credentials.class, CREDENTIALS, true, customTypes, true));
-					methodSpecs
-							.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes, true));
+					methodSpecs.add(buildDeploy(className, functionDefinition, TransactionManager.class, TRANSACTION_MANAGER, true, customTypes, true));
 					continue;
 				}
 
@@ -236,8 +237,7 @@ public class WasmFunctionWrapper extends Generator {
 			MethodSpec.Builder credentialsMethodBuilder = getDeployMethodSpec(className, Credentials.class, CREDENTIALS, false, true);
 			methodSpecs.add(buildDeployNoParams(credentialsMethodBuilder, className, CREDENTIALS, false, true));
 
-			MethodSpec.Builder transactionManagerMethodBuilder = getDeployMethodSpec(className, TransactionManager.class, TRANSACTION_MANAGER, false,
-					true);
+			MethodSpec.Builder transactionManagerMethodBuilder = getDeployMethodSpec(className, TransactionManager.class, TRANSACTION_MANAGER, false, true);
 			methodSpecs.add(buildDeployNoParams(transactionManagerMethodBuilder, className, TRANSACTION_MANAGER, false, true));
 		}
 		return methodSpecs;
@@ -271,15 +271,16 @@ public class WasmFunctionWrapper extends Generator {
 				.returns(buildRemoteCall(ClassName.get("", className))).addParameter(Web3j.class, WEB3J).addParameter(authType, authName);
 
 		if (isPayable && !withGasProvider) {
-			return builder.addParameter(BigInteger.class, GAS_PRICE).addParameter(BigInteger.class, GAS_LIMIT).addParameter(BigInteger.class,
-					INITIAL_VALUE);
+			builder.addParameter(BigInteger.class, GAS_PRICE).addParameter(BigInteger.class, GAS_LIMIT).addParameter(BigInteger.class, INITIAL_VALUE);
 		} else if (isPayable && withGasProvider) {
-			return builder.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER).addParameter(BigInteger.class, INITIAL_VALUE);
+			builder.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER).addParameter(BigInteger.class, INITIAL_VALUE);
 		} else if (!isPayable && withGasProvider) {
-			return builder.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER);
+			builder.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER);
 		} else {
-			return builder.addParameter(BigInteger.class, GAS_PRICE).addParameter(BigInteger.class, GAS_LIMIT);
+			builder.addParameter(BigInteger.class, GAS_PRICE).addParameter(BigInteger.class, GAS_LIMIT);
 		}
+
+		return  builder.addParameter(Long.class, CHAINID);
 	}
 
 	private static MethodSpec buildDeployNoParams(MethodSpec.Builder methodBuilder, String className, String authName, boolean isPayable,
@@ -288,19 +289,19 @@ public class WasmFunctionWrapper extends Generator {
 				Arrays.class);
 
 		if (isPayable && !withGasPRovider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName,
-					GAS_PRICE, GAS_LIMIT, INITIAL_VALUE);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName,
+					GAS_PRICE, GAS_LIMIT, INITIAL_VALUE, CHAINID);
 			methodBuilder.addAnnotation(Deprecated.class);
 		} else if (isPayable && withGasPRovider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName,
-					CONTRACT_GAS_PROVIDER, INITIAL_VALUE);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName,
+					CONTRACT_GAS_PROVIDER, INITIAL_VALUE, CHAINID);
 		} else if (!isPayable && !withGasPRovider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor)", className, WEB3J, authName, GAS_PRICE,
-					GAS_LIMIT);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName, GAS_PRICE,
+					GAS_LIMIT, CHAINID);
 			methodBuilder.addAnnotation(Deprecated.class);
 		} else {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor)", className, WEB3J, authName,
-					CONTRACT_GAS_PROVIDER);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName,
+					CONTRACT_GAS_PROVIDER, CHAINID);
 		}
 		return methodBuilder.build();
 	}
@@ -311,19 +312,15 @@ public class WasmFunctionWrapper extends Generator {
 				Arrays.class, inputParams);
 
 		if (isPayable && !withGasProvider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName,
-					GAS_PRICE, GAS_LIMIT, INITIAL_VALUE);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, INITIAL_VALUE, CHAINID);
 			methodBuilder.addAnnotation(Deprecated.class);
 		} else if (isPayable && withGasProvider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName,
-					CONTRACT_GAS_PROVIDER, INITIAL_VALUE);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName, CONTRACT_GAS_PROVIDER, INITIAL_VALUE,CHAINID);
 		} else if (!isPayable && !withGasProvider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor)", className, WEB3J, authName, GAS_PRICE,
-					GAS_LIMIT);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, CHAINID);
 			methodBuilder.addAnnotation(Deprecated.class);
 		} else {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor)", className, WEB3J, authName,
-					CONTRACT_GAS_PROVIDER);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName, CONTRACT_GAS_PROVIDER, CHAINID);
 		}
 		return methodBuilder.build();
 	}
@@ -350,13 +347,15 @@ public class WasmFunctionWrapper extends Generator {
 	}
 
 	private static MethodSpec buildLoad(String className, Class authType, String authName) {
-		MethodSpec.Builder toReturn = MethodSpec.methodBuilder("load").addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-				.returns(ClassName.get("", className)).addParameter(String.class, CONTRACT_ADDRESS).addParameter(Web3j.class, WEB3J)
-				.addParameter(authType, authName);
-
-		toReturn.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER).addStatement("return new $L($L, $L, $L, $L)", className, CONTRACT_ADDRESS,
-				WEB3J, authName, CONTRACT_GAS_PROVIDER);
-
+		MethodSpec.Builder toReturn = MethodSpec.methodBuilder("load")
+				.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+				.returns(ClassName.get("", className))
+				.addParameter(String.class, CONTRACT_ADDRESS)
+				.addParameter(Web3j.class, WEB3J)
+				.addParameter(authType, authName)
+				.addParameter(GasProvider.class, CONTRACT_GAS_PROVIDER)
+				.addParameter(Long.class, CHAINID)
+				.addStatement("return new $L($L, $L, $L, $L, $L)", className, CONTRACT_ADDRESS, WEB3J, authName, CONTRACT_GAS_PROVIDER, CHAINID);
 		return toReturn.build();
 	}
 

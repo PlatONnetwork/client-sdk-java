@@ -1,7 +1,5 @@
 package com.platon.rlp;
 
-import lombok.NonNull;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -29,12 +27,12 @@ import static com.platon.rlp.RLPElement.readRLPTree;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public final class RLPCodec {
-	public static <T> T decode(byte[] data, Class<T> clazz) {
+	public static <T> T decode(byte[] data, Class<T> clazz, long chainId) {
 		RLPElement element = RLPElement.fromEncoded(data);
-		return decode(element, clazz);
+		return decode(element, clazz, chainId);
 	}
 
-	public static <T> T decode(RLPElement element, Class<T> clazz) {
+	public static <T> T decode(RLPElement element, Class<T> clazz, long chainId) {
 		if (clazz == RLPElement.class)
 			return (T) element;
 
@@ -77,7 +75,7 @@ public final class RLPCodec {
 			return (T) element.asBytes();
 
 		if (clazz == WasmAddress.class)
-			return (T) new WasmAddress(element.asBytes());
+			return (T) new WasmAddress(element.asBytes(),chainId);
 
 		// String is non-null, since we cannot differ between null empty string and null
 		if (clazz == String.class)
@@ -118,14 +116,14 @@ public final class RLPCodec {
 			Class elementType = clazz.getComponentType();
 			Object res = Array.newInstance(clazz.getComponentType(), element.size());
 			for (int i = 0; i < element.size(); i++) {
-				Array.set(res, i, decode(element.get(i), elementType));
+				Array.set(res, i, decode(element.get(i), elementType,chainId));
 			}
 			return (T) res;
 		}
 
 		// cannot determine generic type at runtime
 		if (RLPUtils.isContainer(clazz)) {
-			return (T) decodeContainer(element, Container.fromClass(clazz));
+			return (T) decodeContainer(element, Container.fromClass(clazz),chainId);
 		}
 
 		T o = RLPUtils.newInstance(clazz);
@@ -150,7 +148,7 @@ public final class RLPCodec {
 			}
 
 			try {
-				f.set(o, decodeContainer(el, container));
+				f.set(o, decodeContainer(el, container,chainId));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -254,7 +252,7 @@ public final class RLPCodec {
 		return data;
 	}
 
-	public static byte[] encodeElements(@NonNull Collection<byte[]> elements) {
+	public static byte[] encodeElements(Collection<byte[]> elements) {
 		int totalLength = 0;
 		for (byte[] element1 : elements) {
 			totalLength += element1.length;
@@ -318,23 +316,23 @@ public final class RLPCodec {
 		return list;
 	}
 
-	public static Object decodeContainer(byte[] encoded, Container container) {
-		return decodeContainer(RLPElement.fromEncoded(encoded), container);
+	public static Object decodeContainer(byte[] encoded, Container container, long chainId) {
+		return decodeContainer(RLPElement.fromEncoded(encoded), container, chainId);
 	}
 
-	public static Object decodeContainer(byte[] encoded, ParameterizedType type) {
+	public static Object decodeContainer(byte[] encoded, ParameterizedType type, long chainId) {
 		Container container = Container.fromType(type);
-		return decodeContainer(encoded, container);
+		return decodeContainer(encoded, container, chainId);
 	}
 
-	public static Object decodeContainer(RLPElement element, Container container) {
+	public static Object decodeContainer(RLPElement element, Container container, long chainId) {
 		if (container == null)
 			return element;
 
 		switch (container.getType()) {
 
 		case RAW:
-			return decode(element, container.asRaw());
+			return decode(element, container.asRaw(),chainId);
 
 		case COLLECTION:
 			CollectionContainer collectionContainer = container.asCollection();
@@ -342,7 +340,7 @@ public final class RLPCodec {
 			if (element.isNull())
 				return collection;
 			for (int i = 0; i < element.size(); i++) {
-				collection.add(decodeContainer(element.get(i), collectionContainer.contentType));
+				collection.add(decodeContainer(element.get(i), collectionContainer.contentType, chainId));
 			}
 			return collection;
 
@@ -353,7 +351,7 @@ public final class RLPCodec {
 				return map;
 
 			for (int i = 0; i < element.size(); i++) {
-				map.put(decodeContainer(element.get(i).get(0), mapContainer.keyType), decodeContainer(element.get(i).get(1), mapContainer.valueType));
+				map.put(decodeContainer(element.get(i).get(0), mapContainer.keyType,chainId), decodeContainer(element.get(i).get(1), mapContainer.valueType, chainId));
 			}
 			/*
 			 * for (int i = 0; i < element.size(); i += 2) { map.put(decodeContainer(element.get(i), mapContainer.keyType),
@@ -367,8 +365,8 @@ public final class RLPCodec {
 			if (element.isNull())
 				return pair;
 
-			pair.setKey(decodeContainer(element.get(0), pairContainer.keyType));
-			pair.setValue(decodeContainer(element.get(1), pairContainer.valueType));
+			pair.setKey(decodeContainer(element.get(0), pairContainer.keyType,chainId));
+			pair.setValue(decodeContainer(element.get(1), pairContainer.valueType, chainId));
 			return pair;
 		}
 

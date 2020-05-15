@@ -1,0 +1,99 @@
+[
+    {
+        "constant": true,
+        "input": [],
+        "name": "getLatestTweet",
+        "output": "string",
+        "type": "Action"
+    },
+    {
+        "constant": false,
+        "input": [],
+        "name": "init",
+        "output": "void",
+        "type": "Action"
+    },
+    {
+        "constant": true,
+        "input": [],
+        "name": "isAdmin",
+        "output": "bool",
+        "type": "Action"
+    },
+    {
+        "constant": false,
+        "input": [
+            {
+                "name": "tweetString",
+                "type": "string"
+            }
+        ],
+        "name": "tweet",
+        "output": "int64",
+        "type": "Action"
+    },
+    {
+        "constant": true,
+        "input": [
+            {
+                "name": "tweetId",
+                "type": "uint64"
+            }
+        ],
+        "name": "getTweet",
+        "output": "string",
+        "type": "Action"
+    },
+    {
+        "constant": true,
+        "input": [],
+        "name": "getOwnerAddress",
+        "output": "FixedHash<20>",
+        "type": "Action"
+    },
+    {
+        "constant": true,
+        "input": [],
+        "name": "getNumberOfTweets",
+        "output": "uint64",
+        "type": "Action"
+    },
+    {
+        "constant": false,
+        "input": [
+            {
+                "name": "receiver",
+                "type": "FixedHash<20>"
+            }
+        ],
+        "name": "adminRetrieveDonations",
+        "output": "void",
+        "type": "Action"
+    },
+    {
+        "constant": true,
+        "input": [],
+        "name": "caddr",
+        "output": "FixedHash<20>",
+        "type": "Action"
+    },
+    {
+        "constant": true,
+        "input": [
+            {
+                "name": "receiver",
+                "type": "FixedHash<20>"
+            }
+        ],
+        "name": "caddrBalance",
+        "output": "string",
+        "type": "Action"
+    },
+    {
+        "constant": false,
+        "input": [],
+        "name": "adminDeleteAccount",
+        "output": "void",
+        "type": "Action"
+    }
+]

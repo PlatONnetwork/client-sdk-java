@@ -3,6 +3,7 @@ package com.platon.rlp.datatypes;
 import java.math.BigInteger;
 
 import com.platon.sdk.utlis.Bech32;
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.utils.Numeric;
 
 public class WasmAddress {
@@ -12,20 +13,21 @@ public class WasmAddress {
 
 	public static final int LENGTH = 160;
 	public static final int LENGTH_IN_HEX = LENGTH >> 2;
-	public static final WasmAddress DEFAULT = new WasmAddress(BigInteger.ZERO);
 
-	public WasmAddress(byte[] value) {
+	public WasmAddress(byte[] value, long chainId) {
+		this(value,NetworkParameters.getHrp(chainId));
+	}
+
+	public WasmAddress(byte[] value, String hrp) {
 		this.value = value;
 		this.bigIntValue = Numeric.toBigInt(value);
-		this.address = Numeric.toHexStringWithPrefixZeroPadded(bigIntValue, LENGTH_IN_HEX);
+		this.address = Bech32.addressEncode(hrp, Numeric.toHexStringWithPrefixZeroPadded(bigIntValue, LENGTH_IN_HEX));
 	}
 
-	public WasmAddress(String hexValue) {
-		this(Numeric.toBigInt(Bech32.addressDecodeHex(hexValue)));
-	}
-
-	public WasmAddress(BigInteger value) {
-		this(value.toByteArray());
+	public WasmAddress(String bechValue) {
+		this.bigIntValue = Numeric.toBigInt(Bech32.addressDecodeHex(bechValue));
+		this.value = bigIntValue.toByteArray();
+		this.address = bechValue;
 	}
 
 	public byte[] getValue() {

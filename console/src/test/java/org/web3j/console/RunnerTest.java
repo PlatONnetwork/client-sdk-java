@@ -71,12 +71,4 @@ public class RunnerTest extends TempFileProvider {
 
 		Assert.assertTrue("Java wrapper source code generator for Solidity ABI format error.", condition);
 	}
-	
-	public static void main(String[] args) throws Exception {
-		  String[] params = { "generate", "E:\\文件\\矩真文件\\区块链\\PlatON周边工具\\PlatScan\\部署相关\\platon-web3j-0.9.1.2-SNAPSHOT\\bin\\ContractDistory.wasm",
-		    "E:\\\\文件\\\\矩真文件\\\\区块链\\\\PlatON周边工具\\\\PlatScan\\\\部署相关\\\\platon-web3j-0.9.1.2-SNAPSHOT\\\\bin\\\\ContractDistory.abi.json", "-p", "org.web3j.codegen", "-o",
-		    "C:\\Users\\51632\\Desktop" };
-		  WasmFunctionWrapperGenerator.run(params);
-	}
-
 }

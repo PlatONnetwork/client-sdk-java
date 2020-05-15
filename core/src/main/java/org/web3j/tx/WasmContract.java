@@ -50,18 +50,18 @@ public abstract class WasmContract extends ManagedTransaction {
 	protected TransactionReceipt transactionReceipt;
 	protected Map<String, String> deployedAddresses;
 	protected DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.LATEST;
+	protected long chainId;
 
-	protected WasmContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager,
-			GasProvider gasProvider) {
+	protected WasmContract(String contractBinary, String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider gasProvider, long chainId) {
 		super(web3j, transactionManager);
-
 		this.contractAddress = contractAddress;
 		this.contractBinary = contractBinary;
 		this.gasProvider = gasProvider;
+		this.chainId = chainId;
 	}
 
-	protected WasmContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, GasProvider gasProvider) {
-		this(contractBinary, contractAddress, web3j, new RawTransactionManager(web3j, credentials), gasProvider);
+	protected WasmContract(String contractBinary, String contractAddress, Web3j web3j, Credentials credentials, GasProvider gasProvider, long chainId) {
+		this(contractBinary, contractAddress, web3j, new RawTransactionManager(web3j, credentials, chainId), gasProvider, chainId);
 	}
 
 	public void setContractAddress(String contractAddress) {
@@ -140,9 +140,9 @@ public abstract class WasmContract extends ManagedTransaction {
 
 		String value = ethCall.getValue();
 		if (null != function.getOutputParameterizedType()) {
-			return WasmReturnDecoder.decode(value, clazz, function.getOutputParameterizedType());
+			return WasmReturnDecoder.decode(value, clazz, function.getOutputParameterizedType(),chainId);
 		} else {
-			return WasmReturnDecoder.decode(value, clazz);
+			return WasmReturnDecoder.decode(value, clazz, chainId);
 		}
 	}
 
@@ -193,15 +193,14 @@ public abstract class WasmContract extends ManagedTransaction {
 		return contract;
 	}
 
-	protected static <T extends WasmContract> T deploy(Class<T> type, Web3j web3j, Credentials credentials, GasProvider contractGasProvider,
-			String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException {
+	protected static <T extends WasmContract> T deploy(Class<T> type, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String encodedConstructor, BigInteger value, long chainId) throws RuntimeException, TransactionException {
 
 		try {
-			Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, Credentials.class, GasProvider.class);
+			Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, Credentials.class, GasProvider.class,Long.class);
 			constructor.setAccessible(true);
 
 			// we want to use null here to ensure that "to" parameter on message is not populated
-			T contract = constructor.newInstance(null, web3j, credentials, contractGasProvider);
+			T contract = constructor.newInstance(null, web3j, credentials, contractGasProvider, chainId);
 
 			return create(contract, encodedConstructor, value);
 		} catch (TransactionException e) {
@@ -212,14 +211,14 @@ public abstract class WasmContract extends ManagedTransaction {
 	}
 
 	protected static <T extends WasmContract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager,
-			GasProvider contractGasProvider, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException {
+			GasProvider contractGasProvider, String encodedConstructor, BigInteger value, long chainId) throws RuntimeException, TransactionException {
 
 		try {
-			Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, TransactionManager.class, GasProvider.class);
+			Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, TransactionManager.class, GasProvider.class, Long.class);
 			constructor.setAccessible(true);
 
 			// we want to use null here to ensure that "to" parameter on message is not populated
-			T contract = constructor.newInstance(null, web3j, transactionManager, contractGasProvider);
+			T contract = constructor.newInstance(null, web3j, transactionManager, contractGasProvider, chainId);
 			return create(contract, encodedConstructor, value);
 		} catch (TransactionException e) {
 			throw e;
@@ -229,26 +228,26 @@ public abstract class WasmContract extends ManagedTransaction {
 	}
 
 	public static <T extends WasmContract> RemoteCall<T> deployRemoteCall(Class<T> type, Web3j web3j, Credentials credentials,
-			GasProvider contractGasProvider, String encodedConstructor, BigInteger value) {
-		return new RemoteCall<>(() -> deploy(type, web3j, credentials, contractGasProvider, encodedConstructor, value));
+			GasProvider contractGasProvider, String encodedConstructor, BigInteger value, long chainId) {
+		return new RemoteCall<>(() -> deploy(type, web3j, credentials, contractGasProvider, encodedConstructor, value, chainId));
 	}
 
 	public static <T extends WasmContract> RemoteCall<T> deployRemoteCall(Class<T> type, Web3j web3j, Credentials credentials,
-			GasProvider contractGasProvider, String encodedConstructor) {
-		return new RemoteCall<>(() -> deploy(type, web3j, credentials, contractGasProvider, encodedConstructor, BigInteger.ZERO));
+			GasProvider contractGasProvider, String encodedConstructor, long chainId) {
+		return new RemoteCall<>(() -> deploy(type, web3j, credentials, contractGasProvider, encodedConstructor, BigInteger.ZERO, chainId));
 	}
 
 	public static <T extends WasmContract> RemoteCall<T> deployRemoteCall(Class<T> type, Web3j web3j, TransactionManager transactionManager,
-			GasProvider contractGasProvider, String encodedConstructor, BigInteger value) {
-		return new RemoteCall<>(() -> deploy(type, web3j, transactionManager, contractGasProvider, encodedConstructor, value));
+			GasProvider contractGasProvider, String encodedConstructor, BigInteger value, long chainId) {
+		return new RemoteCall<>(() -> deploy(type, web3j, transactionManager, contractGasProvider, encodedConstructor, value, chainId));
 	}
 
 	public static <T extends WasmContract> RemoteCall<T> deployRemoteCall(Class<T> type, Web3j web3j, TransactionManager transactionManager,
-			GasProvider contractGasProvider, String encodedConstructor) {
-		return new RemoteCall<>(() -> deploy(type, web3j, transactionManager, contractGasProvider, encodedConstructor, BigInteger.ZERO));
+			GasProvider contractGasProvider, String encodedConstructor, long chainId) {
+		return new RemoteCall<>(() -> deploy(type, web3j, transactionManager, contractGasProvider, encodedConstructor, BigInteger.ZERO, chainId));
 	}
 
-	public static WasmEventValues staticExtractEventParameters(WasmEvent event, Log log) {
+	public static WasmEventValues staticExtractEventParameters(WasmEvent event, Log log, long chainId) {
 		String eventSignature = WasmEventEncoder.encode(event);
 		List<String> topics = log.getTopics();
 		if (null == topics || topics.isEmpty() || !topics.get(0).equals(eventSignature)) {
@@ -281,13 +280,13 @@ public abstract class WasmContract extends ManagedTransaction {
 		List<Object> nonIndexedValues = new ArrayList<>();
 		List<WasmEventParameter> nonIndexedParameters = event.getNonIndexedParameters();
 		if (null != log.getData() && !log.getData().equals("")) {
-			RLPList rlpList = RLPCodec.decode(Numeric.hexStringToByteArray(log.getData()), RLPList.class);
+			RLPList rlpList = RLPCodec.decode(Numeric.hexStringToByteArray(log.getData()), RLPList.class,chainId);
 			for (int i = 0; i < rlpList.size(); i++) {
 				WasmEventParameter wasmEventParameter = nonIndexedParameters.get(i);
 				if (wasmEventParameter.getParameterizedType() == null) {
-					nonIndexedValues.add(RLPCodec.decode(rlpList.get(i).getEncoded(), wasmEventParameter.getType()));
+					nonIndexedValues.add(RLPCodec.decode(rlpList.get(i).getEncoded(), wasmEventParameter.getType(),chainId));
 				} else {
-					nonIndexedValues.add(RLPCodec.decodeContainer(rlpList.get(i).getEncoded(), wasmEventParameter.getParameterizedType()));
+					nonIndexedValues.add(RLPCodec.decodeContainer(rlpList.get(i).getEncoded(), wasmEventParameter.getParameterizedType(),chainId));
 				}
 			}
 		}
@@ -296,7 +295,7 @@ public abstract class WasmContract extends ManagedTransaction {
 	}
 
 	protected WasmEventValuesWithLog extractEventParametersWithLog(WasmEvent event, Log log) {
-		final WasmEventValues eventValues = staticExtractEventParameters(event, log);
+		final WasmEventValues eventValues = staticExtractEventParameters(event, log, chainId);
 		return (eventValues == null) ? null : new WasmEventValuesWithLog(eventValues, log);
 	}
 

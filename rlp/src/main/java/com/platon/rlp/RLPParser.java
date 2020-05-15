@@ -1,7 +1,5 @@
 package com.platon.rlp;
 
-import lombok.NonNull;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 
@@ -20,7 +18,7 @@ final class RLPParser {
 
 	private int limit;
 
-	static RLPElement fromEncoded(@NonNull byte[] data, boolean lazy) {
+	static RLPElement fromEncoded( byte[] data, boolean lazy) {
 		RLPParser parser = new RLPParser(data);
 		if (parser.estimateSize() != data.length)
 			throw new RuntimeException("invalid encoding");
