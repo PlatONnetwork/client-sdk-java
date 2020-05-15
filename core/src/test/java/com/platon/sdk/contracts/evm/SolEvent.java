@@ -36,7 +36,7 @@ import rx.functions.Func1;
  * <p>Generated with web3j version 0.13.0.5.
  */
 public class SolEvent extends Contract {
-    private static final String BINARY = "608060405234801561001057600080fd5b506105ec806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80631003e2d21461005c57806317d7de7c1461008a578063336eed241461010d57806338cc4831146101e85780636537214714610232575b600080fd5b6100886004803603602081101561007257600080fd5b8101908080359060200190929190505050610250565b005b6100926102cf565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100d25780820151818401526020810190506100b7565b50505050905090810190601f1680156100ff5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6101e66004803603604081101561012357600080fd5b810190808035906020019064010000000081111561014057600080fd5b82018360208201111561015257600080fd5b8035906020019184600183028401116401000000008311171561017457600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610371565b005b6101f0610504565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61023a61050c565b6040518082815260200191505060405180910390f35b8060008082825401925050819055507f97c35397cb6acebd9df368c206404479fc4c80dd6034d1b28943aaf58263187033600054604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a150565b606060018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156103675780601f1061033c57610100808354040283529160200191610367565b820191906000526020600020905b81548152906001019060200180831161034a57829003601f168201915b5050505050905090565b8160019080519060200190610387929190610512565b507f9f78bfd9c32411e18dbe173525d2f463cb010b7daaa9f7dc3ba22f67f4a64dee600180836040518080602001806020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183810383528681815460018160011615610100020316600290048152602001915080546001816001161561010002031660029004801561046c5780601f106104415761010080835404028352916020019161046c565b820191906000526020600020905b81548152906001019060200180831161044f57829003601f168201915b50508381038252858181546001816001161561010002031660029004815260200191508054600181600116156101000203166002900480156104ef5780601f106104c4576101008083540402835291602001916104ef565b820191906000526020600020905b8154815290600101906020018083116104d257829003601f168201915b50509550505050505060405180910390a15050565b600033905090565b60005481565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061055357805160ff1916838001178555610581565b82800160010185558215610581579182015b82811115610580578251825591602001919060010190610565565b5b50905061058e9190610592565b5090565b6105b491905b808211156105b0576000816000905550600101610598565b5090565b9056fea265627a7a72315820dc5006d246ef2420c3f551dee62bf5fe551b902d781cac710841b147d877df1164736f6c63430005110032";
+    private static final String BINARY = "608060405234801561001057600080fd5b506105ec806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c80631003e2d21461005c57806317d7de7c1461008a578063336eed241461010d57806338cc4831146101e85780636537214714610232575b600080fd5b6100886004803603602081101561007257600080fd5b8101908080359060200190929190505050610250565b005b6100926102cf565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100d25780820151818401526020810190506100b7565b50505050905090810190601f1680156100ff5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6101e66004803603604081101561012357600080fd5b810190808035906020019064010000000081111561014057600080fd5b82018360208201111561015257600080fd5b8035906020019184600183028401116401000000008311171561017457600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610371565b005b6101f0610504565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b61023a61050c565b6040518082815260200191505060405180910390f35b8060008082825401925050819055507f97c35397cb6acebd9df368c206404479fc4c80dd6034d1b28943aaf58263187033600054604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060405180910390a150565b606060018054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156103675780601f1061033c57610100808354040283529160200191610367565b820191906000526020600020905b81548152906001019060200180831161034a57829003601f168201915b5050505050905090565b8160019080519060200190610387929190610512565b507f9f78bfd9c32411e18dbe173525d2f463cb010b7daaa9f7dc3ba22f67f4a64dee600180836040518080602001806020018473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200183810383528681815460018160011615610100020316600290048152602001915080546001816001161561010002031660029004801561046c5780601f106104415761010080835404028352916020019161046c565b820191906000526020600020905b81548152906001019060200180831161044f57829003601f168201915b50508381038252858181546001816001161561010002031660029004815260200191508054600181600116156101000203166002900480156104ef5780601f106104c4576101008083540402835291602001916104ef565b820191906000526020600020905b8154815290600101906020018083116104d257829003601f168201915b50509550505050505060405180910390a15050565b600033905090565b60005481565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061055357805160ff1916838001178555610581565b82800160010185558215610581579182015b82811115610580578251825591602001919060010190610565565b5b50905061058e9190610592565b5090565b6105b491905b808211156105b0576000816000905550600101610598565b5090565b9056fea265627a7a72315820432bd06394b3029dab718a1b64a33f351fee8beee384ff763ca8f4522ecdedb564736f6c63430005110032";
 
     public static final String FUNC_ADD = "add";
 
@@ -56,22 +56,12 @@ public class SolEvent extends Contract {
             Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Address>() {}));
     ;
 
-    @Deprecated
-    protected SolEvent(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        super(BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+    protected SolEvent(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider, chainId);
     }
 
-    protected SolEvent(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
-    }
-
-    @Deprecated
-    protected SolEvent(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        super(BINARY, contractAddress, web3j, transactionManager, gasPrice, gasLimit);
-    }
-
-    protected SolEvent(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
+    protected SolEvent(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider, chainId);
     }
 
     public List<FundTransferEventResponse> getFundTransferEvents(TransactionReceipt transactionReceipt) {
@@ -150,20 +140,18 @@ public class SolEvent extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteCall<TransactionReceipt> getAddress() {
-        final Function function = new Function(
-                FUNC_GETADDRESS, 
+    public RemoteCall<String> getAddress() {
+        final Function function = new Function(FUNC_GETADDRESS, 
                 Arrays.<Type>asList(), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
-    public RemoteCall<TransactionReceipt> getName() {
-        final Function function = new Function(
-                FUNC_GETNAME, 
+    public RemoteCall<String> getName() {
+        final Function function = new Function(FUNC_GETNAME, 
                 Arrays.<Type>asList(), 
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
+                Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {}));
+        return executeRemoteCallSingleValueReturn(function, String.class);
     }
 
     public RemoteCall<BigInteger> result() {
@@ -182,40 +170,20 @@ public class SolEvent extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public static RemoteCall<SolEvent> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
-        return deployRemoteCall(SolEvent.class, web3j, credentials, contractGasProvider, BINARY, "");
+    public static RemoteCall<SolEvent> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
+        return deployRemoteCall(SolEvent.class, web3j, credentials, contractGasProvider, BINARY,  "", chainId);
     }
 
-    @Deprecated
-    public static RemoteCall<SolEvent> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(SolEvent.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
+    public static RemoteCall<SolEvent> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
+        return deployRemoteCall(SolEvent.class, web3j, transactionManager, contractGasProvider, BINARY,  "", chainId);
     }
 
-    public static RemoteCall<SolEvent> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
-        return deployRemoteCall(SolEvent.class, web3j, transactionManager, contractGasProvider, BINARY, "");
+    public static SolEvent load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
+        return new SolEvent(contractAddress, web3j, credentials, contractGasProvider, chainId);
     }
 
-    @Deprecated
-    public static RemoteCall<SolEvent> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(SolEvent.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
-    }
-
-    @Deprecated
-    public static SolEvent load(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return new SolEvent(contractAddress, web3j, credentials, gasPrice, gasLimit);
-    }
-
-    @Deprecated
-    public static SolEvent load(String contractAddress, Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return new SolEvent(contractAddress, web3j, transactionManager, gasPrice, gasLimit);
-    }
-
-    public static SolEvent load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
-        return new SolEvent(contractAddress, web3j, credentials, contractGasProvider);
-    }
-
-    public static SolEvent load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
-        return new SolEvent(contractAddress, web3j, transactionManager, contractGasProvider);
+    public static SolEvent load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
+        return new SolEvent(contractAddress, web3j, transactionManager, contractGasProvider, chainId);
     }
 
     public static class FundTransferEventResponse {

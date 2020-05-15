@@ -37,32 +37,32 @@ public class TypeDecoder {
 
     static final int MAX_BYTE_LENGTH_FOR_HEX_STRING = Type.MAX_BYTE_LENGTH << 1;
 
-    static <T extends Type> int getSingleElementLength(String input, int offset, Class<T> type) {
+    static <T extends Type> int getSingleElementLength(String input, int offset, Class<T> type, long chainId) {
         if (input.length() == offset) {
             return 0;
         } else if (DynamicBytes.class.isAssignableFrom(type)
                 || Utf8String.class.isAssignableFrom(type)) {
             // length field + data value
-            return (decodeUintAsInt(input, offset) / Type.MAX_BYTE_LENGTH) + 2;
+            return (decodeUintAsInt(input, offset,chainId) / Type.MAX_BYTE_LENGTH) + 2;
         } else {
             return 1;
         }
     }
 
     @SuppressWarnings("unchecked")
-    static <T extends Type> T decode(String input, int offset, Class<T> type) {
+    static <T extends Type> T decode(String input, int offset, Class<T> type, long chainId) {
         if (NumericType.class.isAssignableFrom(type)) {
             return (T) decodeNumeric(input.substring(offset), (Class<NumericType>) type);
         } else if (Address.class.isAssignableFrom(type)) {
-            return (T) decodeAddress(input.substring(offset));
+            return (T) decodeAddress(input.substring(offset), chainId);
         } else if (Bool.class.isAssignableFrom(type)) {
             return (T) decodeBool(input, offset);
         } else if (Bytes.class.isAssignableFrom(type)) {
             return (T) decodeBytes(input, offset, (Class<Bytes>) type);
         } else if (DynamicBytes.class.isAssignableFrom(type)) {
-            return (T) decodeDynamicBytes(input, offset);
+            return (T) decodeDynamicBytes(input, offset, chainId);
         } else if (Utf8String.class.isAssignableFrom(type)) {
-            return (T) decodeUtf8String(input, offset);
+            return (T) decodeUtf8String(input, offset, chainId);
         } else if (Array.class.isAssignableFrom(type)) {
             throw new UnsupportedOperationException(
                     "Array types must be wrapped in a TypeReference");
@@ -73,24 +73,24 @@ public class TypeDecoder {
     }
 
     public static <T extends Array> T decode(
-            String input, int offset, TypeReference<T> typeReference) {
+            String input, int offset, TypeReference<T> typeReference,long chainId) {
         Class cls = ((ParameterizedType) typeReference.getType()).getRawType().getClass();
         if (StaticArray.class.isAssignableFrom(cls)) {
-            return decodeStaticArray(input, offset, typeReference, 1);
+            return decodeStaticArray(input, offset, typeReference, 1,chainId);
         } else if (DynamicArray.class.isAssignableFrom(cls)) {
-            return decodeDynamicArray(input, offset, typeReference);
+            return decodeDynamicArray(input, offset, typeReference,chainId);
         } else {
             throw new UnsupportedOperationException("Unsupported TypeReference: "
                     + cls.getName() + ", only Array types can be passed as TypeReferences");
         }
     }
 
-    static <T extends Type> T decode(String input, Class<T> type) {
-        return decode(input, 0, type);
+    static <T extends Type> T decode(String input, Class<T> type, long chainId) {
+        return decode(input, 0, type,  chainId);
     }
 
-    static Address decodeAddress(String input) {
-        return new Address(decodeNumeric(input, Uint160.class));
+    static Address decodeAddress(String input, long chainId) {
+        return new Address(decodeNumeric(input, Uint160.class), chainId);
     }
 
     static <T extends NumericType> T decodeNumeric(String input, Class<T> type) {
@@ -141,9 +141,9 @@ public class TypeDecoder {
         return Type.MAX_BIT_LENGTH;
     }
 
-    static int decodeUintAsInt(String rawInput, int offset) {
+    static int decodeUintAsInt(String rawInput, int offset, long chainId) {
         String input = rawInput.substring(offset, offset + MAX_BYTE_LENGTH_FOR_HEX_STRING);
-        return decode(input, 0, Uint.class).getValue().intValue();
+        return decode(input, 0, Uint.class, chainId).getValue().intValue();
     }
 
     static Bool decodeBool(String rawInput, int offset) {
@@ -175,8 +175,8 @@ public class TypeDecoder {
         }
     }
 
-    static DynamicBytes decodeDynamicBytes(String input, int offset) {
-        int encodedLength = decodeUintAsInt(input, offset);
+    static DynamicBytes decodeDynamicBytes(String input, int offset, long chainId) {
+        int encodedLength = decodeUintAsInt(input, offset, chainId);
         int hexStringEncodedLength = encodedLength << 1;
 
         int valueOffset = offset + MAX_BYTE_LENGTH_FOR_HEX_STRING;
@@ -188,8 +188,8 @@ public class TypeDecoder {
         return new DynamicBytes(bytes);
     }
 
-    static Utf8String decodeUtf8String(String input, int offset) {
-        DynamicBytes dynamicBytesResult = decodeDynamicBytes(input, offset);
+    static Utf8String decodeUtf8String(String input, int offset, long chainId) {
+        DynamicBytes dynamicBytesResult = decodeDynamicBytes(input, offset, chainId);
         byte[] bytes = dynamicBytesResult.getValue();
 
         return new Utf8String(new String(bytes, StandardCharsets.UTF_8));
@@ -200,7 +200,7 @@ public class TypeDecoder {
      */
     @SuppressWarnings("unchecked")
     static <T extends Type> T decodeStaticArray(
-            String input, int offset, TypeReference<T> typeReference, int length) {
+            String input, int offset, TypeReference<T> typeReference, int length, long chainId) {
 
         BiFunction<List<T>, String, T> function = (elements, typeName) -> {
             if (elements.isEmpty()) {
@@ -210,7 +210,7 @@ public class TypeDecoder {
             }
         };
 
-        return decodeArrayElements(input, offset, typeReference, length, function);
+        return decodeArrayElements(input, offset, typeReference, length, function, chainId);
     }
 
     @SuppressWarnings("unchecked")
@@ -227,9 +227,9 @@ public class TypeDecoder {
 
     @SuppressWarnings("unchecked")
     static <T extends Type> T decodeDynamicArray(
-            String input, int offset, TypeReference<T> typeReference) {
+            String input, int offset, TypeReference<T> typeReference, long chainId) {
 
-        int length = decodeUintAsInt(input, offset);
+        int length = decodeUintAsInt(input, offset, chainId);
 
         BiFunction<List<T>, String, T> function = (elements, typeName) -> {
             if (elements.isEmpty()) {
@@ -241,12 +241,12 @@ public class TypeDecoder {
 
         int valueOffset = offset + MAX_BYTE_LENGTH_FOR_HEX_STRING;
 
-        return decodeArrayElements(input, valueOffset, typeReference, length, function);
+        return decodeArrayElements(input, valueOffset, typeReference, length, function, chainId);
     }
 
     private static <T extends Type> T decodeArrayElements(
             String input, int offset, TypeReference<T> typeReference, int length,
-            BiFunction<List<T>, String, T> consumer) {
+            BiFunction<List<T>, String, T> consumer, long chainId) {
 
         try {
             Class<T> cls = Utils.getParameterizedTypeFromArray(typeReference);
@@ -259,9 +259,9 @@ public class TypeDecoder {
 
                 for (int i = 0, currOffset = offset;
                         i < length;
-                        i++, currOffset += getSingleElementLength(input, currOffset, cls)
+                        i++, currOffset += getSingleElementLength(input, currOffset, cls, chainId)
                              * MAX_BYTE_LENGTH_FOR_HEX_STRING) {
-                    T value = decode(input, currOffset, cls);
+                    T value = decode(input, currOffset, cls, chainId );
                     elements.add(value);
                 }
 

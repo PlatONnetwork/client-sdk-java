@@ -34,13 +34,13 @@ public class FunctionReturnDecoder {
      *         invalid response
      */
     public static List<Type> decode(
-            String rawInput, List<TypeReference<Type>> outputParameters) {
+            String rawInput, List<TypeReference<Type>> outputParameters, long chainId) {
         String input = Numeric.cleanHexPrefix(rawInput);
 
         if (Strings.isEmpty(input)) {
             return Collections.emptyList();
         } else {
-            return build(input, outputParameters);
+            return build(input, outputParameters, chainId);
         }
     }
 
@@ -69,7 +69,7 @@ public class FunctionReturnDecoder {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Type> Type decodeIndexedValue(
-            String rawInput, TypeReference<T> typeReference) {
+            String rawInput, TypeReference<T> typeReference, long chainId) {
         String input = Numeric.cleanHexPrefix(rawInput);
 
         try {
@@ -82,7 +82,7 @@ public class FunctionReturnDecoder {
                     || Utf8String.class.isAssignableFrom(type)) {
                 return TypeDecoder.decodeBytes(input, Bytes32.class);
             } else {
-                return TypeDecoder.decode(input, type);
+                return TypeDecoder.decode(input, type, chainId);
             }
         } catch (ClassNotFoundException e) {
             throw new UnsupportedOperationException("Invalid class reference provided", e);
@@ -90,7 +90,7 @@ public class FunctionReturnDecoder {
     }
 
     private static List<Type> build(
-            String input, List<TypeReference<Type>> outputParameters) {
+            String input, List<TypeReference<Type>> outputParameters, long chainId) {
         List<Type> results = new ArrayList<>(outputParameters.size());
 
         int offset = 0;
@@ -99,26 +99,26 @@ public class FunctionReturnDecoder {
                 @SuppressWarnings("unchecked")
                 Class<Type> type = (Class<Type>) typeReference.getClassType();
 
-                int hexStringDataOffset = getDataOffset(input, offset, type);
+                int hexStringDataOffset = getDataOffset(input, offset, type, chainId);
 
                 Type result;
                 if (DynamicArray.class.isAssignableFrom(type)) {
                     result = TypeDecoder.decodeDynamicArray(
-                            input, hexStringDataOffset, typeReference);
+                            input, hexStringDataOffset, typeReference, chainId);
                     offset += MAX_BYTE_LENGTH_FOR_HEX_STRING;
                 } else if (typeReference instanceof TypeReference.StaticArrayTypeReference) {
                     int length = ((TypeReference.StaticArrayTypeReference) typeReference).getSize();
                     result = TypeDecoder.decodeStaticArray(
-                            input, hexStringDataOffset, typeReference, length);
+                            input, hexStringDataOffset, typeReference, length,chainId);
                     offset += length * MAX_BYTE_LENGTH_FOR_HEX_STRING;
                 } else if (StaticArray.class.isAssignableFrom(type)) {
                     int length = Integer.parseInt(type.getSimpleName()
                             .substring(StaticArray.class.getSimpleName().length()));
                     result = TypeDecoder.decodeStaticArray(
-                            input, hexStringDataOffset, typeReference, length);
+                            input, hexStringDataOffset, typeReference, length,chainId);
                     offset += length * MAX_BYTE_LENGTH_FOR_HEX_STRING;
                 } else {
-                    result = TypeDecoder.decode(input, hexStringDataOffset, type);
+                    result = TypeDecoder.decode(input, hexStringDataOffset, type, chainId);
                     offset += MAX_BYTE_LENGTH_FOR_HEX_STRING;
                 }
                 results.add(result);
@@ -130,11 +130,11 @@ public class FunctionReturnDecoder {
         return results;
     }
 
-    private static <T extends Type> int getDataOffset(String input, int offset, Class<T> type) {
+    private static <T extends Type> int getDataOffset(String input, int offset, Class<T> type, long chainId) {
         if (DynamicBytes.class.isAssignableFrom(type)
                 || Utf8String.class.isAssignableFrom(type)
                 || DynamicArray.class.isAssignableFrom(type)) {
-            return TypeDecoder.decodeUintAsInt(input, offset) << 1;
+            return TypeDecoder.decodeUintAsInt(input, offset, chainId) << 1;
         } else {
             return offset;
         }

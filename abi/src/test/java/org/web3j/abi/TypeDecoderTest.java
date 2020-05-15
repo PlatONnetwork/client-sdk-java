@@ -2,7 +2,6 @@ package org.web3j.abi;
 
 import java.math.BigInteger;
 
-import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 
@@ -45,14 +44,14 @@ public class TypeDecoderTest {
                 "0000000000000000000000000000000000000000000000007fffffffffffffff"
                         + "0000000000000000000000000000000000000000000000000000000000000000"
                         + "0000000000000000000000000000000000000000000000007fffffffffffffff",
-                64, Bool.class),
+                64, Bool.class, NetworkParameters.MainNetParams.getChainId()),
                 is(new Bool(false)));
 
         assertThat(TypeDecoder.decode(
                 "0000000000000000000000000000000000000000000000007fffffffffffffff"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
                         + "0000000000000000000000000000000000000000000000007fffffffffffffff",
-                64, Bool.class),
+                64, Bool.class,  NetworkParameters.MainNetParams.getChainId()),
                 is(new Bool(true)));
     }
 
@@ -185,20 +184,20 @@ public class TypeDecoderTest {
         DynamicBytes dynamicBytes = new DynamicBytes(new byte[] { 0, 1, 2, 3, 4, 5 });
         assertThat(TypeDecoder.decodeDynamicBytes(
                 "0000000000000000000000000000000000000000000000000000000000000006"  // length
-                        + "0001020304050000000000000000000000000000000000000000000000000000", 0),
+                        + "0001020304050000000000000000000000000000000000000000000000000000", 0,  NetworkParameters.MainNetParams.getChainId()),
                 is(dynamicBytes));
 
         DynamicBytes empty = new DynamicBytes(new byte[] { 0 });
         assertThat(TypeDecoder.decodeDynamicBytes(
                 "0000000000000000000000000000000000000000000000000000000000000001"
-                        + "0000000000000000000000000000000000000000000000000000000000000000", 0),
+                        + "0000000000000000000000000000000000000000000000000000000000000000", 0,  NetworkParameters.MainNetParams.getChainId()),
                 is(empty));
 
         DynamicBytes dave = new DynamicBytes("dave".getBytes());
 
         assertThat(TypeDecoder.decodeDynamicBytes(
                         "0000000000000000000000000000000000000000000000000000000000000004"
-                        + "6461766500000000000000000000000000000000000000000000000000000000", 0),
+                        + "6461766500000000000000000000000000000000000000000000000000000000", 0,  NetworkParameters.MainNetParams.getChainId()),
                 is(dave));
 
         DynamicBytes loremIpsum = new DynamicBytes(
@@ -226,14 +225,14 @@ public class TypeDecoderTest {
                         + "63616563617420637570696461746174206e6f6e2070726f6964656e742c2073"
                         + "756e7420696e2063756c706120717569206f666669636961206465736572756e"
                         + "74206d6f6c6c697420616e696d20696420657374206c61626f72756d2e000000",
-                0),
+                0,  NetworkParameters.MainNetParams.getChainId()),
                 is(loremIpsum));
     }
 
     @Test
     public void testAddress() {
         assertThat(TypeDecoder.decodeAddress(
-                "000000000000000000000000be5422d15f39373eb0a97ff8c10fbd0e40e29338"),
+                "000000000000000000000000be5422d15f39373eb0a97ff8c10fbd0e40e29338",  NetworkParameters.MainNetParams.getChainId()),
                 is(new Address("lat1he2z952l8ymnav9f0luvzraapeqw9yec8247zy")));
     }
 
@@ -241,7 +240,7 @@ public class TypeDecoderTest {
     public void testUtf8String() {
         assertThat(TypeDecoder.decodeUtf8String(
                 "000000000000000000000000000000000000000000000000000000000000000d"  // length
-                        + "48656c6c6f2c20776f726c642100000000000000000000000000000000000000", 0),
+                        + "48656c6c6f2c20776f726c642100000000000000000000000000000000000000", 0,  NetworkParameters.MainNetParams.getChainId()),
                 is(new Utf8String("Hello, world!")));
     }
 
@@ -252,7 +251,7 @@ public class TypeDecoderTest {
                 + "0000000000000000000000000000000000000000000000007fffffffffffffff",
                 0,
                 new TypeReference.StaticArrayTypeReference<StaticArray<Uint256>>(2) {},
-                2),
+                2,  NetworkParameters.MainNetParams.getChainId()),
                 is(new StaticArray<Uint256>(
                         new Uint256(BigInteger.TEN),
                         new Uint256(BigInteger.valueOf(Long.MAX_VALUE)))));
@@ -264,7 +263,7 @@ public class TypeDecoderTest {
                         + "776f726c64212048656c6c6f2c00000000000000000000000000000000000000",
                 0,
                 new TypeReference.StaticArrayTypeReference<StaticArray<Utf8String>>(2){},
-                2
+                2, NetworkParameters.MainNetParams.getChainId()
                 ),
                 equalTo(new StaticArray<Utf8String>(
                         new Utf8String("Hello, world!"),
@@ -277,7 +276,7 @@ public class TypeDecoderTest {
                 "0000000000000000000000000000000000000000000000000000000000000000",
                 0,
                 new TypeReference.StaticArrayTypeReference<StaticArray<Uint256>>(0) {},
-                0), is("invalid"));
+                0,  NetworkParameters.MainNetParams.getChainId()), is("invalid"));
     }
 
     @Test
@@ -285,7 +284,7 @@ public class TypeDecoderTest {
         assertThat(TypeDecoder.decodeDynamicArray(
                 "0000000000000000000000000000000000000000000000000000000000000000",  // length
                 0,
-                new TypeReference<DynamicArray<Uint256>>() { }
+                new TypeReference<DynamicArray<Uint256>>() { }, NetworkParameters.MainNetParams.getChainId()
                 ),
                 equalTo(DynamicArray.empty("uint256")));
 
@@ -294,7 +293,7 @@ public class TypeDecoderTest {
                         + "000000000000000000000000000000000000000000000000000000000000000a"
                         + "0000000000000000000000000000000000000000000000007fffffffffffffff",
                 0,
-                new TypeReference<DynamicArray<Uint256>>() { }
+                new TypeReference<DynamicArray<Uint256>>() { }, NetworkParameters.MainNetParams.getChainId()
                 ),
                 equalTo(new DynamicArray<Uint256>(
                         new Uint256(BigInteger.TEN),
@@ -307,7 +306,7 @@ public class TypeDecoderTest {
                         + "000000000000000000000000000000000000000000000000000000000000000d"
                         + "776f726c64212048656c6c6f2c00000000000000000000000000000000000000",
                 0,
-                new TypeReference<DynamicArray<Utf8String>>() { }
+                new TypeReference<DynamicArray<Utf8String>>() { }, NetworkParameters.MainNetParams.getChainId()
                 ),
                 equalTo(new DynamicArray<Utf8String>(
                         new Utf8String("Hello, world!"),

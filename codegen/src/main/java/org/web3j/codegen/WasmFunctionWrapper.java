@@ -117,7 +117,6 @@ public class WasmFunctionWrapper extends Generator {
 		classBuilder.addMethod(buildConstructor(TransactionManager.class, TRANSACTION_MANAGER));
 
 		classBuilder.addFields(buildFuncNameConstants(abi));
-
 		classBuilder.addMethods(buildFunctionDefinitions(className, classBuilder, abi));
 
 		classBuilder.addMethod(buildLoad(className, Credentials.class, CREDENTIALS));
@@ -253,8 +252,7 @@ public class WasmFunctionWrapper extends Generator {
 		return structs;
 	}
 
-	private MethodSpec buildDeploy(String className, WasmAbiDefinition functionDefinition, Class authType, String authName, boolean withGasProvider,
-			Set<String> customTypes, boolean isPayable) {
+	private MethodSpec buildDeploy(String className, WasmAbiDefinition functionDefinition, Class authType, String authName, boolean withGasProvider, Set<String> customTypes, boolean isPayable) {
 		MethodSpec.Builder methodBuilder = getDeployMethodSpec(className, authType, authName, isPayable, withGasProvider);
 		String inputParams = addParameters(methodBuilder, functionDefinition.getInput(), customTypes);
 
@@ -265,8 +263,7 @@ public class WasmFunctionWrapper extends Generator {
 		}
 	}
 
-	private static MethodSpec.Builder getDeployMethodSpec(String className, Class authType, String authName, boolean isPayable,
-			boolean withGasProvider) {
+	private static MethodSpec.Builder getDeployMethodSpec(String className, Class authType, String authName, boolean isPayable, boolean withGasProvider) {
 		MethodSpec.Builder builder = MethodSpec.methodBuilder("deploy").addModifiers(Modifier.PUBLIC, Modifier.STATIC)
 				.returns(buildRemoteCall(ClassName.get("", className))).addParameter(Web3j.class, WEB3J).addParameter(authType, authName);
 
@@ -289,27 +286,22 @@ public class WasmFunctionWrapper extends Generator {
 				Arrays.class);
 
 		if (isPayable && !withGasPRovider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName,
-					GAS_PRICE, GAS_LIMIT, INITIAL_VALUE, CHAINID);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, INITIAL_VALUE, CHAINID);
 			methodBuilder.addAnnotation(Deprecated.class);
 		} else if (isPayable && withGasPRovider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName,
-					CONTRACT_GAS_PROVIDER, INITIAL_VALUE, CHAINID);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName, CONTRACT_GAS_PROVIDER, INITIAL_VALUE, CHAINID);
 		} else if (!isPayable && !withGasPRovider) {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName, GAS_PRICE,
-					GAS_LIMIT, CHAINID);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, CHAINID);
 			methodBuilder.addAnnotation(Deprecated.class);
 		} else {
-			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName,
-					CONTRACT_GAS_PROVIDER, CHAINID);
+			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, encodedConstructor, $L)", className, WEB3J, authName, CONTRACT_GAS_PROVIDER, CHAINID);
 		}
 		return methodBuilder.build();
 	}
 
 	private static MethodSpec buildDeployWithParams(MethodSpec.Builder methodBuilder, String className, String inputParams, String authName,
 			boolean isPayable, boolean withGasProvider) {
-		methodBuilder.addStatement("$T encodedConstructor = $T.encodeConstructor($L, $T.asList($L))", String.class, WasmFunctionEncoder.class, BINARY,
-				Arrays.class, inputParams);
+		methodBuilder.addStatement("$T encodedConstructor = $T.encodeConstructor($L, $T.asList($L))", String.class, WasmFunctionEncoder.class, BINARY, Arrays.class, inputParams);
 
 		if (isPayable && !withGasProvider) {
 			methodBuilder.addStatement("return deployRemoteCall($L.class, $L, $L, $L, $L, encodedConstructor, $L, $L)", className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, INITIAL_VALUE, CHAINID);

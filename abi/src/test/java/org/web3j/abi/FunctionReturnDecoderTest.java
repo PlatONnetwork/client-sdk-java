@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Test;
 
 import org.web3j.abi.datatypes.DynamicArray;
@@ -37,7 +38,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decode(
                 "0x0000000000000000000000000000000000000000000000000000000000000037",
-                function.getOutputParameters()),
+                function.getOutputParameters(), NetworkParameters.MainNetParams.getChainId()),
                 equalTo(Collections.singletonList(new Uint(BigInteger.valueOf(55)))));
     }
 
@@ -53,7 +54,7 @@ public class FunctionReturnDecoderTest {
                 "0x0000000000000000000000000000000000000000000000000000000000000020"
                         + "000000000000000000000000000000000000000000000000000000000000000d"
                         + "6f6e65206d6f72652074696d6500000000000000000000000000000000000000",
-                function.getOutputParameters());
+                function.getOutputParameters(), NetworkParameters.MainNetParams.getChainId());
 
         assertThat(utf8Strings.get(0).getValue(), is("one more time"));
     }
@@ -68,7 +69,7 @@ public class FunctionReturnDecoderTest {
         List<Type> utf8Strings = FunctionReturnDecoder.decode(
                 "0x0000000000000000000000000000000000000000000000000000000000000020"
                         + "0000000000000000000000000000000000000000000000000000000000000000",
-                function.getOutputParameters());
+                function.getOutputParameters(), NetworkParameters.MainNetParams.getChainId());
 
         assertThat(utf8Strings.get(0).getValue(), is(""));
     }
@@ -84,7 +85,7 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decode(
                 "0x0000000000000000000000000000000000000000000000000000000000000037"
                 + "0000000000000000000000000000000000000000000000000000000000000007",
-                function.getOutputParameters()),
+                function.getOutputParameters(), NetworkParameters.MainNetParams.getChainId()),
                 equalTo(Arrays.asList(new Uint(BigInteger.valueOf(55)),
                         new Uint(BigInteger.valueOf(7)))));
     }
@@ -110,7 +111,7 @@ public class FunctionReturnDecoderTest {
                         + "6a6b6c3100000000000000000000000000000000000000000000000000000000"
                         + "0000000000000000000000000000000000000000000000000000000000000004"
                         + "6d6e6f3200000000000000000000000000000000000000000000000000000000",
-                function.getOutputParameters()),
+                function.getOutputParameters(), NetworkParameters.MainNetParams.getChainId()),
                 equalTo(Arrays.asList(
                         new Utf8String("def1"), new Utf8String("ghi1"),
                         new Utf8String("jkl1"), new Utf8String("mno2"))));
@@ -130,7 +131,7 @@ public class FunctionReturnDecoderTest {
                 "0x0000000000000000000000000000000000000000000000000000000000000037"
                         + "0000000000000000000000000000000000000000000000000000000000000001"
                         + "000000000000000000000000000000000000000000000000000000000000000a",
-                outputParameters);
+                outputParameters, NetworkParameters.MainNetParams.getChainId());
 
         List<Type> expected = Arrays.asList(
                 new StaticArray<>(new Uint256(BigInteger.valueOf(55)), new Uint256(BigInteger.ONE)),
@@ -145,7 +146,7 @@ public class FunctionReturnDecoderTest {
                 Collections.emptyList(),
                 Collections.emptyList());
 
-        assertThat(FunctionReturnDecoder.decode("0x", function.getOutputParameters()),
+        assertThat(FunctionReturnDecoder.decode("0x", function.getOutputParameters(),  NetworkParameters.MainNetParams.getChainId()),
                 is(Collections.emptyList()));
     }
 
@@ -156,7 +157,7 @@ public class FunctionReturnDecoderTest {
                 Collections.emptyList(),
                 Collections.singletonList(new TypeReference<Uint>() { }));
 
-        assertThat(FunctionReturnDecoder.decode("0x", function.getOutputParameters()),
+        assertThat(FunctionReturnDecoder.decode("0x", function.getOutputParameters(), NetworkParameters.MainNetParams.getChainId()),
                 is(Collections.emptyList()));
     }
 
@@ -167,7 +168,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 encoded,
-                new TypeReference<Uint256>() {}),
+                new TypeReference<Uint256>() {}, NetworkParameters.MainNetParams.getChainId()),
                 equalTo(value));
     }
 
@@ -179,7 +180,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 hash,
-                new TypeReference<Utf8String>() {}),
+                new TypeReference<Utf8String>() {},  NetworkParameters.MainNetParams.getChainId()),
                 equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
     }
 
@@ -190,7 +191,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 rawInput,
-                new TypeReference<Bytes32>(){}),
+                new TypeReference<Bytes32>(){},  NetworkParameters.MainNetParams.getChainId()),
                 equalTo(new Bytes32(rawInputBytes)));
     }
 
@@ -201,7 +202,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 rawInput,
-                new TypeReference<Bytes16>(){}),
+                new TypeReference<Bytes16>(){},  NetworkParameters.MainNetParams.getChainId()),
                 equalTo(new Bytes16(rawInputBytes)));
     }
 
@@ -213,7 +214,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 hash,
-                new TypeReference<DynamicBytes>() {}),
+                new TypeReference<DynamicBytes>() {}, NetworkParameters.MainNetParams.getChainId()),
                 equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
     }
 
@@ -225,7 +226,7 @@ public class FunctionReturnDecoderTest {
 
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 hash,
-                new TypeReference<DynamicArray>() {}),
+                new TypeReference<DynamicArray>() {},  NetworkParameters.MainNetParams.getChainId()),
                 equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
     }
 }

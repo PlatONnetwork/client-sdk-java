@@ -210,8 +210,7 @@ public abstract class WasmContract extends ManagedTransaction {
 		}
 	}
 
-	protected static <T extends WasmContract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager,
-			GasProvider contractGasProvider, String encodedConstructor, BigInteger value, long chainId) throws RuntimeException, TransactionException {
+	protected static <T extends WasmContract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, String encodedConstructor, BigInteger value, long chainId) throws RuntimeException, TransactionException {
 
 		try {
 			Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, TransactionManager.class, GasProvider.class, Long.class);

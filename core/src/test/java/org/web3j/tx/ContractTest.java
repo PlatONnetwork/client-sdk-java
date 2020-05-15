@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -78,7 +79,7 @@ public class ContractTest extends ManagedTransactionTester {
 
         contract = new TestContract(
                 ADDRESS, web3j, getVerifiedTransactionManager(SampleKeys.CREDENTIALS),
-                new DefaultGasProvider());
+                new DefaultGasProvider(), NetworkParameters.MainNetParams.getChainId());
     }
 
     @Test
@@ -142,28 +143,6 @@ public class ContractTest extends ManagedTransactionTester {
 
         Contract contract = deployContract(createTransactionReceipt());
         assertFalse(contract.isValid());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testDeployInvalidContractAddress() throws Throwable {
-        TransactionReceipt transactionReceipt = new TransactionReceipt();
-        transactionReceipt.setTransactionHash(TRANSACTION_HASH);
-
-        prepareTransaction(transactionReceipt);
-
-        String encodedConstructor = FunctionEncoder.encodeConstructor(
-                Arrays.<Type>asList(new Uint256(BigInteger.TEN)));
-
-        try {
-            TestContract.deployRemoteCall(
-                    TestContract.class, web3j, SampleKeys.CREDENTIALS,
-                    ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT,
-                    "0xcafed00d", encodedConstructor, BigInteger.ZERO).send();
-        } catch (InterruptedException e) {
-            throw e;
-        } catch (ExecutionException e) {
-            throw e.getCause();
-        }
     }
 
     @Test
@@ -230,7 +209,7 @@ public class ContractTest extends ManagedTransactionTester {
         prepareTransaction(transactionReceipt);
 
         assertThat(contract.performTransaction(
-                new Address(BigInteger.TEN), new Uint256(BigInteger.ONE)).send(),
+                new Address(BigInteger.TEN, NetworkParameters.MainNetParams.getChainId()), new Uint256(BigInteger.ONE)).send(),
                 is(transactionReceipt));
     }
 
@@ -247,7 +226,7 @@ public class ContractTest extends ManagedTransactionTester {
 
         prepareTransaction(transactionReceipt);
         contract.performTransaction(
-                new Address(BigInteger.TEN), new Uint256(BigInteger.ONE)).send();
+                new Address(BigInteger.TEN,NetworkParameters.MainNetParams.getChainId()), new Uint256(BigInteger.ONE)).send();
     }
 
     @Test
@@ -283,7 +262,7 @@ public class ContractTest extends ManagedTransactionTester {
 
         contract = new TestContract(
                 ADDRESS, web3j, transactionManager,
-                new DefaultGasProvider());
+                new DefaultGasProvider(), NetworkParameters.MainNetParams.getChainId());
 
         testErrorScenario();
     }
@@ -314,22 +293,13 @@ public class ContractTest extends ManagedTransactionTester {
     }
 
     @Test
-    @Ignore
-    public void testSetGetGasPrice() {
-        assertEquals(ManagedTransaction.GAS_PRICE, contract.getGasPrice());
-        BigInteger newPrice = ManagedTransaction.GAS_PRICE.multiply(BigInteger.valueOf(2));
-        contract.setGasPrice(newPrice);
-        assertEquals(newPrice, contract.getGasPrice());
-    }
-
-    @Test
     public void testStaticGasProvider() throws IOException, TransactionException {
         ContractGasProvider gasProvider = new ContractGasProvider(BigInteger.TEN, BigInteger.ONE);
         TransactionManager txManager = mock(TransactionManager.class);
         when(txManager.executeTransaction(any(), any(), any(), any(), any()))
                 .thenReturn(new TransactionReceipt());
 
-        contract = new TestContract(ADDRESS, web3j, txManager, gasProvider);
+        contract = new TestContract(ADDRESS, web3j, txManager, gasProvider, NetworkParameters.MainNetParams.getChainId());
 
         Function func = new Function("test",
                 Arrays.<Type>asList(), Collections.<TypeReference<?>>emptyList());
@@ -394,7 +364,7 @@ public class ContractTest extends ManagedTransactionTester {
     void testErrorScenario() throws Throwable {
         try {
             contract.performTransaction(
-                    new Address(BigInteger.TEN), new Uint256(BigInteger.ONE)).send();
+                    new Address(BigInteger.TEN,NetworkParameters.MainNetParams.getChainId()), new Uint256(BigInteger.ONE)).send();
         } catch (InterruptedException e) {
             throw e;
         } catch (ExecutionException e) {
@@ -422,15 +392,16 @@ public class ContractTest extends ManagedTransactionTester {
     private Contract deployContract(TransactionReceipt transactionReceipt)
             throws Exception {
 
+        ContractGasProvider gasProvider = new ContractGasProvider(ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT);
+
         prepareTransaction(transactionReceipt);
 
         String encodedConstructor = FunctionEncoder.encodeConstructor(
                 Arrays.<Type>asList(new Uint256(BigInteger.TEN)));
 
         return TestContract.deployRemoteCall(
-                TestContract.class, web3j, getVerifiedTransactionManager(SampleKeys.CREDENTIALS),
-                ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT,
-                "0xcafed00d", encodedConstructor, BigInteger.ZERO).send();
+                TestContract.class, web3j, getVerifiedTransactionManager(SampleKeys.CREDENTIALS), gasProvider,
+                "0xcafed00d", encodedConstructor, BigInteger.ZERO, NetworkParameters.MainNetParams.getChainId()).send();
     }
 
     @SuppressWarnings("unchecked")
@@ -448,15 +419,14 @@ public class ContractTest extends ManagedTransactionTester {
     private static class TestContract extends Contract {
         public TestContract(
                 String contractAddress, Web3j web3j, Credentials credentials,
-                BigInteger gasPrice, BigInteger gasLimit) {
-            super(TEST_CONTRACT_BINARY, contractAddress, web3j, credentials, gasPrice, gasLimit);
+                GasProvider gasProvider, Long chainId) {
+            super(TEST_CONTRACT_BINARY, contractAddress, web3j, credentials, gasProvider, chainId);
         }
 
         public TestContract(
-                String contractAddress,
-                Web3j web3j, TransactionManager transactionManager,
-                GasProvider gasProvider) {
-            super(TEST_CONTRACT_BINARY, contractAddress, web3j, transactionManager, gasProvider);
+                String contractAddress, Web3j web3j, TransactionManager transactionManager,
+                GasProvider gasProvider,  Long chainId) {
+            super(TEST_CONTRACT_BINARY, contractAddress, web3j, transactionManager, gasProvider, chainId);
         }
 
         public RemoteCall<Utf8String> callSingleValue() {

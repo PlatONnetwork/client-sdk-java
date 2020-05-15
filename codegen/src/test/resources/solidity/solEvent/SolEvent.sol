@@ -21,11 +21,11 @@ contract SolEvent {
            emit SetNameEvent(name,name,_address);
       }
 
-      function  getName() public returns(string memory) {
+      function  getName() public view returns(string memory) {
           return name;
       }
 
-      function getAddress() public returns(address){
+      function getAddress() public view returns(address){
           return msg.sender;
       }
     

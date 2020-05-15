@@ -12,8 +12,8 @@ public class AddressTest {
     @Test
     public void testToString() {
         assertThat(new Address("lat1qqzjkzpnpczawv0r3jzkcyzr9z8hm96yzdxuyk").toString(),
-                is("0x00052b08330e05d731e38c856c1043288f7d9744"));
+                is("lat1qqzjkzpnpczawv0r3jzkcyzr9z8hm96yzdxuyk"));
         assertThat(new Address("lat1qqzjkzpnpczawv0r3jzkcyzr9z8hm96yzdxuyk").toString(),
-                is("0x00052b08330e05d731e38c856c1043288f7d9744"));
+                is("lat1qqzjkzpnpczawv0r3jzkcyzr9z8hm96yzdxuyk"));
     }
 }
