@@ -2,6 +2,7 @@ package org.web3j.tx;
 
 import java.math.BigDecimal;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,8 +32,7 @@ public class TransferTest extends ManagedTransactionTester {
 
     @Test
     public void testSendFunds() throws Exception {
-        assertThat(sendFunds(SampleKeys.CREDENTIALS, ADDRESS,
-                BigDecimal.TEN, Convert.Unit.LAT),
+        assertThat(sendFunds(SampleKeys.CREDENTIALS, ADDRESS, BigDecimal.TEN, Convert.Unit.LAT),
                 is(transactionReceipt));
     }
 

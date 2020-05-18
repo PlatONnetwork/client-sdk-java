@@ -32,16 +32,14 @@ public abstract class ManagedTransactionTester {
         when(txHashVerifier.verify(any(), any())).thenReturn(true);
     }
 
-    public TransactionManager getVerifiedTransactionManager(Credentials credentials,
-                                                            int attempts, int sleepDuration) {
-        RawTransactionManager transactionManager =
-                new RawTransactionManager(web3j, credentials, attempts, sleepDuration);
+    public TransactionManager getVerifiedTransactionManager(Credentials credentials, int attempts, int sleepDuration) {
+        RawTransactionManager transactionManager = new RawTransactionManager(web3j, credentials, NetworkParameters.MainNetParams.getChainId() ,attempts, sleepDuration);
         transactionManager.setTxHashVerifier(txHashVerifier);
         return transactionManager;
     }
 
     public TransactionManager getVerifiedTransactionManager(Credentials credentials) {
-        RawTransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+        RawTransactionManager transactionManager = new RawTransactionManager(web3j, credentials, NetworkParameters.MainNetParams.getChainId());
         transactionManager.setTxHashVerifier(txHashVerifier);
         return transactionManager;
     }
@@ -60,7 +58,7 @@ public abstract class ManagedTransactionTester {
         Request<?, PlatonGetTransactionCount> transactionCountRequest = mock(Request.class);
         when(transactionCountRequest.send())
                 .thenReturn(ethGetTransactionCount);
-        when(web3j.platonGetTransactionCount(SampleKeys.HEX_ADDRESS, DefaultBlockParameterName.PENDING))
+        when(web3j.platonGetTransactionCount(SampleKeys.CREDENTIALS.getAddress(NetworkParameters.MainNetParams.getChainId()), DefaultBlockParameterName.PENDING))
                 .thenReturn((Request) transactionCountRequest);
     }
 

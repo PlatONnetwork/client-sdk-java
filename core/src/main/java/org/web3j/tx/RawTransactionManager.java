@@ -41,9 +41,7 @@ public class RawTransactionManager extends TransactionManager {
         this.chainId = chainId;
     }
 
-    public RawTransactionManager(
-            Web3j web3j, Credentials credentials, long chainId,
-            TransactionReceiptProcessor transactionReceiptProcessor) {
+    public RawTransactionManager(Web3j web3j, Credentials credentials, long chainId, TransactionReceiptProcessor transactionReceiptProcessor) {
         super(transactionReceiptProcessor, credentials.getAddress(chainId));
 
         this.web3j = web3j;
@@ -52,23 +50,13 @@ public class RawTransactionManager extends TransactionManager {
         this.chainId = chainId;
     }
 
-    public RawTransactionManager(
-            Web3j web3j, Credentials credentials, long chainId, int attempts, long sleepDuration) {
+    public RawTransactionManager(Web3j web3j, Credentials credentials, long chainId, int attempts, long sleepDuration) {
         super(web3j, attempts, sleepDuration, credentials.getAddress(chainId));
 
         this.web3j = web3j;
         this.credentials = credentials;
 
         this.chainId = chainId;
-    }
-
-    public RawTransactionManager(Web3j web3j, Credentials credentials) {
-        this(web3j, credentials, ChainId.NONE);
-    }
-
-    public RawTransactionManager(
-            Web3j web3j, Credentials credentials, int attempts, int sleepDuration) {
-        this(web3j, credentials, ChainId.NONE, attempts, sleepDuration);
     }
 
     protected BigInteger getNonce() throws IOException {
