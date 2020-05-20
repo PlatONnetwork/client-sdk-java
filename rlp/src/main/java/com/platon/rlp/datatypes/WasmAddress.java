@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
+import org.bouncycastle.util.encoders.Hex;
 import org.web3j.utils.Numeric;
 
 public class WasmAddress {
@@ -25,8 +26,8 @@ public class WasmAddress {
 	}
 
 	public WasmAddress(String bechValue) {
-		this.bigIntValue = Numeric.toBigInt(Bech32.addressDecodeHex(bechValue));
-		this.value = bigIntValue.toByteArray();
+		this.value = Numeric.hexStringToByteArray(Bech32.addressDecodeHex(bechValue));
+		this.bigIntValue = Numeric.toBigInt(value);
 		this.address = bechValue;
 	}
 
