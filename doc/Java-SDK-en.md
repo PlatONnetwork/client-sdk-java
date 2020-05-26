@@ -2682,8 +2682,8 @@ TransactionManager transactionManager = new RawTransactionManager(web3j, credent
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
 In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
 
-#### gas提供者
-合约的手续费是通过 `GasProvider` 设置，因为合约gas消耗为动态的，和合约的逻辑相关。建议首次部署调用时使用比较大的值，如 4700000。后面根据实际情况调整。
+#### GasProvider
+The handling fee of the contract is set through `GasProvider`, because the gas consumption of the contract is dynamic and related to the logic of the contract. It is recommended to use a larger value for the first deployment call, such as 4700000. Later adjust according to the actual situation.
 
 ```java
 BigInteger GAS_LIMIT = BigInteger.valueOf(4700000);
@@ -2806,8 +2806,8 @@ TransactionManager transactionManager = new RawTransactionManager(web3j, credent
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
 In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
 
-#### gas提供者
-合约的手续费是通过 `GasProvider` 设置，因为合约gas消耗为动态的，和合约的逻辑相关。建议首次部署调用时使用比较大的值，如 4700000。后面根据实际情况调整。
+#### GasProvider
+The handling fee of the contract is set through `GasProvider`, because the gas consumption of the contract is dynamic and related to the logic of the contract. It is recommended to use a larger value for the first deployment call, such as 4700000. Later adjust according to the actual situation.
 
 ```java
 BigInteger GAS_LIMIT = BigInteger.valueOf(4700000);
