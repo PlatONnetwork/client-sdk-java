@@ -2683,10 +2683,10 @@ In addition to `RawTransactionManager`, the Java SDK also provides a client tran
 In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
 
 #### GasProvider
-The handling fee of the contract is set through `GasProvider`, because the gas consumption of the contract is dynamic and related to the logic of the contract. It is recommended to use a larger value for the first deployment call, such as 4700000. Later adjust according to the actual situation.
+The handling fee of the contract is set through `GasProvider`, because the gas consumption of the contract is dynamic and related to the logic of the contract. It is recommended to use a larger value for the first deployment call, such as 999999. Later adjust according to the actual situation.
 
 ```java
-BigInteger GAS_LIMIT = BigInteger.valueOf(4700000);
+BigInteger GAS_LIMIT = BigInteger.valueOf(999999);
 BigInteger GAS_PRICE = BigInteger.valueOf(1000000000L);
 
 GasProvider gasProvider  = new ContractGasProvider(GAS_PRICE, GAS_LIMIT);
@@ -2725,7 +2725,7 @@ When deploying a Wasm smart contract on the blockchain, it must first be compile
 
 ### Compile Wasm Source Code
 
-* Compile Wasm contract source code with `CDT` compiler([CDT download](https://github.com/PlatONnetwork/PlatON-CDT))：
+* Compile Wasm contract source code with `CDT` compiler([CDT download](https://github.com/PlatONnetwork/PlatON-CDT/releases))：
 
 After the CDT installation is successful, you can compile the Wasm contract source code with the following command:
 
@@ -2807,10 +2807,10 @@ In addition to `RawTransactionManager`, the Java SDK also provides a client tran
 In addition, there is a `ReadonlyTransactionManager`, which is used to query data from the smart contract only and not to trade with it.
 
 #### GasProvider
-The handling fee of the contract is set through `GasProvider`, because the gas consumption of the contract is dynamic and related to the logic of the contract. It is recommended to use a larger value for the first deployment call, such as 4700000. Later adjust according to the actual situation.
+The handling fee of the contract is set through `GasProvider`, because the gas consumption of the contract is dynamic and related to the logic of the contract. It is recommended to use a larger value for the first deployment call, such as 999999. Later adjust according to the actual situation.
 
 ```java
-BigInteger GAS_LIMIT = BigInteger.valueOf(4700000);
+BigInteger GAS_LIMIT = BigInteger.valueOf(999999);
 BigInteger GAS_PRICE = BigInteger.valueOf(1000000000L);
 
 GasProvider gasProvider  = new ContractGasProvider(GAS_PRICE, GAS_LIMIT);
