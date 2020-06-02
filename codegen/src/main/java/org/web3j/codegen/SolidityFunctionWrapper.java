@@ -121,6 +121,23 @@ public class SolidityFunctionWrapper extends Generator {
             String contractName, String bin, List<AbiDefinition> abi, String destinationDir,
             String basePackageName, Map<String, String> addresses)
             throws IOException, ClassNotFoundException {
+
+        //event name is ""
+        for (int i = 0; i < abi.size(); i++) {
+            AbiDefinition abiDefinition = abi.get(i);
+            if(!abiDefinition.getType().equals("event")){
+                continue;
+            }
+
+            List<AbiDefinition.NamedType> namedTypeList = abiDefinition.getInputs();
+            for (int j = 0; j < namedTypeList.size(); j++) {
+                AbiDefinition.NamedType namedType = namedTypeList.get(j);
+                String name = createValidParamName(namedType.getName(), j);
+                namedType.setName(name);
+            }
+        }
+
+
         String className = Strings.capitaliseFirstLetter(contractName);
 
         TypeSpec.Builder classBuilder = createClassBuilder(className, bin);
