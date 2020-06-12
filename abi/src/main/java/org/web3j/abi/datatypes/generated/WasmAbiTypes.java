@@ -2,10 +2,12 @@ package org.web3j.abi.datatypes.generated;
 
 import java.math.BigInteger;
 
+import com.platon.rlp.datatypes.Int128;
 import com.platon.rlp.datatypes.Int16;
 import com.platon.rlp.datatypes.Int32;
 import com.platon.rlp.datatypes.Int64;
 import com.platon.rlp.datatypes.Int8;
+import com.platon.rlp.datatypes.Uint128;
 import com.platon.rlp.datatypes.Uint16;
 import com.platon.rlp.datatypes.Uint32;
 import com.platon.rlp.datatypes.Uint64;
@@ -40,9 +42,9 @@ public final class WasmAbiTypes {
 		case "int64":
 			return Int64.class;
 		case "uint128":
-			return BigInteger.class;
+			return Uint128.class;
 		case "int128":
-			return BigInteger.class;
+			return Int128.class;
 		case "uint160":
 			return BigInteger.class;
 		case "uint256":
@@ -83,9 +85,9 @@ public final class WasmAbiTypes {
 		case "int64":
 			return Int64.class;
 		case "uint128":
-			return BigInteger.class;
+			return Uint128.class;
 		case "int128":
-			return BigInteger.class;
+			return Int128.class;
 		case "uint160":
 			return BigInteger.class;
 		case "uint256":
