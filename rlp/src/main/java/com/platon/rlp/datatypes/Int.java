@@ -16,4 +16,12 @@ public abstract class Int {
 	public static long decodeZigZag64(long encoded) {
 		return (encoded >>> 1) ^ -(encoded & 1);
 	}
+
+	public static long encodeZigZag128(long value) {
+		return (value << 1) ^ (value >> 128);
+	}
+
+	public static long decodeZigZag128(long encoded) {
+		return (encoded >>> 1) ^ -(encoded & 1);
+	}
 }
