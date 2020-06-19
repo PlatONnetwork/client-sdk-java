@@ -210,7 +210,7 @@ public class WalletUtils {
                 "'UTC--'yyyy-MM-dd'T'HH-mm-ss.nVV'--'");
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
 
-        return now.format(format) + walletFile.getAddress() + ".json";
+        return now.format(format) + walletFile.getAddress().getMainnet() + ".json";
     }
 
     public static String getDefaultKeyDirectory() {
