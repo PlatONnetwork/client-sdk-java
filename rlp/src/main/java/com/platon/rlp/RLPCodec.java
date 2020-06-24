@@ -1,6 +1,6 @@
 package com.platon.rlp;
 
-import lombok.NonNull;
+import com.platon.rlp.datatypes.*;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -12,17 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.platon.rlp.datatypes.Int16;
-import com.platon.rlp.datatypes.Int32;
-import com.platon.rlp.datatypes.Int64;
-import com.platon.rlp.datatypes.Int8;
-import com.platon.rlp.datatypes.Pair;
-import com.platon.rlp.datatypes.Uint16;
-import com.platon.rlp.datatypes.Uint32;
-import com.platon.rlp.datatypes.Uint64;
-import com.platon.rlp.datatypes.Uint8;
-import com.platon.rlp.datatypes.WasmAddress;
 
 import static com.platon.rlp.RLPConstants.*;
 import static com.platon.rlp.RLPElement.readRLPTree;
@@ -99,6 +88,9 @@ public final class RLPCodec {
 		if (clazz == Int64.class)
 			return (T) Int64.of(element.asBigInteger());
 
+		if (clazz == Int128.class)
+			return (T) Int128.of(element.asBigInteger());
+
 		if (clazz == Uint8.class)
 			return (T) Uint8.of(element.asBigInteger());
 
@@ -110,6 +102,9 @@ public final class RLPCodec {
 
 		if (clazz == Uint64.class)
 			return (T) Uint64.of(element.asBigInteger());
+
+		if (clazz == Uint128.class)
+			return (T) Uint128.of(element.asBigInteger());
 
 		if (element.isNull())
 			return null;
@@ -254,7 +249,7 @@ public final class RLPCodec {
 		return data;
 	}
 
-	public static byte[] encodeElements(@NonNull Collection<byte[]> elements) {
+	public static byte[] encodeElements(Collection<byte[]> elements) {
 		int totalLength = 0;
 		for (byte[] element1 : elements) {
 			totalLength += element1.length;
