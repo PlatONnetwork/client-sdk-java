@@ -11,11 +11,13 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.platon.rlp.datatypes.Int128;
 import com.platon.rlp.datatypes.Int16;
 import com.platon.rlp.datatypes.Int32;
 import com.platon.rlp.datatypes.Int64;
 import com.platon.rlp.datatypes.Int8;
 import com.platon.rlp.datatypes.Pair;
+import com.platon.rlp.datatypes.Uint128;
 import com.platon.rlp.datatypes.Uint16;
 import com.platon.rlp.datatypes.Uint32;
 import com.platon.rlp.datatypes.Uint64;
@@ -97,6 +99,9 @@ public final class RLPCodec {
 		if (clazz == Int64.class)
 			return (T) Int64.of(element.asBigInteger());
 
+		if (clazz == Int128.class)
+			return (T) Int128.of(element.asBigInteger());
+
 		if (clazz == Uint8.class)
 			return (T) Uint8.of(element.asBigInteger());
 
@@ -108,6 +113,9 @@ public final class RLPCodec {
 
 		if (clazz == Uint64.class)
 			return (T) Uint64.of(element.asBigInteger());
+
+		if (clazz == Uint128.class)
+			return (T) Uint128.of(element.asBigInteger());
 
 		if (element.isNull())
 			return null;
