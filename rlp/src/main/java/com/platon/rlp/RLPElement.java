@@ -6,15 +6,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.platon.rlp.datatypes.Int16;
-import com.platon.rlp.datatypes.Int32;
-import com.platon.rlp.datatypes.Int64;
-import com.platon.rlp.datatypes.Int8;
-import com.platon.rlp.datatypes.Uint16;
-import com.platon.rlp.datatypes.Uint32;
-import com.platon.rlp.datatypes.Uint64;
-import com.platon.rlp.datatypes.Uint8;
-import com.platon.rlp.datatypes.WasmAddress;
+import com.platon.rlp.datatypes.*;
 
 import static com.platon.rlp.RLPItem.NULL;
 import static com.platon.rlp.RLPItem.ONE;
@@ -107,6 +99,9 @@ public interface RLPElement {
 		if (t instanceof Int64)
 			return RLPItem.fromBigInteger(((Int64) t).getUnsingedValue());
 
+		if (t instanceof Int128)
+			return RLPItem.fromBigInteger(((Int128) t).getUnsingedValue());
+
 		if (t instanceof Uint8)
 			return RLPItem.fromBigInteger(((Uint8) t).getValue());
 
@@ -118,6 +113,9 @@ public interface RLPElement {
 
 		if (t instanceof Uint64)
 			return RLPItem.fromBigInteger(((Uint64) t).getValue());
+
+		if (t instanceof Uint128)
+			return RLPItem.fromBigInteger(((Uint128) t).getValue());
 
 		if (t instanceof byte[])
 			return RLPItem.fromBytes((byte[]) t);
