@@ -17,11 +17,22 @@ public abstract class Int {
 		return (encoded >>> 1) ^ -(encoded & 1);
 	}
 
-	public static long encodeZigZag128(long value) {
-		return (value << 1) ^ (value >> 128);
+	public static BigInteger encodeZigZag(BigInteger value, int size) {
+		if(BigInteger.ZERO.compareTo(value) == 0){
+			return BigInteger.ZERO;
+		}
+		return (value.shiftLeft(1)).xor(value.shiftRight(size - 1));
 	}
 
-	public static long decodeZigZag128(long encoded) {
-		return (encoded >>> 1) ^ -(encoded & 1);
+	public static BigInteger decodeZigZag(BigInteger encoded) {
+		return encoded.shiftRight(1).xor(encoded.and(BigInteger.ONE).negate());
+	}
+
+	public static String toUnsignedString(BigInteger bigInteger, int size){
+		if(BigInteger.ZERO.compareTo(bigInteger) == 0){
+			return BigInteger.ZERO.toString();
+		}
+		BigInteger result = bigInteger.signum() > 0 ? bigInteger: BigInteger.ONE.shiftLeft(size).add(bigInteger);;
+		return result.toString();
 	}
 }

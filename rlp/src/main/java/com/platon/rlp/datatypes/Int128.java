@@ -10,27 +10,33 @@ import java.math.BigInteger;
  *
  */
 public class Int128 extends Int {
-	public long value;
+	public BigInteger value;
+
+	public final static int size = 128;
 
 	private Int128(long value) {
-		this.value = value;
-		this.unsingedValue = new BigInteger(Long.toUnsignedString(encodeZigZag128(value)));
+		this.value = BigInteger.valueOf(value);
+		this.unsingedValue = encodeZigZag(this.value, size);
 	}
 
 	private Int128(BigInteger unsingedValue) {
 		this.unsingedValue = unsingedValue;
-		this.value = decodeZigZag128(unsingedValue.longValue());
+		this.value = decodeZigZag(this.unsingedValue);
 	}
 
 	public static Int128 of(long value) {
 		return new Int128(value);
 	}
 
-	public static Int128 of(BigInteger unsingedValue) {
-		return new Int128(unsingedValue);
+	public static Int128 of(BigInteger value) {
+		return new Int128(value);
 	}
 
-	public long getValue() {
+	public static Int128 ofSignedValue(BigInteger value) {
+		return new Int128(encodeZigZag(value, size));
+	}
+
+	public BigInteger getValue() {
 		return value;
 	}
 
@@ -51,6 +57,6 @@ public class Int128 extends Int {
 
 	@Override
 	public String toString() {
-		return Long.valueOf(value).toString();
+		return value.toString();
 	}
 }
