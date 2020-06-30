@@ -28,11 +28,14 @@ public class Int128 extends Int {
 		return new Int128(value);
 	}
 
-	public static Int128 of(BigInteger value) {
+	public static Int128 ofUnsignedValue(BigInteger value) {
 		return new Int128(value);
 	}
 
-	public static Int128 ofSignedValue(BigInteger value) {
+	public static Int128 of(BigInteger value) {
+		if (!(value.bitLength() < 128)) {
+			throw new UnsupportedOperationException("Data length overflow, Bitsize must be in range 0 < bitSize < 128");
+		}
 		return new Int128(encodeZigZag(value, size));
 	}
 

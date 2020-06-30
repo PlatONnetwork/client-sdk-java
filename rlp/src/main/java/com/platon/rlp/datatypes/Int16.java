@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 public class Int16 extends Int {
 	public short value;
+	public final static int size = 64;
 
 	private Int16(short value) {
 		this.value = value;
@@ -22,8 +23,15 @@ public class Int16 extends Int {
 		return new Int16((short) value);
 	}
 
-	public static Int16 of(BigInteger unsingedValue) {
+	public static Int16 ofUnsignedValue(BigInteger unsingedValue) {
 		return new Int16(unsingedValue);
+	}
+
+	public static Int16 of(BigInteger value) {
+		if (!(value.bitLength() < 16)) {
+			throw new UnsupportedOperationException("Data length overflow, Bitsize must be in range 0 < bitSize < 16");
+		}
+		return new Int16(encodeZigZag(value, size));
 	}
 
 	public short getValue() {

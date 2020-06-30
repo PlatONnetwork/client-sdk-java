@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 public class Int8 extends Int {
 	public byte value;
+	public final static int size = 64;
 
 	private Int8(byte value) {
 		this.value = value;
@@ -22,8 +23,15 @@ public class Int8 extends Int {
 		return new Int8((byte) value);
 	}
 
-	public static Int8 of(BigInteger unsingedValue) {
+	public static Int8 ofUnsignedValue(BigInteger unsingedValue) {
 		return new Int8(unsingedValue);
+	}
+
+	public static Int8 of(BigInteger value) {
+		if (!(value.bitLength() < 8)) {
+			throw new UnsupportedOperationException("Data length overflow, Bitsize must be in range 0 < bitSize < 8");
+		}
+		return new Int8(encodeZigZag(value, size));
 	}
 
 	public byte getValue() {

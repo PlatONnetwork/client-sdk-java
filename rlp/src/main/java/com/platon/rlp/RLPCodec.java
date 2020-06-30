@@ -88,19 +88,19 @@ public final class RLPCodec {
 			return (T) element.asBigInteger();
 
 		if (clazz == Int8.class)
-			return (T) Int8.of(element.asBigInteger());
+			return (T) Int8.ofUnsignedValue(element.asBigInteger());
 
 		if (clazz == Int16.class)
-			return (T) Int16.of(element.asBigInteger());
+			return (T) Int16.ofUnsignedValue(element.asBigInteger());
 
 		if (clazz == Int32.class)
-			return (T) Int32.of(element.asBigInteger());
+			return (T) Int32.ofUnsignedValue(element.asBigInteger());
 
 		if (clazz == Int64.class)
-			return (T) Int64.of(element.asBigInteger());
+			return (T) Int64.ofUnsignedValue(element.asBigInteger());
 
 		if (clazz == Int128.class)
-			return (T) Int128.of(element.asBigInteger());
+			return (T) Int128.ofUnsignedValue(element.asBigInteger());
 
 		if (clazz == Uint8.class)
 			return (T) Uint8.of(element.asBigInteger());

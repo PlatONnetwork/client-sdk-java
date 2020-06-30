@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 public class Int32 extends Int {
 	public int value;
+	public final static int size = 64;
 
 	private Int32(int value) {
 		this.value = value;
@@ -22,8 +23,15 @@ public class Int32 extends Int {
 		return new Int32((int) value);
 	}
 
-	public static Int32 of(BigInteger unsingedValue) {
+	public static Int32 ofUnsignedValue(BigInteger unsingedValue) {
 		return new Int32(unsingedValue);
+	}
+
+	public static Int32 of(BigInteger value) {
+		if (!(value.bitLength() < 32)) {
+			throw new UnsupportedOperationException("Data length overflow, Bitsize must be in range 0 < bitSize < 32");
+		}
+		return new Int32(encodeZigZag(value, size));
 	}
 
 	public int getValue() {

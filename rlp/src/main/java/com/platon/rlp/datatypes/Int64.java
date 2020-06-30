@@ -11,6 +11,7 @@ import java.math.BigInteger;
  */
 public class Int64 extends Int {
 	public long value;
+	public final static int size = 64;
 
 	private Int64(long value) {
 		this.value = value;
@@ -26,8 +27,15 @@ public class Int64 extends Int {
 		return new Int64(value);
 	}
 
-	public static Int64 of(BigInteger unsingedValue) {
+	public static Int64 ofUnsignedValue(BigInteger unsingedValue) {
 		return new Int64(unsingedValue);
+	}
+
+	public static Int64 of(BigInteger value) {
+		if (!(value.bitLength() < 64)) {
+			throw new UnsupportedOperationException("Data length overflow, Bitsize must be in range 0 < bitSize < 64");
+		}
+		return new Int64(encodeZigZag(value, size));
 	}
 
 	public long getValue() {
