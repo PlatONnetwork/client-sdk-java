@@ -26,7 +26,7 @@ sidebar_label: Java SDK
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.13.0.2</version>
+	<version>0.13.0.11</version>
 </dependency>
 ```
 
@@ -41,10 +41,39 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.client:core:0.13.0.2"
+compile "com.platon.client:core:0.13.0.11"
 ```
 
-## 基础api
+## 基础api使用
+
+### Bech32地址
+
+* **0x地址转bech32地址**
+```java
+String hex = "0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818";
+String bech32Address = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(), hex);
+assertThat(bech32Address, is("lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390"));
+
+bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
+assertThat(bech32Address, is("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq"));
+```
+
+* **bech32地址转0x地址**
+```java
+String bech32Address = "lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390";
+String hex =  Bech32.addressDecodeHex(bech32Address);
+assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
+```
+
+### 网络参数
+
+* **设置当前网络参数**
+
+> 因为加入了bech32格式地址支持，为了兼容旧的api，加入了全局设置网络参数的功能，旧的api根据当前网络参数输出相应格式地址
+
+```java
+NetworkParameters.setCurrentNetwork(101L);  // default mainnet 100L
+```
 
 ### 钱包相关
 
@@ -79,13 +108,18 @@ Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir
 Credentials credentials = Credentials.create("0xXXXXXXXXXXXXXX...");
 ```
 
-* **从凭证中获取地址**
+* **获取不同网络的地址**
 ```java
 long chainId = 100L;
 String bech32Address = credentials.getAddress(chainId);
 ```
 
-## 基础API使用
+* **获取当前网络参数的地址**
+```java
+String bech32Address = credentials.getAddress();  // NetworkParameters.CurrentNetwork
+```
+
+## 基础RPC接口
 
 基础`API`包括网络，交易，查询，节点信息，经济模型参数配置等相关的接口，具体参考如下`API`使用说明。
 
@@ -1397,7 +1431,7 @@ TransactionResponse
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-String benifitAddress = "0x02c344817be3448c97a059473121a6679450b414";
+String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
@@ -1479,7 +1513,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String benifitAddress = "0x02c344817be3448c97a059473121a6679450b414";
+String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
@@ -1793,7 +1827,7 @@ CallResponse<Delegation>
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String address = "0xc1f330b214668beac2e6418dd651b09c759a4bf5";
+String address = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 BigInteger stakingBlockNum = new BigInteger("10888");
 
 CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
@@ -2476,7 +2510,7 @@ CallResponse
 * **合约使用**
 
 ```java
-CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "0x4F8eb0B21eb8F16C80A9B7D728EA473b8676Cbb3", BigInteger.valueOf(500L)).send();
+CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt", BigInteger.valueOf(500L)).send();
 ```
 
 ###  锁仓相关接口
@@ -2577,7 +2611,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，输出包含十六进制编码的solidity二进制文件以提供交易请求。
 `abi`，输出一个solidity的应用程序二进制接口（`ABI`）文件，它详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成solidity智能合约对应的Java包装类。
 
-* 使用`platon-truffle`编译solidity源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.11.1/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.11.1/))：
+* 使用`platon-truffle`编译solidity源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.0/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.0/))：
 
 > **step1.** 使用platon-truffle初始化项目
 
@@ -2658,7 +2692,7 @@ Warning: This is a pre-release compiler version, please do not use it in product
 
 Java SDK支持从`abi`文件中自动生成Solidity智能合约对应的Java包装类。
 
-* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/sdk/0.11.0.1-20200410/platon-web3j-0.11.0.1.zip)）：
+* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/sdk/0.13.0.11-20200703/platon-web3j-0.13.0.11.zip)）：
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -2688,7 +2722,13 @@ Solidity智能合约对应的Java包装类支持的主要功能：
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider,
+        <web3j>, <transactionManager>, contractGasProvider, chainId
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+
+or
+
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <Credentials>, contractGasProvider, chainId
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2700,7 +2740,12 @@ YourSmartContract contract = YourSmartContract.deploy(
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "0x<address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
+
+or
+
+YourSmartContract contract = YourSmartContract.load(
+        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
 ```
 
 #### 智能合约有效性
@@ -2779,7 +2824,7 @@ $ platon-cpp <contract>.cpp
 `wasm`，输出Wasm合约的二进制文件以提供交易请求。
 `abi.json`，详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成Wasm智能合约对应的Java包装类。
 
-* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.11.1/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.11.1/))
+* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.0/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.0/))
 
 ### Wasm智能合约Java包装类
 
@@ -2812,7 +2857,13 @@ Wasm智能合约对应的Java包装类支持的主要功能：
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider,
+        <web3j>, <transactionManager>, contractGasProvider, chainId,
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+
+or
+
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <Credentials>, contractGasProvider, chainId,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2824,7 +2875,12 @@ YourSmartContract contract = YourSmartContract.deploy(
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
+
+or
+
+YourSmartContract contract = YourSmartContract.load(
+        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
 ```
 
 #### 智能合约有效性

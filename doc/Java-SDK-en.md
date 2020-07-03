@@ -26,7 +26,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.11.0.1</version>
+	<version>0.13.0.11</version>
 </dependency>
 ```
 
@@ -41,10 +41,85 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.11.0.1"
+compile "com.platon.client:core:0.13.0.11"
 ```
 
 ## Basic API Usage
+
+### Bech32 Address
+
+* **0x address to bech32 address**
+```java
+String hex = "0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818";
+String bech32Address = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(), hex);
+assertThat(bech32Address, is("lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390"));
+
+bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
+assertThat(bech32Address, is("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq"));
+```
+
+* **bech32 address to 0x address**
+```java
+String bech32Address = "lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390";
+String hex =  Bech32.addressDecodeHex(bech32Address);
+assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
+```
+
+### NetworkParameters
+
+* **SetCurrentNetworkParameters**
+
+> Because bech 32 format address support is added, in order to be compatible with the old API, the function of setting the network parameters globally is added, and the old API outputs the corresponding format address according to the current network parameters
+
+```java
+NetworkParameters.setCurrentNetwork(101L);  // default mainnet 100L
+```
+
+### Wallet Related
+
+* **Generate PlatON StandardWallet n=16384 p=1 r=8**
+```java
+String fileName = WalletUtils.generatePlatONWalletFile(PASSWORD, tempDir);
+```
+
+* **Generate StandardWallet n=262144 p=1 r=8**
+```java
+String fileName = WalletUtils.generateNewWalletFile(PASSWORD, tempDir);
+```
+
+* **Generate LightWallet n=4096 p=6 r=8**
+```java
+String fileName = WalletUtils.generateLightNewWalletFile(PASSWORD, tempDir);
+```
+
+* **LoadWallet**
+```java
+Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir, fileName));
+```
+
+### Credentials Related
+* **loadCredentials from keystore**
+```java
+Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir, fileName));
+```
+
+* **loadCredentials from key**
+```java
+Credentials credentials = Credentials.create("0xXXXXXXXXXXXXXX...");
+```
+
+* **getBech32AddressFromChainId**
+```java
+long chainId = 100L;
+String bech32Address = credentials.getAddress(chainId);
+```
+
+* **getBech32AddressFromNetworkParameters**
+```java
+String bech32Address = credentials.getAddress();  // NetworkParameters.CurrentNetwork
+```
+
+## Basic RPC Interface
 
 The basic `API` includes network, transaction, query, node information, economic model parameter configuration and other related interfaces. For details, refer to the following` API` instructions.
 
@@ -1356,7 +1431,7 @@ TransactionResponse
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-String benifitAddress = "0x02c344817be3448c97a059473121a6679450b414";
+String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
@@ -1438,7 +1513,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String benifitAddress = benefitCredentials.getAddress();
+String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
@@ -1752,7 +1827,7 @@ CallResponse<Delegation>
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String address = "0xc1f330b214668beac2e6418dd651b09c759a4bf5";
+String address = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 BigInteger stakingBlockNum = new BigInteger("10888");
 
 CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
@@ -2536,7 +2611,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，Output a hex-encoded solidity binary file to provide transaction requests.
 `abi`，Output a solidity application binary interface (`ABI`) file, which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the solidity smart contract.
 
-* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.11.1/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.11.1/))：
+* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.0/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.0/))：
 
 > **step1.** Initialize the project with platon-truffle
 
@@ -2617,7 +2692,7 @@ Put the bytecode attribute in ./build/contracts/HelloWorld.json into the HelloWo
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.11.0.1-20200410/platon-web3j-0.11.0.1.zip)）:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.13.0.11-20200703/platon-web3j-0.13.0.11.zip)）:
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -2647,7 +2722,13 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider,
+        <web3j>, <transactionManager>, contractGasProvider, chainId
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+
+or
+
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <Credentials>, contractGasProvider, chainId
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2659,7 +2740,12 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "0x<address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
+
+or
+
+YourSmartContract contract = YourSmartContract.load(
+        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
 ```
 
 #### Smart Contract Validity
@@ -2738,7 +2824,7 @@ After successful compilation, `<contract> .wasm` and` <contract> .abi.json` file
 `wasm`，Output binary file of Wasm contract to provide transaction request.
 `abi.json`，Which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the Wasm smart contract.
 
-* Compile Wasm source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.11.1/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.11.1/))
+* Compile Wasm source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.0/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.0/))
 
 ### Wasm Smart Contract Java Packaging Class
 
@@ -2771,7 +2857,13 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider,
+        <web3j>, <transactionManager>, contractGasProvider, chainId,
+        [<initialValue>,] <param1>, ..., <paramN>).send();
+
+or
+
+YourSmartContract contract = YourSmartContract.deploy(
+        <web3j>, <Credentials>, contractGasProvider, chainId,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2783,7 +2875,12 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "0x<address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
+
+or
+
+YourSmartContract contract = YourSmartContract.load(
+        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
 ```
 
 #### Smart Contract Validity
