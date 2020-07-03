@@ -15,6 +15,10 @@ public class WasmAddress {
 	public static final int LENGTH = 160;
 	public static final int LENGTH_IN_HEX = LENGTH >> 2;
 
+	public WasmAddress(byte[] value) {
+		this(value,NetworkParameters.CurrentNetwork.getHrp());
+	}
+
 	public WasmAddress(byte[] value, long chainId) {
 		this(value,NetworkParameters.getHrp(chainId));
 	}
@@ -29,6 +33,10 @@ public class WasmAddress {
 		this.value = Numeric.hexStringToByteArray(Bech32.addressDecodeHex(bechValue));
 		this.bigIntValue = Numeric.toBigInt(value);
 		this.address = bechValue;
+	}
+
+	public WasmAddress(BigInteger value) {
+		this(value.toByteArray());
 	}
 
 	public byte[] getValue() {

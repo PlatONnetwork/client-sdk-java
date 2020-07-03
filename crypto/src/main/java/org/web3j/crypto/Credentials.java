@@ -42,6 +42,14 @@ public class Credentials {
         }
     }
 
+    public String getAddress() {
+        if(NetworkParameters.CurrentNetwork.getChainId() == NetworkParameters.MainNetParams.getChainId()){
+            return latAddress;
+        }else {
+            return laxAddress;
+        }
+    }
+
     public static Credentials create(ECKeyPair ecKeyPair) {
         String address = Numeric.prependHexPrefix(Keys.getAddress(ecKeyPair));
         String latAddress = Bech32.addressEncode(NetworkParameters.Hrp.LAT.getHrp(),address);

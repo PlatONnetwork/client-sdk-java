@@ -2,6 +2,7 @@ package com.platon.sdk.utlis;
 
 public class NetworkParameters {
 
+    public static NetworkParameters CurrentNetwork;
     public final static NetworkParameters MainNetParams;
     public final static NetworkParameters TestNetParams;
 
@@ -15,6 +16,11 @@ public class NetworkParameters {
                 "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxlcypcy",
                 100);
         TestNetParams = createTestNetParams(102);
+        CurrentNetwork = MainNetParams;
+    }
+
+    public static void setCurrentNetwork(long chainId){
+        CurrentNetwork =  createTestNetParams(chainId);
     }
 
     public static NetworkParameters createTestNetParams(long chainId){

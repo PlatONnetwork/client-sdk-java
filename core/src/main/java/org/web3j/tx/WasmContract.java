@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.WasmEventEncoder;
 import org.web3j.abi.WasmEventValues;
 import org.web3j.abi.WasmFunctionEncoder;
@@ -244,6 +245,10 @@ public abstract class WasmContract extends ManagedTransaction {
 	public static <T extends WasmContract> RemoteCall<T> deployRemoteCall(Class<T> type, Web3j web3j, TransactionManager transactionManager,
 			GasProvider contractGasProvider, String encodedConstructor, long chainId) {
 		return new RemoteCall<>(() -> deploy(type, web3j, transactionManager, contractGasProvider, encodedConstructor, BigInteger.ZERO, chainId));
+	}
+
+	public static WasmEventValues staticExtractEventParameters(WasmEvent event, Log log) {
+		return staticExtractEventParameters(event,log, NetworkParameters.CurrentNetwork.getChainId());
 	}
 
 	public static WasmEventValues staticExtractEventParameters(WasmEvent event, Log log, long chainId) {
