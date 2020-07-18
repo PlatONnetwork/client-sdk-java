@@ -264,6 +264,8 @@ public class EconomicConfig {
 
         private BigInteger zeroProduceCumulativeTime;
         private BigInteger zeroProduceNumberThreshold;
+        // 节点零出块惩罚被锁定时间
+        private BigInteger zeroProduceFreezeDuration;
 
         public Slashing() {
         }
@@ -316,6 +318,14 @@ public class EconomicConfig {
             this.zeroProduceNumberThreshold = zeroProduceNumberThreshold;
         }
 
+        public BigInteger getZeroProduceFreezeDuration() {
+            return zeroProduceFreezeDuration;
+        }
+
+        public void setZeroProduceFreezeDuration(BigInteger zeroProduceFreezeDuration) {
+            this.zeroProduceFreezeDuration = zeroProduceFreezeDuration;
+        }
+
         @Override
         public String toString() {
             return "Slashing{" +
@@ -325,6 +335,7 @@ public class EconomicConfig {
                     ", maxEvidenceAge=" + maxEvidenceAge +
                     ", zeroProduceCumulativeTime=" + zeroProduceCumulativeTime +
                     ", zeroProduceNumberThreshold=" + zeroProduceNumberThreshold +
+                    ", zeroProduceFreezeDuration=" + zeroProduceFreezeDuration +
                     '}';
         }
     }
