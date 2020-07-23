@@ -60,7 +60,7 @@ public final class WasmAbiTypes {
 		}
 	}
 
-	public static Class<?> getRawType(String type) {
+	public static Class<?> getRawType(String type, boolean isVector) {
 		switch (type) {
 		case "address":
 			return String.class;
@@ -69,7 +69,10 @@ public final class WasmAbiTypes {
 		case "string":
 			return String.class;
 		case "uint8":
-			return byte.class;
+			if(isVector){
+				return byte.class;
+			}
+			return Uint8.class;
 		case "int8":
 			return Int8.class;
 		case "uint16":

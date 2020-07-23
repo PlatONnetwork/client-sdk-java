@@ -786,7 +786,7 @@ public class WasmFunctionWrapper extends Generator {
 		} else {
 			matcher = pattern.matcher(type);
 			if (matcher.find()) { // array
-				Class<?> baseType = WasmAbiTypes.getRawType(matcher.group(1));
+				Class<?> baseType = WasmAbiTypes.getRawType(matcher.group(1), matcher.group(2).length() > 0 ? false:true);
 				TypeName typeName = ArrayTypeName.of(baseType);
 
 				// String firstArrayDimension = matcher.group(2);

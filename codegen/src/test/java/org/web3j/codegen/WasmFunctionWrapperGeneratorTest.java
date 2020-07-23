@@ -40,6 +40,11 @@ public class WasmFunctionWrapperGeneratorTest extends TempFileProvider {
         testCodeGenerationJvmTypes("contractEmitEventWithAddr", "ContractEmitEventWithAddr");
     }
 
+    @Test
+    public void testEventTopic() throws Exception {
+        testCodeGenerationJvmTypes("eventTopic", "EventTopic");
+    }
+
     private void testCodeGenerationJvmTypes(String contractName, String inputFileName) throws Exception {
         testCodeGeneration(contractName, inputFileName, "org.web3j.contract.java", JAVA_TYPES_ARG);
     }
