@@ -3,20 +3,17 @@ package com.platon.sdk.contracts.wasm;
 import com.platon.rlp.datatypes.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
+import org.web3j.abi.WasmEventDecoder;
 import org.web3j.abi.WasmEventEncoder;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.PlatonFilter;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertThat;
 
 public class EvnetTopicTest extends BaseContractTest {
 
-    private String address = "lax1sm0s7468yxscr9tpt3qqd4fepmlywn7rtm708k";
+    private String address = "lax1mjw3l86y59cvgu3t9w6u55m5e0yxz0n3ang8sq";
 
 //    @Test
     public void deployByC() throws Exception {
@@ -27,23 +24,28 @@ public class EvnetTopicTest extends BaseContractTest {
     @Test
     public void setStringAndAddressAndBoolean() throws Exception {
         final String str = "你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc";
-        WasmAddress address = new WasmAddress("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq");
+        WasmAddress wasmAddress = new WasmAddress("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq");
         final Boolean bool = true;
 
         EventTopic contract = loadD();
-        TransactionReceipt transactionReceipt = contract.setStringAndAddressAndBoolean(str,address,bool).send();
+        TransactionReceipt transactionReceipt = contract.setStringAndAddressAndBoolean(str,wasmAddress,bool).send();
         contract.getStringAndAddrAndBooleanEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeString(str)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeAddress(address)));
-            assertThat(log.topic3, CoreMatchers.is(WasmEventEncoder.encodeBoolean(bool)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(str)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(wasmAddress)));
+            assertThat(log.topic3, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(bool)));
+            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic2, WasmAddress.class), CoreMatchers.is(wasmAddress));
+            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic3, Boolean.class), CoreMatchers.is(bool));
         });
 
         final String strShort = "你好abc";
         final Boolean boolFalse = false;
-        transactionReceipt = contract.setStringAndAddressAndBoolean(strShort, address, boolFalse).send();
+        transactionReceipt = contract.setStringAndAddressAndBoolean(strShort, wasmAddress, boolFalse).send();
         contract.getStringAndAddrAndBooleanEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeString(strShort)));
-            assertThat(log.topic3, CoreMatchers.is(WasmEventEncoder.encodeBoolean(boolFalse)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(strShort)));
+            assertThat(log.topic3, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(boolFalse)));
+
+            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic1, String.class), CoreMatchers.is(strShort));
+            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic3, Boolean.class), CoreMatchers.is(boolFalse));
         });
 
     }
@@ -57,8 +59,14 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setIntNumber(int8, int16).send();
 
         contract.getIntNumberEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int8)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int16)));
+//            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8)));
+//            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16)));
+//
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic1, Int8.class), CoreMatchers.is(int8));
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic2, Int16.class), CoreMatchers.is(int16));
+
+            assertThat(log.topic1, CoreMatchers.is(int8.toString()));
+            assertThat(log.topic2, CoreMatchers.is(int16.toString()));
         });
 
         Int8 int8z = Int8.of(100);
@@ -67,8 +75,14 @@ public class EvnetTopicTest extends BaseContractTest {
         transactionReceipt = contract.setIntNumber(int8z, int16z).send();
 
         contract.getIntNumberEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int8z)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int16z)));
+//            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8z)));
+//            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16z)));
+//
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic1, Int8.class), CoreMatchers.is(int8z));
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic2, Int16.class), CoreMatchers.is(int16z));
+
+            assertThat(log.topic1, CoreMatchers.is(int8z.toString()));
+            assertThat(log.topic2, CoreMatchers.is(int16z.toString()));
         });
     }
 
@@ -82,18 +96,29 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setUintNumber(int8, int16).send();
 
         contract.getUintNumberEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int8)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int16)));
+//            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8)));
+//            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16)));
+//
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic1, Uint8.class), CoreMatchers.is(int8));
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic2, Uint16.class), CoreMatchers.is(int16));
+
+            assertThat(log.topic1, CoreMatchers.is(int8.toString()));
+            assertThat(log.topic2, CoreMatchers.is(int16.toString()));
         });
 
         Uint8 int8z = Uint8.of(200);
         Uint16 int16z= Uint16.of(42767);
 
         transactionReceipt = contract.setUintNumber(int8z, int16z).send();
-
         contract.getUintNumberEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int8z)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeNumeric(int16z)));
+//            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8z)));
+//            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16z)));
+//
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic1, Uint8.class), CoreMatchers.is(int8z));
+//            assertThat(WasmEventDecoder.decodeIndexParameter(log.topic2, Uint16.class), CoreMatchers.is(int16z));
+
+            assertThat(log.topic1, CoreMatchers.is(int8z.toString()));
+            assertThat(log.topic2, CoreMatchers.is(int16z.toString()));
         });
     }
 
@@ -106,8 +131,10 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setIntArray(int8s, int16s).send();
 
         contract.getIntArrayEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeArray(int8s)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeArray(int16s)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
+
+
         });
     }
 
@@ -120,8 +147,8 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setUintArray(int8s, int16s).send();
 
         contract.getUintArrayEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeArray(int8s)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeArray(int16s)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
         });
     }
 
@@ -134,8 +161,8 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setIntVector(int8s, int16s).send();
 
         contract.getIntVectorEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeArray(int8s)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeArray(int16s)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
         });
 
 
@@ -153,8 +180,8 @@ public class EvnetTopicTest extends BaseContractTest {
         transactionReceipt = contract.setIntVector(int8sl, int16sl).send();
 
         contract.getIntVectorEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeArray(int8sl)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeArray(int16sl)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8sl)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16sl)));
         });
     }
 
@@ -167,8 +194,8 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setUintVector(int8s, int16s).send();
 
         contract.getUintVectorEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeBytes(int8s)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeArray(int16s)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
         });
 
         byte[]  int8sl = new byte[]{ 100, 11, 100, 11, 100, 11, 100, 11,
@@ -185,8 +212,8 @@ public class EvnetTopicTest extends BaseContractTest {
         transactionReceipt = contract.setUintVector(int8sl, int16sl).send();
 
         contract.getUintVectorEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeBytes(int8sl)));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeArray(int16sl)));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8sl)));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16sl)));
         });
     }
 
@@ -200,8 +227,8 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setIntList(Arrays.asList(int8s), Arrays.asList(int16s)).send();
 
         contract.getIntListEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeList(Arrays.asList(int8s))));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeList( Arrays.asList(int16s))));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8s))));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter( Arrays.asList(int16s))));
         });
 
 
@@ -219,8 +246,8 @@ public class EvnetTopicTest extends BaseContractTest {
         transactionReceipt = contract.setIntList(Arrays.asList(int8sl), Arrays.asList(int16sl)).send();
 
         contract.getIntListEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeList(Arrays.asList(int8sl))));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeList( Arrays.asList(int16sl))));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8sl))));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter( Arrays.asList(int16sl))));
         });
     }
 
@@ -233,8 +260,8 @@ public class EvnetTopicTest extends BaseContractTest {
         TransactionReceipt transactionReceipt = contract.setUintList(Arrays.asList(int8s), Arrays.asList(int16s)).send();
 
         contract.getUintListEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeList(Arrays.asList(int8s))));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeList( Arrays.asList(int16s))));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8s))));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter( Arrays.asList(int16s))));
         });
 
         Uint8[] int8sl = new Uint8[]{ Uint8.of(100), Uint8.of(11),Uint8.of(100), Uint8.of(11),Uint8.of(100), Uint8.of(11),Uint8.of(100), Uint8.of(11),
@@ -251,8 +278,8 @@ public class EvnetTopicTest extends BaseContractTest {
         transactionReceipt = contract.setUintList(Arrays.asList(int8sl), Arrays.asList(int16sl)).send();
 
         contract.getUintListEvents(transactionReceipt).forEach(log ->{
-            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeList(Arrays.asList(int8sl))));
-            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeList(Arrays.asList(int16sl))));
+            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8sl))));
+            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int16sl))));
         });
     }
 

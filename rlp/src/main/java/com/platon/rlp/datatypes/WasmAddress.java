@@ -1,6 +1,7 @@
 package com.platon.rlp.datatypes;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
@@ -56,22 +57,17 @@ public class WasmAddress {
 		return address;
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 		WasmAddress address = (WasmAddress) o;
-
-		return value != null ? value.equals(address.value) : address.value == null;
+		return Objects.equals(bigIntValue, address.bigIntValue);
 	}
 
 	@Override
 	public int hashCode() {
-		return value != null ? value.hashCode() : 0;
+		return Objects.hash(bigIntValue);
 	}
 }
