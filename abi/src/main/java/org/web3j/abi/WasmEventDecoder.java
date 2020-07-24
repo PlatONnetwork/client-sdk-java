@@ -12,10 +12,6 @@ import java.util.List;
 
 public class WasmEventDecoder {
 
-	private static final int MAX_BIT_LENGTH = 256;
-	private static final int MAX_BYTE_LENGTH = MAX_BIT_LENGTH / 8;
-	private static final int MAX_HEX_LENGTH = MAX_BIT_LENGTH / 4;
-
 	private WasmEventDecoder() {
 	}
 
@@ -38,8 +34,6 @@ public class WasmEventDecoder {
 				return (List<T>) decodeInt8List(topic);
 			}  else if (Uint8.class.isAssignableFrom(type)) {
 				return (List<T>) decodeUint8List(topic);
-			}  else if (byte.class.isAssignableFrom(type)) {
-				return (List<T>) decodeByteList(topic);
 			} else {
 				throw new UnsupportedOperationException("Topic cannot be decode: " + type.getClass());
 			}
@@ -48,10 +42,6 @@ public class WasmEventDecoder {
 		} catch (Exception e){
 			throw new UnsupportedOperationException("decode error ",e);
 		}
-	}
-
-	private static List<Byte> decodeByteList(String topic) {
-		return  null;
 	}
 
 	private static List<Uint8> decodeUint8List(String topic) {
