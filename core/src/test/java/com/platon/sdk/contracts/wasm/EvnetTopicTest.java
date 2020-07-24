@@ -134,13 +134,13 @@ public class EvnetTopicTest extends BaseContractTest {
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
 
-
+            assertThat(WasmEventDecoder.decodeIndexParameterList(log.topic1, Int8.class), CoreMatchers.is(Arrays.asList(int8s)));
         });
     }
 
     @Test
     public void setUintArray() throws Exception {
-        Uint8[] int8s = new Uint8[]{Uint8.of(100), Uint8.of(11)};
+        Uint8[] int8s = new Uint8[]{Uint8.of(100), Uint8.of(221)};
         Uint16[] int16s = new Uint16[]{Uint16.of(42767), Uint16.of(1200)};
 
         EventTopic contract = loadD();
@@ -149,6 +149,8 @@ public class EvnetTopicTest extends BaseContractTest {
         contract.getUintArrayEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
+
+            assertThat(WasmEventDecoder.decodeIndexParameterList(log.topic1, Uint8.class), CoreMatchers.is(Arrays.asList(int8s)));
         });
     }
 
@@ -163,6 +165,8 @@ public class EvnetTopicTest extends BaseContractTest {
         contract.getIntVectorEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
+
+            assertThat(WasmEventDecoder.decodeIndexParameterList(log.topic1, Int8.class), CoreMatchers.is(Arrays.asList(int8s)));
         });
 
 
@@ -196,6 +200,8 @@ public class EvnetTopicTest extends BaseContractTest {
         contract.getUintVectorEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
+
+            assertThat(WasmEventDecoder.decodeIndexParameterByteArray(log.topic1), CoreMatchers.is(int8s));
         });
 
         byte[]  int8sl = new byte[]{ 100, 11, 100, 11, 100, 11, 100, 11,
@@ -229,6 +235,8 @@ public class EvnetTopicTest extends BaseContractTest {
         contract.getIntListEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8s))));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter( Arrays.asList(int16s))));
+
+            assertThat(WasmEventDecoder.decodeIndexParameterList(log.topic1, Int8.class), CoreMatchers.is(Arrays.asList(int8s)));
         });
 
 
@@ -262,6 +270,8 @@ public class EvnetTopicTest extends BaseContractTest {
         contract.getUintListEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8s))));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter( Arrays.asList(int16s))));
+
+            assertThat(WasmEventDecoder.decodeIndexParameterList(log.topic1, Uint8.class), CoreMatchers.is(Arrays.asList(int8s)));
         });
 
         Uint8[] int8sl = new Uint8[]{ Uint8.of(100), Uint8.of(11),Uint8.of(100), Uint8.of(11),Uint8.of(100), Uint8.of(11),Uint8.of(100), Uint8.of(11),
