@@ -446,6 +446,7 @@ public class SolidityFunctionWrapper extends Generator {
             } else {
                 String parameterSpecType = parameterSpec.type.toString();
                 TypeName typeName = typeNames.get(0);
+                String componentType = typeName.toString();
                 String typeMapInput = typeName + ".class";
                 if (typeName instanceof ParameterizedTypeName) {
                     List<TypeName> typeArguments = ((ParameterizedTypeName) typeName).typeArguments;
@@ -454,12 +455,15 @@ public class SolidityFunctionWrapper extends Generator {
                                 "Only a single parameterized type is supported");
                     }
                     TypeName innerTypeName = typeArguments.get(0);
+                    componentType = ((ParameterizedTypeName) typeName).rawType.toString();
                     parameterSpecType = ((ParameterizedTypeName) parameterSpec.type)
                             .rawType.toString();
                     typeMapInput = ((ParameterizedTypeName) typeName).rawType + ".class, "
                             + innerTypeName + ".class";
                 }
                 return "new " + parameterSpecType + "(\n"
+                        + componentType
+                        + ".class,\n"
                         + "        org.web3j.abi.Utils.typeMap("
                         + parameterSpec.name + ", " + typeMapInput + "))";
             }

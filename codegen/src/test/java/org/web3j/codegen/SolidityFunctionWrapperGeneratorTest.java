@@ -36,6 +36,12 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
     }
 
     @Test
+    public void testDelegate() throws Exception {
+        testCodeGenerationJvmTypes("delegate", "ProxyDelegate");
+        testCodeGenerationSolidityTypes("delegate", "ProxyDelegate");
+    }
+
+    @Test
     public void testGetFileNoExtension() {
         assertThat(getFileNameNoExtension(""), is(""));
         assertThat(getFileNameNoExtension("file"), is("file"));
