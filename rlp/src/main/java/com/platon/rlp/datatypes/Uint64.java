@@ -3,7 +3,7 @@ package com.platon.rlp.datatypes;
 import java.math.BigInteger;
 
 public class Uint64 extends Uint {
-	private Uint64(BigInteger value) {
+	public Uint64(BigInteger value) {
 		super(64, value);
 	}
 

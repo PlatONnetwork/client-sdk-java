@@ -3,7 +3,7 @@ package com.platon.rlp.datatypes;
 import java.math.BigInteger;
 
 public class Uint128 extends Uint {
-	private Uint128(BigInteger value) {
+	public Uint128(BigInteger value) {
 		super(128, value);
 	}
 

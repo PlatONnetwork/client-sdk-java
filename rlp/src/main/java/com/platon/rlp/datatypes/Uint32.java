@@ -3,7 +3,7 @@ package com.platon.rlp.datatypes;
 import java.math.BigInteger;
 
 public class Uint32 extends Uint {
-	private Uint32(BigInteger value) {
+	public Uint32(BigInteger value) {
 		super(32, value);
 	}
 

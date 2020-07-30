@@ -3,7 +3,7 @@ package com.platon.rlp.datatypes;
 import java.math.BigInteger;
 
 public class Uint16 extends Uint {
-	private Uint16(BigInteger value) {
+	public Uint16(BigInteger value) {
 		super(16, value);
 	}
 
