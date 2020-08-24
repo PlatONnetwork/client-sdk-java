@@ -1928,8 +1928,8 @@ if(baseResponse.isStatusOk()){
 > Check the current account to get the reward details
 
 * **Introduction**
-  - String：address   client s account address
-  - List<String>： nodeList  Node list, if all is checked
+  - String: check the address of your account
+  - List<String>: nodeList Node list, if all is checked
 
 * **return value**
 
@@ -2692,7 +2692,7 @@ Put the bytecode attribute in ./build/contracts/HelloWorld.json into the HelloWo
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.13.1.4-20200703/platon-web3j-0.13.1.4.zip)）:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.13.1.4-20200824/platon-web3j-0.13.1.4.zip)）:
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -2805,15 +2805,15 @@ Constant methods only do queries without changing the state of the smart contrac
 Type result = contract.someMethod(<param1>, ...).send();
 ```
 
-## Wasm Contract Call
+## WASM Contract Call
 
-When deploying a Wasm smart contract on the blockchain, it must first be compiled into a bytecode format and then sent as part of the transaction. The Java SDK will help you generate a Java wrapper class for Wasm smart contracts, which can easily deploy Wasm smart contracts and call transaction methods, events, and constant methods in Wasm smart contracts.
+When deploying a WASM smart contract on the blockchain, it must first be compiled into a bytecode format and then sent as part of the transaction. The Java SDK will help you generate a Java wrapper class for WASM smart contracts, which can easily deploy WASM smart contracts and call transaction methods, events, and constant methods in WASM smart contracts.
 
-### Compile Wasm Source Code
+### Compile WASM Source Code
 
-* Compile Wasm contract source code with `CDT` compiler([CDT download](https://github.com/PlatONnetwork/PlatON-CDT/releases))：
+* Compile WASM contract source code with `CDT` compiler([CDT download](https://github.com/PlatONnetwork/PlatON-CDT/releases))：
 
-After the CDT installation is successful, you can compile the Wasm contract source code with the following command:
+After the CDT installation is successful, you can compile the WASM contract source code with the following command:
 
 ```shell
 $ platon-cpp <contract>.cpp 
@@ -2821,14 +2821,14 @@ $ platon-cpp <contract>.cpp
 
 After successful compilation, `<contract> .wasm` and` <contract> .abi.json` files will be generated.
 
-`wasm`，Output binary file of Wasm contract to provide transaction request.
-`abi.json`，Which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the Wasm smart contract.
+`wasm`，Output binary file of WASM contract to provide transaction request.
+`abi.json`，Which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the WASM smart contract.
 
-* Compile Wasm source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.1/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.1/))
+* Compile WASM source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.1/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.1/))
 
-### Wasm Smart Contract Java Packaging Class
+### WASM Smart Contract Java Packaging Class
 
-The Java SDK supports automatic generation of Java wrapper classes for Wasm smart contracts from an `abi` file.
+The Java SDK supports automatic generation of Java wrapper classes for WASM smart contracts from an `abi` file.
 
 * Generate Java wrapper classes via command line tools:
 
@@ -2843,9 +2843,9 @@ String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-
 org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
 ```
 
-The `wasm` and` abi.json` files are generated after compiling the Wasm contract source code.
+The `wasm` and` abi.json` files are generated after compiling the WASM contract source code.
 
-The main functions supported by the Java wrapper class corresponding to the Wasm smart contract:
+The main functions supported by the Java wrapper class corresponding to the WASM smart contract:
 - Build and deploy
 - Determine contract validity
 - Invoking transactions and events
