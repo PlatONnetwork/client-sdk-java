@@ -26,7 +26,7 @@ sidebar_label: Java SDK
 <dependency>
 	<groupId>com.platon.client</groupId>
 	<artifactId>core</artifactId>
-	<version>0.13.0.11</version>
+	<version>0.13.1.4</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.client:core:0.13.0.11"
+compile "com.platon.client:core:0.13.1.4"
 ```
 
 ## 基础api使用
@@ -2611,7 +2611,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，输出包含十六进制编码的solidity二进制文件以提供交易请求。
 `abi`，输出一个solidity的应用程序二进制接口（`ABI`）文件，它详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成solidity智能合约对应的Java包装类。
 
-* 使用`platon-truffle`编译solidity源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.0/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.0/))：
+* 使用`platon-truffle`编译solidity源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.1/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.1/))：
 
 > **step1.** 使用platon-truffle初始化项目
 
@@ -2692,7 +2692,7 @@ Warning: This is a pre-release compiler version, please do not use it in product
 
 Java SDK支持从`abi`文件中自动生成Solidity智能合约对应的Java包装类。
 
-* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/sdk/0.13.0.11-20200703/platon-web3j-0.13.0.11.zip)）：
+* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/sdk/0.13.1.4-20200703/platon-web3j-0.13.1.4.zip)）：
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -2824,7 +2824,7 @@ $ platon-cpp <contract>.cpp
 `wasm`，输出Wasm合约的二进制文件以提供交易请求。
 `abi.json`，详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成Wasm智能合约对应的Java包装类。
 
-* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.0/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.0/))
+* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.1/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.1/))
 
 ### Wasm智能合约Java包装类
 

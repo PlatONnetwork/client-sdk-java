@@ -20,14 +20,14 @@
 <dependency>
     <groupId>com.platon.client</groupId>
     <artifactId>core</artifactId>
-    <version>0.13.0.11</version>
+    <version>0.13.1.4</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.client:core:0.13.0.11"
+compile "com.platon.client:core:0.13.1.4"
 ```
 
 * use in project
@@ -35,7 +35,3 @@ compile "com.platon.client:core:0.13.0.11"
 ```
 Web3j web3 = Web3j.build(new HttpService("https://host:port"));
 ```
-
-
-# Other
-[more reference wiki](https://github.com/PlatONnetwork/wiki/wiki)
