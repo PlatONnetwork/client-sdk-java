@@ -140,4 +140,26 @@ public class Utils {
         }
         return result;
     }
+
+    public static <T, R extends Type<T>> List<R> typeMap1(List<T> input, Class<R> destType)
+            throws TypeMappingException {
+
+        List<R> result = new ArrayList<>(input.size());
+
+        if (!input.isEmpty()) {
+            try {
+                Constructor<R> constructor =
+                        destType.getDeclaredConstructor(input.get(0).getClass());
+                for (T value : input) {
+                    result.add(constructor.newInstance(value));
+                }
+            } catch (NoSuchMethodException
+                    | IllegalAccessException
+                    | InvocationTargetException
+                    | InstantiationException e) {
+                throw new TypeMappingException(e);
+            }
+        }
+        return result;
+    }
 }

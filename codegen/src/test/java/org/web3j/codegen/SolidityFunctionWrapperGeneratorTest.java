@@ -42,6 +42,13 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
     }
 
     @Test
+    public void testPramaAndReturns() throws Exception {
+        testCodeGenerationJvmTypes("pramaAndReturns", "PramaAndReturns");
+        testCodeGenerationSolidityTypes("pramaAndReturns", "PramaAndReturns");
+    }
+
+
+    @Test
     public void testGetFileNoExtension() {
         assertThat(getFileNameNoExtension(""), is(""));
         assertThat(getFileNameNoExtension("file"), is("file"));

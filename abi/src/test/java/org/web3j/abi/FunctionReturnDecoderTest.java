@@ -18,6 +18,7 @@ import org.web3j.abi.datatypes.Uint;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Bytes16;
 import org.web3j.abi.datatypes.generated.Bytes32;
+import org.web3j.abi.datatypes.generated.StaticArray2;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Hash;
 import org.web3j.utils.Numeric;
@@ -134,7 +135,7 @@ public class FunctionReturnDecoderTest {
                 outputParameters, NetworkParameters.MainNetParams.getChainId());
 
         List<Type> expected = Arrays.asList(
-                new StaticArray<>(new Uint256(BigInteger.valueOf(55)), new Uint256(BigInteger.ONE)),
+                new StaticArray2<>(new Uint256(BigInteger.valueOf(55)), new Uint256(BigInteger.ONE)),
                 new Uint256(BigInteger.TEN));
         assertThat(decoded, equalTo(expected));
     }

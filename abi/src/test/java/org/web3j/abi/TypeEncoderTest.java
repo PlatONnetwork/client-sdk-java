@@ -16,11 +16,7 @@ import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Ufixed;
 import org.web3j.abi.datatypes.Uint;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Bytes1;
-import org.web3j.abi.datatypes.generated.Bytes4;
-import org.web3j.abi.datatypes.generated.Bytes6;
-import org.web3j.abi.datatypes.generated.Int64;
-import org.web3j.abi.datatypes.generated.Uint64;
+import org.web3j.abi.datatypes.generated.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -208,7 +204,7 @@ public class TypeEncoderTest {
 
     @Test
     public void testFixedArray() {
-        StaticArray<Ufixed> array = new StaticArray<>(
+        StaticArray<Ufixed> array = new StaticArray2<>(
                 new Ufixed(BigInteger.valueOf(0x2), BigInteger.valueOf(0x2)),
                 new Ufixed(BigInteger.valueOf(0x8), BigInteger.valueOf(0x8))
         );

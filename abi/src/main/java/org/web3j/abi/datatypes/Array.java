@@ -2,11 +2,12 @@ package org.web3j.abi.datatypes;
 
 import org.web3j.abi.datatypes.generated.AbiTypes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
-/**
- * Fixed size array.
- */
+/** Fixed size array. */
 public abstract class Array<T extends Type> implements Type<List<T>> {
 
     private final Class<T> type;
@@ -39,6 +40,16 @@ public abstract class Array<T extends Type> implements Type<List<T>> {
 
         this.type = type;
         this.value = values;
+    }
+
+    @Override
+    public int bytes32PaddedLength() {
+        int length = 0;
+        for (int i = 0; i < value.size(); i++) {
+            int valueLength = value.get(i).bytes32PaddedLength();
+            length += valueLength;
+        }
+        return length;
     }
 
     @Override

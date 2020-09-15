@@ -12,13 +12,7 @@ import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.DynamicBytes;
 import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.abi.datatypes.generated.Bytes1;
-import org.web3j.abi.datatypes.generated.Bytes4;
-import org.web3j.abi.datatypes.generated.Bytes6;
-import org.web3j.abi.datatypes.generated.Int256;
-import org.web3j.abi.datatypes.generated.Int64;
-import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.abi.datatypes.generated.Uint64;
+import org.web3j.abi.datatypes.generated.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -252,7 +246,7 @@ public class TypeDecoderTest {
                 0,
                 new TypeReference.StaticArrayTypeReference<StaticArray<Uint256>>(2) {},
                 2,  NetworkParameters.MainNetParams.getChainId()),
-                is(new StaticArray<Uint256>(
+                is(new StaticArray2<Uint256>(
                         new Uint256(BigInteger.TEN),
                         new Uint256(BigInteger.valueOf(Long.MAX_VALUE)))));
 
@@ -265,7 +259,7 @@ public class TypeDecoderTest {
                 new TypeReference.StaticArrayTypeReference<StaticArray<Utf8String>>(2){},
                 2, NetworkParameters.MainNetParams.getChainId()
                 ),
-                equalTo(new StaticArray<Utf8String>(
+                equalTo(new StaticArray2<Utf8String>(
                         new Utf8String("Hello, world!"),
                         new Utf8String("world! Hello,"))));
     }

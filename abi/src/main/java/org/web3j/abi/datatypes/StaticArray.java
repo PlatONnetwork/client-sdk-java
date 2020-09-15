@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Static array type.
- */
-public class StaticArray<T extends Type> extends Array<T> {
+/** Static array type. */
+public abstract class StaticArray<T extends Type> extends Array<T> {
 
     /**
      * Warning: increasing this constant will cause more generated StaticArrayN types, see:

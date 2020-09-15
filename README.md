@@ -20,14 +20,14 @@
 <dependency>
     <groupId>com.platon.client</groupId>
     <artifactId>core</artifactId>
-    <version>0.13.1.4</version>
+    <version>0.13.1.5</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.client:core:0.13.1.4"
+compile "com.platon.client:core:0.13.1.5"
 ```
 
 * use in project
