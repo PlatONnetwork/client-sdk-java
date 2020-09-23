@@ -840,7 +840,7 @@ The BigInteger in the PlatonFilter property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
+PlatonFilter filter = new PlatonFilter();
 filter.addSingleTopic("");
 Request <?, PlatonFilter> request = currentValidWeb3j.platonNewFilter(filter);
 BigInteger req = request.send().getFilterId();
@@ -1007,7 +1007,7 @@ The BigInteger in the PlatonLog property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
+PlatonFilter filter = new PlatonFilter();
 filter.addSingleTopic("");
 Request<?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
 List<LogResult> = request.send(). GetLogs();
@@ -2705,7 +2705,7 @@ $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-c
 compile "com.platon.client:console:{version}"
 
 String args[] = {"generate", "/path/to/<smart-contract>.bin", "/path/to/<smart-contract>.abi", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-org.web3j.codegen.SolidityFunctionWrapperGenerator.run(args);
+SolidityFunctionWrapperGenerator.run(args);
 ```
 
 The `bin` and` abi` files are generated after compiling the solidity source code.
@@ -2840,7 +2840,7 @@ $ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-cont
 
 ```java
 String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-contract>.abi.json", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
+WasmFunctionWrapperGenerator.run(args);
 ```
 
 The `wasm` and` abi.json` files are generated after compiling the WASM contract source code.

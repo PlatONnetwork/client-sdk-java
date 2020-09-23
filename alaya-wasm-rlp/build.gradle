@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':alaya-utils')
+    compileOnly "org.projectlombok:lombok:1.18.10"
+}

@@ -1,12 +1,19 @@
 rootProject.name = 'client-sdk-java'
 
-include 'abi'
-include 'codegen'
-include 'console'
-include 'core'
-include 'crypto'
-include 'geth'
-include 'integration-tests'
-include 'rlp'
-include 'tuples'
-include 'utils'
+include 'alaya-integration-tests'
+include 'alaya-console'
+include 'alaya-codegen'
+include 'alaya-core'
+include 'alaya-solidity-abi'
+include 'alaya-wasm-abi'
+include 'alaya-crypto'
+include 'alaya-solidity-rlp'
+include 'alaya-wasm-rlp'
+include 'alaya-utils'
+include 'alaya-tuples'
+
+
+
+
+
+

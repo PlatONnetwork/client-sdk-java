@@ -840,7 +840,7 @@ PlatonFilter属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
+PlatonFilter filter = new PlatonFilter();
 filter.addSingleTopic("");
 Request <?, PlatonFilter> request = currentValidWeb3j.platonNewFilter(filter);
 BigInteger req = request.send().getFilterId();
@@ -1007,7 +1007,7 @@ PlatonLog属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
+PlatonFilter filter = new PlatonFilter();
 filter.addSingleTopic("");
 Request <?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
 List<LogResult> = request.send().getLogs();
@@ -2705,7 +2705,7 @@ $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-c
 compile "com.platon.client:console:{version}"
 
 String args[] = {"generate", "/path/to/<smart-contract>.bin", "/path/to/<smart-contract>.abi", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-org.web3j.codegen.SolidityFunctionWrapperGenerator.run(args);
+SolidityFunctionWrapperGenerator.run(args);
 ```
 
 其中`bin`和`abi`文件是编译solidity源代码以后生成的。
@@ -2840,7 +2840,7 @@ $ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-cont
 
 ```java
 String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-contract>.abi.json", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
+WasmFunctionWrapperGenerator.run(args);
 ```
 
 其中`wasm`和`abi.json`文件是编译wasm源代码以后生成的。
