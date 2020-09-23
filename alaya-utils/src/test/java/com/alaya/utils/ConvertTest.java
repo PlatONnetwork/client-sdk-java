@@ -55,8 +55,8 @@ public class ConvertTest {
 
     @Test
     public void testUnit() {
-        assertThat(Convert.Unit.fromString("lat"), is(Convert.Unit.ATP));
-        assertThat(Convert.Unit.fromString("lat"), is(Convert.Unit.ATP));
+        assertThat(Convert.Unit.fromString("atp"), is(Convert.Unit.ATP));
+        assertThat(Convert.Unit.fromString("atp"), is(Convert.Unit.ATP));
         assertThat(Convert.Unit.fromString("von"), is(Convert.Unit.VON));
     }
 }
