@@ -1,6 +1,6 @@
-package com.platon.sdk.contracts.evm;
+package com.alaya.contracts.evm;
 
-import com.platon.sdk.contracts.wasm.BaseContractTest;
+import com.alaya.contracts.wasm.BaseContractTest;
 import org.junit.Test;
 import com.alaya.protocol.core.methods.response.TransactionReceipt;
 

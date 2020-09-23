@@ -658,7 +658,7 @@ public class WasmFunctionWrapper extends Generator {
 	public static String getParameterizedType(ParameterizedTypeName parameterizedTypeName) {
 		String rawType = parameterizedTypeName.rawType.toString();
 		String argsType = getArgsType(parameterizedTypeName);
-		return "\nnew com.platon.rlp.ParameterizedTypeImpl(\nnew java.lang.reflect.Type[] {" + argsType + "}, \n" + rawType + ".class" + ", \n"
+		return "\nnew com.alaya.rlp.wasm.ParameterizedTypeImpl(\nnew java.lang.reflect.Type[] {" + argsType + "}, \n" + rawType + ".class" + ", \n"
 				+ rawType + ".class)";
 	}
 

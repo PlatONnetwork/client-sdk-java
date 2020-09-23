@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts.wasm;
+package com.alaya.contracts.wasm;
 
 import com.alaya.rlp.wasm.datatypes.WasmAddress;
 import com.alaya.abi.wasm.WasmEventEncoder;

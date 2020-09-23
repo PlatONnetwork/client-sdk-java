@@ -27,6 +27,7 @@ public class CredentialsTest {
         assertEquals(credentials.getAddress(NetworkParameters.TestNetParams),SampleKeys.BECH32_ADDRESS.getTestnet());
         assertThat(credentials.getEcKeyPair(), is(SampleKeys.KEY_PAIR));
 
+        NetworkParameters.setCurrentNetwork(NetworkParameters.MainNetParams.getChainId());
         assertEquals(credentials.getAddress(),SampleKeys.BECH32_ADDRESS.getMainnet());
 
         NetworkParameters.setCurrentNetwork(NetworkParameters.TestNetParams.getChainId());

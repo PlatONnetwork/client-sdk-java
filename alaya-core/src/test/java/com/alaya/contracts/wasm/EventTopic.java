@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts.wasm;
+package com.alaya.contracts.wasm;
 
 import com.alaya.rlp.wasm.ParameterizedTypeImpl;
 import com.alaya.tx.WasmContract;

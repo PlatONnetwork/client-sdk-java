@@ -35,18 +35,4 @@ public class Bech32Test {
         String hex =  Bech32.addressDecodeHex(bech32Address);
         assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
     }
-
-
-    @Test
-    public void test() {
-        String hex = "0x1000000000000000000000000000000000000001";
-        String bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
-        System.out.println("main = "+ hex + "->" +bech32Address);
-
-        hex = "0x1000000000000000000000000000000000000001";
-        bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
-        System.out.println(hex + "->" +bech32Address);
-
-        System.out.println("main = "+ hex + "->" +bech32Address);
-    }
 }

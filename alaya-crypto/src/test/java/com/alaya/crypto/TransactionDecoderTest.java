@@ -16,7 +16,7 @@ public class TransactionDecoderTest {
         BigInteger nonce = BigInteger.ZERO;
         BigInteger gasPrice = BigInteger.ONE;
         BigInteger gasLimit = BigInteger.TEN;
-        String to = "lat1x0yc7gxaw0tmk82n8392xdcl9vcvd6773zg2s0";
+        String to = "atp1x0yc7gxaw0tmk82n8392xdcl9vcvd677g57j0q";
         BigInteger value = BigInteger.valueOf(Long.MAX_VALUE);
         RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
                 nonce, gasPrice, gasLimit, to, value);
@@ -38,7 +38,7 @@ public class TransactionDecoderTest {
         BigInteger nonce = BigInteger.ZERO;
         BigInteger gasPrice = BigInteger.ONE;
         BigInteger gasLimit = BigInteger.TEN;
-        String to = "lat1x0yc7gxaw0tmk82n8392xdcl9vcvd6773zg2s0";
+        String to = "atp1x0yc7gxaw0tmk82n8392xdcl9vcvd677g57j0q";
         BigInteger value = BigInteger.valueOf(Long.MAX_VALUE);
 
         RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
@@ -69,6 +69,7 @@ public class TransactionDecoderTest {
         //CHECKSTYLE:ON
         RawTransaction result = TransactionDecoder.decode(hexTransaction);
         SignedRawTransaction signedResult = (SignedRawTransaction) result;
-        assertEquals(SampleKeys.BECH32_ADDRESS.getMainnet(), signedResult.getFrom());
+
+        assertEquals(SampleKeys.BECH32_ADDRESS.getTestnet(), signedResult.getFrom());
     }
 }

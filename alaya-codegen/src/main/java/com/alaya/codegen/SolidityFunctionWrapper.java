@@ -464,7 +464,7 @@ public class SolidityFunctionWrapper extends Generator {
                 return "new " + parameterSpecType + "(\n"
                         + componentType
                         + ".class,\n"
-                        + "        org.web3j.abi.Utils.typeMap("
+                        + "        com.alaya.abi.solidity.Utils.typeMap("
                         + parameterSpec.name + ", " + typeMapInput + "))";
             }
         } else {
@@ -684,7 +684,7 @@ public class SolidityFunctionWrapper extends Generator {
 
             ParameterizedTypeName parameterizedTupleType = ParameterizedTypeName.get(
                     ClassName.get(
-                            "org.web3j.tuples.generated",
+                            "com.alaya.tuples.generated",
                             "Tuple" + returnTypes.size()),
                     returnTypes.toArray(
                             new TypeName[returnTypes.size()]));
@@ -989,7 +989,7 @@ public class SolidityFunctionWrapper extends Generator {
 
     private static Class<?> getStaticArrayTypeReferenceClass(String type) {
         try {
-            return Class.forName("org.web3j.abi.datatypes.generated.StaticArray" + type);
+            return Class.forName("com.alaya.abi.solidity.datatypes.generated.StaticArray" + type);
         } catch (ClassNotFoundException e) {
             // Unfortunately we can't encode it's length as a type if it's > 32.
             return StaticArray.class;

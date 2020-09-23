@@ -35,7 +35,7 @@ public class TransactionEncoderTest {
     @Test
     public void testEip155Encode() {
         assertThat(TransactionEncoder.encode(createEip155RawTransaction(), NetworkParameters.MainNetParams.getChainId()),
-                is(Numeric.hexStringToByteArray("0xec098504a817c8008252089433c98f20dd73d7bb1d533c4aa3371f2b30c6ebde880de0b6b3a764000080648080")));
+                is(Numeric.hexStringToByteArray("0xef098504a817c8008252089433c98f20dd73d7bb1d533c4aa3371f2b30c6ebde880de0b6b3a7640000808303113a8080")));
     }
 
     @Test
@@ -43,12 +43,12 @@ public class TransactionEncoderTest {
         // https://github.com/ethereum/EIPs/issues/155
         Credentials credentials = Credentials.create("0x4646464646464646464646464646464646464646464646464646464646464646");
         assertThat(TransactionEncoder.signMessage(createEip155RawTransaction(),  NetworkParameters.MainNetParams.getChainId(), credentials),
-                is(Numeric.hexStringToByteArray("0xf86d098504a817c8008252089433c98f20dd73d7bb1d533c4aa3371f2b30c6ebde880de0b6b3a76400008081eba0767f0f54ed49b6078961214a388c73f1e68b885c02cd800b5e3da81b1bf3eba3a048e6fc2d15ca4a8511bb68c3f53e014ca2f7362e98b0a94dc5771708e854bd90")));
+                is(Numeric.hexStringToByteArray("0xf86f098504a817c8008252089433c98f20dd73d7bb1d533c4aa3371f2b30c6ebde880de0b6b3a76400008083062297a0045a8bbf804cc2c6a59f5f6acb544bc60efee31648581d00ebe58dfad67bb10aa01653665e957167922c95385d64590c1c56c7d225ef2ee214add692103a659514")));
     }
 
     private static RawTransaction createEtherTransaction() {
         return RawTransaction.createEtherTransaction(
-                BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, "lat1x0yc7gxaw0tmk82n8392xdcl9vcvd6773zg2s0",
+                BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, "atp1x0yc7gxaw0tmk82n8392xdcl9vcvd677g57j0q",
                 BigInteger.valueOf(Long.MAX_VALUE));
     }
 
@@ -61,7 +61,7 @@ public class TransactionEncoderTest {
     private static RawTransaction createEip155RawTransaction() {
         return RawTransaction.createEtherTransaction(
                 BigInteger.valueOf(9), BigInteger.valueOf(20000000000L),
-                BigInteger.valueOf(21000), "lat1x0yc7gxaw0tmk82n8392xdcl9vcvd6773zg2s0",
+                BigInteger.valueOf(21000), "atp1x0yc7gxaw0tmk82n8392xdcl9vcvd677g57j0q",
                 BigInteger.valueOf(1000000000000000000L));
     }
 }

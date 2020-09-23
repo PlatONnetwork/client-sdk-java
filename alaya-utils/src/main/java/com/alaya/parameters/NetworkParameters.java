@@ -8,13 +8,13 @@ public class NetworkParameters {
 
     static {
         MainNetParams = new NetworkParameters(Hrp.ATP.getHrp(),
-                "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp7pn3ep",
-                "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzsjx8h7",
-                "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrdyjj2v",
-                "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqyva9ztf",
-                "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq93t3hkm",
-                "lat1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxlcypcy",
-                100);
+                "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp8h9fxw",
+                "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzfyslg3",
+                "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr5jy24r",
+                "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqy4tn65x",
+                "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9ga80f5",
+                "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxxwje8t",
+                201018);
         TestNetParams = createTestNetParams(102);
         CurrentNetwork = MainNetParams;
     }
@@ -25,12 +25,12 @@ public class NetworkParameters {
 
     public static NetworkParameters createTestNetParams(long chainId){
         return new NetworkParameters(Hrp.ATX.getHrp() ,
-                "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp3yp7hw",
-                "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzlh5ge3",
-                "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrzpqayr",
-                "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqyrchd9x",
-                "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq97wrcc5",
-                "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxsakwkt",
+                "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y",
+                "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzrzv4mm",
+                "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr75cqxf",
+                "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqyld0s8v",
+                "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9zmm967",
+                "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqxvgwn5p",
                 chainId);
     }
 
