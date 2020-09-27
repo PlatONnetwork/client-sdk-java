@@ -17,9 +17,9 @@ public abstract class BaseContractTest {
 	protected static final BigInteger GAS_LIMIT = BigInteger.valueOf(4712388L);
 	protected static final BigInteger GAS_PRICE = BigInteger.valueOf(10000000000L);
 
-	protected static final long chainId = 103;
-	protected static final String nodeUrl = "http://192.168.120.141:6789";
-	protected static final String privateKey = "a689f0879f53710e9e0c1025af410a530d6381eebb5916773195326e123b822b";
+	protected static final long chainId =  NetworkParameters.MainNetParams.getChainId();
+	protected static final String nodeUrl = "http://192.168.120.150:6789";
+	protected static final String privateKey = "0x3a4130e4abb887a296eb38c15bbd83253ab09492a505b10a54b008b7dcc1668";
 
 	protected Credentials credentials;
 	protected String credentialsAddress;
@@ -31,7 +31,7 @@ public abstract class BaseContractTest {
 	@Before
 	public void init() {
 		credentials = Credentials.create(privateKey);
-		credentialsAddress = credentials.getAddress(NetworkParameters.TestNetParams);
+		credentialsAddress = credentials.getAddress(NetworkParameters.MainNetParams);
 		web3jService = new HttpService(nodeUrl);
 		web3j = Web3j.build(web3jService);
 		transactionManager = new RawTransactionManager(web3j, credentials, chainId);

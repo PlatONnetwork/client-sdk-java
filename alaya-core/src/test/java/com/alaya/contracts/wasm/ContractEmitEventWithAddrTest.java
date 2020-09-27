@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 public class ContractEmitEventWithAddrTest extends BaseContractTest {
 
 
-    private String address = "lax1yr0mnwz58c5da2erhxch0ruf68swusu9hwjp20";
+    private String address = "atp1t8achgl2jtxhft096unvjx2z3zwd890d4ugu8g";
 
     @Test
     public void deployByT() throws Exception {

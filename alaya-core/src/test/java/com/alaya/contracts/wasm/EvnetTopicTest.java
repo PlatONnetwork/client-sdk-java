@@ -9,13 +9,14 @@ import com.alaya.protocol.core.methods.response.TransactionReceipt;
 
 import java.util.Arrays;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class EvnetTopicTest extends BaseContractTest {
 
-    private String address = "lax1mjw3l86y59cvgu3t9w6u55m5e0yxz0n3ang8sq";
+    private String address = "atp1h0qgmr800mej9wnvt5f9hevwwfhxh5yw7k22l4";
 
-//    @Test
+    @Test
     public void deployByC() throws Exception {
         EventTopic contract = EventTopic.deploy(web3j, credentials, gasProvider, chainId).send();
         System.out.println("address="+contract.getContractAddress());
@@ -24,11 +25,14 @@ public class EvnetTopicTest extends BaseContractTest {
     @Test
     public void setStringAndAddressAndBoolean() throws Exception {
         final String str = "你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc你好abc";
-        WasmAddress wasmAddress = new WasmAddress("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq");
+        WasmAddress wasmAddress = new WasmAddress("atp1f7wp58h65lvphgw2hurl9sa943w0f7qc879x50");
         final Boolean bool = true;
 
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setStringAndAddressAndBoolean(str,wasmAddress,bool).send();
+
+        assertThat(contract.getStringAndAddrAndBooleanEvents(transactionReceipt).size(), is(1));
+
         contract.getStringAndAddrAndBooleanEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(str)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(wasmAddress)));
@@ -40,6 +44,9 @@ public class EvnetTopicTest extends BaseContractTest {
         final String strShort = "你好abc";
         final Boolean boolFalse = false;
         transactionReceipt = contract.setStringAndAddressAndBoolean(strShort, wasmAddress, boolFalse).send();
+
+        assertThat(contract.getStringAndAddrAndBooleanEvents(transactionReceipt).size(), is(1));
+
         contract.getStringAndAddrAndBooleanEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(strShort)));
             assertThat(log.topic3, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(boolFalse)));
@@ -58,6 +65,8 @@ public class EvnetTopicTest extends BaseContractTest {
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setIntNumber(int8, int16).send();
 
+        assertThat(contract.getIntNumberEvents(transactionReceipt).size(), is(1));
+
         contract.getIntNumberEvents(transactionReceipt).forEach(log ->{
 //            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8)));
 //            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16)));
@@ -73,6 +82,8 @@ public class EvnetTopicTest extends BaseContractTest {
         Int16 int16z= Int16.of(10000);
 
         transactionReceipt = contract.setIntNumber(int8z, int16z).send();
+
+        assertThat(contract.getIntNumberEvents(transactionReceipt).size(), is(1));
 
         contract.getIntNumberEvents(transactionReceipt).forEach(log ->{
 //            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8z)));
@@ -95,6 +106,8 @@ public class EvnetTopicTest extends BaseContractTest {
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setUintNumber(int8, int16).send();
 
+        assertThat(contract.getUintNumberEvents(transactionReceipt).size(), is(1));
+
         contract.getUintNumberEvents(transactionReceipt).forEach(log ->{
 //            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8)));
 //            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16)));
@@ -110,6 +123,9 @@ public class EvnetTopicTest extends BaseContractTest {
         Uint16 int16z= Uint16.of(42767);
 
         transactionReceipt = contract.setUintNumber(int8z, int16z).send();
+
+        assertThat(contract.getUintNumberEvents(transactionReceipt).size(), is(1));
+
         contract.getUintNumberEvents(transactionReceipt).forEach(log ->{
 //            assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8z)));
 //            assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16z)));
@@ -130,6 +146,8 @@ public class EvnetTopicTest extends BaseContractTest {
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setIntArray(int8s, int16s).send();
 
+        assertThat(contract.getIntArrayEvents(transactionReceipt).size(), is(1));
+
         contract.getIntArrayEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
@@ -146,6 +164,8 @@ public class EvnetTopicTest extends BaseContractTest {
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setUintArray(int8s, int16s).send();
 
+        assertThat(contract.getUintArrayEvents(transactionReceipt).size(), is(1));
+
         contract.getUintArrayEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16s)));
@@ -161,6 +181,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setIntVector(int8s, int16s).send();
+
+        assertThat(contract.getIntVectorEvents(transactionReceipt).size(), is(1));
 
         contract.getIntVectorEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
@@ -183,6 +205,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         transactionReceipt = contract.setIntVector(int8sl, int16sl).send();
 
+        assertThat(contract.getIntVectorEvents(transactionReceipt).size(), is(1));
+
         contract.getIntVectorEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8sl)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16sl)));
@@ -196,6 +220,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setUintVector(int8s, int16s).send();
+
+        assertThat(contract.getUintVectorEvents(transactionReceipt).size(), is(1));
 
         contract.getUintVectorEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8s)));
@@ -217,6 +243,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         transactionReceipt = contract.setUintVector(int8sl, int16sl).send();
 
+        assertThat(contract.getUintVectorEvents(transactionReceipt).size(), is(1));
+
         contract.getUintVectorEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int8sl)));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(int16sl)));
@@ -231,6 +259,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setIntList(Arrays.asList(int8s), Arrays.asList(int16s)).send();
+
+        assertThat(contract.getIntListEvents(transactionReceipt).size(), is(1));
 
         contract.getIntListEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8s))));
@@ -253,6 +283,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         transactionReceipt = contract.setIntList(Arrays.asList(int8sl), Arrays.asList(int16sl)).send();
 
+        assertThat(contract.getIntListEvents(transactionReceipt).size(), is(1));
+
         contract.getIntListEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8sl))));
             assertThat(log.topic2, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter( Arrays.asList(int16sl))));
@@ -266,6 +298,8 @@ public class EvnetTopicTest extends BaseContractTest {
 
         EventTopic contract = loadD();
         TransactionReceipt transactionReceipt = contract.setUintList(Arrays.asList(int8s), Arrays.asList(int16s)).send();
+
+        assertThat(contract.getUintListEvents(transactionReceipt).size(), is(1));
 
         contract.getUintListEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8s))));
@@ -286,6 +320,8 @@ public class EvnetTopicTest extends BaseContractTest {
                 Uint16.of(42767), Uint16.of(1200),Uint16.of(42767), Uint16.of(1200),Uint16.of(42767), Uint16.of(1200),Uint16.of(42767), Uint16.of(1200)};
 
         transactionReceipt = contract.setUintList(Arrays.asList(int8sl), Arrays.asList(int16sl)).send();
+
+        assertThat(contract.getUintListEvents(transactionReceipt).size(), is(1));
 
         contract.getUintListEvents(transactionReceipt).forEach(log ->{
             assertThat(log.topic1, CoreMatchers.is(WasmEventEncoder.encodeIndexParameter(Arrays.asList(int8sl))));

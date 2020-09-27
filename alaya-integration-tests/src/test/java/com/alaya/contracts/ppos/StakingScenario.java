@@ -148,7 +148,7 @@ public class StakingScenario extends Scenario {
         String nodeName = "integration-node1-u";
         String webSite = "https://www.platon.network/#/";
         String details = "integration-node1-details-u";
-        BigInteger rewardPer = BigInteger.valueOf(2000L);
+        BigInteger rewardPer = BigInteger.valueOf(1000L);
 
         PlatonSendTransaction platonSendTransaction = stakingContract.updateStakingInfoReturnTransaction(new UpdateStakingParam.Builder()
                 .setBenifitAddress(benifitAddress)

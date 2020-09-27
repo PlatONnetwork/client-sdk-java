@@ -1,6 +1,5 @@
 package com.alaya.contracts.evm;
 
-import com.alaya.contracts.wasm.BaseContractTest;
 import org.junit.Test;
 import com.alaya.protocol.core.methods.response.TransactionReceipt;
 
@@ -11,7 +10,7 @@ import static org.junit.Assert.assertThat;
 
 public class SolEventTest extends BaseContractTest {
 
-    private String address = "lax16hv4rfzvvvyhdhhyhhca92d06ddzqte0k9vdvq";
+    private String address = "atp1y33t47jmnuvu8c444ccrlgu34rswtstztakn9p";
 
     @Test
     public void deployByT() throws Exception {

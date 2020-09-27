@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 
 public class TweetAccountTest extends BaseContractTest {
 
-    private String address = "lax13370uaqqsm5x7sy6gf4qkhpq9jxk50ajxvlkza";
+    private String address = "atp1yj7qv95dna3w4mjla4y5c9pqvjhj8acwzuvwg0";
 
     @Test
     public void deployByT() throws Exception {

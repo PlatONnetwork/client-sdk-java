@@ -11,8 +11,8 @@ import java.util.List;
 
 public class NodeContractTest {
 
-	private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.145:6789"));
-    long chainId = 103;
+	private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.150:6789"));
+    long chainId = 201018;
 
     private NodeContract nodeContract;
 
@@ -61,8 +61,10 @@ public class NodeContractTest {
     public void getCandidateList() {
         try {
         	CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
-            baseResponse.getData().stream().forEach(
-                    item -> System.out.println(item.getNodeId())
+            baseResponse.getData().stream().forEach( item -> {
+                System.out.println(item);
+                }
+
             );
         } catch (Exception e) {
             e.printStackTrace();
