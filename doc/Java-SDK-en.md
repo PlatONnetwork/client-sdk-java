@@ -24,9 +24,9 @@ Depending on the build tool, use the following methods to add related dependenci
 > maven reference:
 ```xml
 <dependency>
-	<groupId>com.platon.client</groupId>
-	<artifactId>core</artifactId>
-	<version>0.13.1.5</version>
+    <groupId>com.alaya.client</groupId>
+    <artifactId>alaya-core</artifactId>
+    <version>0.13.2.0</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.13.1.5
+compile "com.alaya.client:alaya-core:0.13.2.0"
 ```
 
 ## Basic API Usage
@@ -52,15 +52,15 @@ compile "com.platon.client:core:0.13.1.5
 ```java
 String hex = "0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818";
 String bech32Address = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(), hex);
-assertThat(bech32Address, is("lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390"));
+assertThat(bech32Address, is("atx1f7wp58h65lvphgw2hurl9sa943w0f7qcdcev89"));
 
 bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
-assertThat(bech32Address, is("lat1f7wp58h65lvphgw2hurl9sa943w0f7qc7gn7tq"));
+assertThat(bech32Address, is("atp1f7wp58h65lvphgw2hurl9sa943w0f7qc879x50"));
 ```
 
 * **bech32 address to 0x address**
 ```java
-String bech32Address = "lax1f7wp58h65lvphgw2hurl9sa943w0f7qc3dp390";
+String bech32Address = "atx1f7wp58h65lvphgw2hurl9sa943w0f7qcdcev89";
 String hex =  Bech32.addressDecodeHex(bech32Address);
 assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
 ```
@@ -72,7 +72,7 @@ assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
 > Because bech 32 format address support is added, in order to be compatible with the old API, the function of setting the network parameters globally is added, and the old API outputs the corresponding format address according to the current network parameters
 
 ```java
-NetworkParameters.setCurrentNetwork(101L);  // default mainnet 100L
+NetworkParameters.setCurrentNetwork(101L);  // default mainnet 201018L
 ```
 
 ### Wallet Related
@@ -1429,9 +1429,9 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
+BigDecimal stakingAmount = Convert.toVon("1000000", Convert.Unit.ATP);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
+String benifitAddress = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
 String externalId = "";
 String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
@@ -1513,7 +1513,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
+String benifitAddress = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
 String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
@@ -1558,7 +1558,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT);
+BigDecimal addStakingAmount = Convert.toVon("4000000", Convert.Unit.ATP);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -1722,7 +1722,7 @@ CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+long chainId = 201018;
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
 ```
@@ -1755,7 +1755,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal amount = Convert.toVon("500000", Unit.LAT);
+BigDecimal amount = Convert.toVon("500000", Convert.Unit.ATP);
 
 PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
@@ -1827,7 +1827,7 @@ CallResponse<Delegation>
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String address = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
+String address = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
 BigInteger stakingBlockNum = new BigInteger("10888");
 
 CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
@@ -1862,14 +1862,14 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
+BigDecimal stakingAmount = Convert.toVon("500000", Convert.Unit.ATP);
 BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 
 if(baseResponse.isStatusOk()){ 
-       BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+    BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
 }
 ```
 
@@ -1882,7 +1882,7 @@ if(baseResponse.isStatusOk()){
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+long chainId = 201018;
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
 ```
@@ -1964,9 +1964,9 @@ CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(deleg
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+long chainId = 201018;
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-NodeContract contract = NodeContract.load(web3j, credentials, chainId);
+NodeContract nodeContract = NodeContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -2174,9 +2174,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+long chainId = 201018;
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
+ProposalContract proposalContract = ProposalContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -2450,7 +2450,7 @@ ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "103";
+long chainId = 201018;
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 ```
@@ -2522,7 +2522,7 @@ CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignT
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+long chainId = 201018;
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
 ```
