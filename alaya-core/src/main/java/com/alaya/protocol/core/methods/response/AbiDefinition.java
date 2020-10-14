@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AbiDefinition {
-    private boolean constant;
+    private Boolean constant;
     private List<NamedType> inputs;
     private String name;
     private List<NamedType> outputs;
     private String type;
-    private boolean payable;
+    private Boolean payable;
 
     /**
      * The stateMutability function modifier.
@@ -31,7 +31,7 @@ public class AbiDefinition {
      *     </ul>
      * </p>
      */
-    private String stateMutability;
+    private String stateMutability = "nonpayable";
     
     public AbiDefinition() {
     }
@@ -55,6 +55,9 @@ public class AbiDefinition {
 
 
     public boolean isConstant() {
+        if(constant == null){
+            return "pure".equals(getStateMutability()) || "view".equals(getStateMutability());
+        }
         return constant;
     }
 
@@ -99,6 +102,9 @@ public class AbiDefinition {
     }
 
     public boolean isPayable() {
+        if(payable == null){
+            return "payable".equals(getStateMutability());
+        }
         return payable;
     }
 
