@@ -26,7 +26,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
     <groupId>com.alaya.client</groupId>
     <artifactId>alaya-core</artifactId>
-    <version>0.13.2.0</version>
+    <version>0.13.2.1</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.alaya.client:alaya-core:0.13.2.0"
+compile "com.alaya.client:alaya-core:0.13.2.1"
 ```
 
 ## Basic API Usage
@@ -2611,7 +2611,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，Output a hex-encoded solidity binary file to provide transaction requests.
 `abi`，Output a solidity application binary interface (`ABI`) file, which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the solidity smart contract.
 
-* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.1/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.1/))：
+* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.2/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.2/))：
 
 > **step1.** Initialize the project with platon-truffle
 
@@ -2692,10 +2692,10 @@ Put the bytecode attribute in ./build/contracts/HelloWorld.json into the HelloWo
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/sdk/0.13.1.5-20200915/platon-web3j-0.13.1.5.zip)）:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](http://download.alaya.network/alaya/sdk/0.13.2/alaya-web3j-0.13.2.1.zip)）:
 
 ```shell
-$ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
+$ alaya-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
 ```
 
 * Directly call the tool class in the Java SDK to generate a Java wrapper class:
@@ -2824,7 +2824,7 @@ After successful compilation, `<contract> .wasm` and` <contract> .abi.json` file
 `wasm`，Output binary file of WASM contract to provide transaction request.
 `abi.json`，Which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the WASM smart contract.
 
-* Compile WASM source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.1/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.1/))
+* Compile WASM source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.2/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.2/))
 
 ### WASM Smart Contract Java Packaging Class
 
@@ -2833,7 +2833,7 @@ The Java SDK supports automatic generation of Java wrapper classes for WASM smar
 * Generate Java wrapper classes via command line tools:
 
 ```shell
-$ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-contract>.abi.json -o /path/to/src/main/java -p com.your.organisation.name
+$ alaya-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-contract>.abi.json -o /path/to/src/main/java -p com.your.organisation.name
 ```
 
 * Directly call the tool class in the Java SDK to generate a Java wrapper class:
