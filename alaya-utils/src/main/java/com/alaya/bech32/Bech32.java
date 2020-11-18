@@ -17,6 +17,7 @@
 package com.alaya.bech32;
 
 import com.alaya.utils.Numeric;
+import com.alaya.utils.Strings;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -143,6 +144,8 @@ public class Bech32 {
     }
 
     public static byte[] addressDecode(final String str) throws RuntimeException {
+        if(Strings.isBlank(str)) return new byte[]{};
+
         Bech32.Bech32Data bech32Data  = decode(str);
         return convertBits(bech32Data.data, 5, 8, false);
     }

@@ -53,10 +53,23 @@ public class UpdateStakingParam {
         this.rewardPer = builder.rewardPer;
     }
 
+    @Override
+    public String toString() {
+        return "UpdateStakingParam{" +
+                "nodeId='" + nodeId + '\'' +
+                ", benifitAddress='" + benifitAddress + '\'' +
+                ", externalId='" + externalId + '\'' +
+                ", nodeName='" + nodeName + '\'' +
+                ", webSite='" + webSite + '\'' +
+                ", details='" + details + '\'' +
+                ", rewardPer=" + rewardPer +
+                '}';
+    }
+
     public List<Type> getSubmitInputParameters() {
         return Arrays.asList(new BytesType(Bech32.addressDecode(benifitAddress)),
                 new BytesType(Numeric.hexStringToByteArray(nodeId)),
-                new Uint16(rewardPer),
+                rewardPer == null? null: new Uint16(rewardPer),
                 new Utf8String(externalId),
                 new Utf8String(nodeName),
                 new Utf8String(webSite),

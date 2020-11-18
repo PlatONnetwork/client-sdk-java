@@ -2,6 +2,7 @@ package com.alaya.protocol.core.methods.response.bean;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.StringJoiner;
 
 public class EconomicConfig {
     /**
@@ -28,6 +29,11 @@ public class EconomicConfig {
      * innerAcc的配置项
      */
     private InnerAcc innerAcc;
+
+    /**
+     * config item for restricting plan
+     */
+    private Restricting restricting;
 
     public EconomicConfig() {
     }
@@ -586,6 +592,27 @@ public class EconomicConfig {
         }
     }
 
+    public class Restricting {
+        /**
+         * minimum of each releasing of restricting plan
+         */
+        private BigInteger minimumRelease;
+
+        public BigInteger getMinimumRelease() {
+            return minimumRelease;
+        }
+
+        public void setMinimumRelease(BigInteger minimumRelease) {
+            this.minimumRelease = minimumRelease;
+        }
+
+        @Override
+        public String toString() {
+            return "Restricting{" +
+                    "minimumRelease=" + minimumRelease +
+                    '}';
+        }
+    }
     @Override
     public String toString() {
         return "EconomicConfig{" +

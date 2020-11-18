@@ -172,6 +172,8 @@ public final class Numeric {
     }
 
     public static byte[] hexStringToByteArray(String input) {
+        if(Strings.isBlank(input)) return new byte[]{};
+
         String cleanInput = cleanHexPrefix(input);
 
         int len = cleanInput.length();
