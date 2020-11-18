@@ -28,7 +28,9 @@ public class EncoderUtils {
         if (parameters != null && parameters.size() > 0) {
 
             for (Type parameter : parameters) {
-                if (parameter instanceof IntType) {
+                if (parameter ==null){
+                    result.add(RlpString.create(RlpEncoder.encode(RlpString.EMPTY)));
+                }else if (parameter instanceof IntType) {
                     result.add(RlpString.create(RlpEncoder.encode(RlpString.create(((IntType) parameter).getValue()))));
                 } else if (parameter instanceof BytesType) {
                     result.add(RlpString.create(RlpEncoder.encode(RlpString.create(((BytesType) parameter).getValue()))));

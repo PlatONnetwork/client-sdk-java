@@ -15,7 +15,6 @@ public class UpdateStakingParamTest {
     @Test
     public void getSubmitInputParameters() throws Exception {
 
-
         UpdateStakingParam.Builder builder = new UpdateStakingParam.Builder();
         builder.setBenifitAddress(null);
         builder.setNodeId(null);
