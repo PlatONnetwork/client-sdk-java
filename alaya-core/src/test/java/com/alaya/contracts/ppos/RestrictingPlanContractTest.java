@@ -1,16 +1,15 @@
 package com.alaya.contracts.ppos;
 
+import com.alaya.contracts.ppos.dto.BaseResponse;
+import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.RestrictingPlan;
 import com.alaya.contracts.ppos.dto.resp.RestrictingItem;
-import com.alaya.contracts.ppos.dto.resp.RestrictingPlan;
-import org.junit.Before;
-import org.junit.Test;
 import com.alaya.crypto.Credentials;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
 import com.alaya.protocol.http.HttpService;
-
-import com.alaya.contracts.ppos.dto.BaseResponse;
-import com.alaya.contracts.ppos.dto.CallResponse;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

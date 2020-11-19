@@ -1,11 +1,11 @@
-package com.alaya.contracts.ppos.dto.resp;
+package com.alaya.contracts.ppos.dto;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.alaya.contracts.ppos.abi.CustomType;
 import com.alaya.rlp.solidity.RlpList;
 import com.alaya.rlp.solidity.RlpString;
 import com.alaya.rlp.solidity.RlpType;
 import com.alaya.utils.Numeric;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.math.BigInteger;
 

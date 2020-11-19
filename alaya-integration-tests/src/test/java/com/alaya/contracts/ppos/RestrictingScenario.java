@@ -1,24 +1,22 @@
 package com.alaya.contracts.ppos;
 
-import static org.junit.Assert.assertTrue;
+import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.RestrictingPlan;
+import com.alaya.contracts.ppos.dto.TransactionResponse;
+import com.alaya.contracts.ppos.dto.resp.RestrictingItem;
+import com.alaya.protocol.core.DefaultBlockParameterName;
+import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
+import com.alaya.tx.Transfer;
+import com.alaya.utils.Convert;
+import com.alaya.utils.Convert.Unit;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-import com.alaya.contracts.ppos.Scenario;
-import com.alaya.protocol.core.DefaultBlockParameterName;
-import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
-import com.alaya.tx.Transfer;
-import com.alaya.utils.Convert;
-import com.alaya.utils.Convert.Unit;
-
-import com.alaya.contracts.ppos.dto.CallResponse;
-import com.alaya.contracts.ppos.dto.TransactionResponse;
-import com.alaya.contracts.ppos.dto.resp.RestrictingItem;
-import com.alaya.contracts.ppos.dto.resp.RestrictingPlan;
+import static org.junit.Assert.assertTrue;
 
 public class RestrictingScenario extends Scenario {
 
