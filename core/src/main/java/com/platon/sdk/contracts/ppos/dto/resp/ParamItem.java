@@ -23,6 +23,11 @@ public class ParamItem {
     public ParamItem() {
     }
 
+    public ParamItem(String module, String name) {
+        this.module = module;
+        this.name = name;
+    }
+
     public String getModule() {
         return module;
     }
