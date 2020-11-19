@@ -2,7 +2,6 @@ package com.alaya.protocol.core.methods.response.bean;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.StringJoiner;
 
 public class EconomicConfig {
     /**
@@ -86,6 +85,13 @@ public class EconomicConfig {
         this.innerAcc = innerAcc;
     }
 
+    public Restricting getRestricting() {
+        return restricting;
+    }
+
+    public void setRestricting(Restricting restricting) {
+        this.restricting = restricting;
+    }
 
     public class Common {
         /**

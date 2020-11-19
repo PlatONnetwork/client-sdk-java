@@ -8,6 +8,7 @@ import com.alaya.contracts.ppos.dto.CallResponse;
 import com.alaya.contracts.ppos.dto.RestrictingPlan;
 import com.alaya.contracts.ppos.dto.TransactionResponse;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
+import com.alaya.contracts.ppos.dto.req.CreateRestrictingParam;
 import com.alaya.contracts.ppos.dto.resp.RestrictingItem;
 import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
@@ -81,6 +82,17 @@ public class RestrictingPlanContract extends BaseContract {
     public RemoteCall<TransactionResponse> createRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
         Function function = createRestrictingPlanFunction(account, restrictingPlanList);
         return executeRemoteCallTransaction(function);
+    }
+
+    /**
+     * 获取更新质押信息GasProvider
+     *
+     * @param param CreateRestrictingParam
+     * @return
+     */
+    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, NoSupportFunctionType {
+        Function function = createRestrictingPlanFunction(param.getAccount(), Arrays.asList(param.getPlans()));
+        return getDefaultGasProvider(function);
     }
 
     /**
