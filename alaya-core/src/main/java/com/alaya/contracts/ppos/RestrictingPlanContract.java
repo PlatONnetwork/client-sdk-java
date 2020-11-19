@@ -85,7 +85,7 @@ public class RestrictingPlanContract extends BaseContract {
     }
 
     /**
-     * 获取更新质押信息GasProvider
+     * 获取创建锁仓计划的GasProvider
      *
      * @param param CreateRestrictingParam
      * @return
