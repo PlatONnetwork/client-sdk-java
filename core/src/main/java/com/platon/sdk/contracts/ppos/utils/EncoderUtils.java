@@ -4,7 +4,10 @@ import com.platon.sdk.contracts.ppos.abi.CustomStaticArray;
 import com.platon.sdk.contracts.ppos.abi.CustomType;
 import com.platon.sdk.contracts.ppos.abi.Function;
 import org.bouncycastle.util.encoders.Hex;
-import org.web3j.abi.datatypes.*;
+import org.web3j.abi.datatypes.BytesType;
+import org.web3j.abi.datatypes.IntType;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
 import org.web3j.rlp.RlpString;
@@ -25,7 +28,9 @@ public class EncoderUtils {
         if (parameters != null && parameters.size() > 0) {
 
             for (Type parameter : parameters) {
-                if (parameter instanceof IntType) {
+                if (parameter == null) {
+                    result.add(RlpString.EMPTY);
+                } else if (parameter instanceof IntType) {
                     result.add(RlpString.create(RlpEncoder.encode(RlpString.create(((IntType) parameter).getValue()))));
                 } else if (parameter instanceof BytesType) {
                     result.add(RlpString.create(RlpEncoder.encode(RlpString.create(((BytesType) parameter).getValue()))));

@@ -1,11 +1,11 @@
 package org.web3j.utils;
 
+import org.web3j.exceptions.MessageDecodingException;
+import org.web3j.exceptions.MessageEncodingException;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-
-import org.web3j.exceptions.MessageDecodingException;
-import org.web3j.exceptions.MessageEncodingException;
 
 /**
  * <p>Message codec functions.</p>
@@ -172,6 +172,9 @@ public final class Numeric {
     }
 
     public static byte[] hexStringToByteArray(String input) {
+
+        if(Strings.isBlank(input)) return new byte[]{};
+
         String cleanInput = cleanHexPrefix(input);
 
         int len = cleanInput.length();

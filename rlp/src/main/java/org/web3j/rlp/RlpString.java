@@ -1,15 +1,18 @@
 package org.web3j.rlp;
 
+import org.web3j.utils.Numeric;
+
 import java.math.BigInteger;
 import java.util.Arrays;
-
-import org.web3j.utils.Numeric;
 
 /**
  * RLP string type.
  */
 public class RlpString implements RlpType {
-    private static final byte[] EMPTY = new byte[]{ };
+
+    private static final byte[] EMPTY_ARRAY = new byte[]{};
+
+    public static final RlpString EMPTY = new RlpString(EMPTY_ARRAY);
 
     private final byte[] value;
 
@@ -43,7 +46,7 @@ public class RlpString implements RlpType {
     public static RlpString create(BigInteger value) {
         // RLP encoding only supports positive integer values
         if (value.signum() < 1) {
-            return new RlpString(EMPTY);
+            return new RlpString(EMPTY_ARRAY);
         } else {
             byte[] bytes = value.toByteArray();
             if (bytes[0] == 0) {  // remove leading zero

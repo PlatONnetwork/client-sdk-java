@@ -29,6 +29,11 @@ public class EconomicConfig {
      */
     private InnerAcc innerAcc;
 
+    /**
+     * config item for restricting plan
+     */
+    private Restricting restricting;
+
     public EconomicConfig() {
     }
 
@@ -586,6 +591,28 @@ public class EconomicConfig {
         }
     }
 
+    public class Restricting {
+        /**
+         * minimum of each releasing of restricting plan
+         */
+        private BigInteger minimumRelease;
+
+        public BigInteger getMinimumRelease() {
+            return minimumRelease;
+        }
+
+        public void setMinimumRelease(BigInteger minimumRelease) {
+            this.minimumRelease = minimumRelease;
+        }
+
+        @Override
+        public String toString() {
+            return "Restricting{" +
+                    "minimumRelease=" + minimumRelease +
+                    '}';
+        }
+    }
+
     @Override
     public String toString() {
         return "EconomicConfig{" +
@@ -595,6 +622,7 @@ public class EconomicConfig {
                 ", gov=" + gov +
                 ", reward=" + reward +
                 ", innerAcc=" + innerAcc +
+                ", restricting=" + restricting +
                 '}';
     }
 }
