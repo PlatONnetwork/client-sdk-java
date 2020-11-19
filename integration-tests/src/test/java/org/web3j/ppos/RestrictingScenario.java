@@ -1,12 +1,9 @@
 package org.web3j.ppos;
 
-import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.RestrictingPlan;
+import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
+import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
 import org.junit.Test;
 import org.web3j.Scenario;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -15,10 +12,12 @@ import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
 
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
-import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
-import com.platon.sdk.contracts.ppos.dto.resp.RestrictingPlan;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class RestrictingScenario extends Scenario {
 

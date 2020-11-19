@@ -1,4 +1,4 @@
-package com.platon.sdk.contracts.ppos.dto.resp;
+package com.platon.sdk.contracts.ppos.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.platon.sdk.contracts.ppos.abi.CustomType;

@@ -1,17 +1,15 @@
 package com.platon.sdk.contracts.ppos;
 
+import com.platon.sdk.contracts.ppos.dto.BaseResponse;
+import com.platon.sdk.contracts.ppos.dto.CallResponse;
+import com.platon.sdk.contracts.ppos.dto.RestrictingPlan;
+import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
 import org.web3j.protocol.http.HttpService;
-
-import com.platon.sdk.contracts.ppos.RestrictingPlanContract;
-import com.platon.sdk.contracts.ppos.dto.BaseResponse;
-import com.platon.sdk.contracts.ppos.dto.CallResponse;
-import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
-import com.platon.sdk.contracts.ppos.dto.resp.RestrictingPlan;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
