@@ -6,6 +6,7 @@ import com.platon.sdk.contracts.ppos.dto.CallResponse;
 import com.platon.sdk.contracts.ppos.dto.RestrictingPlan;
 import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.dto.req.CreateRestrictingParam;
 import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.Bech32;
@@ -81,6 +82,19 @@ public class RestrictingPlanContract extends BaseContract {
     public RemoteCall<TransactionResponse> createRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) {
         Function function = createRestrictingPlanFunction(account, restrictingPlanList);
         return executeRemoteCallTransaction(function);
+    }
+
+
+    /**
+     * 获取更新质押信息GasProvider
+     * 获取创建锁仓计划的GasProvider
+     *
+     * @param param CreateRestrictingParam
+     * @return
+     */
+    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, NoSupportFunctionType {
+        Function function = createRestrictingPlanFunction(param.getAccount(), Arrays.asList(param.getPlans()));
+        return getDefaultGasProvider(function);
     }
 
     /**
