@@ -85,6 +85,13 @@ public class EconomicConfig {
         this.innerAcc = innerAcc;
     }
 
+    public Restricting getRestricting() {
+        return restricting;
+    }
+
+    public void setRestricting(Restricting restricting) {
+        this.restricting = restricting;
+    }
 
     public class Common {
         /**
