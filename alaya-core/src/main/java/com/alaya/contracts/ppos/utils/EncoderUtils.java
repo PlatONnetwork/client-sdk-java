@@ -7,11 +7,11 @@ import com.alaya.abi.solidity.datatypes.Utf8String;
 import com.alaya.contracts.ppos.abi.CustomStaticArray;
 import com.alaya.contracts.ppos.abi.CustomType;
 import com.alaya.contracts.ppos.abi.Function;
-import org.bouncycastle.util.encoders.Hex;
 import com.alaya.rlp.solidity.RlpEncoder;
 import com.alaya.rlp.solidity.RlpList;
 import com.alaya.rlp.solidity.RlpString;
 import com.alaya.rlp.solidity.RlpType;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,8 @@ public class EncoderUtils {
         if (parameters != null && parameters.size() > 0) {
 
             for (Type parameter : parameters) {
-                if (parameter ==null){
-                    result.add(RlpString.create(RlpEncoder.encode(RlpString.EMPTY)));
+                if (parameter == null) {
+                    result.add(RlpString.EMPTY);
                 }else if (parameter instanceof IntType) {
                     result.add(RlpString.create(RlpEncoder.encode(RlpString.create(((IntType) parameter).getValue()))));
                 } else if (parameter instanceof BytesType) {

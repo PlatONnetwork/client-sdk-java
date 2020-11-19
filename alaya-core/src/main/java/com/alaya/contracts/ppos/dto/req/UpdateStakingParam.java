@@ -67,13 +67,14 @@ public class UpdateStakingParam {
     }
 
     public List<Type> getSubmitInputParameters() {
-        return Arrays.asList(new BytesType(Bech32.addressDecode(benifitAddress)),
-                new BytesType(Numeric.hexStringToByteArray(nodeId)),
-                rewardPer == null? null: new Uint16(rewardPer),
-                new Utf8String(externalId),
-                new Utf8String(nodeName),
-                new Utf8String(webSite),
-                new Utf8String(details));
+        return Arrays.asList(
+                benifitAddress == null ? null:new BytesType(Bech32.addressDecode(benifitAddress)),
+                nodeId == null ? null:new BytesType(Numeric.hexStringToByteArray(nodeId)),
+                rewardPer == null ? null: new Uint16(rewardPer),
+                externalId == null ? null : new Utf8String(externalId),
+                nodeName == null ? null :new Utf8String(nodeName),
+                webSite == null ? null :new Utf8String(webSite),
+                details == null ? null :new Utf8String(details));
     }
 
 
