@@ -8,6 +8,7 @@ import com.platon.sdk.contracts.ppos.dto.enums.VoteOption;
 import com.platon.sdk.contracts.ppos.dto.resp.GovernParam;
 import com.platon.sdk.contracts.ppos.dto.resp.Proposal;
 import com.platon.sdk.contracts.ppos.dto.resp.TallyResult;
+import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.datatypes.BytesType;
@@ -148,7 +149,7 @@ public class ProposalContract extends BaseContract {
      * @param verifier       投票验证人
      * @return
      */
-    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, NoSupportFunctionType {
+    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
         return getDefaultGasProvider(function);
     }
@@ -218,7 +219,7 @@ public class ProposalContract extends BaseContract {
      * @param verifier
      * @return
      */
-    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, NoSupportFunctionType {
+    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createDeclareVersionFunction(programVersion, verifier);
         return getDefaultGasProvider(function);
     }
@@ -280,7 +281,7 @@ public class ProposalContract extends BaseContract {
      * @param proposal
      * @return
      */
-    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, NoSupportFunctionType {
+    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createSubmitProposalFunction(proposal);
         return getDefaultGasProvider(function);
     }

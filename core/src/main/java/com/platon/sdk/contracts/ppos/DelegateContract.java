@@ -8,6 +8,7 @@ import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
 import com.platon.sdk.contracts.ppos.dto.resp.Delegation;
 import com.platon.sdk.contracts.ppos.dto.resp.DelegationIdInfo;
+import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
@@ -114,10 +115,10 @@ public class DelegateContract extends BaseContract {
      *
      * @param nodeId
      * @param stakingAmountType
-     * @param amount
+     * @param amount`
      * @return
              */
-    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType {
+    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
         return 	getDefaultGasProvider(function);
     }
@@ -193,7 +194,7 @@ public class DelegateContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) throws IOException, NoSupportFunctionType {
+    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createUnDelegateFunction(nodeId, stakingBlockNum, amount);
     	return getDefaultGasProvider(function);
     }

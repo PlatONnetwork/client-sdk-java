@@ -8,6 +8,7 @@ import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.req.CreateRestrictingParam;
 import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
+import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
@@ -92,7 +93,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @param param CreateRestrictingParam
      * @return
      */
-    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, NoSupportFunctionType {
+    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createRestrictingPlanFunction(param.getAccount(), Arrays.asList(param.getPlans()));
         return getDefaultGasProvider(function);
     }
@@ -119,7 +120,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @param restrictingPlanList
      * @return
      */
-    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, NoSupportFunctionType {
+    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, NoSupportFunctionType, EstimateGasException {
     	Function function = createRestrictingPlanFunction(account, restrictingPlanList);
     	return getDefaultGasProvider(function);
     }

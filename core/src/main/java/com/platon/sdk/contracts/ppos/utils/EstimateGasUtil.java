@@ -38,7 +38,7 @@ public class EstimateGasUtil {
                     .add(getInterfaceDynamicGasLimit(function.getType(),function.getInputParameters()))
                     .add(getDataGasLimit(EncoderUtils.functionEncoder(function)));
         } else {
-            throw new NoSupportFunctionType();
+            throw new NoSupportFunctionType(function.getType());
         }
     }
 

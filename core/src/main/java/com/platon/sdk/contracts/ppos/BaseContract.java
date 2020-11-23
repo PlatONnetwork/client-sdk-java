@@ -6,6 +6,7 @@ import com.platon.sdk.contracts.ppos.dto.CallResponse;
 import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.common.ErrorCode;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
+import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.contracts.ppos.utils.EncoderUtils;
 import com.platon.sdk.contracts.ppos.utils.EstimateGasUtil;
@@ -16,10 +17,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.Log;
-import org.web3j.protocol.core.methods.response.PlatonCall;
-import org.web3j.protocol.core.methods.response.PlatonSendTransaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpList;
@@ -206,7 +204,7 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
 
-    protected GasProvider getDefaultGasProvider(Function function) throws IOException, NoSupportFunctionType {
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, NoSupportFunctionType, EstimateGasException {
         if(EstimateGasUtil.isSupportLocal(function.getType())){
             return  getDefaultGasProviderLocal(function);
         } else {
@@ -214,9 +212,13 @@ public abstract class BaseContract extends ManagedTransaction {
         }
     }
 
-    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException {
+    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
         Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress,  EncoderUtils.functionEncoder(function));
-        BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
+
+        //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
+        PlatonEstimateGas estimateGasResult = web3j.platonEstimateGas(transaction).send();
+        BigInteger gasLimit = estimateGasResult.getAmountUsed();
+
         BigInteger gasPrice = getDefaultGasPrice(function.getType());
         GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
         return  gasProvider;

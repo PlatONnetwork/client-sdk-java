@@ -1,11 +1,14 @@
 package com.platon.sdk.contracts.ppos.exception;
 
-public class NoSupportFunctionType extends  Exception {
+import org.web3j.protocol.exceptions.TransactionException;
 
-    public NoSupportFunctionType() {
+public class NoSupportFunctionType extends TransactionException {
+
+    public NoSupportFunctionType(int type) {
+        super(String.valueOf(type));
     }
 
-    public NoSupportFunctionType(String message) {
+    /*public NoSupportFunctionType(String message) {
         super(message);
     }
 
@@ -15,5 +18,5 @@ public class NoSupportFunctionType extends  Exception {
 
     public NoSupportFunctionType(Throwable cause) {
         super(cause);
-    }
+    }*/
 }

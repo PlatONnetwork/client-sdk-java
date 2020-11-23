@@ -8,6 +8,7 @@ import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.common.ErrorCode;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.resp.Reward;
+import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
 import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
@@ -28,7 +29,6 @@ import org.web3j.tx.gas.GasProvider;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -107,7 +107,7 @@ public class RewardContract extends BaseContract {
      *
      * @return
      */
-    public GasProvider getWithdrawDelegateRewardGasProvider() throws IOException, NoSupportFunctionType {
+    public GasProvider getWithdrawDelegateRewardGasProvider() throws IOException, NoSupportFunctionType, EstimateGasException {
     	Function function = createWithdrawDelegateRewardFunction();
     	return getDefaultGasProvider(function);
     }
