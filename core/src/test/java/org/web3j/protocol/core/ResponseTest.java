@@ -1,9 +1,9 @@
 package org.web3j.protocol.core;
 
-import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
 import org.junit.Test;
 import org.web3j.protocol.ResponseTester;
 import org.web3j.protocol.core.methods.response.*;
+import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -399,11 +399,7 @@ public class ResponseTest extends ResponseTester {
         );
 
         PlatonEstimateGas ethEstimateGas = deserialiseResponse(PlatonEstimateGas.class);
-        try {
-            assertThat(ethEstimateGas.getAmountUsed(), equalTo(BigInteger.valueOf(21000)));
-        } catch (EstimateGasException e) {
-            e.printStackTrace();
-        }
+        assertThat(Numeric.decodeQuantity(ethEstimateGas.getResult()), equalTo(BigInteger.valueOf(21000)));
     }
 
     @Test
