@@ -2,6 +2,7 @@ package com.alaya.protocol.core;
 
 import com.alaya.protocol.ResponseTester;
 import com.alaya.protocol.core.methods.response.*;
+import com.alaya.utils.Numeric;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -398,7 +399,7 @@ public class ResponseTest extends ResponseTester {
         );
 
         PlatonEstimateGas ethEstimateGas = deserialiseResponse(PlatonEstimateGas.class);
-        assertThat(ethEstimateGas.getAmountUsed(), equalTo(BigInteger.valueOf(21000)));
+        assertThat(Numeric.decodeQuantity(ethEstimateGas.getResult()), equalTo(BigInteger.valueOf(21000)));
     }
 
     @Test

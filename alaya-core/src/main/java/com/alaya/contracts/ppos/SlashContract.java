@@ -1,17 +1,18 @@
 package com.alaya.contracts.ppos;
 
-import com.alaya.contracts.ppos.abi.Function;
-import com.alaya.contracts.ppos.dto.common.DuplicateSignType;
-import com.alaya.contracts.ppos.dto.common.FunctionType;
-import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
-import com.alaya.contracts.ppos.dto.CallResponse;
-import com.alaya.contracts.ppos.dto.TransactionResponse;
-import com.alaya.parameters.NetworkParameters;
 import com.alaya.abi.solidity.datatypes.BytesType;
 import com.alaya.abi.solidity.datatypes.Utf8String;
 import com.alaya.abi.solidity.datatypes.generated.Uint32;
 import com.alaya.abi.solidity.datatypes.generated.Uint64;
+import com.alaya.contracts.ppos.abi.Function;
+import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.TransactionResponse;
+import com.alaya.contracts.ppos.dto.common.DuplicateSignType;
+import com.alaya.contracts.ppos.dto.common.FunctionType;
+import com.alaya.contracts.ppos.exception.EstimateGasException;
+import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
+import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.RemoteCall;
 import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
@@ -99,7 +100,7 @@ public class SlashContract extends BaseContract {
      * @param data
      * @return
      */
-    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, NoSupportFunctionType {
+    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, NoSupportFunctionType, EstimateGasException {
     	 Function function = createReportDoubleSignFunction(duplicateSignType, data);
     	 return getDefaultGasProvider(function);
     }

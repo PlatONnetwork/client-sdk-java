@@ -2,24 +2,20 @@ package com.alaya.contracts.ppos;
 
 import com.alaya.contracts.ppos.abi.Function;
 import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.TransactionResponse;
 import com.alaya.contracts.ppos.dto.common.ErrorCode;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
+import com.alaya.contracts.ppos.exception.EstimateGasException;
 import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.contracts.ppos.utils.EncoderUtils;
 import com.alaya.contracts.ppos.utils.EstimateGasUtil;
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alaya.contracts.ppos.dto.TransactionResponse;
-import org.bouncycastle.util.encoders.Hex;
 import com.alaya.crypto.Credentials;
 import com.alaya.exceptions.MessageDecodingException;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.DefaultBlockParameterName;
 import com.alaya.protocol.core.RemoteCall;
 import com.alaya.protocol.core.methods.request.Transaction;
-import com.alaya.protocol.core.methods.response.Log;
-import com.alaya.protocol.core.methods.response.PlatonCall;
-import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.alaya.protocol.core.methods.response.*;
 import com.alaya.protocol.exceptions.TransactionException;
 import com.alaya.rlp.solidity.RlpDecoder;
 import com.alaya.rlp.solidity.RlpList;
@@ -34,6 +30,8 @@ import com.alaya.tx.gas.ContractGasProvider;
 import com.alaya.tx.gas.GasProvider;
 import com.alaya.utils.JSONUtil;
 import com.alaya.utils.Numeric;
+import com.alibaba.fastjson.annotation.JSONField;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -206,7 +204,7 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
 
-    protected GasProvider getDefaultGasProvider(Function function) throws IOException, NoSupportFunctionType {
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, NoSupportFunctionType, EstimateGasException {
         if(EstimateGasUtil.isSupportLocal(function.getType())){
             return  getDefaultGasProviderLocal(function);
         } else {
@@ -214,9 +212,20 @@ public abstract class BaseContract extends ManagedTransaction {
         }
     }
 
-    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException {
+    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
         Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress,  EncoderUtils.functionEncoder(function));
-        BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
+
+        BigInteger gasLimit;
+        PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
+        String result = platonEstimateGas.getResult();
+        if(platonEstimateGas.hasError()){
+            throw new EstimateGasException(result);
+        }else{
+            gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
+        }
+
+
+        //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
         BigInteger gasPrice = getDefaultGasPrice(function.getType());
         GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
         return  gasProvider;

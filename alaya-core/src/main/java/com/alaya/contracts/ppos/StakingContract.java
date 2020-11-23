@@ -1,19 +1,20 @@
 package com.alaya.contracts.ppos;
 
-import com.alaya.contracts.ppos.abi.Function;
-import com.alaya.contracts.ppos.dto.common.FunctionType;
-import com.alaya.contracts.ppos.dto.req.StakingParam;
-import com.alaya.contracts.ppos.dto.resp.Node;
-import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
-import com.alaya.contracts.ppos.dto.CallResponse;
-import com.alaya.contracts.ppos.dto.TransactionResponse;
-import com.alaya.contracts.ppos.dto.enums.StakingAmountType;
-import com.alaya.contracts.ppos.dto.req.UpdateStakingParam;
-import com.alaya.parameters.NetworkParameters;
 import com.alaya.abi.solidity.datatypes.BytesType;
 import com.alaya.abi.solidity.datatypes.generated.Uint16;
 import com.alaya.abi.solidity.datatypes.generated.Uint256;
+import com.alaya.contracts.ppos.abi.Function;
+import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.TransactionResponse;
+import com.alaya.contracts.ppos.dto.common.FunctionType;
+import com.alaya.contracts.ppos.dto.enums.StakingAmountType;
+import com.alaya.contracts.ppos.dto.req.StakingParam;
+import com.alaya.contracts.ppos.dto.req.UpdateStakingParam;
+import com.alaya.contracts.ppos.dto.resp.Node;
+import com.alaya.contracts.ppos.exception.EstimateGasException;
+import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
+import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.RemoteCall;
 import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
@@ -145,7 +146,7 @@ public class StakingContract extends BaseContract {
      * @param stakingParam
      * @return
      */
-    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, NoSupportFunctionType {
+    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createStakingFunction(stakingParam);
         return getDefaultGasProvider(function);
     }
@@ -211,7 +212,7 @@ public class StakingContract extends BaseContract {
      * @param nodeId
      * @return
      */
-    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, NoSupportFunctionType {
+    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createUnStakingFunction(nodeId);
         return getDefaultGasProvider(function);
     }
@@ -274,7 +275,7 @@ public class StakingContract extends BaseContract {
      * @param updateStakingParam
      * @return
      */
-    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, NoSupportFunctionType {
+    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createUpdateStakingFunction(updateStakingParam);
         return getDefaultGasProvider(function);
     }
@@ -342,7 +343,7 @@ public class StakingContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType {
+    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
         return getDefaultGasProvider(function);
     }

@@ -1,10 +1,10 @@
 package com.alaya.contracts.ppos.utils;
 
+import com.alaya.abi.solidity.datatypes.Type;
 import com.alaya.contracts.ppos.abi.CustomStaticArray;
 import com.alaya.contracts.ppos.abi.Function;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
 import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
-import com.alaya.abi.solidity.datatypes.Type;
 import com.alaya.utils.Numeric;
 
 import java.math.BigInteger;
@@ -38,7 +38,7 @@ public class EstimateGasUtil {
                     .add(getInterfaceDynamicGasLimit(function.getType(),function.getInputParameters()))
                     .add(getDataGasLimit(EncoderUtils.functionEncoder(function)));
         } else {
-            throw new NoSupportFunctionType();
+            throw new NoSupportFunctionType(function.getType());
         }
     }
 

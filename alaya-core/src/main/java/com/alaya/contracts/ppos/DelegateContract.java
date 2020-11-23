@@ -1,21 +1,22 @@
 package com.alaya.contracts.ppos;
 
+import com.alaya.abi.solidity.datatypes.BytesType;
+import com.alaya.abi.solidity.datatypes.generated.Uint16;
+import com.alaya.abi.solidity.datatypes.generated.Uint256;
+import com.alaya.abi.solidity.datatypes.generated.Uint64;
+import com.alaya.bech32.Bech32;
 import com.alaya.contracts.ppos.abi.Function;
+import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.TransactionResponse;
 import com.alaya.contracts.ppos.dto.common.ErrorCode;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
 import com.alaya.contracts.ppos.dto.enums.StakingAmountType;
 import com.alaya.contracts.ppos.dto.resp.Delegation;
 import com.alaya.contracts.ppos.dto.resp.DelegationIdInfo;
+import com.alaya.contracts.ppos.exception.EstimateGasException;
 import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
-import com.alaya.contracts.ppos.dto.CallResponse;
-import com.alaya.contracts.ppos.dto.TransactionResponse;
-import com.alaya.bech32.Bech32;
-import com.alaya.parameters.NetworkParameters;
-import com.alaya.abi.solidity.datatypes.BytesType;
-import com.alaya.abi.solidity.datatypes.generated.Uint16;
-import com.alaya.abi.solidity.datatypes.generated.Uint256;
-import com.alaya.abi.solidity.datatypes.generated.Uint64;
 import com.alaya.crypto.Credentials;
+import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.RemoteCall;
 import com.alaya.protocol.core.methods.response.Log;
@@ -117,7 +118,7 @@ public class DelegateContract extends BaseContract {
      * @param amount
      * @return
              */
-    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType {
+    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
         return 	getDefaultGasProvider(function);
     }
@@ -193,7 +194,7 @@ public class DelegateContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) throws IOException, NoSupportFunctionType {
+    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createUnDelegateFunction(nodeId, stakingBlockNum, amount);
     	return getDefaultGasProvider(function);
     }

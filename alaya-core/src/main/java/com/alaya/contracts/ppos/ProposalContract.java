@@ -1,24 +1,25 @@
 package com.alaya.contracts.ppos;
 
+import com.alaya.abi.solidity.datatypes.BytesType;
+import com.alaya.abi.solidity.datatypes.Utf8String;
+import com.alaya.abi.solidity.datatypes.generated.Uint32;
+import com.alaya.abi.solidity.datatypes.generated.Uint8;
 import com.alaya.contracts.ppos.abi.Function;
+import com.alaya.contracts.ppos.dto.CallResponse;
+import com.alaya.contracts.ppos.dto.TransactionResponse;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
 import com.alaya.contracts.ppos.dto.enums.VoteOption;
 import com.alaya.contracts.ppos.dto.resp.GovernParam;
 import com.alaya.contracts.ppos.dto.resp.Proposal;
 import com.alaya.contracts.ppos.dto.resp.TallyResult;
+import com.alaya.contracts.ppos.exception.EstimateGasException;
 import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
-import com.alaya.contracts.ppos.dto.CallResponse;
-import com.alaya.contracts.ppos.dto.TransactionResponse;
-import com.alaya.parameters.NetworkParameters;
-import com.alaya.abi.solidity.datatypes.BytesType;
-import com.alaya.abi.solidity.datatypes.Utf8String;
-import com.alaya.abi.solidity.datatypes.generated.Uint32;
-import com.alaya.abi.solidity.datatypes.generated.Uint8;
 import com.alaya.crypto.Credentials;
-import com.alaya.protocol.core.methods.response.bean.ProgramVersion;
+import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.RemoteCall;
 import com.alaya.protocol.core.methods.response.PlatonSendTransaction;
+import com.alaya.protocol.core.methods.response.bean.ProgramVersion;
 import com.alaya.tx.TransactionManager;
 import com.alaya.tx.gas.GasProvider;
 import com.alaya.utils.Numeric;
@@ -148,7 +149,7 @@ public class ProposalContract extends BaseContract {
      * @param verifier       投票验证人
      * @return
      */
-    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, NoSupportFunctionType {
+    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
         return getDefaultGasProvider(function);
     }
@@ -218,7 +219,7 @@ public class ProposalContract extends BaseContract {
      * @param verifier
      * @return
      */
-    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, NoSupportFunctionType {
+    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createDeclareVersionFunction(programVersion, verifier);
         return getDefaultGasProvider(function);
     }
@@ -280,7 +281,7 @@ public class ProposalContract extends BaseContract {
      * @param proposal
      * @return
      */
-    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, NoSupportFunctionType {
+    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, NoSupportFunctionType, EstimateGasException {
         Function function = createSubmitProposalFunction(proposal);
         return getDefaultGasProvider(function);
     }
