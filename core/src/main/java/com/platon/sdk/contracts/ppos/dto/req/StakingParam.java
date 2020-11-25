@@ -1,20 +1,19 @@
 package com.platon.sdk.contracts.ppos.dto.req;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-
+import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
+import com.platon.sdk.utlis.Bech32;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Int256;
 import org.web3j.abi.datatypes.generated.Uint16;
 import org.web3j.abi.datatypes.generated.Uint32;
-import com.platon.sdk.utlis.Bech32;
 import org.web3j.platon.bean.ProgramVersion;
 import org.web3j.utils.Numeric;
 
-import com.platon.sdk.contracts.ppos.dto.enums.StakingAmountType;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
 public class StakingParam implements Cloneable {
 
@@ -184,10 +183,10 @@ public class StakingParam implements Cloneable {
         return Arrays.<Type>asList(new Uint16(stakingAmountType.getValue())
                 , new BytesType(Bech32.addressDecode(benifitAddress))
                 , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                , new Utf8String(externalId)
-                , new Utf8String(nodeName)
-                , new Utf8String(webSite)
-                , new Utf8String(details)
+                , externalId == null ? null : new Utf8String(externalId)
+                , nodeName == null ? null : new Utf8String(nodeName)
+                , webSite == null ? null : new Utf8String(webSite)
+                , details == null ? null : new Utf8String(details)
                 , new Int256(amount)
                 , new Uint16(rewardPer)
                 , new Uint32(processVersion.getProgramVersion())
