@@ -1,9 +1,5 @@
 package com.alaya.contracts.ppos.dto.req;
 
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-
 import com.alaya.abi.solidity.datatypes.BytesType;
 import com.alaya.abi.solidity.datatypes.Type;
 import com.alaya.abi.solidity.datatypes.Utf8String;
@@ -11,10 +7,13 @@ import com.alaya.abi.solidity.datatypes.generated.Int256;
 import com.alaya.abi.solidity.datatypes.generated.Uint16;
 import com.alaya.abi.solidity.datatypes.generated.Uint32;
 import com.alaya.bech32.Bech32;
+import com.alaya.contracts.ppos.dto.enums.StakingAmountType;
 import com.alaya.protocol.core.methods.response.bean.ProgramVersion;
 import com.alaya.utils.Numeric;
 
-import com.alaya.contracts.ppos.dto.enums.StakingAmountType;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
 public class StakingParam implements Cloneable {
 
@@ -184,10 +183,10 @@ public class StakingParam implements Cloneable {
         return Arrays.<Type>asList(new Uint16(stakingAmountType.getValue())
                 , new BytesType(Bech32.addressDecode(benifitAddress))
                 , new BytesType(Numeric.hexStringToByteArray(nodeId))
-                , new Utf8String(externalId)
-                , new Utf8String(nodeName)
-                , new Utf8String(webSite)
-                , new Utf8String(details)
+                , externalId == null ? null : new Utf8String(externalId)
+                , nodeName == null ? null : new Utf8String(nodeName)
+                , webSite == null ? null : new Utf8String(webSite)
+                , details == null ? null : new Utf8String(details)
                 , new Int256(amount)
                 , new Uint16(rewardPer)
                 , new Uint32(processVersion.getProgramVersion())
