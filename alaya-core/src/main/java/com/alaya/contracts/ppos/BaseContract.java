@@ -204,12 +204,13 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
 
-    protected GasProvider getDefaultGasProvider(Function function) throws IOException, NoSupportFunctionType, EstimateGasException {
-        if(EstimateGasUtil.isSupportLocal(function.getType())){
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException {
+        /*if(EstimateGasUtil.isSupportLocal(function.getType())){
             return  getDefaultGasProviderLocal(function);
         } else {
-            return  getDefaultGasProviderRemote(function);
-        }
+            return  getDefaultGasProviderRemote(function);`
+        }*/
+        return  getDefaultGasProviderRemote(function);
     }
 
     private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
