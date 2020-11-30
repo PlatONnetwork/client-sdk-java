@@ -281,7 +281,7 @@ public class ProposalContract extends BaseContract {
      * @param proposal
      * @return
      */
-    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, EstimateGasException {
         Function function = createSubmitProposalFunction(proposal);
         return getDefaultGasProvider(function);
     }

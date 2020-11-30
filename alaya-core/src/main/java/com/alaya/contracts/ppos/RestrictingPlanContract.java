@@ -91,7 +91,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @param param CreateRestrictingParam
      * @return
      */
-    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, EstimateGasException {
         Function function = createRestrictingPlanFunction(param.getAccount(), Arrays.asList(param.getPlans()));
         return getDefaultGasProvider(function);
     }

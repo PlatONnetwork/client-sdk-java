@@ -146,7 +146,7 @@ public class StakingContract extends BaseContract {
      * @param stakingParam
      * @return
      */
-    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, EstimateGasException {
         Function function = createStakingFunction(stakingParam);
         return getDefaultGasProvider(function);
     }

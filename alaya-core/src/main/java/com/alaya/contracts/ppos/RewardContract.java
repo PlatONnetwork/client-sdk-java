@@ -11,7 +11,6 @@ import com.alaya.contracts.ppos.dto.common.ErrorCode;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
 import com.alaya.contracts.ppos.dto.resp.Reward;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
-import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -107,7 +106,7 @@ public class RewardContract extends BaseContract {
      *
      * @return
      */
-    public GasProvider getWithdrawDelegateRewardGasProvider() throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getWithdrawDelegateRewardGasProvider() throws IOException, EstimateGasException {
     	Function function = createWithdrawDelegateRewardFunction();
     	return getDefaultGasProvider(function);
     }
