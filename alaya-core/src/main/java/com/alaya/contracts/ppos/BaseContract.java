@@ -34,6 +34,8 @@ import com.alaya.utils.Numeric;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.bouncycastle.util.encoders.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -46,6 +48,8 @@ import java.util.List;
  * @author chendai
  */
 public abstract class BaseContract extends ManagedTransaction {
+
+    private static final Logger log = LoggerFactory.getLogger(BaseContract.class);
 
     protected String contractAddress;
     protected TransactionReceipt transactionReceipt;
@@ -221,6 +225,7 @@ public abstract class BaseContract extends ManagedTransaction {
         BigInteger gasLimit;
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
         if(platonEstimateGas.hasError()){
+            log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
             Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
             throw new EstimateGasException(error.getMessage());
         }else{
