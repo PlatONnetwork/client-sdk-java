@@ -14,6 +14,7 @@ import com.alaya.exceptions.MessageDecodingException;
 import com.alaya.protocol.Web3j;
 import com.alaya.protocol.core.DefaultBlockParameterName;
 import com.alaya.protocol.core.RemoteCall;
+import com.alaya.protocol.core.Response;
 import com.alaya.protocol.core.methods.request.Transaction;
 import com.alaya.protocol.core.methods.response.*;
 import com.alaya.protocol.exceptions.TransactionException;
@@ -30,6 +31,7 @@ import com.alaya.tx.gas.ContractGasProvider;
 import com.alaya.tx.gas.GasProvider;
 import com.alaya.utils.JSONUtil;
 import com.alaya.utils.Numeric;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -218,9 +220,9 @@ public abstract class BaseContract extends ManagedTransaction {
 
         BigInteger gasLimit;
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
-        String result = platonEstimateGas.getResult();
         if(platonEstimateGas.hasError()){
-            throw new EstimateGasException(result);
+            Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
+            throw new EstimateGasException(error.getMessage());
         }else{
             gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
         }
