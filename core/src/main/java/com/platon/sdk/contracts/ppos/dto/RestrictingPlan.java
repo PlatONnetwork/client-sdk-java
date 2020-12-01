@@ -37,6 +37,10 @@ public class RestrictingPlan extends CustomType {
         this.epoch = epoch;
     }
 
+    public void setAmount(BigInteger amount) {
+        this.amount = amount;
+    }
+
     public BigInteger getAmount() {
         return amount;
     }
