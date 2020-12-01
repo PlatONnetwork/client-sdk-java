@@ -45,6 +45,10 @@ public class RestrictingPlan extends CustomType {
         this.amount = Numeric.decodeQuantity(amount);
     }
 
+    public void setAmount(BigInteger amount) {
+        this.amount = amount;
+    }
+
     @Override
     public RlpType getRlpEncodeData() {
         return new RlpList(RlpString.create(epoch), RlpString.create(amount));
