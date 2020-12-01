@@ -225,9 +225,15 @@ public abstract class BaseContract extends ManagedTransaction {
         BigInteger gasLimit;
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
         if(platonEstimateGas.hasError()){
-            log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
-            Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
-            throw new EstimateGasException(error.getMessage());
+            if(platonEstimateGas.getError().getCode() == 4) { //vm执行出错
+                log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
+                Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
+                //vm执行出错，需要解析出业务错误，并抛出
+                throw new EstimateGasException(error.getMessage());
+            }else{
+                throw new EstimateGasException(platonEstimateGas.getError().getMessage());
+            }
+
         }else{
             gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
         }
