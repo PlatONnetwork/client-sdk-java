@@ -14,7 +14,6 @@ import com.alaya.contracts.ppos.dto.enums.StakingAmountType;
 import com.alaya.contracts.ppos.dto.resp.Delegation;
 import com.alaya.contracts.ppos.dto.resp.DelegationIdInfo;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
-import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -194,7 +193,7 @@ public class DelegateContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getUnDelegateGasProvider(String nodeId, BigInteger stakingBlockNum, BigInteger amount) throws IOException, EstimateGasException {
         Function function = createUnDelegateFunction(nodeId, stakingBlockNum, amount);
     	return getDefaultGasProvider(function);
     }

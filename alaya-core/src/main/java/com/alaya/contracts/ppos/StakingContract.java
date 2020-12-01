@@ -12,7 +12,6 @@ import com.alaya.contracts.ppos.dto.req.StakingParam;
 import com.alaya.contracts.ppos.dto.req.UpdateStakingParam;
 import com.alaya.contracts.ppos.dto.resp.Node;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
-import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -212,7 +211,7 @@ public class StakingContract extends BaseContract {
      * @param nodeId
      * @return
      */
-    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, EstimateGasException {
         Function function = createUnStakingFunction(nodeId);
         return getDefaultGasProvider(function);
     }
@@ -275,7 +274,7 @@ public class StakingContract extends BaseContract {
      * @param updateStakingParam
      * @return
      */
-    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, EstimateGasException {
         Function function = createUpdateStakingFunction(updateStakingParam);
         return getDefaultGasProvider(function);
     }
@@ -343,7 +342,7 @@ public class StakingContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException {
         Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
         return getDefaultGasProvider(function);
     }

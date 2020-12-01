@@ -11,7 +11,6 @@ import com.alaya.contracts.ppos.dto.common.FunctionType;
 import com.alaya.contracts.ppos.dto.req.CreateRestrictingParam;
 import com.alaya.contracts.ppos.dto.resp.RestrictingItem;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
-import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -118,7 +117,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @param restrictingPlanList
      * @return
      */
-    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, EstimateGasException {
     	Function function = createRestrictingPlanFunction(account, restrictingPlanList);
     	return getDefaultGasProvider(function);
     }
