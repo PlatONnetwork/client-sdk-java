@@ -9,7 +9,6 @@ import com.platon.sdk.contracts.ppos.dto.req.StakingParam;
 import com.platon.sdk.contracts.ppos.dto.req.UpdateStakingParam;
 import com.platon.sdk.contracts.ppos.dto.resp.Node;
 import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
-import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.generated.Uint16;
@@ -146,7 +145,7 @@ public class StakingContract extends BaseContract {
      * @param stakingParam
      * @return
      */
-    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, EstimateGasException {
         Function function = createStakingFunction(stakingParam);
         return getDefaultGasProvider(function);
     }
@@ -212,7 +211,7 @@ public class StakingContract extends BaseContract {
      * @param nodeId
      * @return
      */
-    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, EstimateGasException {
         Function function = createUnStakingFunction(nodeId);
         return getDefaultGasProvider(function);
     }
@@ -275,7 +274,7 @@ public class StakingContract extends BaseContract {
      * @param updateStakingParam
      * @return
      */
-    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, EstimateGasException {
         Function function = createUpdateStakingFunction(updateStakingParam);
         return getDefaultGasProvider(function);
     }
@@ -343,7 +342,7 @@ public class StakingContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException {
         Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
         return getDefaultGasProvider(function);
     }

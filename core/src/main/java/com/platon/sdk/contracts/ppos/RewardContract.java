@@ -9,7 +9,6 @@ import com.platon.sdk.contracts.ppos.dto.common.ErrorCode;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.resp.Reward;
 import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
-import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.datatypes.BytesType;
@@ -107,7 +106,7 @@ public class RewardContract extends BaseContract {
      *
      * @return
      */
-    public GasProvider getWithdrawDelegateRewardGasProvider() throws IOException, NoSupportFunctionType, EstimateGasException {
+    public GasProvider getWithdrawDelegateRewardGasProvider() throws IOException, EstimateGasException {
     	Function function = createWithdrawDelegateRewardFunction();
     	return getDefaultGasProvider(function);
     }

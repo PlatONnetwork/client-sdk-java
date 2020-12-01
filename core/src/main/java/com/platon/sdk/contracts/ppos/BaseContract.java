@@ -1,5 +1,6 @@
 package com.platon.sdk.contracts.ppos;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.platon.sdk.contracts.ppos.abi.Function;
 import com.platon.sdk.contracts.ppos.dto.CallResponse;
@@ -11,11 +12,14 @@ import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.contracts.ppos.utils.EncoderUtils;
 import com.platon.sdk.contracts.ppos.utils.EstimateGasUtil;
 import org.bouncycastle.util.encoders.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
 import org.web3j.exceptions.MessageDecodingException;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.exceptions.TransactionException;
@@ -44,6 +48,8 @@ import java.util.List;
  * @author chendai
  */
 public abstract class BaseContract extends ManagedTransaction {
+
+    private static final Logger log = LoggerFactory.getLogger(BaseContract.class);
 
     protected String contractAddress;
     protected TransactionReceipt transactionReceipt;
@@ -220,7 +226,9 @@ public abstract class BaseContract extends ManagedTransaction {
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
         String result = platonEstimateGas.getResult();
         if(platonEstimateGas.hasError()){
-            throw new EstimateGasException(result);
+            log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
+            Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
+            throw new EstimateGasException(error.getMessage());
         }else{
             gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
         }
