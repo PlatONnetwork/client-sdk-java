@@ -12,6 +12,7 @@ import com.alaya.contracts.ppos.dto.req.StakingParam;
 import com.alaya.contracts.ppos.dto.req.UpdateStakingParam;
 import com.alaya.contracts.ppos.dto.resp.Node;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
+import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -145,7 +146,7 @@ public class StakingContract extends BaseContract {
      * @param stakingParam
      * @return
      */
-    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, EstimateGasException {
+    public GasProvider getStakingGasProvider(StakingParam stakingParam) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createStakingFunction(stakingParam);
         return getDefaultGasProvider(function);
     }
@@ -211,7 +212,7 @@ public class StakingContract extends BaseContract {
      * @param nodeId
      * @return
      */
-    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, EstimateGasException {
+    public GasProvider getUnStakingGasProvider(String nodeId) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createUnStakingFunction(nodeId);
         return getDefaultGasProvider(function);
     }
@@ -274,7 +275,7 @@ public class StakingContract extends BaseContract {
      * @param updateStakingParam
      * @return
      */
-    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, EstimateGasException {
+    public GasProvider getUpdateStakingInfoGasProvider(UpdateStakingParam updateStakingParam) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createUpdateStakingFunction(updateStakingParam);
         return getDefaultGasProvider(function);
     }
@@ -342,7 +343,7 @@ public class StakingContract extends BaseContract {
      * @param amount
      * @return
      */
-    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException {
+    public GasProvider getAddStakingGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createAddStakingFunction(nodeId, stakingAmountType, amount);
         return getDefaultGasProvider(function);
     }

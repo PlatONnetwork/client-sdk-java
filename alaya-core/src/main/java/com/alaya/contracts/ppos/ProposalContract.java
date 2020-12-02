@@ -13,6 +13,7 @@ import com.alaya.contracts.ppos.dto.resp.GovernParam;
 import com.alaya.contracts.ppos.dto.resp.Proposal;
 import com.alaya.contracts.ppos.dto.resp.TallyResult;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
+import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -148,7 +149,7 @@ public class ProposalContract extends BaseContract {
      * @param verifier       投票验证人
      * @return
      */
-    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, EstimateGasException {
+    public GasProvider getVoteProposalGasProvider(ProgramVersion programVersion, VoteOption voteOption, String proposalID, String verifier) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createVoteFunction(programVersion, proposalID, verifier, voteOption);
         return getDefaultGasProvider(function);
     }
@@ -218,7 +219,7 @@ public class ProposalContract extends BaseContract {
      * @param verifier
      * @return
      */
-    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, EstimateGasException {
+    public GasProvider getDeclareVersionGasProvider(ProgramVersion programVersion, String verifier) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createDeclareVersionFunction(programVersion, verifier);
         return getDefaultGasProvider(function);
     }
@@ -280,7 +281,7 @@ public class ProposalContract extends BaseContract {
      * @param proposal
      * @return
      */
-    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, EstimateGasException {
+    public GasProvider getSubmitProposalGasProvider(Proposal proposal) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createSubmitProposalFunction(proposal);
         return getDefaultGasProvider(function);
     }

@@ -10,6 +10,7 @@ import com.alaya.contracts.ppos.dto.TransactionResponse;
 import com.alaya.contracts.ppos.dto.common.DuplicateSignType;
 import com.alaya.contracts.ppos.dto.common.FunctionType;
 import com.alaya.contracts.ppos.exception.EstimateGasException;
+import com.alaya.contracts.ppos.exception.NoSupportFunctionType;
 import com.alaya.crypto.Credentials;
 import com.alaya.parameters.NetworkParameters;
 import com.alaya.protocol.Web3j;
@@ -99,7 +100,7 @@ public class SlashContract extends BaseContract {
      * @param data
      * @return
      */
-    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, EstimateGasException {
+    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, EstimateGasException, NoSupportFunctionType {
     	 Function function = createReportDoubleSignFunction(duplicateSignType, data);
     	 return getDefaultGasProvider(function);
     }

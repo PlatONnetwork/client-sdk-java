@@ -210,7 +210,7 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
 
-    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException {
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException, NoSupportFunctionType {
         /*if(EstimateGasUtil.isSupportLocal(function.getType())){
             return  getDefaultGasProviderLocal(function);
         } else {
@@ -219,15 +219,15 @@ public abstract class BaseContract extends ManagedTransaction {
         return  getDefaultGasProviderRemote(function);
     }
 
-    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
-
+    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException, NoSupportFunctionType {
         //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
         //gasPrice必须首先获得，在estimateGas的时候，治理合约就需要gasPrice。
         //estimateGas的时候，交易的所有参数，除了gasLimit，应该和真正发送时的参数一样。
         BigInteger gasPrice = getDefaultGasPrice(function.getType());
+        //必须填gasLimit，否则按区块最大gas来算，这样要求账户余额>=区块最大gas*gasPrice，就容易抛出余额不足的错误
+        BigInteger gasLimit = EstimateGasUtil.getGasLimit(function);
 
         BigInteger nonce = null;
-        BigInteger gasLimit = null;
 
         //String from, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, String data
         Transaction transaction = Transaction.createFunctionCallTransaction(transactionManager.getFromAddress(), nonce, gasPrice, gasLimit, contractAddress, EncoderUtils.functionEncoder(function));
