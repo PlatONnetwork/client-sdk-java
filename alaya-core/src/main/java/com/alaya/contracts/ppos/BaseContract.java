@@ -220,12 +220,21 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
     private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
-        Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress,  EncoderUtils.functionEncoder(function));
 
-        BigInteger gasLimit;
+        //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
+        //gasPrice必须首先获得，在estimateGas的时候，治理合约就需要gasPrice。
+        //estimateGas的时候，交易的所有参数，除了gasLimit，应该和真正发送时的参数一样。
+        BigInteger gasPrice = getDefaultGasPrice(function.getType());
+
+        BigInteger nonce = null;
+        BigInteger gasLimit = null;
+
+        //String from, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, String data
+        Transaction transaction = Transaction.createFunctionCallTransaction(transactionManager.getFromAddress(), nonce, gasPrice, gasLimit, contractAddress, EncoderUtils.functionEncoder(function));
+
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
         if(platonEstimateGas.hasError()){
-            if(platonEstimateGas.getError().getCode() == 4) { //vm执行出错
+            if(platonEstimateGas.getError().getCode() == ErrorCode.PlatON_Precompiled_Contract_EXEC_FAILED) {
                 log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
                 Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
                 //vm执行出错，需要解析出业务错误，并抛出
@@ -237,10 +246,6 @@ public abstract class BaseContract extends ManagedTransaction {
         }else{
             gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
         }
-
-
-        //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
-        BigInteger gasPrice = getDefaultGasPrice(function.getType());
         GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
         return  gasProvider;
     }

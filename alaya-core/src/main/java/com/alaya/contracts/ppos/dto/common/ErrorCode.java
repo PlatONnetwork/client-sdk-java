@@ -17,6 +17,11 @@ public class ErrorCode {
      * 参数错误
      */
     public static final int INVALID_PARAMETER = 3;
+
+    /**
+     * PlatON内置合约执行出错
+     */
+    public static final int PlatON_Precompiled_Contract_EXEC_FAILED = 4;
     /**
      * bls key 长度有误
      */
