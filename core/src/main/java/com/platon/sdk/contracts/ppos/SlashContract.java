@@ -6,6 +6,7 @@ import com.platon.sdk.contracts.ppos.dto.TransactionResponse;
 import com.platon.sdk.contracts.ppos.dto.common.DuplicateSignType;
 import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.datatypes.BytesType;
 import org.web3j.abi.datatypes.Utf8String;
@@ -99,7 +100,7 @@ public class SlashContract extends BaseContract {
      * @param data
      * @return
      */
-    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, EstimateGasException {
+    public GasProvider getReportDoubleSignGasProvider(DuplicateSignType duplicateSignType, String data) throws IOException, EstimateGasException, NoSupportFunctionType {
     	 Function function = createReportDoubleSignFunction(duplicateSignType, data);
     	 return getDefaultGasProvider(function);
     }

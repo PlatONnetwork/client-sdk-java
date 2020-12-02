@@ -210,7 +210,7 @@ public abstract class BaseContract extends ManagedTransaction {
     }
 
 
-    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException {
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException, NoSupportFunctionType {
         /*if(EstimateGasUtil.isSupportLocal(function.getType())){
             return  getDefaultGasProviderLocal(function);
         } else {
@@ -219,22 +219,33 @@ public abstract class BaseContract extends ManagedTransaction {
         return  getDefaultGasProviderRemote(function);
     }
 
-    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
-        Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress,  EncoderUtils.functionEncoder(function));
+    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException, NoSupportFunctionType {
+        //gasPrice必须首先获得，在estimateGas的时候，治理合约就需要gasPrice。
+        //estimateGas的时候，交易的所有参数，除了gasLimit，应该和真正发送时的参数一样。
+        BigInteger gasPrice = getDefaultGasPrice(function.getType());
+        //必须填gasLimit，否则按区块最大gas来算，这样要求账户余额>=区块最大gas*gasPrice，就容易抛出余额不足的错误
+        BigInteger gasLimit = EstimateGasUtil.getGasLimit(function);
 
-        BigInteger gasLimit;
+        BigInteger nonce = null;
+
+        //String from, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, String data
+        Transaction transaction = Transaction.createFunctionCallTransaction(transactionManager.getFromAddress(), nonce, gasPrice, gasLimit, contractAddress, EncoderUtils.functionEncoder(function));
+
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
         String result = platonEstimateGas.getResult();
         if(platonEstimateGas.hasError()){
-            log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
-            Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
-            throw new EstimateGasException(error.getMessage());
+            if(platonEstimateGas.getError().getCode() == ErrorCode.PlatON_Precompiled_Contract_EXEC_FAILED) {
+                log.error("estimate gas error, code:={}, message:={}", platonEstimateGas.getError().getCode(), platonEstimateGas.getError().getData());
+                Response.Error error = JSON.parseObject(platonEstimateGas.getError().getData(), Response.Error.class);
+                //vm执行出错，需要解析出业务错误，并抛出
+                throw new EstimateGasException(error.getMessage());
+            }else{
+                throw new EstimateGasException(platonEstimateGas.getError().getMessage());
+            }
+
         }else{
             gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
         }
-
-        //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
-        BigInteger gasPrice = getDefaultGasPrice(function.getType());
         GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
         return  gasProvider;
     }

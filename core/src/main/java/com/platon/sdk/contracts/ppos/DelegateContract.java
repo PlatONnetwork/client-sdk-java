@@ -118,7 +118,7 @@ public class DelegateContract extends BaseContract {
      * @param amount`
      * @return
              */
-    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException {
+    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
         return 	getDefaultGasProvider(function);
     }

@@ -9,6 +9,7 @@ import com.platon.sdk.contracts.ppos.dto.common.FunctionType;
 import com.platon.sdk.contracts.ppos.dto.req.CreateRestrictingParam;
 import com.platon.sdk.contracts.ppos.dto.resp.RestrictingItem;
 import com.platon.sdk.contracts.ppos.exception.EstimateGasException;
+import com.platon.sdk.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.sdk.utlis.Bech32;
 import com.platon.sdk.utlis.NetworkParameters;
 import org.web3j.abi.datatypes.BytesType;
@@ -92,7 +93,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @param param CreateRestrictingParam
      * @return
      */
-    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, EstimateGasException {
+    public GasProvider getCreateRestrictingPlanGasProvider(CreateRestrictingParam param) throws IOException, EstimateGasException, NoSupportFunctionType {
         Function function = createRestrictingPlanFunction(param.getAccount(), Arrays.asList(param.getPlans()));
         return getDefaultGasProvider(function);
     }
@@ -119,7 +120,7 @@ public class RestrictingPlanContract extends BaseContract {
      * @param restrictingPlanList
      * @return
      */
-    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, EstimateGasException {
+    public GasProvider getCreateRestrictingPlan(String account, List<RestrictingPlan> restrictingPlanList) throws IOException, EstimateGasException, NoSupportFunctionType {
     	Function function = createRestrictingPlanFunction(account, restrictingPlanList);
     	return getDefaultGasProvider(function);
     }
