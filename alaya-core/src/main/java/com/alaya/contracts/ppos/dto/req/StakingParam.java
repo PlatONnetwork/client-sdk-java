@@ -15,6 +15,8 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.alaya.contracts.ppos.dto.enums.StakingAmountType.DEFAULT_TYPE;
+
 public class StakingParam implements Cloneable {
 
     /**
@@ -26,9 +28,9 @@ public class StakingParam implements Cloneable {
      */
     private BigInteger amount;
     /**
-     * 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额
+     * 表示使用账户自由金额还是账户的锁仓金额做质押，0: 自由金额； 1: 锁仓金额; 2: 默认优先使用锁仓金额，当质押金额大于锁仓金额时才使用自由金额
      */
-    private StakingAmountType stakingAmountType;
+    private StakingAmountType stakingAmountType = DEFAULT_TYPE;
     /**
      * 20bytes 用于接受出块奖励和质押奖励的收益账户
      */
