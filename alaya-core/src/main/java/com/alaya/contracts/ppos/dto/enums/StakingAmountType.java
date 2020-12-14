@@ -2,7 +2,7 @@ package com.alaya.contracts.ppos.dto.enums;
 
 public enum StakingAmountType {
 
-    FREE_AMOUNT_TYPE(0), RESTRICTING_AMOUNT_TYPE(1), DEFAULT_TYPE(2);;
+    FREE_AMOUNT_TYPE(0), RESTRICTING_AMOUNT_TYPE(1), AUTO_AMOUNT_TYPE(2);;
 
     int value;
 
