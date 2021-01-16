@@ -102,6 +102,7 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
     }
+    tasks.withType(Javadoc).all { enabled = false }
     //sonar扫描的路径
     sonarqube {
         properties {
@@ -278,8 +279,8 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: [
-                            'com/alaya/abi/solidity/datatypes/generated/**',
-                            'com/alaya/tuples/generated/**'
+                            'com/platon/abi/solidity/datatypes/generated/**',
+                            'com/platon/tuples/generated/**'
                     ])
         })
     }

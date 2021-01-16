@@ -1,16 +1,16 @@
-rootProject.name = 'client-sdk-java'
+rootProject.name = 'platon-sdk-java'
 
-include 'alaya-integration-tests'
-include 'alaya-console'
-include 'alaya-codegen'
-include 'alaya-core'
-include 'alaya-solidity-abi'
-include 'alaya-wasm-abi'
-include 'alaya-crypto'
-include 'alaya-solidity-rlp'
-include 'alaya-wasm-rlp'
-include 'alaya-utils'
-include 'alaya-tuples'
+include 'integration-tests'
+include 'console'
+include 'codegen'
+include 'core'
+include 'solidity-abi'
+include 'wasm-abi'
+include 'crypto'
+include 'solidity-rlp'
+include 'wasm-rlp'
+include 'utils'
+include 'tuples'
 
 
 

@@ -18,8 +18,8 @@
 
 ```
 <dependency>
-    <groupId>com.alaya.client</groupId>
-    <artifactId>alaya-core</artifactId>
+    <groupId>com.platon.sdk</groupId>
+    <artifactId>core</artifactId>
     <version>0.13.2.1</version>
 </dependency>
 ```
@@ -27,7 +27,7 @@
 or
 
 ```
-compile "com.alaya.client:alaya-core:0.13.2.1"
+compile "com.platon.sdk:core:0.13.2.1"
 ```
 
 * use in project

@@ -24,9 +24,9 @@ Depending on the build tool, use the following methods to add related dependenci
 > maven reference:
 ```xml
 <dependency>
-    <groupId>com.alaya.client</groupId>
-    <artifactId>alaya-core</artifactId>
-    <version>0.13.2.1</version>
+    <groupId>com.platon.sdk</groupId>
+    <artifactId>core</artifactId>
+    <version>0.15.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.alaya.client:alaya-core:0.13.2.1"
+compile "com.platon.client:core:0.15.1.0-SNAPSHOT"
 ```
 
 ## Basic API Usage
@@ -50,16 +50,15 @@ compile "com.alaya.client:alaya-core:0.13.2.1"
 
 * **0x address to bech32 address**
 ```java
+NetworkParameters.init(20000L, "atx");
 String hex = "0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818";
-String bech32Address = Bech32.addressEncode(NetworkParameters.TestNetParams.getHrp(), hex);
+String bech32Address = Bech32.addressEncode(NetworkParameters.getHrp(), hex);
 assertThat(bech32Address, is("atx1f7wp58h65lvphgw2hurl9sa943w0f7qcdcev89"));
-
-bech32Address = Bech32.addressEncode(NetworkParameters.MainNetParams.getHrp(), hex);
-assertThat(bech32Address, is("atp1f7wp58h65lvphgw2hurl9sa943w0f7qc879x50"));
 ```
 
 * **bech32 address to 0x address**
 ```java
+NetworkParameters.init(20000L, "atx");
 String bech32Address = "atx1f7wp58h65lvphgw2hurl9sa943w0f7qcdcev89";
 String hex =  Bech32.addressDecodeHex(bech32Address);
 assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
@@ -67,12 +66,28 @@ assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
 
 ### NetworkParameters
 
-* **SetCurrentNetworkParameters**
+* **initialize network**
 
-> Because bech 32 format address support is added, in order to be compatible with the old API, the function of setting the network parameters globally is added, and the old API outputs the corresponding format address according to the current network parameters
+> SDK includes Alaya network already. User can initialize custom networks, the latest is the current network.
+>
+>
+```java
+NetworkParameters.init(2000L, "ABC");  
+```
+
+
+* **select current network**
+> user can switch current network if multi-networks have been initialized.
+>
 
 ```java
-NetworkParameters.setCurrentNetwork(101L);  // default mainnet 201018L
+NetworkParameters.selectNetwork(2000L, "ABC");  
+```
+> or select Alaya network
+>
+
+```java
+NetworkParameters.selectAlaya();  
 ```
 
 ### Wallet Related
@@ -108,15 +123,9 @@ Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir
 Credentials credentials = Credentials.create("0xXXXXXXXXXXXXXX...");
 ```
 
-* **getBech32AddressFromChainId**
+* **get credential address**
 ```java
-long chainId = 100L;
-String bech32Address = credentials.getAddress(chainId);
-```
-
-* **getBech32AddressFromNetworkParameters**
-```java
-String bech32Address = credentials.getAddress();  // NetworkParameters.CurrentNetwork
+String bech32Address = credentials.getAddress();  
 ```
 
 ## Basic RPC Interface
@@ -1388,9 +1397,9 @@ For the introduction and use of the above system contract, please refer to the f
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract contract = StakingContract.load(web3j, credentials, chainId);
+StakingContract contract = StakingContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -1429,7 +1438,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("1000000", Convert.Unit.ATP);
+BigDecimal stakingAmount = Convert.toVon("1000000", Convert.Unit.KPVON);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
 String benifitAddress = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
 String externalId = "";
@@ -1558,7 +1567,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal addStakingAmount = Convert.toVon("4000000", Convert.Unit.ATP);
+BigDecimal addStakingAmount = Convert.toVon("4000000", Convert.Unit.KPVON);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -1722,9 +1731,9 @@ CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-long chainId = 201018;
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
+DelegateContract delegateContract = DelegateContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -1755,7 +1764,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal amount = Convert.toVon("500000", Convert.Unit.ATP);
+BigDecimal amount = Convert.toVon("500000", Convert.Unit.KPVON);
 
 PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
@@ -1862,7 +1871,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Convert.Unit.ATP);
+BigDecimal stakingAmount = Convert.toVon("500000", Convert.Unit.KPVON);
 BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
@@ -1882,9 +1891,9 @@ if(baseResponse.isStatusOk()){
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-long chainId = 201018;
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials);
 ```
 
 #### Interface Description
@@ -1964,9 +1973,9 @@ CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(deleg
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-long chainId = 201018;
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-NodeContract nodeContract = NodeContract.load(web3j, credentials, chainId);
+NodeContract nodeContract = NodeContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2174,9 +2183,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-long chainId = 201018;
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-ProposalContract proposalContract = ProposalContract.load(web3j, credentials, chainId);
+ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2450,9 +2459,9 @@ ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-long chainId = 201018;
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-SlashContract contract = SlashContract.load(web3j, credentials, chainId);
+SlashContract contract = SlashContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2522,9 +2531,9 @@ CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignT
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-long chainId = 201018;
+
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
+RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2692,10 +2701,10 @@ Put the bytecode attribute in ./build/contracts/HelloWorld.json into the HelloWo
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools（[platon-web3j download](http://download.alaya.network/alaya/sdk/0.13.2/alaya-web3j-0.13.2.1.zip)）:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](http://download.alaya.network/alaya/sdk/0.13.2/platon-web3j-0.13.2.1.zip)）:
 
 ```shell
-$ alaya-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
+$ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
 ```
 
 * Directly call the tool class in the Java SDK to generate a Java wrapper class:
@@ -2722,13 +2731,13 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, chainId
+        <web3j>, <transactionManager>, contractGasProvider
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, chainId
+        <web3j>, <Credentials>, contractGasProvider
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2740,12 +2749,12 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
+        "<bech32Address>", web3j, credentials, contractGasProvider);
 ```
 
 #### Smart Contract Validity
@@ -2762,7 +2771,7 @@ The Java SDK provides a transaction manager `TransactionManager` to control how 
 `RawTransactionManager` needs to specify the chain ID. Prevent transactions on one chain from being rebroadcasted to another chain:
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
 ```
 
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
@@ -2833,7 +2842,7 @@ The Java SDK supports automatic generation of Java wrapper classes for WASM smar
 * Generate Java wrapper classes via command line tools:
 
 ```shell
-$ alaya-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-contract>.abi.json -o /path/to/src/main/java -p com.your.organisation.name
+$ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-contract>.abi.json -o /path/to/src/main/java -p com.your.organisation.name
 ```
 
 * Directly call the tool class in the Java SDK to generate a Java wrapper class:
@@ -2857,13 +2866,13 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, chainId,
+        <web3j>, <transactionManager>, contractGasProvider, 
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, chainId,
+        <web3j>, <Credentials>, contractGasProvider, 
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2875,12 +2884,12 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
+        "<bech32Address>", web3j, credentials, contractGasProvider);
 ```
 
 #### Smart Contract Validity
@@ -2897,7 +2906,7 @@ The Java SDK provides a transaction manager `TransactionManager` to control how 
 `RawTransactionManager` needs to specify the chain ID. Prevent transactions on one chain from being rebroadcasted to another chain:
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
 ```
 
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.

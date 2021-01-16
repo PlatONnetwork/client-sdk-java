@@ -1,9 +1,0 @@
-
-description 'web3j project code generators'
-
-dependencies {
-    compile project(':alaya-core'),
-            "com.squareup:javapoet:$javapoetVersion"
-    testCompile project(path: ':alaya-core', configuration: 'testArtifacts')
-    testCompile group: 'com.alibaba', name: 'fastjson', version: '1.2.54'
-}
