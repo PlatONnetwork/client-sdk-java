@@ -19,10 +19,6 @@ public class WasmAddress {
 		this(value, NetworkParameters.getHrp());
 	}
 
-	public WasmAddress(byte[] value, long chainId) {
-		this(value,NetworkParameters.getHrp());
-	}
-
 	public WasmAddress(byte[] value, String hrp) {
 		this.value = value;
 		this.bigIntValue = Numeric.toBigInt(value);

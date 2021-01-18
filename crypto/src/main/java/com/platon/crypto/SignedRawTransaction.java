@@ -37,9 +37,9 @@ public class SignedRawTransaction extends RawTransaction {
         byte[] r = signatureData.getR();
         byte[] s = signatureData.getS();
         Sign.SignatureData signatureDataV = new Sign.SignatureData(getRealV(v), r, s);
-        BigInteger key = Sign.signedMessageToKey(encodedTransaction, signatureDataV);
+        BigInteger pubKey = Sign.signedMessageToKey(encodedTransaction, signatureDataV);
 
-        return Bech32.addressEncode(NetworkParameters.getHrp(),"0x" + Keys.getAddress(key) );
+        return Bech32.addressEncode(NetworkParameters.getHrp(),"0x" + Keys.getAddress(pubKey) );
     }
 
     public void verify(String from) throws SignatureException {

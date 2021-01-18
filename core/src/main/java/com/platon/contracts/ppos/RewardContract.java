@@ -41,7 +41,7 @@ public class RewardContract extends BaseContract {
 	 * @param web3j
 	 * @return
 	 */
-    public static RewardContract load(Web3j web3j, long chainId) {
+    public static RewardContract load(Web3j web3j) {
         return new RewardContract(NetworkParameters.getPposContractAddressOfReward(), web3j);
     }
 
@@ -52,7 +52,7 @@ public class RewardContract extends BaseContract {
      * @param transactionManager
      * @return
      */
-    public static RewardContract load(Web3j web3j, TransactionManager transactionManager,long chainId) {
+    public static RewardContract load(Web3j web3j, TransactionManager transactionManager) {
     	return new RewardContract(NetworkParameters.getPposContractAddressOfReward(), web3j, transactionManager);
     }
 
