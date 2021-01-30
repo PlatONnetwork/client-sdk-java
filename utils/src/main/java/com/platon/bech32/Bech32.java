@@ -262,7 +262,6 @@ public class Bech32 {
         if(bech32Data.hrp.equals(destHrp)){
             return originBech32Address;
         }else{
-
             return addressEncode(destHrp, addressDecodeHex(originBech32Address));
         }
     }
@@ -275,5 +274,22 @@ public class Bech32 {
     public static boolean checkBech32Addr(final String bech32Address){
         Bech32Data bech32Data = decode(bech32Address);
         return bech32Data.hrp.equals(NetworkParameters.getHrp());
+    }
+
+
+    /**
+     * compatible with ETH address, Alaya previous bech 32 address.
+     * convert these addresses to be unified for the new version.
+     *
+     * @param originAddress
+     * @return
+     */
+    public static String convertToUnifiedAddress(String originAddress){
+        if(Numeric.containsHexPrefix(originAddress)){ //compatible with ETH address
+            return Bech32.addressEncode(NetworkParameters.getHrp(), originAddress);
+        }else{
+            // compatible with Bech32
+            return Bech32.changeHrp(originAddress, NetworkParameters.getHrp());
+        }
     }
 }

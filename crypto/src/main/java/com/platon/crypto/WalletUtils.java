@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.platon.bech32.Bech32;
-import com.platon.parameters.NetworkParameters;
 import com.platon.utils.Files;
 import com.platon.utils.Numeric;
 import org.bouncycastle.util.encoders.Hex;
@@ -196,11 +195,12 @@ public class WalletUtils {
         WalletFile walletFile = objectMapper.readValue(fileContent, WalletFile.class);
 
         //eth钱包文件中的地址，是0x开头的，转成Bech32格式
-        if(Numeric.containsHexPrefix(walletFile.getAddress())){
+        /*if(Numeric.containsHexPrefix(walletFile.getAddress())){
             walletFile.setAddress(Bech32.addressEncode(NetworkParameters.getHrp(), walletFile.getAddress()));
         }else{
             walletFile.setAddress(Bech32.changeHrp(walletFile.getAddress(), NetworkParameters.getHrp()));
-        }
+        }*/
+        walletFile.setAddress(Bech32.convertToUnifiedAddress(walletFile.getAddress()));
         return walletFile;
     }
 
