@@ -239,7 +239,8 @@ public class Bech32 {
         }
 
         byte[] bytes = hrp.getBytes();
-        if(bytes.length<1 || bytes.length>83){
+        //if(bytes.length<1 || bytes.length>83){
+        if(bytes.length!=3){
             return false;
         }
 
