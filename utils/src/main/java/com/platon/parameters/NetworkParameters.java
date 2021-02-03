@@ -92,10 +92,8 @@ public class NetworkParameters {
         if(networksContainer.containsKey(String.valueOf(chainId) + ":" + hrp)){
             return;
         }
+        //if the chainID = 201018L, the hrp should be atp.
         if (chainId==ReservedChainId.Alaya.getChainId() && !ReservedHrp.Alaya.getHrp().equals(hrp)){
-            throw new RuntimeException("hrp not match to chainID");
-        }
-        if (chainId!=ReservedChainId.Alaya.getChainId() && ReservedHrp.Alaya.getHrp().equals(hrp)){
             throw new RuntimeException("hrp not match to chainID");
         }
         //todo: to add code to verify PlatON network
