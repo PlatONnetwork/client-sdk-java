@@ -96,7 +96,11 @@ public class NetworkParameters {
         if (chainId==ReservedChainId.Alaya.getChainId() && !ReservedHrp.Alaya.getHrp().equals(hrp)){
             throw new RuntimeException("hrp not match to chainID");
         }
-        //todo: to add code to verify PlatON network
+
+        //if the chainID = 100L, the hrp should be lat.
+        if (chainId==ReservedChainId.PlatON.getChainId() && !ReservedHrp.PlatON.getHrp().equals(hrp)){
+            throw new RuntimeException("hrp not match to chainID");
+        }
 
         if(Bech32.verifyHrp(hrp)){
             NetworkParameters network =  new NetworkParameters(chainId, hrp);
@@ -148,7 +152,7 @@ public class NetworkParameters {
     }
 
     public enum ReservedChainId {
-        PlatON(103L),
+        PlatON(100L),
         Alaya(201018L);
 
         private final long chainId;
