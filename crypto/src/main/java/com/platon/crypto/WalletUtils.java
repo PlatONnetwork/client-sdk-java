@@ -187,7 +187,7 @@ public class WalletUtils {
         return Credentials.create(Wallet.decrypt(password, loadWalletFile(source)));
     }
 
-    private static final String MAIN_TEST_ADDRESS_REGEX = "\\\"address\\\"\\s*:\\s*\\{\\s*\\\"mainnet\\\"\\s*:\\s*\\\"(\\S*)\\\"[^}]*\\}";
+    private static final String MAIN_TEST_ADDRESS_REGEX = "\\\"address\\\"\\s*:\\s*\\{\\s*\\\"mainnet\\\"\\s*:\\s*\\\"([A-Za-z0-9]+)\\\"[^}]*\\}";
     public static WalletFile loadWalletFile(File source) throws IOException{
         // 统一把source文件中的address值替换为“{}”，兼容新旧格式钱包文件的加载
         String fileContent = Files.readString(source);
