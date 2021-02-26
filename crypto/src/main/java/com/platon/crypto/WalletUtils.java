@@ -184,6 +184,11 @@ public class WalletUtils {
 
     //private static final Pattern OLD_ADDRESS_PATTERN = Pattern.compile(".*address\":[\\s]*\".*");
     public static Credentials loadCredentials(String password, File source) throws IOException, CipherException {
+        WalletFile walletFile = loadWalletFile(source);
+        Credentials credentials = Credentials.create(Wallet.decrypt(password, loadWalletFile(source)));
+        if (!walletFile.getAddress().equalsIgnoreCase(credentials.getAddress())){
+            throw new CipherException("wallet file's content is cracked.");
+        }
         return Credentials.create(Wallet.decrypt(password, loadWalletFile(source)));
     }
 
