@@ -157,7 +157,7 @@ public class Bech32 {
             values[i] = CHARSET_REV[c];
         }
         String hrp = str.substring(0, pos).toLowerCase(Locale.ROOT);
-        if (!verifyChecksum(hrp, values)) throw new RuntimeException();
+        if (!verifyChecksum(hrp, values)) throw new RuntimeException("decode Bech32 address error");
         return new Bech32Data(hrp, Arrays.copyOfRange(values, 0, values.length - 6));
     }
 
