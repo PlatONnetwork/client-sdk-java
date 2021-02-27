@@ -52,14 +52,14 @@ public class Transfer extends ManagedTransaction {
                                     BigInteger gasLimit) throws IOException, InterruptedException,
             TransactionException {
 
-        BigDecimal weiValue = Convert.toVon(value, unit);
-        if (!Numeric.isIntegerValue(weiValue)) {
+        BigDecimal vonValue = Convert.toVon(value, unit);
+        if (!Numeric.isIntegerValue(vonValue)) {
             throw new UnsupportedOperationException(
-                    "Non decimal Wei value provided: " + value + " " + unit.toString()
-                            + " = " + weiValue + " Wei");
+                    "Non decimal Von value provided: " + value + " " + unit.toString()
+                            + " = " + vonValue + " Von");
         }
 
-        return send(toAddress, "", weiValue.toBigIntegerExact(), gasPrice, gasLimit);
+        return send(toAddress, "", vonValue.toBigIntegerExact(), gasPrice, gasLimit);
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(

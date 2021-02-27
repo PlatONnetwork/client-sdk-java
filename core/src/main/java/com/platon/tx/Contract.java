@@ -205,7 +205,7 @@ public abstract class Contract extends ManagedTransaction {
      * Given the duration required to execute a transaction.
      *
      * @param data  to send in transaction
-     * @param weiValue in Wei to send in transaction
+     * @param vonValue in Von to send in transaction
      * @return {@link Optional} containing our transaction receipt
      * @throws IOException                 if the call to the node fails
      * @throws TransactionException if the transaction was not mined while waiting
