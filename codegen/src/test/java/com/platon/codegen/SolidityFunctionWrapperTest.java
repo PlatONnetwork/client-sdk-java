@@ -142,11 +142,11 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.alaya.protocol.core.RemoteCall<com.alaya.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param) {\n"
-                        + "  final com.alaya.abi.solidity.datatypes.Function function = new com.alaya.abi.solidity.datatypes.Function(\n"
+                "public com.platon.protocol.core.RemoteCall<com.platon.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param) {\n"
+                        + "  final com.platon.abi.solidity.datatypes.Function function = new com.platon.abi.solidity.datatypes.Function(\n"
                         + "      FUNC_FUNCTIONNAME, \n"
-                        + "      java.util.Arrays.<com.alaya.abi.solidity.datatypes.Type>asList(new com.alaya.abi.solidity.datatypes.generated.Uint8(param)), \n"
-                        + "      java.util.Collections.<com.alaya.abi.solidity.TypeReference<?>>emptyList());\n"
+                        + "      java.util.Arrays.<com.platon.abi.solidity.datatypes.Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint8(param)), \n"
+                        + "      java.util.Collections.<com.platon.abi.solidity.TypeReference<?>>emptyList());\n"
                         + "  return executeRemoteCallTransaction(function);\n"
                         + "}\n";
         //CHECKSTYLE:ON
@@ -190,11 +190,11 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.alaya.protocol.core.RemoteCall<com.alaya.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger vonValue) {\n"
-                        + "  final com.alaya.abi.solidity.datatypes.Function function = new com.alaya.abi.solidity.datatypes.Function(\n"
+                "public com.platon.protocol.core.RemoteCall<com.platon.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger vonValue) {\n"
+                        + "  final com.platon.abi.solidity.datatypes.Function function = new com.platon.abi.solidity.datatypes.Function(\n"
                         + "      FUNC_FUNCTIONNAME, \n"
-                        + "      java.util.Arrays.<com.alaya.abi.solidity.datatypes.Type>asList(new com.alaya.abi.solidity.datatypes.generated.Uint8(param)), \n"
-                        + "      java.util.Collections.<com.alaya.abi.solidity.TypeReference<?>>emptyList());\n"
+                        + "      java.util.Arrays.<com.platon.abi.solidity.datatypes.Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint8(param)), \n"
+                        + "      java.util.Collections.<com.platon.abi.solidity.TypeReference<?>>emptyList());\n"
                         + "  return executeRemoteCallTransaction(function, vonValue);\n"
                         + "}\n";
         //CHECKSTYLE:ON
@@ -218,10 +218,10 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.alaya.protocol.core.RemoteCall<java.math.BigInteger> functionName(java.math.BigInteger param) {\n"
-                        + "  final com.alaya.abi.solidity.datatypes.Function function = new com.alaya.abi.solidity.datatypes.Function(FUNC_FUNCTIONNAME, \n"
-                        + "      java.util.Arrays.<com.alaya.abi.solidity.datatypes.Type>asList(new com.alaya.abi.solidity.datatypes.generated.Uint8(param)), \n"
-                        + "      java.util.Arrays.<com.alaya.abi.solidity.TypeReference<?>>asList(new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.generated.Int8>() {}));\n"
+                "public com.platon.protocol.core.RemoteCall<java.math.BigInteger> functionName(java.math.BigInteger param) {\n"
+                        + "  final com.platon.abi.solidity.datatypes.Function function = new com.platon.abi.solidity.datatypes.Function(FUNC_FUNCTIONNAME, \n"
+                        + "      java.util.Arrays.<com.platon.abi.solidity.datatypes.Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint8(param)), \n"
+                        + "      java.util.Arrays.<com.platon.abi.solidity.TypeReference<?>>asList(new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.generated.Int8>() {}));\n"
                         + "  return executeRemoteCallSingleValueReturn(function, java.math.BigInteger.class);\n"
                         + "}\n";
         //CHECKSTYLE:ON
@@ -245,16 +245,16 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.alaya.protocol.core.RemoteCall<java.util.List> functionName(java.math.BigInteger param) {\n"
-                + "  final com.alaya.abi.solidity.datatypes.Function function = new com.alaya.abi.solidity.datatypes.Function(FUNC_FUNCTIONNAME, \n"
-                + "      java.util.Arrays.<com.alaya.abi.solidity.datatypes.Type>asList(new com.alaya.abi.solidity.datatypes.generated.Uint8(param)), \n"
-                + "      java.util.Arrays.<com.alaya.abi.solidity.TypeReference<?>>asList(new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.DynamicArray<com.alaya.abi.solidity.datatypes.Address>>() {}));\n"
-                + "  return new com.alaya.protocol.core.RemoteCall<java.util.List>(\n"
+                "public com.platon.protocol.core.RemoteCall<java.util.List> functionName(java.math.BigInteger param) {\n"
+                + "  final com.platon.abi.solidity.datatypes.Function function = new com.platon.abi.solidity.datatypes.Function(FUNC_FUNCTIONNAME, \n"
+                + "      java.util.Arrays.<com.platon.abi.solidity.datatypes.Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint8(param)), \n"
+                + "      java.util.Arrays.<com.platon.abi.solidity.TypeReference<?>>asList(new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.DynamicArray<com.platon.abi.solidity.datatypes.Address>>() {}));\n"
+                + "  return new com.platon.protocol.core.RemoteCall<java.util.List>(\n"
                 + "      new java.util.concurrent.Callable<java.util.List>() {\n"
                 + "        @java.lang.Override\n"
                 + "        @java.lang.SuppressWarnings(\"unchecked\")\n"
                 + "        public java.util.List call() throws java.lang.Exception {\n"
-                + "          java.util.List<com.alaya.abi.solidity.datatypes.Type> result = (java.util.List<com.alaya.abi.solidity.datatypes.Type>) executeCallSingleValueReturn(function, java.util.List.class);\n"
+                + "          java.util.List<com.platon.abi.solidity.datatypes.Type> result = (java.util.List<com.platon.abi.solidity.datatypes.Type>) executeCallSingleValueReturn(function, java.util.List.class);\n"
                 + "          return convertToNative(result);\n"
                 + "        }\n"
                 + "      });\n"
@@ -305,17 +305,17 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
         MethodSpec methodSpec = solidityFunctionWrapper.buildFunction(functionDefinition);
 
         //CHECKSTYLE:OFF
-        String expected = "public com.alaya.protocol.core.RemoteCall<com.alaya.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>> functionName(java.math.BigInteger param1, java.math.BigInteger param2) {\n"
-                + "  final com.alaya.abi.solidity.datatypes.Function function = new com.alaya.abi.solidity.datatypes.Function(FUNC_FUNCTIONNAME, \n"
-                + "      java.util.Arrays.<com.alaya.abi.solidity.datatypes.Type>asList(new com.alaya.abi.solidity.datatypes.generated.Uint8(param1), \n"
-                + "      new com.alaya.abi.solidity.datatypes.generated.Uint32(param2)), \n"
-                + "      java.util.Arrays.<com.alaya.abi.solidity.TypeReference<?>>asList(new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.generated.Int8>() {}, new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.generated.Int32>() {}));\n"
-                + "  return new com.alaya.protocol.core.RemoteCall<com.alaya.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>(\n"
-                + "      new java.util.concurrent.Callable<com.alaya.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>() {\n"
+        String expected = "public com.platon.protocol.core.RemoteCall<com.platon.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>> functionName(java.math.BigInteger param1, java.math.BigInteger param2) {\n"
+                + "  final com.platon.abi.solidity.datatypes.Function function = new com.platon.abi.solidity.datatypes.Function(FUNC_FUNCTIONNAME, \n"
+                + "      java.util.Arrays.<com.platon.abi.solidity.datatypes.Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint8(param1), \n"
+                + "      new com.platon.abi.solidity.datatypes.generated.Uint32(param2)), \n"
+                + "      java.util.Arrays.<com.platon.abi.solidity.TypeReference<?>>asList(new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.generated.Int8>() {}, new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.generated.Int32>() {}));\n"
+                + "  return new com.platon.protocol.core.RemoteCall<com.platon.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>(\n"
+                + "      new java.util.concurrent.Callable<com.platon.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>() {\n"
                 + "        @java.lang.Override\n"
-                + "        public com.alaya.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger> call() throws java.lang.Exception {\n"
-                + "          java.util.List<com.alaya.abi.solidity.datatypes.Type> results = executeCallMultipleValueReturn(function);\n"
-                + "          return new com.alaya.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>(\n"
+                + "        public com.platon.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger> call() throws java.lang.Exception {\n"
+                + "          java.util.List<com.platon.abi.solidity.datatypes.Type> results = executeCallMultipleValueReturn(function);\n"
+                + "          return new com.platon.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>(\n"
                 + "              (java.math.BigInteger) results.get(0).getValue(), \n"
                 + "              (java.math.BigInteger) results.get(1).getValue());\n"
                 + "        }\n"
@@ -352,12 +352,12 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
         //CHECKSTYLE:OFF
         String expected =
                 "class testClass {\n"
-                        + "  public static final com.alaya.abi.solidity.datatypes.Event TRANSFER_EVENT = new com.alaya.abi.solidity.datatypes.Event(\"Transfer\", \n"
-                        + "      java.util.Arrays.<com.alaya.abi.solidity.TypeReference<?>>asList(new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.Utf8String>(true) {}, new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.Address>(true) {}, new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.Address>(true) {}, new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.generated.Uint256>() {}, new com.alaya.abi.solidity.TypeReference<com.alaya.abi.solidity.datatypes.Utf8String>() {}));\n  ;\n\n"
-                        + "  public java.util.List<TransferEventResponse> getTransferEvents(com.alaya.protocol.core.methods.response.TransactionReceipt transactionReceipt) {\n"
-                        + "    java.util.List<com.alaya.tx.Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(TRANSFER_EVENT, transactionReceipt);\n"
+                        + "  public static final com.platon.abi.solidity.datatypes.Event TRANSFER_EVENT = new com.platon.abi.solidity.datatypes.Event(\"Transfer\", \n"
+                        + "      java.util.Arrays.<com.platon.abi.solidity.TypeReference<?>>asList(new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.Utf8String>(true) {}, new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.Address>(true) {}, new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.Address>(true) {}, new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.generated.Uint256>() {}, new com.platon.abi.solidity.TypeReference<com.platon.abi.solidity.datatypes.Utf8String>() {}));\n  ;\n\n"
+                        + "  public java.util.List<TransferEventResponse> getTransferEvents(com.platon.protocol.core.methods.response.TransactionReceipt transactionReceipt) {\n"
+                        + "    java.util.List<com.platon.tx.Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(TRANSFER_EVENT, transactionReceipt);\n"
                         + "    java.util.ArrayList<TransferEventResponse> responses = new java.util.ArrayList<TransferEventResponse>(valueList.size());\n"
-                        + "    for (com.alaya.tx.Contract.EventValuesWithLog eventValues : valueList) {\n"
+                        + "    for (com.platon.tx.Contract.EventValuesWithLog eventValues : valueList) {\n"
                         + "      TransferEventResponse typedResponse = new TransferEventResponse();\n"
                         + "      typedResponse.log = eventValues.getLog();\n"
                         + "      typedResponse.id = (byte[]) eventValues.getIndexedValues().get(0).getValue();\n"
@@ -371,11 +371,11 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                         + "  }\n"
                         + "\n"
                         + "  public rx.Observable<TransferEventResponse> transferEventObservable" +
-                        "(com.alaya.protocol.core.methods.request.PlatonFilter filter) {\n"
-                        + "    return web3j.platonLogObservable(filter).map(new rx.functions.Func1<com.alaya.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
+                        "(com.platon.protocol.core.methods.request.PlatonFilter filter) {\n"
+                        + "    return web3j.platonLogObservable(filter).map(new rx.functions.Func1<com.platon.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
                         + "      @java.lang.Override\n"
-                        + "      public TransferEventResponse call(com.alaya.protocol.core.methods.response.Log log) {\n"
-                        + "        com.alaya.tx.Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(TRANSFER_EVENT, log);\n"
+                        + "      public TransferEventResponse call(com.platon.protocol.core.methods.response.Log log) {\n"
+                        + "        com.platon.tx.Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(TRANSFER_EVENT, log);\n"
                         + "        TransferEventResponse typedResponse = new TransferEventResponse();\n"
                         + "        typedResponse.log = log;\n"
                         + "        typedResponse.id = (byte[]) eventValues.getIndexedValues().get(0).getValue();\n"
@@ -388,14 +388,14 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                         + "    });\n"
                         + "  }\n"
                         + "\n"
-                        + "  public rx.Observable<TransferEventResponse> transferEventObservable(com.alaya.protocol.core.DefaultBlockParameter startBlock, com.alaya.protocol.core.DefaultBlockParameter endBlock) {\n"
-                        + "    com.alaya.protocol.core.methods.request.PlatonFilter filter = new com.alaya.protocol.core.methods.request.PlatonFilter(startBlock, endBlock, getContractAddress());\n"
-                        + "    filter.addSingleTopic(com.alaya.abi.solidity.EventEncoder.encode(TRANSFER_EVENT));\n"
+                        + "  public rx.Observable<TransferEventResponse> transferEventObservable(com.platon.protocol.core.DefaultBlockParameter startBlock, com.platon.protocol.core.DefaultBlockParameter endBlock) {\n"
+                        + "    com.platon.protocol.core.methods.request.PlatonFilter filter = new com.platon.protocol.core.methods.request.PlatonFilter(startBlock, endBlock, getContractAddress());\n"
+                        + "    filter.addSingleTopic(com.platon.abi.solidity.EventEncoder.encode(TRANSFER_EVENT));\n"
                         + "    return transferEventObservable(filter);\n"
                         + "  }\n"
                         + "\n"
                         + "  public static class TransferEventResponse {\n"
-                        + "    public com.alaya.protocol.core.methods.response.Log log;\n"
+                        + "    public com.platon.protocol.core.methods.response.Log log;\n"
                         + "\n"
                         + "    public byte[] id;\n"
                         + "\n"

@@ -204,7 +204,7 @@ public class TypeDecoder {
         try {
             Class<? extends StaticArray> arrayClass =
                     (Class<? extends StaticArray>)
-                            Class.forName("com.alaya.abi.solidity.datatypes.generated.StaticArray" + length);
+                            Class.forName("com.platon.abi.solidity.datatypes.generated.StaticArray" + length);
 
             return (T) arrayClass.getConstructor(List.class).newInstance(elements);
         } catch (ReflectiveOperationException e) {

@@ -437,7 +437,7 @@ public class SolidityFunctionWrapper extends Generator {
                 return "new " + parameterSpecType + "(\n"
                         + componentType
                         + ".class,\n"
-                        + "        com.alaya.abi.solidity.Utils.typeMap("
+                        + "        com.platon.abi.solidity.Utils.typeMap("
                         + parameterSpec.name + ", " + typeMapInput + "))";
             }
         } else {
@@ -657,7 +657,7 @@ public class SolidityFunctionWrapper extends Generator {
 
             ParameterizedTypeName parameterizedTupleType = ParameterizedTypeName.get(
                     ClassName.get(
-                            "com.alaya.tuples.generated",
+                            "com.platon.tuples.generated",
                             "Tuple" + returnTypes.size()),
                     returnTypes.toArray(
                             new TypeName[returnTypes.size()]));
@@ -962,7 +962,7 @@ public class SolidityFunctionWrapper extends Generator {
 
     private static Class<?> getStaticArrayTypeReferenceClass(String type) {
         try {
-            return Class.forName("com.alaya.abi.solidity.datatypes.generated.StaticArray" + type);
+            return Class.forName("com.platon.abi.solidity.datatypes.generated.StaticArray" + type);
         } catch (ClassNotFoundException e) {
             // Unfortunately we can't encode it's length as a type if it's > 32.
             return StaticArray.class;
