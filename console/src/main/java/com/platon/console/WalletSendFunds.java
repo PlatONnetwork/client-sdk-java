@@ -30,11 +30,11 @@ public class WalletSendFunds extends WalletManager {
         if (args.length != 2) {
             exitError(USAGE);
         } else {
-            new WalletSendFunds().run(args[0], args[1],args[2]);
+            new WalletSendFunds().run(args[0], args[1]);
         }
     }
 
-    private void run(String walletFileLocation,String chainId, String destinationAddress) {
+    private void run(String walletFileLocation, String destinationAddress) {
         File walletFile = new File(walletFileLocation);
         Credentials credentials = getCredentials(walletFile);
         console.printf("Wallet for address " + credentials.getAddress() + " loaded\n");
@@ -43,16 +43,16 @@ public class WalletSendFunds extends WalletManager {
             exitError("Invalid destination address specified");
         }
 
-        Web3j web3j = getEthereumClient();
+        Web3j web3j = getPlatonClient();
 
         BigDecimal amountToTransfer = getAmountToTransfer();
         Convert.Unit transferUnit = getTransferUnit();
-        BigDecimal amountInWei = Convert.toVon(amountToTransfer, transferUnit);
+        BigDecimal amountInVon = Convert.toVon(amountToTransfer, transferUnit);
 
-        confirmTransfer(amountToTransfer, transferUnit, amountInWei, destinationAddress);
+        confirmTransfer(amountToTransfer, transferUnit, amountInVon, destinationAddress);
 
         TransactionReceipt transactionReceipt = performTransfer(
-                web3j, destinationAddress,chainId, credentials, amountInWei);
+                web3j, destinationAddress, credentials, amountInVon);
 
         console.printf("Funds have been successfully transferred from %s to %s%n"
                         + "Transaction hash: %s%nMined block number: %s%n",
@@ -75,7 +75,7 @@ public class WalletSendFunds extends WalletManager {
     }
 
     private Convert.Unit getTransferUnit() {
-        String unit = console.readLine("Please specify the unit (ether, wei, ...) [ether]: ")
+        String unit = console.readLine("Please specify the unit (KPVON, VON, ...) [KPVON]: ")
                 .trim();
 
         Convert.Unit transferUnit;
@@ -89,12 +89,12 @@ public class WalletSendFunds extends WalletManager {
     }
 
     private void confirmTransfer(
-            BigDecimal amountToTransfer, Convert.Unit transferUnit, BigDecimal amountInWei,
+            BigDecimal amountToTransfer, Convert.Unit transferUnit, BigDecimal amountInVon,
             String destinationAddress) {
 
         console.printf("Please confim that you wish to transfer %s %s (%s %s) to address %s%n",
                 amountToTransfer.stripTrailingZeros().toPlainString(), transferUnit,
-                amountInWei.stripTrailingZeros().toPlainString(),
+                amountInVon.stripTrailingZeros().toPlainString(),
                 Convert.Unit.VON, destinationAddress);
         String confirm = console.readLine("Please type 'yes' to proceed: ").trim();
         if (!confirm.toLowerCase().equals("yes")) {
@@ -103,13 +103,13 @@ public class WalletSendFunds extends WalletManager {
     }
 
     private TransactionReceipt performTransfer(
-            Web3j web3j, String destinationAddress,String chainId, Credentials credentials,
-            BigDecimal amountInWei) {
+            Web3j web3j, String destinationAddress, Credentials credentials,
+            BigDecimal amountInVon) {
 
         console.printf("Commencing transfer (this may take a few minutes) ");
         try {
             Future<TransactionReceipt> future = Transfer.sendFunds(
-                    web3j, credentials, destinationAddress,amountInWei, Convert.Unit.KPVON)
+                    web3j, credentials, destinationAddress, amountInVon, Convert.Unit.KPVON)
                     .sendAsync();
 
             while (!future.isDone()) {
@@ -124,9 +124,9 @@ public class WalletSendFunds extends WalletManager {
         throw new RuntimeException("Application exit failure");
     }
 
-    private Web3j getEthereumClient() {
+    private Web3j getPlatonClient() {
         String clientAddress = console.readLine(
-                "Please confirm address of running Ethereum client you wish to send "
+                "Please confirm address of running PlatON/Alaya client you wish to send "
                 + "the transfer request to [" + HttpService.DEFAULT_URL + "]: ")
                 .trim();
 
