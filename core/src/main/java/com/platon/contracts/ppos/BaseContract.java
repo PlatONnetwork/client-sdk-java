@@ -13,6 +13,7 @@ import com.platon.contracts.ppos.utils.EncoderUtils;
 import com.platon.contracts.ppos.utils.EstimateGasUtil;
 import com.platon.crypto.Credentials;
 import com.platon.exceptions.MessageDecodingException;
+import com.platon.parameters.NetworkParameters;
 import com.platon.protocol.Web3j;
 import com.platon.protocol.core.DefaultBlockParameterName;
 import com.platon.protocol.core.RemoteCall;
@@ -259,23 +260,40 @@ public abstract class BaseContract extends ManagedTransaction {
 
     /**
      * 获得默认的gasPrice
+     * Alaya_chainID或者Alaya_hrp时，gasPrice缩小100倍，
      *
      * @param type
      * @return
      * @throws IOException
      */
     private BigInteger getDefaultGasPrice(int type) throws IOException {
-        switch (type) {
-            case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
-                return BigInteger.valueOf(1500000).multiply(BigInteger.valueOf(1000000000));
-            case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
-                return BigInteger.valueOf(2100000).multiply(BigInteger.valueOf(1000000000));
-            case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
-                return BigInteger.valueOf(2000000).multiply(BigInteger.valueOf(1000000000));
-            case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
-                return BigInteger.valueOf(3000000).multiply(BigInteger.valueOf(1000000000));
-            default:
-                return web3j.platonGasPrice().send().getGasPrice();
+        if(NetworkParameters.ReservedChainId.Alaya.getChainId() == NetworkParameters.getChainId() ||
+                NetworkParameters.ReservedHrp.Alaya.getHrp().equalsIgnoreCase(NetworkParameters.getHrp())){
+            switch (type) {
+                case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
+                    return BigInteger.valueOf(1500000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
+                    return BigInteger.valueOf(2100000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+                    return BigInteger.valueOf(2000000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
+                    return BigInteger.valueOf(3000000).multiply(BigInteger.valueOf(1000000000));
+                default:
+                    return web3j.platonGasPrice().send().getGasPrice();
+            }
+        }else{
+            switch (type) {
+                case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
+                    return BigInteger.valueOf(150000000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
+                    return BigInteger.valueOf(210000000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+                    return BigInteger.valueOf(200000000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
+                    return BigInteger.valueOf(300000000).multiply(BigInteger.valueOf(1000000000));
+                default:
+                    return web3j.platonGasPrice().send().getGasPrice();
+            }
         }
     }
 
