@@ -32,13 +32,13 @@ compile "com.platon.client:core:0.15.1.7"
 
 * use in project
 
-## SDK includes Alaya network already. User can initialize custom networks, the latest is the current network.
+1. SDK includes Alaya network already. User can initialize custom networks, the latest is the current network.
 ```java
 NetworkParameters.init(2000L, "ABC");  
 ```
 
-## user can switch current network if multi-networks have been initialized.
+2. user can switch current network if multi-networks have been initialized.
 ```java
 NetworkParameters.selectNetwork(2000L, "ABC");  
 ```
-
+3. In Alaya, the gas price for submitting a proposal is lower than in PlatON. When initializing a network with the parameter chainId：201018 or hrp:atp, this network will be considered as an Alaya network.
