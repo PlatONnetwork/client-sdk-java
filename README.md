@@ -20,18 +20,25 @@
 <dependency>
     <groupId>com.platon.client</groupId>
     <artifactId>core</artifactId>
-    <version>0.13.1.5</version>
+    <version>0.15.1.7</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.client:core:0.13.1.5"
+compile "com.platon.client:core:0.15.1.7"
 ```
 
 * use in project
 
+## SDK includes Alaya network already. User can initialize custom networks, the latest is the current network.
+```java
+NetworkParameters.init(2000L, "ABC");  
 ```
-Web3j web3 = Web3j.build(new HttpService("https://host:port"));
+
+## user can switch current network if multi-networks have been initialized.
+```java
+NetworkParameters.selectNetwork(2000L, "ABC");  
 ```
+
