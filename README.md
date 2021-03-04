@@ -18,7 +18,7 @@
 
 ```
 <dependency>
-    <groupId>com.platon.client</groupId>
+    <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
     <version>0.15.1.7</version>
 </dependency>
@@ -27,7 +27,7 @@
 or
 
 ```
-compile "com.platon.client:core:0.15.1.7"
+compile "com.platon.sdk:core:0.15.1.7"
 ```
 
 * use in project
