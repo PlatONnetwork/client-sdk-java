@@ -11,6 +11,7 @@ import com.platon.protocol.core.DefaultBlockParameterName;
 import com.platon.protocol.core.methods.response.PlatonSendTransaction;
 import com.platon.protocol.http.HttpService;
 import com.platon.tx.Transfer;
+import com.platon.tx.gas.GasProvider;
 import com.platon.utils.Convert.Unit;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,18 @@ public class DelegateContractTest {
             PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
             TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
             System.out.println(baseResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void estimateDelegateGasLimit() {
+        try {
+            GasProvider gasProvider = delegateContract.getDelegateGasProvider(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000"));
+            System.out.println("gasProvider.getGasLimit():" + gasProvider.getGasLimit());
+            TransactionResponse response = delegateContract.delegate(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
+            System.out.println(response);
         } catch (Exception e) {
             e.printStackTrace();
         }
