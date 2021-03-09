@@ -71,83 +71,83 @@ public abstract class BaseContract extends ManagedTransaction {
     public String getContractAddress() {
         return contractAddress;
     }
-    
+
     protected <T> RemoteCall<CallResponse<T>> executeRemoteCallObjectValueReturn(Function function, Class<T> returnType) {
         return new RemoteCall<>(() -> executeCallObjectValueReturn(function, returnType));
     }
-    
+
     protected <T> RemoteCall<CallResponse<List<T>>> executeRemoteCallListValueReturn(Function function, Class<T> returnType) {
         return new RemoteCall<>(() -> executeCallListValueReturn(function, returnType));
     }
-   
+
     private <T> CallResponse<T> executeCallObjectValueReturn(Function function, Class<T> returnType) throws IOException {
-    	PlatonCall ethCall = web3j.platonCall(
+        PlatonCall ethCall = web3j.platonCall(
                 Transaction.createEthCallTransaction(
-                		transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
+                        transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
                 DefaultBlockParameterName.LATEST)
                 .send();
-    	
-    	String result = Numeric.cleanHexPrefix(ethCall.getValue());
-    	if(result==null || "".equals(result)){
-    		  throw new ContractCallException("Empty value (0x) returned from contract");
-    	}
 
-    	CallRet callRet = JSONUtil.parseObject(new String(Hex.decode(result)), CallRet.class);
-        if (callRet == null) {
-        	throw new ContractCallException("Unable to convert response: " + result);
+        String result = Numeric.cleanHexPrefix(ethCall.getValue());
+        if(result==null || "".equals(result)){
+            throw new ContractCallException("Empty value (0x) returned from contract");
         }
-        
+
+        CallRet callRet = JSONUtil.parseObject(new String(Hex.decode(result)), CallRet.class);
+        if (callRet == null) {
+            throw new ContractCallException("Unable to convert response: " + result);
+        }
+
         CallResponse<T> callResponse = new CallResponse<T>();
         if (callRet.isStatusOk()) {
-        	callResponse.setCode(callRet.getCode());
-        	if(BigInteger.class.isAssignableFrom(returnType) ) {
-        		callResponse.setData((T)numberDecoder(callRet.getRet()));
-        	}else {
-        		callResponse.setData(JSONUtil.parseObject(JSONUtil.toJSONString(callRet.getRet()), returnType));
-			}
+            callResponse.setCode(callRet.getCode());
+            if(BigInteger.class.isAssignableFrom(returnType) ) {
+                callResponse.setData((T)numberDecoder(callRet.getRet()));
+            }else {
+                callResponse.setData(JSONUtil.parseObject(JSONUtil.toJSONString(callRet.getRet()), returnType));
+            }
         } else {
-        	callResponse.setCode(callRet.getCode());
-        	callResponse.setErrMsg(callRet.getRet().toString());
+            callResponse.setCode(callRet.getCode());
+            callResponse.setErrMsg(callRet.getRet().toString());
         }
         return callResponse;
     }
-    
+
     private BigInteger numberDecoder(Object number) {
-    	if(number instanceof String) {
-    		String numberStr = (String)number;
-    		return Numeric.decodeQuantity(numberStr);
-    	} else if(number instanceof Number ){
-    		Number number2 = (Number)number;
-    		return BigInteger.valueOf(number2.longValue());
-		} else {
-			throw new MessageDecodingException("Can not decode number value = " + number);
-		}
+        if(number instanceof String) {
+            String numberStr = (String)number;
+            return Numeric.decodeQuantity(numberStr);
+        } else if(number instanceof Number ){
+            Number number2 = (Number)number;
+            return BigInteger.valueOf(number2.longValue());
+        } else {
+            throw new MessageDecodingException("Can not decode number value = " + number);
+        }
     }
-   
+
     private <T> CallResponse<List<T>> executeCallListValueReturn(Function function, Class<T> returnType) throws IOException {
-    	PlatonCall ethCall = web3j.platonCall(
+        PlatonCall ethCall = web3j.platonCall(
                 Transaction.createEthCallTransaction(
-                		transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
+                        transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
                 DefaultBlockParameterName.LATEST)
                 .send();
-    	
-    	String result = Numeric.cleanHexPrefix(ethCall.getValue());
-    	if(result==null || "".equals(result)){
-    		  throw new ContractCallException("Empty value (0x) returned from contract");
-    	}
-    	
-    	CallRet callRet = JSONUtil.parseObject(new String(Hex.decode(result)), CallRet.class);
-        if (callRet == null) {
-        	throw new ContractCallException("Unable to convert response: " + result);
+
+        String result = Numeric.cleanHexPrefix(ethCall.getValue());
+        if(result==null || "".equals(result)){
+            throw new ContractCallException("Empty value (0x) returned from contract");
         }
-        
+
+        CallRet callRet = JSONUtil.parseObject(new String(Hex.decode(result)), CallRet.class);
+        if (callRet == null) {
+            throw new ContractCallException("Unable to convert response: " + result);
+        }
+
         CallResponse<List<T>> callResponse = new CallResponse<List<T>>();
         if (callRet.isStatusOk()) {
-        	callResponse.setCode(callRet.getCode());
-        	callResponse.setData(JSONUtil.parseArray(JSONUtil.toJSONString(callRet.getRet()), returnType));
+            callResponse.setCode(callRet.getCode());
+            callResponse.setData(JSONUtil.parseArray(JSONUtil.toJSONString(callRet.getRet()), returnType));
         } else {
-        	callResponse.setCode(callRet.getCode());
-        	callResponse.setErrMsg(callRet.getRet().toString());
+            callResponse.setCode(callRet.getCode());
+            callResponse.setErrMsg(callRet.getRet().toString());
         }
 
         if(callRet.getCode() == ErrorCode.OBJECT_NOT_FOUND){
@@ -157,82 +157,66 @@ public abstract class BaseContract extends ManagedTransaction {
 
         return callResponse;
     }
-    
+
     public static class CallRet{
-    	@JSONField(name = "Code")
-    	private int code;
-    	@JSONField(name = "Ret")
-    	private Object ret;
-    	
+        @JSONField(name = "Code")
+        private int code;
+        @JSONField(name = "Ret")
+        private Object ret;
+
         public boolean isStatusOk() {
             return code == ErrorCode.SUCCESS;
         }
-		public int getCode() {
-			return code;
-		}
-		public void setCode(int code) {
-			this.code = code;
-		}
-		public Object getRet() {
-			return ret;
-		}
-		public void setRet(Object ret) {
-			this.ret = ret;
-		}
-		
-		@Override
-		public String toString() {
-			return "CallRet [code=" + code + ", ret=" + ret + "]";
-		}    	
+        public int getCode() {
+            return code;
+        }
+        public void setCode(int code) {
+            this.code = code;
+        }
+        public Object getRet() {
+            return ret;
+        }
+        public void setRet(Object ret) {
+            this.ret = ret;
+        }
+
+        @Override
+        public String toString() {
+            return "CallRet [code=" + code + ", ret=" + ret + "]";
+        }
     }
 
     protected RemoteCall<PlatonSendTransaction> executeRemoteCallTransactionStep1(Function function, GasProvider gasProvider) {
         return new RemoteCall<>(() -> executeTransactionStep1(function, BigInteger.ZERO,gasProvider));
     }
-    
+
     protected RemoteCall<PlatonSendTransaction> executeRemoteCallTransactionStep1(Function function) {
-    	return new RemoteCall<>(() -> executeTransactionStep1(function, BigInteger.ZERO, getDefaultGasProvider(function)));
-	}
-    
+        return new RemoteCall<>(() -> executeTransactionStep1(function, BigInteger.ZERO, getDefaultGasProvider(function)));
+    }
+
     private RemoteCall<TransactionResponse> executeRemoteCallTransactionStep2(PlatonSendTransaction ethSendTransaction) {
         return new RemoteCall<>(() -> executeTransactionStep2(ethSendTransaction));
     }
-    
-    public RemoteCall<TransactionResponse> getTransactionResponse(PlatonSendTransaction ethSendTransaction) throws IOException, TransactionException {
-    	return executeRemoteCallTransactionStep2(ethSendTransaction);
+
+    public RemoteCall<TransactionResponse> getTransactionResponse(PlatonSendTransaction ethSendTransaction){
+        return executeRemoteCallTransactionStep2(ethSendTransaction);
     }
 
     protected RemoteCall<TransactionResponse> executeRemoteCallTransaction(Function function) {
-    	return new RemoteCall<>(() -> executeTransaction(function, BigInteger.ZERO, getDefaultGasProvider(function)));
-	}
+        return new RemoteCall<>(() -> executeTransaction(function, BigInteger.ZERO, getDefaultGasProvider(function)));
+    }
 
     protected RemoteCall<TransactionResponse> executeRemoteCallTransaction(Function function, GasProvider gasProvider) {
         return new RemoteCall<>(() -> executeTransaction(function, BigInteger.ZERO, gasProvider));
     }
 
 
-    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException, NoSupportFunctionType {
-        /*if(EstimateGasUtil.isSupportLocal(function.getType())){
-            return  getDefaultGasProviderLocal(function);
-        } else {
-            return  getDefaultGasProviderRemote(function);`
-        }*/
+    protected GasProvider getDefaultGasProvider(Function function) throws IOException, EstimateGasException {
         return  getDefaultGasProviderRemote(function);
     }
 
-    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException, NoSupportFunctionType {
-        //BigInteger gasLimit = web3j.platonEstimateGas(transaction).send().getAmountUsed();
-        //gasPrice必须首先获得，在estimateGas的时候，治理合约就需要gasPrice。
-        //estimateGas的时候，交易的所有参数，除了gasLimit，应该和真正发送时的参数一样。
-        BigInteger gasPrice = getDefaultGasPrice(function.getType());
-        //必须填gasLimit，否则按区块最大gas来算，这样要求账户余额>=区块最大gas*gasPrice，就容易抛出余额不足的错误
-        BigInteger gasLimit = EstimateGasUtil.getGasLimit(function);
-
-        BigInteger nonce = null;
-
-        //String from, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, String data
-        Transaction transaction = Transaction.createFunctionCallTransaction(transactionManager.getFromAddress(), nonce, gasPrice, gasLimit, contractAddress, EncoderUtils.functionEncoder(function));
-
+    private GasProvider getDefaultGasProviderRemote(Function function) throws IOException, EstimateGasException {
+        Transaction transaction = Transaction.createEthCallTransaction(transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function));
         PlatonEstimateGas platonEstimateGas = web3j.platonEstimateGas(transaction).send();
         if(platonEstimateGas.hasError()){
             if(platonEstimateGas.getError().getCode() == ErrorCode.PlatON_Precompiled_Contract_EXEC_FAILED) {
@@ -243,12 +227,10 @@ public abstract class BaseContract extends ManagedTransaction {
             }else{
                 throw new EstimateGasException(platonEstimateGas.getError().getMessage());
             }
-
-        }else{
-            gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
         }
-        GasProvider gasProvider = new ContractGasProvider(gasPrice, gasLimit);
-        return  gasProvider;
+        BigInteger gasLimit = Numeric.decodeQuantity(platonEstimateGas.getResult());
+        BigInteger gasPrice = getDefaultGasPrice(function.getType());
+        return new ContractGasProvider(gasPrice, gasLimit);
     }
 
     private GasProvider getDefaultGasProviderLocal(Function function) throws IOException, NoSupportFunctionType {
@@ -271,6 +253,19 @@ public abstract class BaseContract extends ManagedTransaction {
                 NetworkParameters.ReservedHrp.Alaya.getHrp().equalsIgnoreCase(NetworkParameters.getHrp())){
             switch (type) {
                 case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
+                    return BigInteger.valueOf(150000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
+                    return BigInteger.valueOf(210000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
+                    return BigInteger.valueOf(200000).multiply(BigInteger.valueOf(1000000000));
+                case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
+                    return BigInteger.valueOf(300000).multiply(BigInteger.valueOf(1000000000));
+                default:
+                    return web3j.platonGasPrice().send().getGasPrice();
+            }
+        }else{
+            switch (type) {
+                case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
                     return BigInteger.valueOf(1500000).multiply(BigInteger.valueOf(1000000000));
                 case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
                     return BigInteger.valueOf(2100000).multiply(BigInteger.valueOf(1000000000));
@@ -281,70 +276,54 @@ public abstract class BaseContract extends ManagedTransaction {
                 default:
                     return web3j.platonGasPrice().send().getGasPrice();
             }
-        }else{
-            switch (type) {
-                case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
-                    return BigInteger.valueOf(150000000).multiply(BigInteger.valueOf(1000000000));
-                case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
-                    return BigInteger.valueOf(210000000).multiply(BigInteger.valueOf(1000000000));
-                case FunctionType.SUBMIR_PARAM_FUNCTION_TYPE:
-                    return BigInteger.valueOf(200000000).multiply(BigInteger.valueOf(1000000000));
-                case FunctionType.SUBMIT_CANCEL_FUNC_TYPE:
-                    return BigInteger.valueOf(300000000).multiply(BigInteger.valueOf(1000000000));
-                default:
-                    return web3j.platonGasPrice().send().getGasPrice();
-            }
         }
     }
 
 
 
 
-    private TransactionResponse executeTransaction(Function function, BigInteger weiValue, GasProvider gasProvider)throws TransactionException, IOException {
+    private TransactionResponse executeTransaction(Function function, BigInteger vonValue, GasProvider gasProvider)throws TransactionException, IOException {
 
-    	TransactionReceipt receipt = send(contractAddress, EncoderUtils.functionEncoder(function), weiValue,
-             gasProvider.getGasPrice(),
-             gasProvider.getGasLimit());
-
-    	return getResponseFromTransactionReceipt(receipt);
-    }
-    
-    private PlatonSendTransaction executeTransactionStep1(Function function, BigInteger weiValue, GasProvider gasProvider) throws TransactionException, IOException {
-
-        PlatonSendTransaction sendTransaction =  sendPlatonRawTransaction(contractAddress,  EncoderUtils.functionEncoder(function), weiValue,
+        TransactionReceipt receipt = send(contractAddress, EncoderUtils.functionEncoder(function), vonValue,
                 gasProvider.getGasPrice(),
                 gasProvider.getGasLimit());
-        
-        return sendTransaction;
+
+        return getResponseFromTransactionReceipt(receipt);
     }
-    
+
+    private PlatonSendTransaction executeTransactionStep1(Function function, BigInteger vonValue, GasProvider gasProvider) throws IOException {
+
+        return sendPlatonRawTransaction(contractAddress,  EncoderUtils.functionEncoder(function), vonValue, gasProvider.getGasPrice(), gasProvider.getGasLimit());
+
+    }
+
     private TransactionResponse executeTransactionStep2(PlatonSendTransaction ethSendTransaction) throws IOException, TransactionException {
 
         TransactionReceipt receipt = getTransactionReceipt(ethSendTransaction);
-        
+
         return getResponseFromTransactionReceipt(receipt);
     }
-    
+
     private TransactionResponse getResponseFromTransactionReceipt(TransactionReceipt transactionReceipt) throws TransactionException {
-		List<Log> logs = transactionReceipt.getLogs();
+        List<Log> logs = transactionReceipt.getLogs();
         if(logs==null||logs.isEmpty()){
-        	 throw new TransactionException("TransactionReceipt logs is empty");
+            throw new TransactionException("TransactionReceipt logs is empty");
         }
 
-		String logData = logs.get(0).getData();
-		if(null == logData || "".equals(logData) ){
-			throw new TransactionException("TransactionReceipt log data is empty");
-		}
+        String logData = logs.get(0).getData();
+        if(null == logData || "".equals(logData) ){
+            throw new TransactionException("TransactionReceipt log data is empty");
+        }
 
         RlpList rlp = RlpDecoder.decode(Numeric.hexStringToByteArray(logData));
         List<RlpType> rlpList = ((RlpList)(rlp.getValues().get(0))).getValues();
         String decodedStatus = new String(((RlpString)rlpList.get(0)).getBytes());
         int statusCode = Integer.parseInt(decodedStatus);
-        
+
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setCode(statusCode);
         transactionResponse.setTransactionReceipt(transactionReceipt);
-        
+
         return transactionResponse;
-	}
+    }
 }
