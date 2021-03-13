@@ -20,18 +20,25 @@
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.13.2.1</version>
+    <version>0.15.1.8</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.sdk:core:0.13.2.1"
+compile "com.platon.sdk:core:0.15.1.8"
 ```
 
 * use in project
 
+1. SDK includes Alaya network already. User can initialize custom networks, the latest is the current network.
+```java
+NetworkParameters.init(2000L, "ABC");  
 ```
-Web3j web3 = Web3j.build(new HttpService("https://host:port"));
+
+2. user can switch current network if multi-networks have been initialized.
+```java
+NetworkParameters.selectNetwork(2000L, "ABC");  
 ```
+3. In Alaya, the gas price for submitting a proposal is lower than in PlatON. When initializing a network with the parameter chainId：201018 or hrp:atp, this network will be considered as an Alaya network.
