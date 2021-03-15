@@ -140,8 +140,22 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     }
 
     ext {
-        ossrhUsername = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : System.getenv("ossrhUsername")
-        ossrhPassword = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : System.getenv("ossrhPassword")
+        ossrhUsername = ""
+        ossrhPassword = ""
+        //read maven repositories username and password from a file which is ignored by Git.
+        //./.gradle/publish.properties sample:
+        //ossrhUsername=user
+        //ossrhPassword=pwd
+        def publishPropsFile = rootProject.file("./.gradle/publish.properties")
+        Properties publishProps = new Properties()
+        if (publishPropsFile.exists()) {
+            publishProps.load(new FileInputStream(publishPropsFile))
+            ossrhUsername = publishProps['ossrhUsername']
+            ossrhPassword = publishProps['ossrhPassword']
+        } else{
+            ossrhUsername = System.getenv("ossrhUsername")
+            ossrhPassword = System.getenv("ossrhPassword")
+        }
         isSnapshotVersion = project.version.endsWith("-SNAPSHOT")
     }
 
