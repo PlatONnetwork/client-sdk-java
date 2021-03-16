@@ -26,7 +26,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.15.1.0-SNAPSHOT</version>
+    <version>0.15.1.9</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.15.1.0-SNAPSHOT"
+compile "com.platon.client:core:0.15.1.9"
 ```
 
 ## Basic API Usage

@@ -26,7 +26,7 @@ sidebar_label: Java SDK
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.15.1.0-SNAPSHOT</version>
+    <version>0.15.1.9</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.sdk:core:0.15.1.0-SNAPSHOT"
+compile "com.platon.sdk:core:0.15.1.9"
 ```
 
 ## 基础api使用
