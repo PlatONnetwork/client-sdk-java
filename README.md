@@ -37,6 +37,8 @@ compile "com.platon.sdk:core:0.15.1.9"
 NetworkParameters.init(2000L, "ABC");  
 ```
 
+chain ID 201018 is reserved for Alaya, and chain ID 100 is reserved for PlatON.
+
 2. user can switch current network if multi-networks have been initialized.
 ```java
 NetworkParameters.selectNetwork(2000L, "ABC");  
