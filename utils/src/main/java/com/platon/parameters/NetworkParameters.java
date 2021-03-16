@@ -19,6 +19,11 @@ public class NetworkParameters {
         networksContainer.put(alayaNetworkKey, alaya);
         //networksContainer.put(platonNetworkKey, new NetworkParameters(ReservedChainId.PlatON.getChainId(), ReservedHrp.PlatON.getHrp()));
         currentNetwork=alaya;
+
+        NetworkParameters platon = new NetworkParameters(ReservedChainId.PlatON.getChainId(), ReservedHrp.PlatON.getHrp());
+        networksContainer.put(platonNetworkKey, platon);
+        //networksContainer.put(platonNetworkKey, new NetworkParameters(ReservedChainId.PlatON.getChainId(), ReservedHrp.PlatON.getHrp()));
+        //currentNetwork=alaya;
     }
 
     //锁仓合约地址
