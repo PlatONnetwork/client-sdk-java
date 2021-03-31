@@ -95,6 +95,7 @@ public class NetworkParameters {
      */
     public static void init(long chainId, String hrp){
         if(networksContainer.containsKey(String.valueOf(chainId) + ":" + hrp)){
+            currentNetwork = networksContainer.get(String.valueOf(chainId) + ":" + hrp);
             return;
         }
         //if the chainID = 201018L, the hrp should be atp.
