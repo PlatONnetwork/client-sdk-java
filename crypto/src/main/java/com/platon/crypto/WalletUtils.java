@@ -189,7 +189,7 @@ public class WalletUtils {
         if (!walletFile.getAddress().equalsIgnoreCase(credentials.getAddress())){
             throw new CipherException("wallet file's content is cracked.");
         }
-        return Credentials.create(Wallet.decrypt(password, loadWalletFile(source)));
+        return credentials;
     }
 
     private static final String MAIN_TEST_ADDRESS_REGEX = "\\\"address\\\"\\s*:\\s*\\{\\s*\\\"mainnet\\\"\\s*:\\s*\\\"([A-Za-z0-9]+)\\\"[^}]*\\}";
