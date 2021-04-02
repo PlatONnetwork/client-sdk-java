@@ -27,7 +27,7 @@
 or
 
 ```
-compile "com.platon.sdk:core:0.15.1.8"
+compile "com.platon.sdk:core:0.15.1.12"
 ```
 
 * use in project
