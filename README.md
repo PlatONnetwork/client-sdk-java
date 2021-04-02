@@ -20,7 +20,7 @@
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.15.1.8</version>
+    <version>0.15.1.12</version>
 </dependency>
 ```
 
