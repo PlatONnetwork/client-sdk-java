@@ -6,7 +6,7 @@
     git clone https://github.com/PlatONnetwork/client-sdk-java.git
     cd client-sdk-java/
     ./gradlew clean jar            //Generate jar package
-	./gradlew clean distZip        //Generate code generation skeleton tool
+    ./gradlew clean distZip        //Generate code generation skeleton tool
     ./gradlew -Pintegration-tests=true :integration-tests:test    //To run the integration tests:
    
 ``` 
@@ -20,14 +20,14 @@
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.15.1.9</version>
+    <version>0.15.1.12</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.sdk:core:0.15.1.9"
+compile "com.platon.sdk:core:0.15.1.12"
 ```
 
 * use in project
