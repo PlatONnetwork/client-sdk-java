@@ -1,12 +1,19 @@
-rootProject.name = 'client-sdk-java'
+rootProject.name = 'platon-sdk-java'
 
-include 'abi'
-include 'codegen'
-include 'console'
-include 'core'
-include 'crypto'
-include 'geth'
 include 'integration-tests'
-include 'rlp'
-include 'tuples'
+include 'console'
+include 'codegen'
+include 'core'
+include 'solidity-abi'
+include 'wasm-abi'
+include 'crypto'
+include 'solidity-rlp'
+include 'wasm-rlp'
 include 'utils'
+include 'tuples'
+
+
+
+
+
+
