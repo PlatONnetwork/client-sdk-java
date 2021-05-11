@@ -17,6 +17,7 @@ import rx.subjects.BehaviorSubject;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -160,7 +161,7 @@ public class WebSocketService implements Web3jService {
         executor.schedule(
                 () -> closeRequest(
                     requestId,
-                    new IOException(
+                    new SocketTimeoutException(
                         String.format("Request with id %d timed out", requestId))),
                 REQUEST_TIMEOUT,
                 TimeUnit.SECONDS);

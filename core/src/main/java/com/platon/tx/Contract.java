@@ -268,7 +268,7 @@ public abstract class Contract extends ManagedTransaction {
         return contract;
     }
 
-    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException {
+    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException, IOException {
 
         try {
             Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, Credentials.class, GasProvider.class);
@@ -280,12 +280,14 @@ public abstract class Contract extends ManagedTransaction {
             return create(contract, binary, encodedConstructor, value);
         } catch (TransactionException e) {
             throw e;
+        } catch (IOException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException {
+    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException, IOException{
 
         try {
             Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, TransactionManager.class, GasProvider.class);
@@ -295,6 +297,8 @@ public abstract class Contract extends ManagedTransaction {
             T contract = constructor.newInstance(null, web3j, transactionManager, contractGasProvider);
             return create(contract, binary, encodedConstructor, value);
         } catch (TransactionException e) {
+            throw e;
+        } catch (IOException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
