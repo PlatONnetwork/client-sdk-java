@@ -30,10 +30,13 @@ import com.platon.tx.RawTransactionManager;
 import com.platon.tx.ReadonlyTransactionManager;
 import com.platon.tx.TransactionManager;
 import com.platon.tx.exceptions.ContractCallException;
+import com.platon.tx.exceptions.PlatonCallException;
+import com.platon.tx.exceptions.PlatonCallTimeoutException;
 import com.platon.tx.gas.ContractGasProvider;
 import com.platon.tx.gas.GasProvider;
 import com.platon.utils.JSONUtil;
 import com.platon.utils.Numeric;
+import com.platon.utils.Strings;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +90,20 @@ public abstract class BaseContract extends ManagedTransaction {
                 DefaultBlockParameterName.LATEST)
                 .send();
 
+        //判断底层返回的错误信息是否包含超时信息
+        if(ethCall.hasError()){
+            Response.Error error = ethCall.getError();
+            String message = error.getMessage();
+            String lowMessage = !Strings.isBlank(message)? message.toLowerCase() : null;
+            //包含timeout则抛超时异常，其他错误则直接抛出runtime异常
+            if(!Strings.isBlank(lowMessage)
+                    && lowMessage.contains("timeout")){
+                throw new PlatonCallTimeoutException(error.getCode(),error.getMessage(),ethCall);
+            } else {
+                throw new PlatonCallException(error.getCode(),error.getMessage(),ethCall);
+            }
+        }
+
         String result = Numeric.cleanHexPrefix(ethCall.getValue());
         if(result==null || "".equals(result)){
             throw new ContractCallException("Empty value (0x) returned from contract");
@@ -130,6 +147,20 @@ public abstract class BaseContract extends ManagedTransaction {
                         transactionManager.getFromAddress(), contractAddress, EncoderUtils.functionEncoder(function)),
                 DefaultBlockParameterName.LATEST)
                 .send();
+
+        //判断底层返回的错误信息是否包含超时信息
+        if(ethCall.hasError()){
+            Response.Error error = ethCall.getError();
+            String message = error.getMessage();
+            String lowMessage = !Strings.isBlank(message)? message.toLowerCase() : null;
+            //包含timeout则抛超时异常，其他错误则直接抛出runtime异常
+            if(!Strings.isBlank(lowMessage)
+                    && lowMessage.contains("timeout")){
+                throw new PlatonCallTimeoutException(error.getCode(),error.getMessage(),ethCall);
+            } else {
+                throw new PlatonCallException(error.getCode(),error.getMessage(),ethCall);
+            }
+        }
 
         String result = Numeric.cleanHexPrefix(ethCall.getValue());
         if(result==null || "".equals(result)){

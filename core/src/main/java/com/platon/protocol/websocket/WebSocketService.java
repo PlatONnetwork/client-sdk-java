@@ -161,7 +161,7 @@ public class WebSocketService implements Web3jService {
         executor.schedule(
                 () -> closeRequest(
                     requestId,
-                    new SocketTimeoutException(
+                    new IOException(
                         String.format("Request with id %d timed out", requestId))),
                 REQUEST_TIMEOUT,
                 TimeUnit.SECONDS);
