@@ -130,4 +130,6 @@ public interface Platon {
     Request<?, AdminSchnorrNIZKProve> getSchnorrNIZKProve();
     
     Request<?, DebugEconomicConfig> getEconomicConfig();
+
+    Request<?, PlatonChainId> getChainId();
 }

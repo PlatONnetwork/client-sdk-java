@@ -15,8 +15,9 @@ public abstract class Scenario {
 
 	protected Logger logger = LoggerFactory.getLogger(Scenario.class);
 
-	protected Web3j web3j = Web3j.build(new HttpService("http://192.168.120.150:6789"));
-	protected Web3j proposalWeb3j = Web3j.build(new HttpService("http://192.168.120.149:6789"));
+	//protected Web3j web3j = Web3j.build(new HttpService("http://192.168.120.150:6789"));
+	protected Web3j web3j = Web3j.build(new HttpService("http://192.168.120.141:6789"));
+	protected Web3j proposalWeb3j = Web3j.build(new HttpService("http://192.168.120.141:6789"));
 	protected Web3j slashWeb3j = proposalWeb3j;
 	//protected long chainId = NetworkParameters.CurrentNetwork.getChainId();
 	protected String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";

@@ -39,4 +39,11 @@ public class RpcScenario extends Scenario {
     	assertThat(nizkProve, is(instanceOf(String.class)));
     	System.out.println(nizkProve);
     }
+
+	@Test
+	public void getChainId() throws Exception {
+		BigInteger chainId = web3j.getChainId().send().getChainId();
+		assertThat(chainId, is(instanceOf(BigInteger.class)));
+		System.out.println(chainId);
+	}
 }

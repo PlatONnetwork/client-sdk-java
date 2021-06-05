@@ -690,4 +690,13 @@ public class JsonRpc2_0Web3j implements Web3j {
                 web3jService,
                 DebugEconomicConfig.class);
 	}
+
+    @Override
+    public Request<?, PlatonChainId> getChainId() {
+        return new Request<>(
+                "platon_chainId",
+                Collections.<String>emptyList(),
+                web3jService,
+                PlatonChainId.class);
+    }
 }
