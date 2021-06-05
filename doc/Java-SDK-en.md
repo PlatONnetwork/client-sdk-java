@@ -26,7 +26,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.15.1.9</version>
+    <version>0.16.0.0</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:0.15.1.9"
+compile "com.platon.client:core:0.16.0.0"
 ```
 
 ## Basic API Usage
@@ -1373,6 +1373,32 @@ Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request<?, DebugEconomicConfig> req = currentValidWeb3j.getEconomicConfig();
 String debugEconomicConfig = req.send().getEconomicConfigStr();
 ```
+
+
+### getChainId
+
+> Get chain ID
+
+- **parameters**
+
+  no
+
+- **return value**
+
+```java
+Request<?, PlatonChainId>
+```
+
+The String in the PlatonChainId property is the corresponding stored data
+
+- **Example**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request<?, PlatonChainId> req = platonWeb3j.getChainId();
+BigInteger chainId = req.send().getChainId();
+```
+
 
 ## System Contract Call
 

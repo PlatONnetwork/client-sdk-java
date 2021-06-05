@@ -26,7 +26,7 @@ sidebar_label: Java SDK
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>0.15.1.9</version>
+    <version>0.15.1.10</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.sdk:core:0.15.1.9"
+compile "com.platon.sdk:core:0.15.1.10"
 ```
 
 ## 基础api使用
@@ -1371,6 +1371,30 @@ DebugEconomicConfig属性中的String即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request<?, DebugEconomicConfig> req = currentValidWeb3j.getEconomicConfig();
 String debugEconomicConfig = req.send().getEconomicConfigStr();
+```
+
+### getChainId
+
+>    获取链ID
+
+* **参数**
+
+  无
+
+* **返回值**
+
+```java
+Request<?, PlatonChainId>
+```
+
+PlatonChainId属性中的String即为对应存储数据
+
+* **示例**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request<?, PlatonChainId> req = platonWeb3j.getChainId();
+BigInteger chainId = req.send().getChainId();
 ```
 
 ## 系统合约调用
