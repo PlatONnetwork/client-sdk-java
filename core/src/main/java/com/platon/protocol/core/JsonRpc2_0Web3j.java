@@ -2,6 +2,7 @@ package com.platon.protocol.core;
 
 import com.platon.protocol.Web3j;
 import com.platon.protocol.Web3jService;
+import com.platon.protocol.core.methods.DebugWaitSlashingNodeList;
 import com.platon.protocol.core.methods.request.ShhFilter;
 import com.platon.protocol.core.methods.response.*;
 import com.platon.protocol.rx.JsonRpc2_0Rx;
@@ -690,4 +691,22 @@ public class JsonRpc2_0Web3j implements Web3j {
                 web3jService,
                 DebugEconomicConfig.class);
 	}
+
+    @Override
+    public Request<?, PlatonChainId> getChainId() {
+        return new Request<>(
+                "platon_chainId",
+                Collections.<String>emptyList(),
+                web3jService,
+                PlatonChainId.class);
+    }
+
+    @Override
+    public Request<?, DebugWaitSlashingNodeList> getWaitSlashingNodeList() {
+        return new Request<>(
+                "debug_getWaitSlashingNodeList",
+                Collections.<String>emptyList(),
+                web3jService,
+                DebugWaitSlashingNodeList.class);
+    }
 }
