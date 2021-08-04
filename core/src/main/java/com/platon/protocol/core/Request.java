@@ -12,6 +12,7 @@ public class Request<S, T extends Response> {
     private static AtomicLong nextId = new AtomicLong(0);
 
     private String jsonrpc = "2.0";
+    private boolean bech32 = true; //bech32的值来区分是以太坊/PlatON调用
     private String method;
     private List<S> params;
     private long id;
@@ -40,6 +41,14 @@ public class Request<S, T extends Response> {
 
     public void setJsonrpc(String jsonrpc) {
         this.jsonrpc = jsonrpc;
+    }
+
+    public boolean getBech32() {
+        return bech32;
+    }
+
+    public void setBech32(boolean bech32) {
+        this.bech32 = bech32;
     }
 
     public String getMethod() {
