@@ -118,9 +118,13 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
             } else {
                 addresses = Collections.EMPTY_MAP;
             }
+            String bytecode = c.getBytecode();
+            if(!Strings.isBlank(bytecode) && bytecode.startsWith("0x")){
+                bytecode = bytecode.substring(2);
+            }
             new SolidityFunctionWrapper(useJavaNativeTypes)
                     .generateJavaFiles(contractName,
-                            c.getBytecode(),
+                            bytecode,
                             c.getAbi(),
                             destinationDirLocation.toString(),
                             basePackageName,
