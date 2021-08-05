@@ -1,6 +1,8 @@
 package com.platon.protocol.core;
 
 import com.platon.protocol.ResponseTester;
+import com.platon.protocol.admin.methods.response.TxPoolStatus;
+import com.platon.protocol.admin.methods.response.admin.AdminDataDir;
 import com.platon.protocol.core.methods.response.*;
 import com.platon.utils.Numeric;
 import org.junit.Test;
@@ -1256,5 +1258,33 @@ public class ResponseTest extends ResponseTester {
 
         ShhMessages shhMessages = deserialiseResponse(ShhMessages.class);
         assertThat(shhMessages.getMessages(), equalTo(messages));
+    }
+
+    @Test
+    public void testAdminDataDir() {
+        buildResponse(
+                "{\n"
+                        + "    \"jsonrpc\":\"2.0\",\n"
+                        + "    \"id\":22,\n"
+                        + "    \"result\":\"sampleDir\"\n"
+                        + "}");
+
+        AdminDataDir dataDir = deserialiseResponse(AdminDataDir.class);
+        assertEquals(dataDir.getDataDir(), "sampleDir");
+    }
+
+    @Test
+    public void testTxPoolStatus() {
+        buildResponse(
+                "{\n"
+                        + "    \"jsonrpc\":\"2.0\",\n"
+                        + "    \"id\":22,\n"
+                        + "    \"result\":{ \"pending\": \"10\",\n"
+                        + "			\"queued\": \"7\"}\n"
+                        + "}");
+
+        TxPoolStatus status = deserialiseResponse(TxPoolStatus.class);
+        assert(status.getPending() == 10);
+        assert(status.getQueued() == 7);
     }
 }

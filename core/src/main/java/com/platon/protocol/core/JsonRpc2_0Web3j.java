@@ -2,6 +2,9 @@ package com.platon.protocol.core;
 
 import com.platon.protocol.Web3j;
 import com.platon.protocol.Web3jService;
+import com.platon.protocol.admin.methods.response.BooleanResponse;
+import com.platon.protocol.admin.methods.response.TxPoolStatus;
+import com.platon.protocol.admin.methods.response.admin.AdminDataDir;
 import com.platon.protocol.core.methods.DebugWaitSlashingNodeList;
 import com.platon.protocol.core.methods.request.ShhFilter;
 import com.platon.protocol.core.methods.response.*;
@@ -85,6 +88,24 @@ public class JsonRpc2_0Web3j implements Web3j {
                 Collections.<String>emptyList(),
                 web3jService,
                 NetPeerCount.class);
+    }
+
+    @Override
+    public Request<?, BooleanResponse> adminAddPeer(String url) {
+        return new Request<>(
+                "admin_addPeer", Arrays.asList(url), web3jService, BooleanResponse.class);
+    }
+
+    @Override
+    public Request<?, BooleanResponse> adminRemovePeer(String url) {
+        return new Request<>(
+                "admin_removePeer", Arrays.asList(url), web3jService, BooleanResponse.class);
+    }
+
+    @Override
+    public Request<?, AdminDataDir> adminDataDir() {
+        return new Request<>(
+                "admin_datadir", Collections.emptyList(), web3jService, AdminDataDir.class);
     }
 
     @Override
@@ -513,6 +534,12 @@ public class JsonRpc2_0Web3j implements Web3j {
                 Arrays.asList(Numeric.toHexStringWithPrefixSafe(filterId)),
                 web3jService,
                 ShhMessages.class);
+    }
+
+    @Override
+    public Request<?, TxPoolStatus> txPoolStatus() {
+        return new Request<>(
+                "txpool_status", Collections.<String>emptyList(), web3jService, TxPoolStatus.class);
     }
 
     @Override
