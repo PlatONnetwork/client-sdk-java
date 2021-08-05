@@ -4,6 +4,7 @@ import com.platon.protocol.Web3jService;
 import com.platon.protocol.admin.methods.response.NewAccountIdentifier;
 import com.platon.protocol.admin.methods.response.PersonalListAccounts;
 import com.platon.protocol.admin.methods.response.PersonalUnlockAccount;
+import com.platon.protocol.admin.methods.response.TxPoolContent;
 import com.platon.protocol.core.JsonRpc2_0Web3j;
 import com.platon.protocol.core.Request;
 import com.platon.protocol.core.methods.request.Transaction;
@@ -88,5 +89,14 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
                 web3jService,
                 PlatonSendTransaction.class);
     }
-    
+
+    @Override
+    public Request<?, TxPoolContent> txPoolContent() {
+        return new Request<>(
+                "txpool_content",
+                Collections.<String>emptyList(),
+                web3jService,
+                TxPoolContent.class);
+    }
+
 }

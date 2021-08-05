@@ -5,6 +5,7 @@ import com.platon.protocol.Web3jService;
 import com.platon.protocol.admin.methods.response.NewAccountIdentifier;
 import com.platon.protocol.admin.methods.response.PersonalListAccounts;
 import com.platon.protocol.admin.methods.response.PersonalUnlockAccount;
+import com.platon.protocol.admin.methods.response.TxPoolContent;
 import com.platon.protocol.core.Request;
 import com.platon.protocol.core.methods.request.Transaction;
 import com.platon.protocol.core.methods.response.PlatonSendTransaction;
@@ -40,4 +41,5 @@ public interface Admin extends Web3j {
     public Request<?, PlatonSendTransaction> personalSendTransaction(
             Transaction transaction, String password);
 
+    public Request<?, TxPoolContent> txPoolContent();
 }   
