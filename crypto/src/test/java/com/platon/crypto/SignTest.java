@@ -1,6 +1,7 @@
 package com.platon.crypto;
 
 import com.platon.utils.Numeric;
+import org.bouncycastle.math.ec.ECPoint;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -48,5 +49,12 @@ public class SignTest {
     public void testInvalidSignature() throws SignatureException {
         Sign.signedMessageToKey(
                 TEST_MESSAGE, new Sign.SignatureData((byte) 27, new byte[]{1}, new byte[]{0}));
+    }
+
+    @Test
+    public void testPublicKeyFromPrivatePoint() {
+        ECPoint point = Sign.publicPointFromPrivate(SampleKeys.PRIVATE_KEY);
+        assertThat(Sign.publicFromPoint(point.getEncoded(false)),
+                equalTo(SampleKeys.PUBLIC_KEY));
     }
 }
