@@ -10,6 +10,7 @@ import com.platon.protocol.Web3j;
 import com.platon.protocol.core.DefaultBlockParameter;
 import com.platon.protocol.core.DefaultBlockParameterName;
 import com.platon.protocol.core.RemoteCall;
+import com.platon.protocol.core.Response;
 import com.platon.protocol.core.methods.request.Transaction;
 import com.platon.protocol.core.methods.response.Log;
 import com.platon.protocol.core.methods.response.PlatonCall;
@@ -17,9 +18,12 @@ import com.platon.protocol.core.methods.response.PlatonGetCode;
 import com.platon.protocol.core.methods.response.TransactionReceipt;
 import com.platon.protocol.exceptions.TransactionException;
 import com.platon.tx.exceptions.ContractCallException;
+import com.platon.tx.exceptions.PlatonCallException;
+import com.platon.tx.exceptions.PlatonCallTimeoutException;
 import com.platon.tx.gas.DefaultGasProvider;
 import com.platon.tx.gas.GasProvider;
 import com.platon.utils.Numeric;
+import com.platon.utils.Strings;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -149,6 +153,20 @@ public abstract class Contract extends ManagedTransaction {
                 defaultBlockParameter)
                 .send();
 
+        //判断底层返回的错误信息是否包含超时信息
+        if(ethCall.hasError()){
+            Response.Error error = ethCall.getError();
+            String message = error.getMessage();
+            String lowMessage = !Strings.isBlank(message)? message.toLowerCase() : null;
+            //包含timeout则抛超时异常，其他错误则直接抛出runtime异常
+            if(!Strings.isBlank(lowMessage)
+                    && lowMessage.contains("timeout")){
+                throw new PlatonCallTimeoutException(error.getCode(),error.getMessage(),ethCall);
+            } else {
+                throw new PlatonCallException(error.getCode(),error.getMessage(),ethCall);
+            }
+        }
+
         String value = ethCall.getValue();
         return FunctionReturnDecoder.decode(value, function.getOutputParameters());
     }
@@ -268,7 +286,7 @@ public abstract class Contract extends ManagedTransaction {
         return contract;
     }
 
-    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException {
+    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException, IOException {
 
         try {
             Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, Credentials.class, GasProvider.class);
@@ -280,12 +298,14 @@ public abstract class Contract extends ManagedTransaction {
             return create(contract, binary, encodedConstructor, value);
         } catch (TransactionException e) {
             throw e;
+        } catch (IOException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException {
+    protected static <T extends Contract> T deploy(Class<T> type, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, String binary, String encodedConstructor, BigInteger value) throws RuntimeException, TransactionException, IOException{
 
         try {
             Constructor<T> constructor = type.getDeclaredConstructor(String.class, Web3j.class, TransactionManager.class, GasProvider.class);
@@ -295,6 +315,8 @@ public abstract class Contract extends ManagedTransaction {
             T contract = constructor.newInstance(null, web3j, transactionManager, contractGasProvider);
             return create(contract, binary, encodedConstructor, value);
         } catch (TransactionException e) {
+            throw e;
+        } catch (IOException e) {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);

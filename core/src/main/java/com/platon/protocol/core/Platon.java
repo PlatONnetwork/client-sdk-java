@@ -1,5 +1,6 @@
 package com.platon.protocol.core;
 
+import com.platon.protocol.core.methods.DebugWaitSlashingNodeList;
 import com.platon.protocol.core.methods.request.ShhFilter;
 import com.platon.protocol.core.methods.response.*;
 
@@ -130,4 +131,8 @@ public interface Platon {
     Request<?, AdminSchnorrNIZKProve> getSchnorrNIZKProve();
     
     Request<?, DebugEconomicConfig> getEconomicConfig();
+
+    Request<?, PlatonChainId> getChainId();
+
+    Request<?, DebugWaitSlashingNodeList> getWaitSlashingNodeList();
 }

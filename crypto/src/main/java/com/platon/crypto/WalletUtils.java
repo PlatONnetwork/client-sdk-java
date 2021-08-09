@@ -17,6 +17,8 @@ import java.security.SecureRandom;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.platon.crypto.Hash.sha256;
 import static com.platon.crypto.Keys.ADDRESS_LENGTH_IN_HEX;
@@ -264,6 +266,12 @@ public class WalletUtils {
     }
 
     public static boolean isValidAddress(String input) {
+        //exclude blank characters and uppercase letters
+        Pattern pattern = Pattern.compile("^[a-z0-9]+$");
+        Matcher matcher = pattern.matcher(input);
+        if(!matcher.find()){
+            return false;
+        }
         String cleanInput;
         try{
             byte [] bytes = Bech32.addressDecode(input);
