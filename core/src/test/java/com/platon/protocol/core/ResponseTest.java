@@ -1279,12 +1279,12 @@ public class ResponseTest extends ResponseTester {
                 "{\n"
                         + "    \"jsonrpc\":\"2.0\",\n"
                         + "    \"id\":22,\n"
-                        + "    \"result\":{ \"pending\": \"10\",\n"
-                        + "			\"queued\": \"7\"}\n"
+                        + "    \"result\":{ \"pending\": \"0x9\",\n"
+                        + "			\"queued\": \"0x7\"}\n"
                         + "}");
 
         TxPoolStatus status = deserialiseResponse(TxPoolStatus.class);
-        assert(status.getPending() == 10);
+        assert(status.getPending() == 9);
         assert(status.getQueued() == 7);
     }
 }

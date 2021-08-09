@@ -5,12 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigInteger;
 
-/**
- * @Author liushuyu
- * @Date 2021/7/6 14:38
- * @Version
- * @Desc
- */
 public class WaitSlashingNode {
 
     //零出块的节点ID

@@ -12,12 +12,6 @@
  */
 package com.platon.protocol.admin.methods.response;
 
-/**
- * @Author liushuyu
- * @Date 2021/8/5 16:01
- * @Version
- * @Desc
- */
 
 import com.platon.protocol.core.Response;
 import com.platon.utils.Numeric;
