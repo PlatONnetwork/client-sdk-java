@@ -26,7 +26,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.0.0</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:1.1.0"
+compile "com.platon.client:core:1.1.0.0"
 ```
 
 ## Basic API Usage
@@ -1461,7 +1461,7 @@ StakingContract contract = StakingContract.load(web3j, credentials);
 
   - String: nodeId node id, hexadecimal format
   - BigInteger: amount of von pledged, the pledged amount must be greater than or equal to 1,000,000 LAT
-  - StakingAmountType: stakingAmountType, enumeration, FREE_AMOUNT_TYPE means use the free amount of the account, RESTRICTING_AMOUNT_TYPE means use the amount of the lock to make a pledge
+  - StakingAmountType: stakingAmountType, enumeration, FREE_AMOUNT_TYPE means use the free amount of the account, RESTRICTING_AMOUNT_TYPE means use the amount of the lock to make a pledge, AUTO_AMOUNT_TYPE means give priority to the use of the locked balance, and use the free amount for the remaining part if the locked balance is insufficient
   - String: benefitAddress revenue account
   - String: nodeName The name of the node being pledged
   - String: externalId External Id(the length of the Id described by the third-party pull node), currently the keybase account public key
