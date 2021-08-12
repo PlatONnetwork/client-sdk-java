@@ -28,11 +28,4 @@ public class Bip39Wallet {
         return mnemonic;
     }
 
-    @Override
-    public String toString() {
-        return "Bip39Wallet{"
-                + "filename='" + filename + '\''
-                + ", mnemonic='" + mnemonic + '\''
-                + '}';
-    }
 }
