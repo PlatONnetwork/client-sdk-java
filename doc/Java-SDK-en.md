@@ -26,7 +26,7 @@ Depending on the build tool, use the following methods to add related dependenci
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1.0</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:1.1.0"
+compile "com.platon.client:core:1.1.1.0"
 ```
 
 ## Basic API Usage
@@ -251,6 +251,78 @@ The BigInteger in the NetPeerCount property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request <?, NetPeerCount> request = currentValidWeb3j.netPeerCount();
 BigInteger req = request.send().getQuantity();
+```
+
+### adminAddPeer
+
+> Add a peer to the client node
+
+* **parameters**
+
+  String : peer's URL
+
+* **return value**
+
+```java
+Request<?, BooleanResponse>
+```
+
+The result in the BooleanResponse property is the corresponding stored data
+
+* **Example**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request<?, BooleanResponse> request = platonWeb3j.adminAddPeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
+Boolean resp = request.send().getResult();
+```
+
+### adminRemovePeer
+
+> Remove a peer from the client node
+
+* **parameters**
+
+  String : peer's URL
+
+* **return value**
+
+```java
+Request<?, BooleanResponse>
+```
+
+The result in the BooleanResponse property is the corresponding stored data
+
+* **Example**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request<?, BooleanResponse> request = platonWeb3j.adminRemovePeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
+Boolean resp = request.send().getResult();
+```
+
+### adminDataDir
+
+> Return the current node data directory
+
+* **parameters**
+
+  no
+
+* **return value**
+
+```java
+Request<?, AdminDataDir>
+```
+
+The result in the AdminDataDir property is the corresponding storage data
+
+* **Example**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request <?, AdminDataDir> request = platonWeb3j.adminDataDir();
+String resp = request.send().getDataDir();
 ```
 
 ### platonProtocolVersion
@@ -1152,6 +1224,54 @@ String databaseName;
 String keyName;
 Request<?, DbGetHex> request = currentValidWeb3j.dbGetHex(databaseName, keyName);
 String req = request.send(). GetStoredValue();
+```
+
+### txPoolStatus
+
+>    Returns the status of the transaction pool
+
+* **parameters**
+
+  no
+
+* **return value**
+
+```java
+Request<?, TxPoolStatus>
+```
+
+The result in the TxPoolStatus property is the corresponding stored data
+
+* **Example**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request <?, TxPoolStatus> request = platonWeb3j.txPoolStatus();
+TxPoolStatus txPoolStatus = request.send();
+```
+
+### txPoolContent
+
+>    Return transaction pool content
+
+* **parameters**
+
+  no
+
+* **return value**
+
+```java
+Request<?, TxPoolContent>
+```
+
+The result in the TxPoolContent property is the corresponding storage data
+
+* **Example**
+
+```java
+JsonRpc2_0Admin platonWeb3j = new JsonRpc2_0Admin(new HttpService("http://127.0.0.1:6789"));
+Request <?, TxPoolContent> request = platonWeb3j.txPoolContent();
+TxPoolContent txPoolContent = request.send();
 ```
 
 ### platonEvidences

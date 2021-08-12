@@ -26,7 +26,7 @@ sidebar_label: Java SDK
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1.0</version>
 </dependency>
 ```
 
@@ -41,7 +41,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.sdk:core:1.1.0"
+compile "com.platon.sdk:core:1.1.1.0"
 ```
 
 ## 基础api使用
@@ -250,6 +250,78 @@ NetPeerCount属性中的BigInteger即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request <?, NetPeerCount> request = currentValidWeb3j.netPeerCount();
 BigInteger req = request.send().getQuantity();
+```
+
+### adminAddPeer
+
+> 新增一个端点到客户端节点
+
+* **参数**
+
+  String ：端点URL
+
+* **返回值**
+
+```java
+Request<?, BooleanResponse>
+```
+
+BooleanResponse属性中的result即为对应存储数据
+
+* **示例**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request<?, BooleanResponse> request = platonWeb3j.adminAddPeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
+Boolean resp = request.send().getResult();
+```
+
+### adminRemovePeer
+
+> 从客户端节点移除一个端点
+
+* **参数**
+
+  String ：端点URL
+
+* **返回值**
+
+```java
+Request<?, BooleanResponse>
+```
+
+BooleanResponse属性中的result即为对应存储数据
+
+* **示例**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request<?, BooleanResponse> request = platonWeb3j.adminRemovePeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
+Boolean resp = request.send().getResult();
+```
+
+### adminDataDir
+
+> 返回当前节点数据目录
+
+* **参数**
+
+  ​	无
+
+* **返回值**
+
+```java
+Request<?, AdminDataDir>
+```
+
+AdminDataDir属性中的result即为对应存储数据
+
+* **示例**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request <?, AdminDataDir> request = platonWeb3j.adminDataDir();
+String resp = request.send().getDataDir();
 ```
 
 ### platonProtocolVersion
@@ -1151,6 +1223,54 @@ String databaseName;
 String keyName;
 Request <?, DbGetHex> request = currentValidWeb3j.dbGetHex(databaseName,keyName);
 String req  = request.send().getStoredValue();
+```
+
+### txPoolStatus
+
+>    返回交易池状态
+
+* **参数**
+
+  无
+
+* **返回值**
+
+```java
+Request<?, TxPoolStatus>
+```
+
+TxPoolStatus属性中的result即为对应存储数据
+
+* **示例**
+
+```java
+Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
+Request <?, TxPoolStatus> request = platonWeb3j.txPoolStatus();
+TxPoolStatus txPoolStatus = request.send();
+```
+
+### txPoolContent
+
+>    返回交易池内容
+
+* **参数**
+
+  无
+
+* **返回值**
+
+```java
+Request<?, TxPoolContent>
+```
+
+TxPoolContent属性中的result即为对应存储数据
+
+* **示例**
+
+```java
+JsonRpc2_0Admin platonWeb3j = new JsonRpc2_0Admin(new HttpService("http://127.0.0.1:6789"));
+Request <?, TxPoolContent> request = platonWeb3j.txPoolContent();
+TxPoolContent txPoolContent = request.send();
 ```
 
 ### platonEvidences
