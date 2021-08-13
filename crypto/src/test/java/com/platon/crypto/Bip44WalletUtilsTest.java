@@ -1,6 +1,8 @@
 package com.platon.crypto;
 
+import com.platon.parameters.NetworkParameters;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,10 +45,25 @@ public class Bip44WalletUtilsTest {
 
         Bip32ECKeyPair bip44Keypair = Bip44WalletUtils.generateBip44KeyPair(masterKeypair);
 
-        assertEquals("xprv9zvpunws9gusoXVkmqAXWQm5z5hjR5kY3ifRGL7M8Kpjn8kRhavkGnFLjnFWPGGS2gAUw8rP33Lmj6SwZUpwy2mn2fXRYWzGa9WRTnE8DPz",
+        assertEquals("xprvA21iQhYkgksD4fXqSAvbJxqhzcULByCqRPLciwEBstGYTTEbEhUJp4cn3foK7xbMiGMfhFKvKmauQ5SjoqvkTE7XKFqHaa6F8XBx78N9CRh",
                 Base58.encode(addChecksum(serializePrivate(bip44Keypair))));
-        assertEquals("xpub6DvBKJUkz4UB21aDsrhXsYhpY7YDpYUPQwb24iWxgfMiew5aF8EzpaZpb567bYYbMfUnPwFNuRYvVpMGQUcaGPMoXUEUZKFvx7LaU5b7zBD",
+        assertEquals("xpub6F14pD5eX8RWH9cJYCTbg6nSYeJpbRvgncGDXKdoSDoXLFZjnEnZMrwFtv8TTxJ3s4e9oxDFcfQXSRyuzbaovNmKFJogGp3vGH7EwUCncei",
                 Base58.encode(addChecksum(serializePublic(bip44Keypair))));
+    }
+
+    @SuppressWarnings("checkstyle:LineLength")
+    @Test
+    public void deriveChildKey() {
+        NetworkParameters.selectPlatON();
+        String mnemonic = "spider elbow fossil truck deal circle divert sleep safe report laundry above";
+        byte[] seed = MnemonicUtils.generateSeed(mnemonic, null);
+        Bip32ECKeyPair masterKeypair = Bip32ECKeyPair.generateKeyPair(seed);
+        Bip32ECKeyPair bip44Keypair = Bip44WalletUtils.generateBip44KeyPair(masterKeypair);
+        for (int i = 0; i < 1; i++) {
+            Bip32ECKeyPair bip32ECKeyPair = bip44Keypair.deriveChildKey(i);
+            String address = Credentials.create(bip32ECKeyPair).getAddress();
+            Assert.assertEquals("lat134h3492x5lfrukdweagu7d77udn5xeje54hdck",address);
+        }
     }
 
     @SuppressWarnings("checkstyle:LineLength")

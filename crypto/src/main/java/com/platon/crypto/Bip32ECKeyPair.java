@@ -69,7 +69,7 @@ public class Bip32ECKeyPair extends ECKeyPair {
         return curr;
     }
 
-    private Bip32ECKeyPair deriveChildKey(int childNumber) {
+    public Bip32ECKeyPair deriveChildKey(int childNumber) {
         if (!hasPrivateKey()) {
             byte[] parentPublicKey = getPublicKeyPoint().getEncoded(true);
             ByteBuffer data = ByteBuffer.allocate(37);
