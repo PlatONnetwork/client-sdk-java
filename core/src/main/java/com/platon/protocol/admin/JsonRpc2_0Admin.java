@@ -1,14 +1,13 @@
 package com.platon.protocol.admin;
 
 import com.platon.protocol.Web3jService;
-import com.platon.protocol.admin.methods.response.NewAccountIdentifier;
-import com.platon.protocol.admin.methods.response.PersonalListAccounts;
-import com.platon.protocol.admin.methods.response.PersonalUnlockAccount;
-import com.platon.protocol.admin.methods.response.TxPoolContent;
+import com.platon.protocol.admin.methods.response.*;
 import com.platon.protocol.core.JsonRpc2_0Web3j;
 import com.platon.protocol.core.Request;
+import com.platon.protocol.core.methods.PlatonSignTransaction;
 import com.platon.protocol.core.methods.request.Transaction;
 import com.platon.protocol.core.methods.response.PlatonSendTransaction;
+import com.platon.protocol.core.methods.response.VoidResponse;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -29,6 +28,72 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
     public JsonRpc2_0Admin(Web3jService web3jService, long pollingInterval,
             ScheduledExecutorService scheduledExecutorService) {
         super(web3jService, pollingInterval, scheduledExecutorService);
+    }
+
+    @Override
+    public Request<?, PersonalImportRawKey> personalImportRawKey(String keydata, String password) {
+        return new Request<>(
+                "personal_importRawKey",
+                Arrays.asList(keydata, password),
+                web3jService,
+                PersonalImportRawKey.class);
+    }
+
+    @Override
+    public Request<?, BooleanResponse> personalLockAccount(String accountId) {
+        return new Request<>(
+                "personal_lockAccount",
+                Arrays.asList(accountId),
+                web3jService,
+                BooleanResponse.class);
+    }
+
+    @Override
+    public Request<?, PersonalSign> personalSign(
+            String message, String accountId, String password) {
+        return new Request<>(
+                "personal_sign",
+                Arrays.asList(message, accountId, password),
+                web3jService,
+                PersonalSign.class);
+    }
+
+    @Override
+    public Request<?, PersonalSign> personalSignAndSendTransaction(
+            Transaction transaction, String password) {
+        return new Request<>(
+                "personal_signAndSendTransaction",
+                Arrays.asList(transaction, password),
+                web3jService,
+                PersonalSign.class);
+    }
+
+    @Override
+    public Request<?, PlatonSignTransaction> personalSignTransaction(Transaction transaction, String password) {
+        return new Request<>(
+                "personal_signTransaction",
+                Arrays.asList(transaction, password),
+                web3jService,
+                PlatonSignTransaction.class);
+    }
+
+    @Override
+    public Request<?, PersonalEcRecover> personalEcRecover(
+            String hexMessage, String signedMessage) {
+        return new Request<>(
+                "personal_ecRecover",
+                Arrays.asList(hexMessage, signedMessage),
+                web3jService,
+                PersonalEcRecover.class);
+    }
+
+    @Override
+    public Request<?, PersonalListWallets> personalListWallets() {
+        return new Request<>(
+                "personal_listWallets",
+                Collections.<String>emptyList(),
+                web3jService,
+                PersonalListWallets.class);
     }
 
     @Override
@@ -79,7 +144,16 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
         
         return personalUnlockAccount(accountId, password, null);
     }
-    
+
+    @Override
+    public Request<?, VoidResponse> personalOpenWallet(String url, String passphrase) {
+        return new Request<>(
+                "personal_openWallet",
+                Arrays.asList(url, passphrase),
+                web3jService,
+                VoidResponse.class);
+    }
+
     @Override
     public Request<?, PlatonSendTransaction> personalSendTransaction(
             Transaction transaction, String passphrase) {

@@ -4,6 +4,7 @@ import com.platon.protocol.admin.methods.response.BooleanResponse;
 import com.platon.protocol.admin.methods.response.TxPoolStatus;
 import com.platon.protocol.admin.methods.response.admin.AdminDataDir;
 import com.platon.protocol.core.methods.DebugWaitSlashingNodeList;
+import com.platon.protocol.core.methods.PlatonSignTransaction;
 import com.platon.protocol.core.methods.request.ShhFilter;
 import com.platon.protocol.core.methods.response.*;
 
@@ -23,11 +24,27 @@ public interface Platon {
 
     Request<?, NetPeerCount> netPeerCount();
 
+    Request<?, AdminNodeInfo> adminNodeInfo();
+
+    Request<?, AdminPeers> adminPeers();
+
     Request<?, BooleanResponse> adminAddPeer(String url);
 
     Request<?, BooleanResponse> adminRemovePeer(String url);
 
     Request<?, AdminDataDir> adminDataDir();
+
+    Request<?, BooleanResponse> adminStartRPC(String host,int port,String cors,String apis);
+
+    Request<?, BooleanResponse> adminStartWS(String host,int port,String cors,String apis);
+
+    Request<?, BooleanResponse> adminStopRPC();
+
+    Request<?, BooleanResponse> adminStopWS();
+
+    Request<?, BooleanResponse> adminExportChain(String file);
+
+    Request<?, BooleanResponse> adminImportChain(String file);
 
     Request<?, PlatonProtocolVersion> platonProtocolVersion();
 
@@ -146,4 +163,18 @@ public interface Platon {
     Request<?, PlatonChainId> getChainId();
 
     Request<?, DebugWaitSlashingNodeList> getWaitSlashingNodeList();
+
+    Request<?, PlatonRawTransaction> platonGetRawTransactionByHash(String transactionHash);
+
+    Request<?, PlatonRawTransaction> platonGetRawTransactionByBlockHashAndIndex(String blockHash, String index);
+
+    Request<?, PlatonRawTransaction> platonGetRawTransactionByBlockNumberAndIndex(String blockNumber, String index);
+
+    Request<?, PlatonGetAddressHrp> platonGetAddressHrp();
+
+    Request<?, PlatonSignTransaction> platonSignTransaction(com.platon.protocol.core.methods.request.Transaction transaction);
+
+    Request<?, BooleanResponse> minerSetGasPrice(String minGasPrice);
+
+    Request<?, AdminPeerEvents> adminPeerEvents();
 }
