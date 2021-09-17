@@ -4,7 +4,7 @@ import com.platon.protocol.Web3j;
 import com.platon.protocol.Web3jService;
 import com.platon.protocol.admin.methods.response.*;
 import com.platon.protocol.core.Request;
-import com.platon.protocol.core.methods.PlatonSignTransaction;
+import com.platon.protocol.core.methods.response.PlatonSignTransaction;
 import com.platon.protocol.core.methods.request.Transaction;
 import com.platon.protocol.core.methods.response.PlatonSendTransaction;
 import com.platon.protocol.core.methods.response.VoidResponse;

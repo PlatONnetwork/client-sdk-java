@@ -1,7 +1,6 @@
-package com.platon.protocol.core.methods;
+package com.platon.protocol.core.methods.response;
 
 import com.platon.protocol.core.Response;
-import com.platon.protocol.core.methods.response.Transaction;
 
 /**
  * @Author liushuyu

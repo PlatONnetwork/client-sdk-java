@@ -3,8 +3,8 @@ package com.platon.protocol.core;
 import com.platon.protocol.admin.methods.response.BooleanResponse;
 import com.platon.protocol.admin.methods.response.TxPoolStatus;
 import com.platon.protocol.admin.methods.response.admin.AdminDataDir;
-import com.platon.protocol.core.methods.DebugWaitSlashingNodeList;
-import com.platon.protocol.core.methods.PlatonSignTransaction;
+import com.platon.protocol.core.methods.response.DebugWaitSlashingNodeList;
+import com.platon.protocol.core.methods.response.PlatonSignTransaction;
 import com.platon.protocol.core.methods.request.ShhFilter;
 import com.platon.protocol.core.methods.response.*;
 

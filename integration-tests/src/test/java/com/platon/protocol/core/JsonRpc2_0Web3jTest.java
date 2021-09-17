@@ -2,7 +2,7 @@ package com.platon.protocol.core;
 
 import com.platon.parameters.NetworkParameters;
 import com.platon.protocol.Web3j;
-import com.platon.protocol.core.methods.DebugWaitSlashingNodeList;
+import com.platon.protocol.core.methods.response.DebugWaitSlashingNodeList;
 import com.platon.protocol.core.methods.response.PlatonChainId;
 import com.platon.protocol.http.HttpService;
 import org.junit.Assert;
