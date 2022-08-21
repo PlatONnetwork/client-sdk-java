@@ -10,6 +10,7 @@ public interface GovernParamItemSupported {
     ParamItem Staking_unStakeFreezeDuration = new ParamItem("staking", "unStakeFreezeDuration");
     ParamItem Staking_rewardPerMaxChangeRange = new ParamItem("staking", "rewardPerMaxChangeRange");
     ParamItem Staking_rewardPerChangeInterval = new ParamItem("staking", "rewardPerChangeInterval");
+    ParamItem Staking_unDelegateFreezeDuration = new ParamItem("staking", "unDelegateFreezeDuration");
 
     ParamItem Slashing_stakeThreshold = new ParamItem("slashing", "KeySlashFractionDuplicateSign");
     ParamItem Slashing_duplicateSignReportReward = new ParamItem("slashing", "duplicateSignReportReward");

@@ -10,9 +10,11 @@ import com.platon.contracts.ppos.dto.CallResponse;
 import com.platon.contracts.ppos.dto.TransactionResponse;
 import com.platon.contracts.ppos.dto.common.ErrorCode;
 import com.platon.contracts.ppos.dto.common.FunctionType;
+import com.platon.contracts.ppos.dto.enums.DelegateAmountType;
 import com.platon.contracts.ppos.dto.enums.StakingAmountType;
 import com.platon.contracts.ppos.dto.resp.Delegation;
 import com.platon.contracts.ppos.dto.resp.DelegationIdInfo;
+import com.platon.contracts.ppos.dto.resp.DelegationLockInfo;
 import com.platon.contracts.ppos.exception.EstimateGasException;
 import com.platon.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.crypto.Credentials;
@@ -86,12 +88,12 @@ public class DelegateContract extends BaseContract {
      * 发起委托
      *
      * @param nodeId            被质押的节点的NodeId
-     * @param stakingAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额
+     * @param delegateAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额  3:委托锁定金额
      * @param amount            委托的金额(按照最小单位算，1LAT = 10**18 von)
      * @return
      */
-    public RemoteCall<TransactionResponse> delegate(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
+    public RemoteCall<TransactionResponse> delegate(String nodeId, DelegateAmountType delegateAmountType, BigInteger amount) {
+        Function function = createDelegateFunction(nodeId, delegateAmountType, amount);
         return executeRemoteCallTransaction(function);
     }
 
@@ -99,13 +101,13 @@ public class DelegateContract extends BaseContract {
      * 发起委托
      *
      * @param nodeId            被质押的节点的NodeId
-     * @param stakingAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额
+     * @param delegateAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额  3:委托锁定金额
      * @param amount            委托的金额(按照最小单位算，1LAT = 10**18 von)
      * @param gasProvider       用户指定的gasProvider
      * @return
      */
-    public RemoteCall<TransactionResponse> delegate(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
+    public RemoteCall<TransactionResponse> delegate(String nodeId, DelegateAmountType delegateAmountType, BigInteger amount, GasProvider gasProvider) {
+        Function function = createDelegateFunction(nodeId, delegateAmountType, amount);
         return executeRemoteCallTransaction(function,gasProvider);
     }
 
@@ -113,12 +115,12 @@ public class DelegateContract extends BaseContract {
      * 发起委托的gasProvider
      *
      * @param nodeId
-     * @param stakingAmountType
+     * @param delegateAmountType
      * @param amount
      * @return
              */
-    public GasProvider getDelegateGasProvider(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) throws IOException, EstimateGasException, NoSupportFunctionType {
-        Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
+    public GasProvider getDelegateGasProvider(String nodeId, DelegateAmountType delegateAmountType, BigInteger amount) throws IOException, EstimateGasException, NoSupportFunctionType {
+        Function function = createDelegateFunction(nodeId, delegateAmountType, amount);
         return 	getDefaultGasProvider(function);
     }
 
@@ -126,12 +128,12 @@ public class DelegateContract extends BaseContract {
      * 发起委托
      *
      * @param nodeId            被质押的节点的NodeId
-     * @param stakingAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额
+     * @param delegateAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额  3:委托锁定金额
      * @param amount            委托的金额(按照最小单位算，1LAT = 10**18 von)
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
-        Function function = createDelegateFunction(nodeId, stakingAmountType, amount);
+    public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, DelegateAmountType delegateAmountType, BigInteger amount) {
+        Function function = createDelegateFunction(nodeId, delegateAmountType, amount);
         return executeRemoteCallTransactionStep1(function);
     }
 
@@ -139,19 +141,19 @@ public class DelegateContract extends BaseContract {
      * 发起委托
      *
      * @param nodeId            被质押的节点的NodeId
-     * @param stakingAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额
+     * @param delegateAmountType 表示使用账户自由金额还是账户的锁仓金额做委托，0: 自由金额； 1: 锁仓金额  3:委托锁定金额
      * @param amount            委托的金额(按照最小单位算，1LAT = 10**18 von)
      * @param gasProvider       用户指定的gasProvider
      * @return
      */
-    public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount, GasProvider gasProvider) {
-        Function function = createDelegateFunction(nodeId, stakingAmountType, amount );
+    public RemoteCall<PlatonSendTransaction> delegateReturnTransaction(String nodeId, DelegateAmountType delegateAmountType, BigInteger amount, GasProvider gasProvider) {
+        Function function = createDelegateFunction(nodeId, delegateAmountType, amount );
         return executeRemoteCallTransactionStep1(function, gasProvider);
     }
 
-    private Function createDelegateFunction(String nodeId, StakingAmountType stakingAmountType, BigInteger amount) {
+    private Function createDelegateFunction(String nodeId, DelegateAmountType delegateAmountType, BigInteger amount) {
     	Function function = new Function(FunctionType.DELEGATE_FUNC_TYPE,
-                								Arrays.asList(new Uint16(stakingAmountType.getValue())
+                								Arrays.asList(new Uint16(delegateAmountType.getValue())
                 								, new BytesType(Numeric.hexStringToByteArray(nodeId))
                 								, new Uint256(amount)));
         return function;
@@ -291,4 +293,32 @@ public class DelegateContract extends BaseContract {
                 Arrays.asList(new BytesType(Bech32.addressDecode(address))));
         return executeRemoteCallListValueReturn(function, DelegationIdInfo.class);
     }
+
+    /**
+     * 领取解锁的委托金
+     *
+     * @return
+     * 注:交易结果存储在交易回执的logs.data中，如果成功赎回委托，
+     * 存储 rlp.Encode([][]byte{[]byte(状态码0)， rlp.Encode(领取的委托金,回到余额), rlp.Encode(领取的委托金,回到锁仓账户) })
+     *
+     * released | *big.int | 成功领取的委托金,回到余额
+     * restrictingPlan | *big.int | 成功领取的委托金,回到锁仓账户
+     */
+    public RemoteCall<TransactionResponse> redeemDelegation() {
+        Function function = new Function(FunctionType.REDEEM_DELEGATION_FUNC_TYPE);
+        return executeRemoteCallTransaction(function);
+    }
+
+    /**
+     * 查询用户处于锁定期与解锁期的委托信息
+     *
+     * @param address 委托人账户地址
+     * @return
+     */
+    public RemoteCall<CallResponse<DelegationLockInfo>> getDelegationLockInfo(String address) {
+        Function function = new Function(FunctionType.GET_DELEGATION_LOCKINFO_FUNC_TYPE,
+                Arrays.asList(new BytesType(Bech32.addressDecode(address))));
+        return executeRemoteCallObjectValueReturn(function, DelegationLockInfo.class);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.platon.contracts.ppos;
 
 import com.platon.contracts.ppos.dto.CallResponse;
 import com.platon.contracts.ppos.dto.TransactionResponse;
+import com.platon.contracts.ppos.dto.enums.DelegateAmountType;
 import com.platon.contracts.ppos.dto.enums.StakingAmountType;
 import com.platon.contracts.ppos.dto.req.StakingParam;
 import com.platon.contracts.ppos.dto.req.UpdateStakingParam;
@@ -124,10 +125,10 @@ public class StakingScenario extends Scenario {
     }
 
     public TransactionResponse delegate() throws Exception {
-        StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
+        DelegateAmountType delegateAmountType = DelegateAmountType.FREE_AMOUNT_TYPE;
         BigDecimal stakingAmount = Convert.toVon("500000", Unit.KPVON);
 
-        PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, stakingAmount.toBigInteger()).send();
+        PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, delegateAmountType, stakingAmount.toBigInteger()).send();
         TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
         return baseResponse;
     }

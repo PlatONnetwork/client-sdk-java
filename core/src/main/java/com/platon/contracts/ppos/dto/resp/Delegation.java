@@ -52,6 +52,40 @@ public class Delegation {
      */
     @JSONField(name = "CumulativeIncome")
     private BigInteger cumulativeIncome;
+    /**
+     * 犹豫期的委托金,来自锁定期,源自自由金额
+     */
+    @JSONField(name = "LockReleasedHes")
+    private BigInteger lockReleasedHes;
+    /**
+     * 犹豫期的委托金,来自锁定期,源自锁仓金额
+     */
+    @JSONField(name = "LockRestrictingPlanHes")
+    private BigInteger lockRestrictingPlanHes;
+
+    public BigInteger getLockReleasedHes() {
+        return lockReleasedHes;
+    }
+
+    public void setLockReleasedHes(String lockReleasedHes) {
+        if(lockReleasedHes != null && lockReleasedHes.length()>0) {
+            this.lockReleasedHes = Numeric.decodeQuantity(lockReleasedHes);
+        }else {
+            this.lockReleasedHes = BigInteger.ZERO;
+        }
+    }
+
+    public BigInteger getLockRestrictingPlanHes() {
+        return lockRestrictingPlanHes;
+    }
+
+    public void setLockRestrictingPlanHes(String lockRestrictingPlanHes) {
+        if(lockRestrictingPlanHes != null && lockRestrictingPlanHes.length()>0) {
+            this.lockRestrictingPlanHes = Numeric.decodeQuantity(lockRestrictingPlanHes);
+        }else {
+            this.lockRestrictingPlanHes = BigInteger.ZERO;
+        }
+    }
 
     public BigInteger getCumulativeIncome() {
         return cumulativeIncome;

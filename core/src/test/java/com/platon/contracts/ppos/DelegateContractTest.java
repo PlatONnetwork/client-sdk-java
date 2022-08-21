@@ -2,6 +2,7 @@ package com.platon.contracts.ppos;
 
 import com.platon.contracts.ppos.dto.CallResponse;
 import com.platon.contracts.ppos.dto.TransactionResponse;
+import com.platon.contracts.ppos.dto.enums.DelegateAmountType;
 import com.platon.contracts.ppos.dto.enums.StakingAmountType;
 import com.platon.contracts.ppos.dto.resp.Delegation;
 import com.platon.contracts.ppos.dto.resp.DelegationIdInfo;
@@ -53,7 +54,7 @@ public class DelegateContractTest {
     @Test
     public void delegate() {
         try {
-            PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
+            PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, DelegateAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
             TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
             System.out.println(baseResponse);
         } catch (Exception e) {
@@ -64,9 +65,9 @@ public class DelegateContractTest {
     @Test
     public void estimateDelegateGasLimit() {
         try {
-            GasProvider gasProvider = delegateContract.getDelegateGasProvider(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000"));
+            GasProvider gasProvider = delegateContract.getDelegateGasProvider(nodeId, DelegateAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000"));
             System.out.println("gasProvider.getGasLimit():" + gasProvider.getGasLimit());
-            TransactionResponse response = delegateContract.delegate(nodeId, StakingAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
+            TransactionResponse response = delegateContract.delegate(nodeId, DelegateAmountType.FREE_AMOUNT_TYPE, new BigInteger("200000000000000000000")).send();
             System.out.println(response);
         } catch (Exception e) {
             e.printStackTrace();
