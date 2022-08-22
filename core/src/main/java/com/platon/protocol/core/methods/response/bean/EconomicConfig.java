@@ -190,6 +190,10 @@ public class EconomicConfig {
         private BigInteger unStakeFreezeDuration;
         private BigInteger rewardPerMaxChangeRange;
         private BigInteger rewardPerChangeInterval;
+        /**
+         * 委托冻结周期数
+         */
+        private BigInteger unDelegateFreezeDuration;
 
         public Staking() {
         }
@@ -227,7 +231,7 @@ public class EconomicConfig {
         }
 
         public BigInteger getRewardPerMaxChangeRange() {
-            return  rewardPerMaxChangeRange;
+            return rewardPerMaxChangeRange;
         }
 
         public void setRewardPerMaxChangeRange(BigInteger rewardPerMaxChangeRange) {
@@ -235,11 +239,19 @@ public class EconomicConfig {
         }
 
         public BigInteger getRewardPerChangeInterval() {
-           return rewardPerChangeInterval;
+            return rewardPerChangeInterval;
         }
 
         public void setRewardPerChangeInterval(BigInteger rewardPerChangeInterval) {
             this.rewardPerChangeInterval = rewardPerChangeInterval;
+        }
+
+        public BigInteger getUnDelegateFreezeDuration() {
+            return unDelegateFreezeDuration;
+        }
+
+        public void setUnDelegateFreezeDuration(BigInteger unDelegateFreezeDuration) {
+            this.unDelegateFreezeDuration = unDelegateFreezeDuration;
         }
 
         @Override
@@ -251,6 +263,7 @@ public class EconomicConfig {
                     ", unStakeFreezeDuration=" + unStakeFreezeDuration +
                     ", rewardPerMaxChangeRange=" + rewardPerMaxChangeRange +
                     ", rewardPerChangeInterval=" + rewardPerChangeInterval +
+                    ", unDelegateFreezeDuration=" + unDelegateFreezeDuration +
                     '}';
         }
     }
@@ -619,6 +632,7 @@ public class EconomicConfig {
                     '}';
         }
     }
+
     @Override
     public String toString() {
         return "EconomicConfig{" +
