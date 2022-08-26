@@ -11,19 +11,18 @@ public class NetworkParameters {
 
     protected static NetworkParameters currentNetwork;
     private static Map<String, NetworkParameters> networksContainer = new HashMap<>();
-    private static String alayaNetworkKey = String.valueOf(ReservedChainId.Alaya.getChainId()) + ":" + ReservedHrp.Alaya.getHrp();
-    private static String platonNetworkKey = String.valueOf(ReservedChainId.PlatON.getChainId()) + ":" + ReservedHrp.PlatON.getHrp();
+    private static String alayaNetworkKey = ReservedChainId.Alaya.getChainId() + ":" + ReservedHrp.Alaya.getHrp();
+    private static String platonNetworkKey = ReservedChainId.PlatON.getChainId() + ":" + ReservedHrp.PlatON.getHrp();
 
     static {
         NetworkParameters alaya = new NetworkParameters(ReservedChainId.Alaya.getChainId(), ReservedHrp.Alaya.getHrp());
         networksContainer.put(alayaNetworkKey, alaya);
-        //networksContainer.put(platonNetworkKey, new NetworkParameters(ReservedChainId.PlatON.getChainId(), ReservedHrp.PlatON.getHrp()));
-        currentNetwork=alaya;
 
         NetworkParameters platon = new NetworkParameters(ReservedChainId.PlatON.getChainId(), ReservedHrp.PlatON.getHrp());
         networksContainer.put(platonNetworkKey, platon);
-        //networksContainer.put(platonNetworkKey, new NetworkParameters(ReservedChainId.PlatON.getChainId(), ReservedHrp.PlatON.getHrp()));
-        //currentNetwork=alaya;
+
+        // he default context loads the platon mainnet
+        currentNetwork=platon;
     }
 
     //锁仓合约地址
@@ -158,7 +157,7 @@ public class NetworkParameters {
     }
 
     public enum ReservedChainId {
-        PlatON(100L),
+        PlatON(210425L),
         Alaya(201018L);
 
         private final long chainId;
