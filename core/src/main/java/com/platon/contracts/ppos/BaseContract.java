@@ -37,6 +37,7 @@ import com.platon.tx.gas.GasProvider;
 import com.platon.utils.JSONUtil;
 import com.platon.utils.Numeric;
 import com.platon.utils.Strings;
+import com.sun.org.apache.regexp.internal.RE;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -357,5 +358,27 @@ public abstract class BaseContract extends ManagedTransaction {
         transactionResponse.setTransactionReceipt(transactionReceipt);
 
         return transactionResponse;
+    }
+
+    protected List<RlpType> decodePPOSLog(TransactionReceipt transactionReceipt) throws TransactionException {
+        List<Log> logs = transactionReceipt.getLogs();
+        if(logs==null||logs.isEmpty()){
+            throw new TransactionException("TransactionReceipt logs is empty");
+        }
+
+        String logData = logs.get(0).getData();
+        if(null == logData || "".equals(logData) ){
+            throw new TransactionException("TransactionReceipt logs[0].data is empty");
+        }
+
+        RlpList rlp = RlpDecoder.decode(Numeric.hexStringToByteArray(logData));
+        List<RlpType> rlpList = ((RlpList)(rlp.getValues().get(0))).getValues();
+        String decodedStatus = new String(((RlpString)rlpList.get(0)).getBytes());
+        int statusCode = Integer.parseInt(decodedStatus);
+
+        if(statusCode != ErrorCode.SUCCESS){
+            throw new TransactionException("TransactionResponse code is 0");
+        }
+        return rlpList;
     }
 }

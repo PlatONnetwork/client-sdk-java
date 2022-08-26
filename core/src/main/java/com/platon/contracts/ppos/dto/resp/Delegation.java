@@ -52,6 +52,40 @@ public class Delegation {
      */
     @JSONField(name = "CumulativeIncome")
     private BigInteger cumulativeIncome;
+    /**
+     * 待领取的委托收益von
+     */
+    @JSONField(name = "LockHes")
+    private BigInteger lockHes;
+    /**
+     * 待领取的委托收益von
+     */
+    @JSONField(name = "LockRestrictingHes")
+    private BigInteger lockRestrictingHes;
+
+    public BigInteger getLockRestrictingHes() {
+        return lockRestrictingHes;
+    }
+
+    public void setLockRestrictingHes(String lockRestrictingHes) {
+        if(lockRestrictingHes != null && lockRestrictingHes.length()>0) {
+            this.lockRestrictingHes = Numeric.decodeQuantity(lockRestrictingHes);
+        }else {
+            this.lockRestrictingHes = BigInteger.ZERO;
+        }
+    }
+
+    public BigInteger getLockHes() {
+        return lockHes;
+    }
+
+    public void setLockHes(String lockHes) {
+        if(lockHes != null && lockHes.length()>0) {
+            this.lockHes = Numeric.decodeQuantity(lockHes);
+        }else {
+            this.lockHes = BigInteger.ZERO;
+        }
+    }
 
     public BigInteger getCumulativeIncome() {
         return cumulativeIncome;
@@ -100,7 +134,7 @@ public class Delegation {
     public BigInteger getDelegateReleased() {
         return delegateReleased;
     }
-    
+
     public void setDelegateReleased(String delegateReleased) {
       	if(delegateReleased != null && delegateReleased.length()>0) {
       		this.delegateReleased = Numeric.decodeQuantity(delegateReleased);
@@ -112,7 +146,7 @@ public class Delegation {
     public BigInteger getDelegateReleasedHes() {
         return delegateReleasedHes;
     }
-    
+
     public void setDelegateReleasedHes(String delegateReleasedHes) {
       	if(delegateReleasedHes != null && delegateReleasedHes.length()>0) {
       		this.delegateReleasedHes = Numeric.decodeQuantity(delegateReleasedHes);
@@ -124,7 +158,7 @@ public class Delegation {
     public BigInteger getDelegateLocked() {
         return delegateLocked;
     }
-    
+
     public void setDelegateLocked(String delegateLocked) {
       	if(delegateLocked != null && delegateLocked.length()>0) {
       		this.delegateLocked = Numeric.decodeQuantity(delegateLocked);

@@ -27,6 +27,10 @@ public class FunctionType {
      */
     public static final int WITHDREW_DELEGATE_FUNC_TYPE = 1005;
     /**
+     * 领取解锁的委托
+     */
+    public static final int REDEEM_DELEGATE_FUNC_TYPE = 1006;
+    /**
      * 查询当前结算周期的验证人队列
      */
     public static final int GET_VERIFIERLIST_FUNC_TYPE = 1100;

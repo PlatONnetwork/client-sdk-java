@@ -82,6 +82,7 @@ public class EstimateGasUtil {
             case FunctionType.WITHDREW_STAKING_FUNC_TYPE:
             case FunctionType.DELEGATE_FUNC_TYPE:
             case FunctionType.WITHDREW_DELEGATE_FUNC_TYPE:
+            case FunctionType.REDEEM_DELEGATE_FUNC_TYPE:
                 return BigInteger.valueOf(6000);
             case FunctionType.SUBMIT_TEXT_FUNC_TYPE:
             case FunctionType.SUBMIT_VERSION_FUNC_TYPE:
@@ -132,6 +133,8 @@ public class EstimateGasUtil {
                 return BigInteger.valueOf(2000);
             case FunctionType.REPORT_DOUBLESIGN_FUNC_TYPE:
                 return BigInteger.valueOf(42000);
+            case FunctionType.REDEEM_DELEGATE_FUNC_TYPE:
+                return BigInteger.valueOf(6000);
             default:
                 return BigInteger.valueOf(0);
         }
