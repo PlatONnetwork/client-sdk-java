@@ -53,37 +53,37 @@ public class Delegation {
     @JSONField(name = "CumulativeIncome")
     private BigInteger cumulativeIncome;
     /**
-     * 待领取的委托收益von
+     * 犹豫期的委托金,来自锁定期,源自自由金额
      */
-    @JSONField(name = "LockHes")
-    private BigInteger lockHes;
+    @JSONField(name = "LockReleasedHes")
+    private BigInteger lockReleasedHes;
     /**
-     * 待领取的委托收益von
+     * 犹豫期的委托金,来自锁定期,源自锁仓金额
      */
-    @JSONField(name = "LockRestrictingHes")
-    private BigInteger lockRestrictingHes;
+    @JSONField(name = "LockRestrictingPlanHes")
+    private BigInteger lockRestrictingPlanHes;
 
-    public BigInteger getLockRestrictingHes() {
-        return lockRestrictingHes;
+    public BigInteger getLockRestrictingPlanHes() {
+        return lockRestrictingPlanHes;
     }
 
-    public void setLockRestrictingHes(String lockRestrictingHes) {
-        if(lockRestrictingHes != null && lockRestrictingHes.length()>0) {
-            this.lockRestrictingHes = Numeric.decodeQuantity(lockRestrictingHes);
+    public void setLockRestrictingPlanHes(String lockRestrictingPlanHes) {
+        if(lockRestrictingPlanHes != null && lockRestrictingPlanHes.length()>0) {
+            this.lockRestrictingPlanHes = Numeric.decodeQuantity(lockRestrictingPlanHes);
         }else {
-            this.lockRestrictingHes = BigInteger.ZERO;
+            this.lockRestrictingPlanHes = BigInteger.ZERO;
         }
     }
 
-    public BigInteger getLockHes() {
-        return lockHes;
+    public BigInteger getLockReleasedHes() {
+        return lockReleasedHes;
     }
 
-    public void setLockHes(String lockHes) {
-        if(lockHes != null && lockHes.length()>0) {
-            this.lockHes = Numeric.decodeQuantity(lockHes);
+    public void setLockReleasedHes(String lockReleasedHes) {
+        if(lockReleasedHes != null && lockReleasedHes.length()>0) {
+            this.lockReleasedHes = Numeric.decodeQuantity(lockReleasedHes);
         }else {
-            this.lockHes = BigInteger.ZERO;
+            this.lockReleasedHes = BigInteger.ZERO;
         }
     }
 
@@ -191,8 +191,8 @@ public class Delegation {
                 ", delegateLocked=" + delegateLocked +
                 ", delegateLockedHes=" + delegateLockedHes +
                 ", cumulativeIncome=" + cumulativeIncome +
-                ", lockHes=" + lockHes +
-                ", lockRestrictingHes=" + lockRestrictingHes +
+                ", lockReleasedHes=" + lockReleasedHes +
+                ", lockRestrictingPlanHes=" + lockRestrictingPlanHes +
                 '}';
     }
 }

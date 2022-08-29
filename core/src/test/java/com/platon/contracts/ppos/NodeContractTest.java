@@ -2,6 +2,7 @@ package com.platon.contracts.ppos;
 
 import com.platon.contracts.ppos.dto.CallResponse;
 import com.platon.contracts.ppos.dto.resp.Node;
+import com.platon.parameters.NetworkParameters;
 import com.platon.protocol.Web3j;
 import com.platon.protocol.http.HttpService;
 import org.junit.Before;
@@ -11,13 +12,15 @@ import java.util.List;
 
 public class NodeContractTest {
 
-	private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.150:6789"));
-    long chainId = 201018;
+	private Web3j web3j = Web3j.build(new HttpService("http://192.168.120.148:6789"));
+    long chainId = 2022041902;
+    String hrp = "lat";
 
     private NodeContract nodeContract;
 
     @Before
     public void init() {
+        NetworkParameters.init(chainId, hrp);
         nodeContract = NodeContract.load(web3j);
     }
 
@@ -30,12 +33,11 @@ public class NodeContractTest {
         try {
             CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
             baseResponse.getData().stream().forEach(
-                 item -> System.out.println(item.getNodeId())
+                 item -> System.out.println(item)
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -46,12 +48,11 @@ public class NodeContractTest {
         try {
         	CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
             baseResponse.getData().stream().forEach(
-                    item -> System.out.println(item.getNodeId())
+                    item -> System.out.println(item)
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -61,14 +62,11 @@ public class NodeContractTest {
     public void getCandidateList() {
         try {
         	CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
-            baseResponse.getData().stream().forEach( item -> {
-                System.out.println(item);
-                }
-
+            baseResponse.getData().stream().forEach(
+                    item -> System.out.println(item)
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

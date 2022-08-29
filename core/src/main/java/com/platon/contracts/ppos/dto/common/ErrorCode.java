@@ -364,6 +364,27 @@ public class ErrorCode {
      * 锁仓信息中的质押金额小于回退的金额
      */
     public static final int WRONG_STAKING_RETURN_AMOUNT = 304009;
+    /**
+     *  惩罚的金额不能小于0
+     */
+    public static final int SLASHING_AMOUNT_LESSTHAN_ZERO = 304010;
+    /**
+     * 创建锁计划每笔金额不能小于等于0
+     */
+    public static final int CREATE_PLAN_AMOUNT_LESSTHAN_ZERO = 304011;
+    /**
+     * 质押金额小于返还金额
+     */
+    public static final int STAKING_AMOUNT_INVALID = 304012;
+    /**
+     * 用户锁仓余额不足
+     */
+    public static final int RESTRICT_BALANCE_NOT_ENOUGH = 304013;
+    /**
+     * 创建锁仓计划每个金额应大于最小金额
+     */
+    public static final int CREATE_PLAN_AMOUNT_LESSTHAN_MINI_AMOUNT = 304014;
+
 
     public static String getErrorMsg(int errorCode) {
         switch (errorCode) {
@@ -545,9 +566,18 @@ public class ErrorCode {
                 return "锁仓转质押后回退的金额不能小于0";
             case WRONG_STAKING_RETURN_AMOUNT:
                 return "锁仓信息中的质押金额小于回退的金额";
+            case SLASHING_AMOUNT_LESSTHAN_ZERO:
+                return "惩罚的金额不能小于0";
+            case CREATE_PLAN_AMOUNT_LESSTHAN_ZERO:
+                return "创建锁计划每笔金额不能小于等于0";
+            case STAKING_AMOUNT_INVALID:
+                return "质押金额小于返还金额";
+            case RESTRICT_BALANCE_NOT_ENOUGH:
+                return "用户锁仓余额不足";
+            case CREATE_PLAN_AMOUNT_LESSTHAN_MINI_AMOUNT:
+                return "创建锁仓计划每个金额应大于最小金额";
             default:
                 return "";
-
         }
     }
 
