@@ -20,15 +20,18 @@ Depending on the build tool, use the following methods to add related dependenci
 	<url>https://sdk.platon.network/nexus/content/groups/public/</url>
 </repository>
 ```
+NOTE： the latest version is 1.1.0.0
 
 > maven reference:
 ```xml
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.1.0</version>
+    <version>1.1.0.0</version>
 </dependency>
 ```
+NOTE： the latest version is 1.1.0.0
+
 
 ### gradle
 
@@ -41,7 +44,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.client:core:1.1.1.0"
+compile "com.platon.sdk:core:1.1.0.0"
 ```
 
 ## Basic API Usage
@@ -68,26 +71,24 @@ assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
 
 * **initialize network**
 
-> SDK includes Alaya network already. User can initialize custom networks, the latest is the current network.
->
->
-```java
-NetworkParameters.init(2000L, "ABC");  
-```
+> SDK includes PlatON network already. User can initialize custom networks, the latest is the current network.
 
+```java
+NetworkParameters.init(2000L, "ABC");
+```
 
 * **select current network**
+
 > user can switch current network if multi-networks have been initialized.
->
 
 ```java
-NetworkParameters.selectNetwork(2000L, "ABC");  
+NetworkParameters.selectNetwork(2000L, "ABC");
 ```
-> or select Alaya network
->
+
+> or select PlatON network.
 
 ```java
-NetworkParameters.selectAlaya();  
+NetworkParameters.selectPlatON();
 ```
 
 ### Wallet Related
@@ -113,19 +114,20 @@ Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir
 ```
 
 ### Credentials Related
-* **loadCredentials from keystore**
+* **load credentials from keystore**
 ```java
 Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir, fileName));
 ```
 
-* **loadCredentials from key**
+* **create credentials from key**
 ```java
 Credentials credentials = Credentials.create("0xXXXXXXXXXXXXXX...");
 ```
 
-* **get credential address**
+
+* **get bech32 address of current network**
 ```java
-String bech32Address = credentials.getAddress();  
+String bech32Address = credentials.getAddress();
 ```
 
 ## Basic RPC Interface
@@ -251,78 +253,6 @@ The BigInteger in the NetPeerCount property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request <?, NetPeerCount> request = currentValidWeb3j.netPeerCount();
 BigInteger req = request.send().getQuantity();
-```
-
-### adminAddPeer
-
-> Add a peer to the client node
-
-* **parameters**
-
-  String : peer's URL
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse property is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, BooleanResponse> request = platonWeb3j.adminAddPeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
-Boolean resp = request.send().getResult();
-```
-
-### adminRemovePeer
-
-> Remove a peer from the client node
-
-* **parameters**
-
-  String : peer's URL
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse property is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, BooleanResponse> request = platonWeb3j.adminRemovePeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
-Boolean resp = request.send().getResult();
-```
-
-### adminDataDir
-
-> Return the current node data directory
-
-* **parameters**
-
-  no
-
-* **return value**
-
-```java
-Request<?, AdminDataDir>
-```
-
-The result in the AdminDataDir property is the corresponding storage data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, AdminDataDir> request = platonWeb3j.adminDataDir();
-String resp = request.send().getDataDir();
 ```
 
 ### platonProtocolVersion
@@ -921,7 +851,7 @@ The BigInteger in the PlatonFilter property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonFilter filter = new PlatonFilter();
+org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
 filter.addSingleTopic("");
 Request <?, PlatonFilter> request = currentValidWeb3j.platonNewFilter(filter);
 BigInteger req = request.send().getFilterId();
@@ -1088,7 +1018,7 @@ The BigInteger in the PlatonLog property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonFilter filter = new PlatonFilter();
+org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
 filter.addSingleTopic("");
 Request<?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
 List<LogResult> = request.send(). GetLogs();
@@ -1226,54 +1156,6 @@ Request<?, DbGetHex> request = currentValidWeb3j.dbGetHex(databaseName, keyName)
 String req = request.send(). GetStoredValue();
 ```
 
-### txPoolStatus
-
->    Returns the status of the transaction pool
-
-* **parameters**
-
-  no
-
-* **return value**
-
-```java
-Request<?, TxPoolStatus>
-```
-
-The result in the TxPoolStatus property is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, TxPoolStatus> request = platonWeb3j.txPoolStatus();
-TxPoolStatus txPoolStatus = request.send();
-```
-
-### txPoolContent
-
->    Return transaction pool content
-
-* **parameters**
-
-  no
-
-* **return value**
-
-```java
-Request<?, TxPoolContent>
-```
-
-The result in the TxPoolContent property is the corresponding storage data
-
-* **Example**
-
-```java
-JsonRpc2_0Admin platonWeb3j = new JsonRpc2_0Admin(new HttpService("http://127.0.0.1:6789"));
-Request <?, TxPoolContent> request = platonWeb3j.txPoolContent();
-TxPoolContent txPoolContent = request.send();
-```
-
 ### platonEvidences
 
 > Return double sign report data
@@ -1304,7 +1186,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
     "blockNumber": 16013,       //block number
     "blockIndex": 0,        //The index value of the block in a round view
     "blockData": "0xe1a507a57c1e9d8cade361fefa725d7a271869aea7fd923165c872e7c0c2b3f2",     //Block rlp encoding value
-    "validateNode": {            
+    "validateNode": {
       "index": 0,     //The index value of the validator in a round of epoch
       "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",    //Verifier address
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",    //Verifier nodeID
@@ -1332,7 +1214,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
 
 - **duplicateVote**
 
-```text 
+```text
 {
   "voteA": {
     "epoch": 0,   //epoch value of consensus round
@@ -1340,7 +1222,7 @@ Each type contains multiple evidences, so it is an array structure, and you need
     "blockHash": "0x58b5976a471f86c4bd198984827bd594dce6ac861ef15bbbb1555e7b2edc2fc9",   //block hash
     "blockNumber": 16013,   //block number
     "blockIndex": 0,    //The index value of the block in a round view
-    "validateNode": { 
+    "validateNode": {
       "index": 0,    //The index value of the validator in a round of epoch
       "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",  //Verifier address
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",   //Verifier nodeID
@@ -1370,13 +1252,13 @@ Each type contains multiple evidences, so it is an array structure, and you need
 ```text
 {
   "viewA": {
-    "epoch": 0,  
-    "viewNumber": 0, 
+    "epoch": 0,
+    "viewNumber": 0,
     "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",  //区块hash
-    "blockNumber": 16013, 
+    "blockNumber": 16013,
     "validateNode": {
-      "index": 0,  
-      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4", 
+      "index": 0,
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
       "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
     },
@@ -1496,222 +1378,25 @@ String debugEconomicConfig = req.send().getEconomicConfigStr();
 
 ### getChainId
 
->    Get chain ID
+> Get chain ID
+- **parameters**
 
-* **parameters**
+  no
 
-  No
-
-* **return value**
+- **return value**
 
 ```java
 Request<?, PlatonChainId>
 ```
 
-The String in the PlatonChainId attribute is the corresponding storage data
+The String in the PlatonChainId property is the corresponding stored data
 
-* **Example**
+- **Example**
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request<?, PlatonChainId> req = platonWeb3j.getChainId();
 BigInteger chainId = req.send().getChainId();
-```
-
-### adminNodeInfo
-
->  Retrieve all the information we know about the host node at protocol granularity
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, AdminNodeInfo>
-```
-
-The result in the AdminNodeInfo attribute is the corresponding storage data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-AdminNodeInfo nodeInfo = platonWeb3j.adminNodeInfo().send();
-```
-
-### adminPeers
-
->  Retrieve all the information we know about each individual Peer at protocol granularity
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, AdminPeers>
-```
-
-The result in the AdminPeers attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-AdminPeers adminPeers = platonWeb3j.adminPeers().send();
-```
-
-### adminStartRPC
-
->   Start the HTTP RPC API server
-
-* **parameters**
-
-    - String :  host : Network address to listen on
-    - Integer : port : Network port to listen on
-    - String : cors : Cross-origin resource sharing header to be used
-    - String : apis : API modules to provide services through the service interface
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-WebSocketService webSocketService = new WebSocketService("ws://127.0.0.1:7790",false);
-webSocketService.connect();
-Web3j platonWeb3j = Web3j.build(webSocketService);
-BooleanResponse send = platonWeb3j.adminStartRPC("127.0.0.1", 6789, null, null).send();
-```
-
-### adminStartWS
-
->   Start the websocket RPC API server
-
-* **parameters**
-
-    - String :  host : Network address to listen on
-    - Integer : port : Network port to listen on
-    - String : cors : Cross-origin resource sharing header to be used
-    - String : apis : API modules to provide services through the service interface
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = web3j.adminStartWS("127.0.0.1", 7789, null, null).send();
-```
-
-### adminStopRPC
-
->  Close the currently started HTTP RPC end node
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-WebSocketService webSocketService = new WebSocketService("ws://127.0.0.1:7790",false);
-webSocketService.connect();
-Web3j platonWeb3j = Web3j.build(webSocketService);
-BooleanResponse send = platonWeb3j.adminStopRPC().send();
-```
-
-### adminStopWS
-
->  Close the currently started WebSocket RPC end node
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-WebSocketService webSocketService = new WebSocketService("ws://127.0.0.1:7790",false);
-webSocketService.connect();
-Web3j platonWeb3j = Web3j.build(webSocketService);
-BooleanResponse send = platonWeb3j.adminStopWS().send();
-```
-
-### adminExportChain
-
->   Export the current blockchain to a local file
-
-* **parameters**
-
-    - String :  file : file name
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = platonWeb3j.adminExportChain("1").send();
-```
-
-### adminImportChain
-
->   Import blockchain from local file
-
-* **parameters**
-
-    - String :  file : file name
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = platonWeb3j.adminImportChain("1").send();
 ```
 
 ### getWaitSlashingNodeList
@@ -1720,7 +1405,7 @@ BooleanResponse send = platonWeb3j.adminImportChain("1").send();
 
 * **parameters**
 
-  No
+  no
 
 * **return value**
 
@@ -1728,7 +1413,7 @@ BooleanResponse send = platonWeb3j.adminImportChain("1").send();
 Request<?, DebugWaitSlashingNodeList>
 ```
 
-The WaitSlashingNode list object in the DebugWaitSlashingNodeList property is the corresponding storage data
+The `WaitSlashingNode` List Object in the `DebugWaitSlashingNodeList` property is the corresponding stored data
 
 * **Example**
 
@@ -1738,410 +1423,6 @@ Request<?, DebugWaitSlashingNodeList> req = platonWeb3j.getWaitSlashingNodeList(
 DebugWaitSlashingNodeList nodeList = req.send();
 ```
 
-### platonGetRawTransactionByHash
-
->  Returns the number of transaction bytes for a given Hash
-
-* **parameters**
-
-    - String :  hash : Transaction hash
-
-* **return value**
-
-```java
-Request<?, PlatonRawTransaction>
-```
-
-The result in the PlatonRawTransaction attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonRawTransaction send = platonWeb3j.platonGetRawTransactionByHash("0x5b99...").send();
-```
-
-### platonGetRawTransactionByBlockHashAndIndex
-
->   Return transactions for a given block hash and index
-
-* **parameters**
-
-    - String :  hash : Block hash 
-    - String :  index : index
-
-* **return value**
-
-```java
-Request<?, PlatonRawTransaction>
-```
-
-The result in the PlatonRawTransaction attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonRawTransaction send = platonWeb3j.platonGetRawTransactionByBlockHashAndIndex("0xa34...", "0x1").send();
-```
-
-### platonGetRawTransactionByBlockNumberAndIndex
-
->    Return transactions with a given block number and index
-
-* **parameters**
-
-    - String :  blockNumber : Block number
-    - String :  index : index 
-
-* **return value**
-
-```java
-Request<?, PlatonRawTransaction>
-```
-
-The result in the PlatonRawTransaction attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonRawTransaction send = platonWeb3j.platonGetRawTransactionByBlockNumberAndIndex("0x1", "0x1").send();
-```
-
-### platonGetAddressHrp
-
->    Get chain Hrp
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, PlatonGetAddressHrp>
-```
-
-The result in the PlatonGetAddressHrp attribute is the corresponding storage data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonGetAddressHrp send = platonWeb3j.platonGetAddressHrp().send();
-```
-
-### platonSignTransaction
-
->    The from account will be used to sign the given transaction. The node needs to have the account private key corresponding to the given sender address, and it needs to be unlocked
-
-* **parameters**
-
-      - Transaction :  transaction : Transaction object
-
-* **return value**
-
-```java
-Request<?, PlatonSignTransaction>
-```
-
-The result in the PlatonSignTransaction attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Transaction transaction = new Transaction("lat1xxx",nonce,gasPrice,gasLimit,toAddress,value,data);
-PlatonSignTransaction send = platonWeb3j.platonSignTransaction(transaction).send();
-```
-
-### minerSetGasPrice
-
->    Set the minimum gas price acceptable to miners
-
-* **parameters**
-
-      - String :  minGasPrice : Lowest gas price
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = platonWeb3j.minerSetGasPrice("0x1").send();
-```
-
-### adminPeerEvents
-
->   Create an RPC subscription, which receives peer events from the node's p2p server
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, AdminPeerEvents>
-```
-
-The result in the AdminPeerEvents attribute is the corresponding storage data
-
-* **Example**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-AdminPeerEvents send = web3j.adminPeerEvents().send();
-```
-
-### personalImportRawKey
-
->  Store the given hexadecimal coded key in the key directory and encrypt it with a password
-
-* **parameters**
-
-      - String :  keydata : Private key
-      - String :  password : password
-
-* **return value**
-
-```java
-Request<?, PersonalImportRawKey>
-```
-
-The result in the PersonalImportRawKey attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalImportRawKey key = admin.personalImportRawKey("03axxx", "000000").send();
-```
-
-### personalLockAccount
-
->   Lock the account associated with a given address
-
-* **parameters**
-
-      - String :  address : Account address
-
-* **return value**
-
-```java
-Request<?, BooleanResponse>
-```
-
-The result in the BooleanResponse attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse response = admin.personalLockAccount("lat1cxxx").send();
-```
-
-### personalSign
-
->    Use the given account to sign the transaction, the account needs to exist in the node's account library
-
-* **parameters**
-
-      - String :  message : The hexadecimal code string of the transaction
-      - String :  accountId : Account address
-      - String :  password : Account address password
-
-* **return value**
-
-```java
-Request<?, PersonalSign>
-```
-
-The result in the PersonalSign attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-RawTransaction transaction = RawTransaction.createTransaction(nonce,gasPrice,gasLimit,toAddress,value,data);
-byte[] encode = TransactionEncoder.encode(transaction);
-String hexSignedTransaction = Numeric.toHexString(encode);
-PersonalSign send = admin.personalSign(hexSignedTransaction, "lat1xxx","000000").send();
-```
-
-### personalSignAndSendTransaction
-
->    Use the from address of the transaction to sign and send the transaction. The from account needs to exist in the node's account library
-
-* **parameters**
-
-      - Transaction :  transaction : Transaction object
-      - String :  password : Account address password
-
-* **return value**
-
-```java
-Request<?, PersonalSign>
-```
-
-The result in the PersonalSign attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-Transaction transaction = new Transaction("lat1xxx",nonce,gasPrice,gasLimit,toAddress,value,data);
-PersonalSign send = admin.personalSignAndSendTransaction(transaction, "000000").send();
-```
-
-### personalSignTransaction
-
->    Use the from address of the transaction to sign, and the from account needs to exist in the node's account database
-
-* **parameters**
-
-      - Transaction :  transaction : Transaction object
-      - String :  password : From account address password
-
-* **return value**
-
-```java
-Request<?, PlatonSignTransaction>
-```
-
-The result in the PlatonSignTransaction attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-Transaction transaction = new Transaction("lat1xxx",nonce,gasPrice,gasLimit,toAddress,value,data);
-PlatonSignTransaction send = admin.personalSignTransaction(transaction,"000000").send();
-```
-
-### personalEcRecover
-
->   Returns the address of the account used to create the signature
-
-* **parameters**
-
-      - String :  message : Raw data
-      - String :  signiture : Signed data
-
-* **return value**
-
-```java
-Request<?, PersonalEcRecover>
-```
-
-The result in the PersonalEcRecover attribute is the corresponding storage data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalEcRecover send = admin.personalEcRecover("0xebxxx","0xa4f5xxx").send();
-```
-
-### personalListWallets
-
->   Return the list of wallets managed by this node
-
-* **parameters**
-
-  No
-
-* **return value**
-
-```java
-Request<?, PersonalListWallets>
-```
-
-The result in the PersonalListWallets attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalListWallets send = admin.personalListWallets().send();
-```
-
-### personalOpenWallet
-
->  Start the hardware wallet opening program, establish a USB connection and try to authenticate with the provided password. Please note that this method may return an additional challenge that needs to be opened a second time (for example, Trezor PIN matrix challenge)
-
-* **parameters**
-
-      - String :  url : URL
-      - String :  passphrase : password
-
-* **return value**
-
-```java
-Request<?, VoidResponse>
-```
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-VoidResponse send = admin.personalOpenWallet("http://localhost:8080", "000000").send();
-```
-
-### personalUnlockAccount
-
->  Use the given password to unlock the account associated with the given address for a duration of seconds. The default is 300 seconds. If the account is unlocked, it will return an indication
-
-* **parameters**
-
-      - String :  address : address
-      - String :  passphrase : password
-
-* **return value**
-
-```java
-Request<?, PersonalUnlockAccount>
-```
-
-The result in the PersonalUnlockAccount attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalUnlockAccount response = admin.personalUnlockAccount("lat1xxx", "111111").send();
-```
-
-### personalListAccounts
-
->  Returns a list of addresses of accounts managed by this node
-
-* **parameters**
-
-    No
-
-* **return value**
-
-```java
-Request<?, PersonalListAccounts>
-```
-
-The result in the PersonalListAccounts attribute is the corresponding stored data
-
-* **Example**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalListAccounts send = admin.personalListAccounts().send();
-```
 
 ## System Contract Call
 
@@ -2166,9 +1447,9 @@ For the introduction and use of the above system contract, please refer to the f
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract contract = StakingContract.load(web3j, credentials);
+StakingContract contract = StakingContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -2207,9 +1488,9 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("1000000", Convert.Unit.KPVON);
+BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-String benifitAddress = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
+String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
@@ -2291,7 +1572,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String benifitAddress = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
+String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
@@ -2336,7 +1617,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal addStakingAmount = Convert.toVon("4000000", Convert.Unit.KPVON);
+BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -2356,7 +1637,7 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
 CallResponse<Node> baseRespons
 ```
 
-- CallResponse<Node> description
+- CallResponse&lt;Node&gt; description
   -  int: Code result flag, 0 is success
   -  Node: data Node object data
   -  String: ErrMsg error message, exists on failure
@@ -2398,15 +1679,15 @@ CallResponse<Node> baseRespons
   - String: Website The third-party homepage of the Website node(the length of the node is the homepage of the node)
 
   - BigInteger：delegateEpoch  The node's last delegate settlement cycle
-  
+
   - BigInteger：delegateTotal  The total number of delegate nodes
-  
+
   - BigInteger：delegateTotalHes  Total number of inactive nodes delegate
-  
+
   - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
-  
+
   - BigInteger：nextRewardPer Proportion of reward share in the next settlement cycle
-  
+
   - BigInteger：rewardPer Proportion of reward share in current settlement cycle
 
 - **Java SDK contract use**
@@ -2430,7 +1711,7 @@ CallResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
 CallResponse<BigInteger> baseResponse
 ```
 
-- CallResponse<BigInteger> description
+- CallResponse&lt;BigInteger&gt; description
   -  int: Code result flag, 0 is success
   -  BigInteger：reward   Block rewards for the current settlement cycle
   -  String: ErrMsg error message, exists on failure
@@ -2455,7 +1736,7 @@ CallResponse<BigInteger> response = stakingContract.getPackageReward().send();
 CallResponse<BigInteger> baseResponse
 ```
 
-- CallResponse<BigInteger> description
+- CallResponse&lt;BigInteger&gt; description
   -  int: Code result flag, 0 is success
   -  BigInteger：reward   staking rewards for the current settlement cycle
   -  String: ErrMsg error message, exists on failure
@@ -2480,7 +1761,7 @@ CallResponse<BigInteger> response = stakingContract.getStakingReward().send();
 CallResponse<BigInteger> baseResponse
 ```
 
-- CallResponse<BigInteger> description
+- CallResponse&lt;BigInteger&gt; description
   -  int: Code result flag, 0 is success
   -  BigInteger：data   average time of packed blocks
   -  String: ErrMsg error message, exists on failure
@@ -2500,9 +1781,9 @@ CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-DelegateContract delegateContract = DelegateContract.load(web3j, credentials);
+DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -2533,7 +1814,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal amount = Convert.toVon("500000", Convert.Unit.KPVON);
+BigDecimal amount = Convert.toVon("500000", Unit.LAT);
 
 PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
@@ -2553,9 +1834,9 @@ TransactionResponse baseResponse = delegateContract.getTransactionResponse(plato
 CallResponse<List<DelegationIdInfo>> baseRespons
 ```
 
-- CallResponse<List<DelegationIdInfo>>
+- CallResponse&lt;List&lt;DelegationIdInfo&gt;&gt;
   - int: Code result identification, 0 is success
-  - List<DelegationIdInfo>: List of Data DelegationIdInfo objects
+  - List&lt;DelegationIdInfo&gt;: List of Data DelegationIdInfo objects
   - String: ErrMsg error message, exists on failure
 
 - **DelegationIdInfo**: An object that stores the NodeID and the height of the pledged block of the node commissioned by the current account address
@@ -2585,7 +1866,7 @@ CallResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedL
 CallResponse<Delegation>
 ```
 
-- CallResponse<Delegation>
+- CallResponse&lt;Delegation&gt;
   - int: Code result identification, 0 is success
   - Delegation: Data delegation object data
   - String: ErrMsg error message, exists on failure
@@ -2605,7 +1886,7 @@ CallResponse<Delegation>
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String address = "atp1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
+String address = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 BigInteger stakingBlockNum = new BigInteger("10888");
 
 CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
@@ -2640,14 +1921,14 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Convert.Unit.KPVON);
+BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
 BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 
-if(baseResponse.isStatusOk()){ 
-    BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+if(baseResponse.isStatusOk()){
+       BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
 }
 ```
 
@@ -2660,16 +1941,16 @@ if(baseResponse.isStatusOk()){
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials);
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
 ```
 
 #### Interface Description
 
 ##### **withdrawDelegateReward**
 
-> Withdraw all currently available commissioned rewards on the account 
+> Withdraw all currently available commissioned rewards on the account
 
 * **Introduction**
 
@@ -2707,7 +1988,7 @@ if(baseResponse.isStatusOk()){
 
 * **Introduction**
   - String: check the address of your account
-  - List<String>: nodeList Node list, if all is checked
+  - List&lt;String&gt;: nodeList Node list, if all is checked
 
 * **return value**
 
@@ -2715,13 +1996,13 @@ if(baseResponse.isStatusOk()){
 CallResponse<List<Reward>> baseRespons
 ```
 
-- CallResponse<List<Reward>>description
+- CallResponse&lt;List&lt;Reward&gt;&gt;description
 	- int：code   result identification, 0 is success
-	- List<Reward>：data   rewardList object data
+	- List&lt;Reward&gt;：data   rewardList object data
 	- String：errMsg   Error message, exists on failure
 
 * **Reward**：Reward details
-   - String：nodeId   
+   - String：nodeId
    - BigInteger：stakingNum  Node pledge block is high
    - BigInteger：reward  received benefits
 
@@ -2742,9 +2023,9 @@ CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(deleg
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-NodeContract nodeContract = NodeContract.load(web3j, credentials);
+NodeContract contract = NodeContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -2763,9 +2044,9 @@ NodeContract nodeContract = NodeContract.load(web3j, credentials);
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node >>
+- CallResponse&lt;List&lt;Node&gt;&gt;
   - int: Code result identification, 0 is success
-  - List<Node>: data nodeList object data
+  - List&lt;Node&gt;: data nodeList object data
   - String: ErrMsg error message, exists on failure
 
 * **Node**: object for saving node information for a single current settlement cycle
@@ -2797,7 +2078,7 @@ CallResponse<List<Node>> baseResponse
   - String: details The description of the Details node(the length is limited, indicating the description of the node)
 
   - BigInteger: validatorTerm
-  
+
   - BigInteger：delegateTotal  The total number of commissioned nodes
 
   - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
@@ -2821,9 +2102,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node >>
+- CallResponse&lt;List&lt;Node &gt;&gt;
   - int: Code result identification, 0 is success
-  - List<Node>: Data nodeList object data
+  - List&lt;Node&gt;: Data nodeList object data
   - String: ErrMsg error message, exists on failure
 
 - **Node**: object that saves the information of a single current consensus cycle verification node
@@ -2855,7 +2136,7 @@ CallResponse<List<Node>> baseResponse
   - String：details   The description of the node (there is a length limit, indicating the description of the node)
 
   - BigInteger：validatorTerm   Validator's tenure
-  
+
   - BigInteger：delegateTotal  The total number of nodes that are entrusted to take effect
 
   - BigInteger：delegateRewardTotal  The total entrusted reward currently issued by the candidate
@@ -2884,9 +2165,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node >>
+- CallResponse&lt;List&lt;Node &gt;&gt;
   - int: Code result identification, 0 is success
-  - List<Node>: Data nodeList object data
+  - List&lt;Node&gt;: Data nodeList object data
   - String: ErrMsg error message, exists on failure
 
 - **Node**: holds a single candidate node information object
@@ -2930,9 +2211,9 @@ CallResponse<List<Node>> baseResponse
   - String: details The description of the Details node(the length is limited, indicating the description of the node)
 
   - BigInteger：delegateEpoch The node's last commissioned settlement cycle
-  
+
   - BigInteger：delegateTotal  The total number of commissioned nodes
-  
+
   - BigInteger：delegateTotalHes  Total number of inactive nodes commissioned
 
   - BigInteger：delegateRewardTotal  Total delegated rewards currently issued by the candidate
@@ -2952,9 +2233,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
+ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -2983,7 +2264,7 @@ ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
   - String：module  parameter module
   - String：name  parameter name
   - String：newValue parameter newValue
-  
+
 * **CancelProposal Proposal.createSubmitCancelProposalParam()**
   - String：verifier Submit verifier
   - String：pIDID  PIPID
@@ -3058,7 +2339,7 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
 CallResponse<Proposal>
 ```
 
-- CallResponse<Proposal>
+- CallResponse&lt;Proposal&gt;
   - int: Code result identification, 0 is success
   - Proposal: Data Proposal object data
   - String: ErrMsg error message, exists on failure
@@ -3072,7 +2353,7 @@ CallResponse<Proposal>
   - BigInteger: endVotingBlock block height
   - BigInteger: newVersion
   - BigInteger: ID of the promotion proposal to be canceled by the toBeCanceled proposal
-  - BigInteger: activeBlock(if the vote passes) the effective block height(endVotingBlock + 20 + 4 * 250<effective block height<= endVotingBlock + 20 + 10 * 250)
+  - BigInteger: activeBlock(if the vote passes) the effective block height(endVotingBlock + 20 + 4 \* 250<effective block height<= endVotingBlock + 20 + 10 \* 250)
   - String: verifier
 
 - **Contract use**
@@ -3097,7 +2378,7 @@ CallResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).s
 CallResponse<TallyResult>
 ```
 
-- CallResponse<TallyResult>
+- CallResponse&lt;TallyResult&gt;
   - int: Code result identification, 0 is success
   - TallyResult: Data TallyResult object data
   - String: ErrMsg error message, exists on failure
@@ -3140,9 +2421,9 @@ CallResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposa
 CallResponse<List<Proposal>>
 ```
 
-- CallResponse<List<Proposal >>
+- CallResponse&lt;List&lt;Proposal &gt;&gt;
   - int: Code result identification, 0 is success
-  - List<Proposal>: Data ProposalList object data
+  - List&lt;Proposal&gt;: Data ProposalList object data
   - String: ErrMsg error message, exists on failure
 
 - **Proposal**: object for saving a single proposal
@@ -3154,7 +2435,7 @@ CallResponse<List<Proposal>>
   - BigInteger: endVotingBlock block height
   - BigInteger: newVersion
   - String: ID of the promotion proposal to be canceled by the toBeCanceled proposal
-  - BigInteger: activeBlock(if the vote passes) the effective block height(endVotingBlock + 20 + 4 * 250<effective block height<= endVotingBlock + 20 + 10 * 250)
+  - BigInteger: activeBlock(if the vote passes) the effective block height(endVotingBlock + 20 + 4 \* 250<effective block height<= endVotingBlock + 20 + 10 \* 250)
   - String: verifier
 
 - **Contract use**
@@ -3228,9 +2509,9 @@ ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "103";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-SlashContract contract = SlashContract.load(web3j, credentials);
+SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -3300,9 +2581,9 @@ CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignT
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials);
+RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -3314,8 +2595,8 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 - **Introduction**
 
   - String: address lock position is released to the account
-  - List<RestrictingPlan>: plan Locked plan list(array)
-    - epoch: indicates a multiple of the settlement cycle. The product of the number of blocks produced per settlement cycle indicates the release of locked funds at the height of the target block. If account is the incentive pool address, the period value is a multiple of 120(that is, 30 * 4). In addition, period, the number of blocks per cycle must be at least greater than the highest irreversible block height.
+  - List&lt;RestrictingPlan&gt;: plan Locked plan list(array)
+    - epoch: indicates a multiple of the settlement cycle. The product of the number of blocks produced per settlement cycle indicates the release of locked funds at the height of the target block. If account is the incentive pool address, the period value is a multiple of 120(that is, 30 \* 4). In addition, period, the number of blocks per cycle must be at least greater than the highest irreversible block height.
     - amount: indicates the amount to be released on the target block.
 
 - **return value**
@@ -3354,7 +2635,7 @@ TransactionResponse baseResponse = restrictingPlanContract.getTransactionRespons
 CallResponse<RestrictingItem> baseResponse
 ```
 
-- CallResponse<RestrictingItem> description
+- CallResponse&lt;RestrictingItem&gt; description
   - int: Code result identification, 0 is success
   - RestrictingItem: Data RestrictingItem object data
   - String: ErrMsg error message, exists on failure
@@ -3363,7 +2644,7 @@ CallResponse<RestrictingItem> baseResponse
   - BigInteger: balance
   - BigInteger: pledge pledge / mortgage amount
   - BigInteger: debt release amount due
-  - List<RestrictingInfo>: info lock entry information
+  - List&lt;RestrictingInfo&gt;: info lock entry information
 - **RestrictingInfo**: Object that saves information of a single lock entry
   - BigInteger: blockNumber releases block height
   - BigInteger: amount released
@@ -3389,7 +2670,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，Output a hex-encoded solidity binary file to provide transaction requests.
 `abi`，Output a solidity application binary interface (`ABI`) file, which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the solidity smart contract.
 
-* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.2/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.2/))：
+* Compile solidity source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v1.0.0/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v1.0.0/))：
 
 > **step1.** Initialize the project with platon-truffle
 
@@ -3470,7 +2751,7 @@ Put the bytecode attribute in ./build/contracts/HelloWorld.json into the HelloWo
 
 The Java SDK supports automatic generation of Java wrapper classes for Solidity smart contracts from an `abi` file.
 
-* Generate Java wrapper classes via command line tools（[platon-web3j download](http://download.alaya.network/alaya/sdk/0.13.2/platon-web3j-0.13.2.1.zip)）:
+* Generate Java wrapper classes via command line tools（[platon-web3j download](https://download.platon.network/platon/sdk/1.1.0/platon-web3j-1.1.0.0.zip)）:
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -3480,10 +2761,10 @@ $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-c
 
 ```java
 // Import console module via maven or gradle
-compile "com.platon.client:console:{version}"
+compile "com.platon.sdk:console:{version}"
 
 String args[] = {"generate", "/path/to/<smart-contract>.bin", "/path/to/<smart-contract>.abi", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-SolidityFunctionWrapperGenerator.run(args);
+org.web3j.codegen.SolidityFunctionWrapperGenerator.run(args);
 ```
 
 The `bin` and` abi` files are generated after compiling the solidity source code.
@@ -3500,30 +2781,30 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider
+        <web3j>, <transactionManager>, contractGasProvider, chainId
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider
+        <web3j>, <Credentials>, contractGasProvider, chainId
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
 This method will deploy smart contracts on the blockchain. After successful deployment, it will return a wrapper class instance of the smart contract, which contains the address of the smart contract.
 
-If your smart contract accepts LAT transfers on the structure, you need to initialize the parameter value <initialValue>.
+If your smart contract accepts LAT transfers on the structure, you need to initialize the parameter value &lt;initialValue&gt;.
 
 You can also create an instance of the Java wrapper class corresponding to the smart contract by using the address of the smart contract:
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider);
+        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
 ```
 
 #### Smart Contract Validity
@@ -3540,7 +2821,7 @@ The Java SDK provides a transaction manager `TransactionManager` to control how 
 `RawTransactionManager` needs to specify the chain ID. Prevent transactions on one chain from being rebroadcasted to another chain:
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
 ```
 
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.
@@ -3594,7 +2875,7 @@ When deploying a WASM smart contract on the blockchain, it must first be compile
 After the CDT installation is successful, you can compile the WASM contract source code with the following command:
 
 ```shell
-$ platon-cpp <contract>.cpp 
+$ platon-cpp <contract>.cpp
 ```
 
 After successful compilation, `<contract> .wasm` and` <contract> .abi.json` files will be generated.
@@ -3602,7 +2883,7 @@ After successful compilation, `<contract> .wasm` and` <contract> .abi.json` file
 `wasm`，Output binary file of WASM contract to provide transaction request.
 `abi.json`，Which details all publicly accessible contract methods and their related parameters. The `abi` file is also used to generate the Java wrapper class corresponding to the WASM smart contract.
 
-* Compile WASM source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v0.13.2/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v0.13.2/))
+* Compile WASM source code with `platon-truffle`([platon-truffle development tool installation reference](https://platon-truffle.readthedocs.io/en/v1.0.0/getting-started/installation.html#)|[platon-truffle Development tool manual](https://platon-truffle.readthedocs.io/en/v1.0.0/))
 
 ### WASM Smart Contract Java Packaging Class
 
@@ -3618,7 +2899,7 @@ $ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-cont
 
 ```java
 String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-contract>.abi.json", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-WasmFunctionWrapperGenerator.run(args);
+org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
 ```
 
 The `wasm` and` abi.json` files are generated after compiling the WASM contract source code.
@@ -3635,30 +2916,30 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, 
+        <web3j>, <transactionManager>, contractGasProvider, chainId,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, 
+        <web3j>, <Credentials>, contractGasProvider, chainId,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
 This method will deploy smart contracts on the blockchain. After successful deployment, it will return a wrapper class instance of the smart contract, which contains the address of the smart contract.
 
-If your smart contract accepts LAT transfers on the structure, you need to initialize the parameter value <initialValue>.
+If your smart contract accepts LAT transfers on the structure, you need to initialize the parameter value &lt;initialValue&gt;.
 
 You can also create an instance of the Java wrapper class corresponding to the smart contract by using the address of the smart contract:
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider);
+        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
 ```
 
 #### Smart Contract Validity
@@ -3675,7 +2956,7 @@ The Java SDK provides a transaction manager `TransactionManager` to control how 
 `RawTransactionManager` needs to specify the chain ID. Prevent transactions on one chain from being rebroadcasted to another chain:
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
 ```
 
 In addition to `RawTransactionManager`, the Java SDK also provides a client transaction manager` ClientTransactionManager`, which will hand over your transaction signing work to the PlatON client you are connecting to.

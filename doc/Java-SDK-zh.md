@@ -11,6 +11,8 @@ sidebar_label: Java SDK
 
 - 使用要求jdk1.8以上.
 
+注：最新版本是1.1.0.0
+
 ### maven
 
 > 项目配置:
@@ -26,13 +28,13 @@ sidebar_label: Java SDK
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.1.0</version>
+    <version>1.1.0.0</version>
 </dependency>
 ```
 
 ### gradle
 
-> 项目配置:	
+> 项目配置:
 ```
 repositories {
 	maven { url "https://sdk.platon.network/nexus/content/groups/public/" }
@@ -41,7 +43,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.sdk:core:1.1.1.0"
+compile "com.platon.sdk:core:1.1.0.0"
 ```
 
 ## 基础api使用
@@ -68,11 +70,10 @@ assertThat(hex, is("0x4f9c1a1efaa7d81ba1cabf07f2c3a5ac5cf4f818"));
 
 * **初始化网络**
 
-> SDK已经内置Alaya网络。用户还可以初始化其它自定义网络，最后一个初始化的是当前网络.
->
+> SDK已经内置PlatON网络。用户还可以初始化其它自定义网络，最后一个初始化的是当前网络.
 
 ```java
-NetworkParameters.init(2000L, "ABC");  
+NetworkParameters.init(2000L, "ABC");
 ```
 
 * **选择当前网络**
@@ -80,13 +81,13 @@ NetworkParameters.init(2000L, "ABC");
 >
 
 ```java
-NetworkParameters.selectNetwork(2000L, "ABC");  
+NetworkParameters.selectNetwork(2000L, "ABC");
 ```
-> 或者直接选择Alaya主网络
+> 或者直接选择PlatON主网络
 >
 
 ```java
-NetworkParameters.selectAlaya();  
+NetworkParameters.selectPlatON();
 ```
 
 ### 钱包相关
@@ -122,7 +123,8 @@ Credentials credentials = WalletUtils.loadCredentials(PASSWORD, new File(tempDir
 Credentials credentials = Credentials.create("0xXXXXXXXXXXXXXX...");
 ```
 
-* **获取钱包地址**
+
+* **获取当前网络参数的地址**
 ```java
 String bech32Address = credentials.getAddress();  
 ```
@@ -151,7 +153,7 @@ Web3ClientVersion属性中的string即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, Web3ClientVersion> request = currentValidWeb3j.web3ClientVersion();
+Request <?, Web3ClientVersion> request = platonWeb3j.web3ClientVersion();
 String version = request.send().getWeb3ClientVersion();
 ```
 
@@ -177,7 +179,7 @@ Web3Sha3属性中的string即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String date = "";
 Request <?, Web3Sha3> request = currentValidWeb3j.web3Sha3(date);
-String resDate = request.send().getWeb3ClientVersion();
+String resDate = request.send().getResult();
 ```
 
 ### netVersion
@@ -200,7 +202,7 @@ NetVersion属性中的string即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, NetVersion> request = currentValidWeb3j.netVersion();
+Request <?, NetVersion> request = platonWeb3j.netVersion();
 String version = request.send().getNetVersion();
 ```
 
@@ -224,7 +226,7 @@ NetListening属性中的boolean即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, NetListening> request = currentValidWeb3j.netListening();
+Request <?, NetListening> request = platonWeb3j.netListening();
 boolean req = request.send().isListening();
 ```
 
@@ -248,80 +250,8 @@ NetPeerCount属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, NetPeerCount> request = currentValidWeb3j.netPeerCount();
+Request <?, NetPeerCount> request = platonWeb3j.netPeerCount();
 BigInteger req = request.send().getQuantity();
-```
-
-### adminAddPeer
-
-> 新增一个端点到客户端节点
-
-* **参数**
-
-  String ：端点URL
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, BooleanResponse> request = platonWeb3j.adminAddPeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
-Boolean resp = request.send().getResult();
-```
-
-### adminRemovePeer
-
-> 从客户端节点移除一个端点
-
-* **参数**
-
-  String ：端点URL
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, BooleanResponse> request = platonWeb3j.adminRemovePeer("enode://0abaf3219f454f3d07b6cbcf3c10b6b4ccf605202868e2043b6f5db12b745df0604ef01ef4cb523adc6d9e14b83a76dd09f862e3fe77205d8ac83df707969b47@[::]:16789");
-Boolean resp = request.send().getResult();
-```
-
-### adminDataDir
-
-> 返回当前节点数据目录
-
-* **参数**
-
-  ​	无
-
-* **返回值**
-
-```java
-Request<?, AdminDataDir>
-```
-
-AdminDataDir属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, AdminDataDir> request = platonWeb3j.adminDataDir();
-String resp = request.send().getDataDir();
 ```
 
 ### platonProtocolVersion
@@ -344,7 +274,7 @@ PlatonProtocolVersion属性中的String即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonProtocolVersion> request = currentValidWeb3j.platonProtocolVersion();
+Request <?, PlatonProtocolVersion> request = platonWeb3j.platonProtocolVersion();
 String req = request.send().getProtocolVersion();
 ```
 
@@ -368,7 +298,7 @@ PlatonSyncing属性中的String即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonSyncing> request = currentValidWeb3j.platonSyncing();
+Request <?, PlatonSyncing> request = platonWeb3j.platonSyncing();
 boolean req = request.send().isSyncing();
 ```
 
@@ -392,7 +322,7 @@ PlatonGasPrice属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonGasPrice> request = currentValidWeb3j.platonGasPrice();
+Request <?, PlatonGasPrice> request = platonWeb3j.platonGasPrice();
 BigInteger req = request.send().getGasPrice();
 ```
 
@@ -416,7 +346,7 @@ PlatonAccounts属性中的String数组即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonAccounts> request = currentValidWeb3j.platonAccounts();
+Request <?, PlatonAccounts> request = platonWeb3j.platonAccounts();
 List<String> req = request.send().getAccounts();
 ```
 
@@ -440,7 +370,7 @@ PlatonBlockNumber属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonBlockNumber> request = currentValidWeb3j.platonBlockNumber();
+Request <?, PlatonBlockNumber> request = platonWeb3j.platonBlockNumber();
 BigInteger req = request.send().getBlockNumber();
 ```
 
@@ -450,7 +380,7 @@ BigInteger req = request.send().getBlockNumber();
 
 * **参数**
     - String ： address 需要查询的地址
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       - DefaultBlockParameterName.LATEST  最新块高(默认)
       - DefaultBlockParameterName.EARLIEST 最低块高
       - DefaultBlockParameterName.PENDING 未打包交易
@@ -480,7 +410,7 @@ BigInteger req = request.send().getBalance();
 * **参数**
     - String : address  存储地址
     - BigInteger: position 存储器中位置的整数
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       -  DefaultBlockParameterName.LATEST  最新块高(默认)
       -  DefaultBlockParameterName.EARLIEST 最低块高
       -  DefaultBlockParameterName.PENDING 未打包交易
@@ -499,7 +429,7 @@ PlatonGetStorageAt属性中的String即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
-Request <?, PlatonGetStorageAt> request = currentValidWeb3j.platonGetStorageAt(address ,BigInteger.ZERO,DefaultBlockParameterName.LATEST );
+Request <?, PlatonGetStorageAt> request = platonWeb3j.platonGetStorageAt(address ,BigInteger.ZERO,DefaultBlockParameterName.LATEST );
 String req = request.send().getData();
 ```
 
@@ -523,7 +453,7 @@ PlatonGetBlockTransactionCountByHash属性中的BigInteger即为对应存储数�
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockhash = "";
-Request <?, PlatonGetBlockTransactionCountByHash> request = currentValidWeb3j.platonGetBlockTransactionCountByHash(blockhash);
+Request <?, PlatonGetBlockTransactionCountByHash> request = platonWeb3j.platonGetBlockTransactionCountByHash(blockhash);
 BigInteger req = request.send().getTransactionCount();
 ```
 
@@ -533,7 +463,7 @@ BigInteger req = request.send().getTransactionCount();
 
 * **参数**
     - String : address 查询地址
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       -  DefaultBlockParameterName.LATEST  最新块高(默认)
       -  DefaultBlockParameterName.EARLIEST 最低块高
       -  DefaultBlockParameterName.PENDING 未打包交易
@@ -552,7 +482,7 @@ PlatonGetTransactionCount属性中的BigInteger即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
-Request <?, PlatonGetTransactionCount> request = currentValidWeb3j.platonGetTransactionCount(address,DefaultBlockParameterName.LATEST);
+Request <?, PlatonGetTransactionCount> request = platonWeb3j.platonGetTransactionCount(address,DefaultBlockParameterName.LATEST);
 BigInteger req = request.send().getTransactionCount();
 ```
 
@@ -561,7 +491,7 @@ BigInteger req = request.send().getTransactionCount();
 > 根据区块块高，返回块高中的交易总数
 
 * **参数**
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       -  DefaultBlockParameterName.LATEST  最新块高(默认)
       -  DefaultBlockParameterName.EARLIEST 最低块高
       -  DefaultBlockParameterName.PENDING 未打包交易
@@ -579,7 +509,7 @@ PlatonGetBlockTransactionCountByNumber属性中的BigInteger即为对应存储�
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonGetBlockTransactionCountByNumber> request = currentValidWeb3j.platonGetBlockTransactionCountByNumber(DefaultBlockParameterName.LATEST);
+Request <?, PlatonGetBlockTransactionCountByNumber> request = platonWeb3j.platonGetBlockTransactionCountByNumber(DefaultBlockParameterName.LATEST);
 BigInteger req = request.send().getTransactionCount();
 ```
 
@@ -590,7 +520,7 @@ BigInteger req = request.send().getTransactionCount();
 * **参数**
     - String ： address 地址/合约
 
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       -  DefaultBlockParameterName.LATEST  最新块高(默认)
       -  DefaultBlockParameterName.EARLIEST 最低块高
       -  DefaultBlockParameterName.PENDING 未打包交易
@@ -609,7 +539,7 @@ PlatonGetCode属性中的String即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
-Request <?, PlatonGetCode> request = currentValidWeb3j.platonGetCode(address,DefaultBlockParameterName.LATEST);
+Request <?, PlatonGetCode> request = platonWeb3j.platonGetCode(address,DefaultBlockParameterName.LATEST);
 String req = request.send().getCode();
 ```
 
@@ -635,7 +565,7 @@ PlatonSign属性中的String即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
 String sha3HashOfDataToSign   = "";
-Request <?, PlatonSign> request = currentValidWeb3j.platonSign(address,DefaultBlockParameterName.LATEST);
+Request <?, PlatonSign> request = platonWeb3j.platonSign(address,DefaultBlockParameterName.LATEST);
 String req = request.send().getSignature();
 ```
 
@@ -649,13 +579,13 @@ String req = request.send().getSignature();
     - Transaction : Transaction: 交易结构
       - String : from : 交易发送地址
       - String : to : 交易接收方地址
-      - BigInteger ： gas ：  本次交易gas用量上限 
+      - BigInteger ： gas ：  本次交易gas用量上限
       - BigInteger ： gasPrice ： gas价格
       - BigInteger ：value ： 转账金额
       - String ：data ： 上链数据
       - BigInteger ：nonce ： 交易唯一性标识
         - 调用platonGetTransactionCount，获取from地址作为参数，获取到该地址的已发送交易总数
-        - 每次使用该地址nonce +1 
+        - 每次使用该地址nonce +1
 
 * **返回值**
 
@@ -670,7 +600,7 @@ PlatonSendTransaction属性中的String即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Transaction transaction = new Transaction("from","to",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO,"data ",BigInteger.ONE);
-Request <?, PlatonSendTransaction> request = currentValidWeb3j.platonSendTransaction(transaction);
+Request <?, PlatonSendTransaction> request = platonWeb3j.platonSendTransaction(transaction);
 String req = request.send().getTransactionHash();
 ```
 
@@ -694,25 +624,25 @@ PlatonSendTransaction属性中的String即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String  data = "";
-Request <?, PlatonSendTransaction> request = currentValidWeb3j.platonSendRawTransaction(data);
+Request <?, PlatonSendTransaction> request = platonWeb3j.platonSendRawTransaction(data);
 String req = request.send().getTransactionHash();
 ```
 
 ### platonCall
 
->   执行一个消息调用交易，消息调用交易直接在节点旳VM中执行而 不需要通过区块链的挖矿来执行 
+>   执行一个消息调用交易，消息调用交易直接在节点旳VM中执行而 不需要通过区块链的挖矿来执行
 
 * **参数**
     - Transaction : Transaction: 交易结构
       - String : from : 交易发送地址
       - String : to : 交易接收方地址
-      - BigInteger ： gas ：  本次交易gas用量上限 
+      - BigInteger ： gas ：  本次交易gas用量上限
       - BigInteger ： gasPrice ： gas价格
       - BigInteger ：value ： 转账金额
       - String ：data ： 上链数据
       - BigInteger ：nonce ： 交易唯一性标识
         - 调用platonGetTransactionCount，获取from地址作为参数，获取到该地址的已发送交易总数
-        - 每次使用该地址nonce +1 
+        - 每次使用该地址nonce +1
 
 * **返回值**
 
@@ -727,25 +657,25 @@ PlatonCall属性中的String即为对应存储数据
 ```javas
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Transaction transaction = new Transaction("from","to",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO,"data ",BigInteger.ONE);
-Request <?, PlatonSendTransaction> request = currentValidWeb3j.platonCall(transaction);
+Request <?, PlatonSendTransaction> request = platonWeb3j.platonCall(transaction);
 String req = request.send().getValue();
 ```
 
 ### platonEstimateGas
 
->   估算合约方法gas用量 
+>   估算合约方法gas用量
 
 * **参数**
     - Transaction : Transaction: 交易结构
       - String : from : 交易发送地址
       - String : to : 交易接收方地址
-      - BigInteger ： gas ：  本次交易gas用量上限 
+      - BigInteger ： gas ：  本次交易gas用量上限
       - BigInteger ： gasPrice ： gas价格
       - BigInteger ：value ： 转账金额
       - String ：data ： 上链数据
       - BigInteger ：nonce ： 交易唯一性标识
         - 调用platonGetTransactionCount，获取from地址作为参数，获取到该地址的已发送交易总数
-        - 每次使用该地址nonce +1 
+        - 每次使用该地址nonce +1
 
 * **返回值**
 
@@ -760,7 +690,7 @@ PlatonEstimateGas属性中的BigInteger即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Transaction transaction = new Transaction("from","to",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO,"data ",BigInteger.ONE);
-Request <?, PlatonEstimateGas> request = currentValidWeb3j.platonEstimateGas(transaction);
+Request <?, PlatonEstimateGas> request = platonWeb3j.platonEstimateGas(transaction);
 BigInteger req = request.send().getAmountUsed();
 ```
 
@@ -770,7 +700,7 @@ BigInteger req = request.send().getAmountUsed();
 
 * **参数**
     - String ： blockHash  区块hash
-    - boolean : 
+    - boolean :
       -  true ： 区块中带有完整的交易列表
       -  false： 区块中只带交易hash列表
 
@@ -788,7 +718,7 @@ PlatonBlock属性中的Block即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockHash  = "";
 
-Request <?, PlatonBlock> request = currentValidWeb3j.platonGetBlockByHash(blockHash,true);
+Request <?, PlatonBlock> request = platonWeb3j.platonGetBlockByHash(blockHash,true);
 Block req = request.send().getBlock();
 ```
 
@@ -797,12 +727,12 @@ Block req = request.send().getBlock();
 >  根据区块高度查询区块信息
 
 * **参数**
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       -  DefaultBlockParameterName.LATEST  最新块高(默认)
       -  DefaultBlockParameterName.EARLIEST 最低块高
       -  DefaultBlockParameterName.PENDING 未打包交易
       -  DefaultBlockParameter.valueOf(BigInteger blockNumber) 指定块高
-    - boolean : 
+    - boolean :
       -  true ： 区块中带有完整的交易列表
       -  false： 区块中只带交易hash列表
 
@@ -818,7 +748,7 @@ PlatonBlock属性中的Block即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonBlock> request = currentValidWeb3j.platonGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,true);
+Request <?, PlatonBlock> request = platonWeb3j.platonGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,true);
 Block req = request.send().getBlock();
 ```
 
@@ -843,7 +773,7 @@ PlatonTransaction属性中的Transaction即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockHash    = "";
-Request <?, PlatonTransaction> request = currentValidWeb3j.platonGetTransactionByHash(blockHash,BigInteger.ZERO);
+Request <?, PlatonTransaction> request = platonWeb3j.platonGetTransactionByHash(blockHash,BigInteger.ZERO);
 Optional<Transaction> req = request.send().getTransaction();
 ```
 
@@ -852,7 +782,7 @@ Optional<Transaction> req = request.send().getTransaction();
 >  根据区块高度查询区块中指定序号的交易
 
 * **参数**
-    - DefaultBlockParameter: 
+    - DefaultBlockParameter:
       -  DefaultBlockParameterName.LATEST  最新块高(默认)
       -  DefaultBlockParameterName.EARLIEST 最低块高
       -  DefaultBlockParameterName.PENDING 未打包交易
@@ -872,7 +802,7 @@ PlatonTransaction属性中的Transaction即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockHash    = "";
-Request <?, PlatonTransaction> request = currentValidWeb3j.platonGetTransactionByHash(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,BigInteger.ZERO);
+Request <?, PlatonTransaction> request = platonWeb3j.platonGetTransactionByHash(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,BigInteger.ZERO);
 Optional<Transaction> req = request.send().getTransaction();
 ```
 
@@ -896,17 +826,17 @@ PlatonGetTransactionReceipt属性中的Transaction即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockHash    = "";
-Request <?, PlatonGetTransactionReceipt> request = currentValidWeb3j.platonGetTransactionReceipt(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,BigInteger.ZERO);
+Request <?, PlatonGetTransactionReceipt> request = platonWeb3j.platonGetTransactionReceipt(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,BigInteger.ZERO);
 Optional<TransactionReceipt> req = request.send().getTransactionReceipt();
 ```
 
 ### platonNewFilter
 
->   创建一个过滤器，以便在客户端接收到匹配的whisper消息时进行通知 
+>   创建一个过滤器，以便在客户端接收到匹配的whisper消息时进行通知
 
 * **参数**
     - PlatonFilter:  PlatonFilter :
-      - SingleTopic : 
+      - SingleTopic :
 
 * **返回值**
 
@@ -920,15 +850,15 @@ PlatonFilter属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonFilter filter = new PlatonFilter();
+org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
 filter.addSingleTopic("");
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewFilter(filter);
+Request <?, PlatonFilter> request = platonWeb3j.platonNewFilter(filter);
 BigInteger req = request.send().getFilterId();
 ```
 
 ### platonNewBlockFilter
 
->   在节点中创建一个过滤器，以便当新块生成时进行通知。要检查状态是否变化 
+>   在节点中创建一个过滤器，以便当新块生成时进行通知。要检查状态是否变化
 
 * **参数**
 
@@ -946,13 +876,13 @@ PlatonFilter属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewBlockFilter();
+Request <?, PlatonFilter> request = platonWeb3j.platonNewBlockFilter();
 BigInteger req = request.send().getFilterId();
 ```
 
 ### platonNewPendingTransactionFilter
 
->    在节点中创建一个过滤器，以便当产生挂起交易时进行通知。 要检查状态是否发生变化 
+>    在节点中创建一个过滤器，以便当产生挂起交易时进行通知。 要检查状态是否发生变化
 
 * **参数**
 
@@ -970,13 +900,13 @@ PlatonFilter属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewPendingTransactionFilter();
+Request <?, PlatonFilter> request = platonWeb3j.platonNewPendingTransactionFilter();
 BigInteger req = request.send().getFilterId();
 ```
 
 ### platonNewPendingTransactionFilter
 
->  写在具有指定编号的过滤器。当不在需要监听时，总是需要执行该调用  
+>  写在具有指定编号的过滤器。当不在需要监听时，总是需要执行该调用
 
 * **参数**
 
@@ -994,16 +924,16 @@ PlatonFilter属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewPendingTransactionFilter();
+Request <?, PlatonFilter> request = platonWeb3j.platonNewPendingTransactionFilter();
 BigInteger req = request.send().getFilterId();
 ```
 
 ### platonUninstallFilter
 
->     写在具有指定编号的过滤器。当不在需要监听时，总是需要执行该调用 
+>     写在具有指定编号的过滤器。当不在需要监听时，总是需要执行该调用
 
 * **参数**
-	- BigInteger  : filterId :  过滤器编号 
+	- BigInteger  : filterId :  过滤器编号
 
 * **返回值**
 
@@ -1017,16 +947,16 @@ PlatonUninstallFilter属性中的boolean即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonUninstallFilter> request = currentValidWeb3j.platonNewPendingTransactionFilter(BigInteger.ZERO);
+Request <?, PlatonUninstallFilter> request = platonWeb3j.platonNewPendingTransactionFilter(BigInteger.ZERO);
 boolean req = request.send().isUninstalled();
 ```
 
 ### platonGetFilterChanges
 
->    轮询指定的过滤器，并返回自上次轮询之后新生成的日志数组 
+>    轮询指定的过滤器，并返回自上次轮询之后新生成的日志数组
 
 * **参数**
-	- BigInteger  : filterId :  过滤器编号 
+	- BigInteger  : filterId :  过滤器编号
 
 * **返回值**
 
@@ -1040,7 +970,7 @@ PlatonLog属性中的LogResult数组即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonLog> request = currentValidWeb3j.platonGetFilterChanges(BigInteger.ZERO);
+Request <?, PlatonLog> request = platonWeb3j.platonGetFilterChanges(BigInteger.ZERO);
 List<PlatonLog.LogResult> req = request.send().getLogs();
 ```
 
@@ -1049,7 +979,7 @@ List<PlatonLog.LogResult> req = request.send().getLogs();
 >     轮询指定的过滤器，并返回自上次轮询之后新生成的日志数组。
 
 * **参数**
-	- BigInteger  : filterId :  过滤器编号 
+	- BigInteger  : filterId :  过滤器编号
 
 * **返回值**
 
@@ -1063,17 +993,17 @@ PlatonLog属性中的LogResult数组即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonLog> request = currentValidWeb3j.platonGetFilterLogs(BigInteger.ZERO);
+Request <?, PlatonLog> request = platonWeb3j.platonGetFilterLogs(BigInteger.ZERO);
 List<PlatonLog.LogResult> req = request.send().getLogs();
 ```
 
 ### platonGetLogs
 
->    返回指定过滤器中的所有日志 
+>    返回指定过滤器中的所有日志
 
 * **参数**
     - PlatonFilter:  PlatonFilter :
-      - SingleTopic : 
+      - SingleTopic :
 
 * **返回值**
 
@@ -1087,9 +1017,9 @@ PlatonLog属性中的BigInteger即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonFilter filter = new PlatonFilter();
+org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
 filter.addSingleTopic("");
-Request <?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
+Request <?, PlatonLog> request = platonWeb3j.platonGetLogs(filter);
 List<LogResult> = request.send().getLogs();
 ```
 
@@ -1112,7 +1042,7 @@ PlatonPendingTransactions属性中的transactions即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, PlatonPendingTransactions> req = currentValidWeb3j.platonPendingTx();
+Request<?, PlatonPendingTransactions> req = platonWeb3j.platonPendingTx();
 EthPendingTransactions res = req.send();
 List<Transaction> transactions = res.getTransactions();
 ```
@@ -1122,9 +1052,9 @@ List<Transaction> transactions = res.getTransactions();
 >   在本地数据库中存入字符串。
 
 * **参数**
-    - String :  databaseName :   数据库名称 
-    - String : keyName :  键名 
-    - String : stringToStore :   要存入的字符串 
+    - String :  databaseName :   数据库名称
+    - String : keyName :  键名
+    - String : stringToStore :   要存入的字符串
 
 * **返回值**
 
@@ -1141,17 +1071,17 @@ Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
 String stringToStore;
-Request <?, DbPutString> request = currentValidWeb3j.dbPutString(databaseName,keyName,stringToStore);
+Request <?, DbPutString> request = platonWeb3j.dbPutString(databaseName,keyName,stringToStore);
 List<DbPutString> = request.send().valueStored();
 ```
 
 ### dbGetString
 
->    从本地数据库读取字符串 
+>    从本地数据库读取字符串
 
 * **参数**
-    - String :  databaseName :   数据库名称 
-    - String : keyName :  键名 
+    - String :  databaseName :   数据库名称
+    - String : keyName :  键名
 
 * **返回值**
 
@@ -1167,18 +1097,18 @@ DbGetString属性中的String即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
-Request <?, DbGetString> request = currentValidWeb3j.dbGetString(databaseName,keyName);
+Request <?, DbGetString> request = platonWeb3j.dbGetString(databaseName,keyName);
 String req  = request.send().getStoredValue();
 ```
 
 ### dbPutHex
 
->     将二进制数据写入本地数据库 
+>     将二进制数据写入本地数据库
 
 * **参数**
-    - String :  databaseName :   数据库名称 
-    - String : keyName :  键名 
-    - String : dataToStore :   要存入的二进制数据 
+    - String :  databaseName :   数据库名称
+    - String : keyName :  键名
+    - String : dataToStore :   要存入的二进制数据
 
 * **返回值**
 
@@ -1195,17 +1125,17 @@ Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
 String dataToStore;
-Request <?, DbPutHex> request = currentValidWeb3j.dbPutHex(databaseName,keyName,dataToStore);
+Request <?, DbPutHex> request = platonWeb3j.dbPutHex(databaseName,keyName,dataToStore);
 boolean req  = request.send().valueStored();
 ```
 
 ### dbGetHex
 
->     从本地数据库中读取二进制数据  
+>     从本地数据库中读取二进制数据
 
 * **参数**
-    - String :  databaseName :   数据库名称 
-    - String : keyName :  键名 
+    - String :  databaseName :   数据库名称
+    - String : keyName :  键名
 
 * **返回值**
 
@@ -1221,56 +1151,8 @@ DbGetHex属性中的String即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
-Request <?, DbGetHex> request = currentValidWeb3j.dbGetHex(databaseName,keyName);
+Request <?, DbGetHex> request = platonWeb3j.dbGetHex(databaseName,keyName);
 String req  = request.send().getStoredValue();
-```
-
-### txPoolStatus
-
->    返回交易池状态
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, TxPoolStatus>
-```
-
-TxPoolStatus属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, TxPoolStatus> request = platonWeb3j.txPoolStatus();
-TxPoolStatus txPoolStatus = request.send();
-```
-
-### txPoolContent
-
->    返回交易池内容
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, TxPoolContent>
-```
-
-TxPoolContent属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-JsonRpc2_0Admin platonWeb3j = new JsonRpc2_0Admin(new HttpService("http://127.0.0.1:6789"));
-Request <?, TxPoolContent> request = platonWeb3j.txPoolContent();
-TxPoolContent txPoolContent = request.send();
 ```
 
 ### platonEvidences
@@ -1303,7 +1185,7 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
     "blockNumber": 16013,       //区块number
     "blockIndex": 0,        //区块在一轮view中的索引值
     "blockData": "0xe1a507a57c1e9d8cade361fefa725d7a271869aea7fd923165c872e7c0c2b3f2",     //区块rlp编码值
-    "validateNode": {            
+    "validateNode": {
       "index": 0,     //验证人在一轮epoch中的索引值
       "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",    //验证人地址
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",    //验证人nodeID
@@ -1331,7 +1213,7 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
 
 * **duplicateVote**
 
-```text 
+```text
 {
   "voteA": {
     "epoch": 0,   //共识轮epoch值
@@ -1339,7 +1221,7 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
     "blockHash": "0x58b5976a471f86c4bd198984827bd594dce6ac861ef15bbbb1555e7b2edc2fc9",   //区块hash
     "blockNumber": 16013,   //区块number
     "blockIndex": 0,    //区块在一轮view中的索引值
-    "validateNode": { 
+    "validateNode": {
       "index": 0,    //验证人在一轮epoch中的索引值
       "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",  //验证人地址
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",   //验证人nodeID
@@ -1369,13 +1251,13 @@ result为证据字符串，包含3种证据类型，分别是：duplicatePrepare
 ```text
 {
   "viewA": {
-    "epoch": 0,  
-    "viewNumber": 0, 
+    "epoch": 0,
+    "viewNumber": 0,
     "blockHash": "0xb84a40bb954e579716e7a6b9021618f6b25cdb0e0dd3d8c2c0419fe835640f36",  //区块hash
-    "blockNumber": 16013, 
+    "blockNumber": 16013,
     "validateNode": {
-      "index": 0,  
-      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4", 
+      "index": 0,
+      "address": "0xc30671be006dcbfd6d36bdf0dfdf95c62c23fad4",
       "nodeId": "19f1c9aa5140bd1304a3260de640a521c33015da86b88cd2ecc83339b558a4d4afa4bd0555d3fa16ae43043aeb4fbd32c92b34de1af437811de51d966dc64365",
       "blsPubKey": "f93a2381b4cbb719a83d80a4feb93663c7aa026c99f64704d6cc464ae1239d3486d0cf6e0b257ac02d5dd3f5b4389907e9d1d5b434d784bfd7b89e0822148c7f5b8e1d90057a5bbf4a0abf88bbb12902b32c94ca390a2e16eea8132bf8c2ed8f"
     },
@@ -1413,7 +1295,7 @@ PlatonEvidences属性中的Evidences对象即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, PlatonEvidences> req = currentValidWeb3j.platonEvidences();
+Request<?, PlatonEvidences> req = platonWeb3j.platonEvidences();
 Evidences evidences = req.send().getEvidences();
 ```
 
@@ -1437,7 +1319,7 @@ AdminProgramVersion属性中的ProgramVersion对象即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, AdminProgramVersion> req = currentValidWeb3j.getProgramVersion();
+Request<?, AdminProgramVersion> req = platonWeb3j.getProgramVersion();
 ProgramVersion programVersion = req.send().getAdminProgramVersion();
 ```
 
@@ -1465,7 +1347,7 @@ AdminSchnorrNIZKProve属性中的String即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, AdminProgramVersion> req = currentValidWeb3j.getSchnorrNIZKProve();
+Request<?, AdminProgramVersion> req = platonWeb3j.getSchnorrNIZKProve();
 String res = req.send().getAdminSchnorrNIZKProve();
 ```
 
@@ -1489,14 +1371,13 @@ DebugEconomicConfig属性中的String即为对应存储数据
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, DebugEconomicConfig> req = currentValidWeb3j.getEconomicConfig();
+Request<?, DebugEconomicConfig> req = platonWeb3j.getEconomicConfig();
 String debugEconomicConfig = req.send().getEconomicConfigStr();
 ```
 
 ### getChainId
 
 >    获取链ID
-
 * **参数**
 
   无
@@ -1515,202 +1396,6 @@ PlatonChainId属性中的String即为对应存储数据
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Request<?, PlatonChainId> req = platonWeb3j.getChainId();
 BigInteger chainId = req.send().getChainId();
-```
-
-### adminNodeInfo
-
->  以协议粒度检索我们知道的有关主机节点的所有信息。
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, AdminNodeInfo>
-```
-
-AdminNodeInfo属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-AdminNodeInfo nodeInfo = platonWeb3j.adminNodeInfo().send();
-```
-
-### adminPeers
-
->  以协议粒度检索我们知道的关于每个单独 Peer 的所有信息
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, AdminPeers>
-```
-
-AdminPeers属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-AdminPeers adminPeers = platonWeb3j.adminPeers().send();
-```
-
-### adminStartRPC
-
->   启动 HTTP RPC API 服务器
-
-* **参数**
-
-    - String :  host : 要监听的网络地址 
-    - Integer : port : 要监听的网络端口 
-    - String : cors : 要使用的跨源资源共享头
-    - String : apis : 要透过该服务接口提供服务的API模块
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-WebSocketService webSocketService = new WebSocketService("ws://127.0.0.1:7790",false);
-webSocketService.connect();
-Web3j platonWeb3j = Web3j.build(webSocketService);
-BooleanResponse send = platonWeb3j.adminStartRPC("127.0.0.1", 6789, null, null).send();
-```
-
-### adminStartWS
-
->   启动 websocket RPC API 服务器
-
-* **参数**
-
-    - String :  host : 要监听的网络地址 
-    - Integer : port : 要监听的网络端口 
-    - String : cors : 要使用的跨源资源共享头
-    - String : apis : 要透过该服务接口提供服务的API模块
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = web3j.adminStartWS("127.0.0.1", 7789, null, null).send();
-```
-
-### adminStopRPC
-
->  关闭当前启动的HTTP RPC端结点
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-WebSocketService webSocketService = new WebSocketService("ws://127.0.0.1:7790",false);
-webSocketService.connect();
-Web3j platonWeb3j = Web3j.build(webSocketService);
-BooleanResponse send = platonWeb3j.adminStopRPC().send();
-```
-
-### adminStopWS
-
->  关闭当前启动的WebSocket RPC端结点
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-WebSocketService webSocketService = new WebSocketService("ws://127.0.0.1:7790",false);
-webSocketService.connect();
-Web3j platonWeb3j = Web3j.build(webSocketService);
-BooleanResponse send = platonWeb3j.adminStopWS().send();
-```
-
-### adminExportChain
-
->   将当前区块链导出到本地文件中
-
-* **参数**
-
-    - String :  file : 文件名 
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = platonWeb3j.adminExportChain("1").send();
-```
-
-### adminImportChain
-
->   从本地文件导入区块链
-
-* **参数**
-
-    - String :  file : 文件名 
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = platonWeb3j.adminImportChain("1").send();
 ```
 
 ### getWaitSlashingNodeList
@@ -1737,411 +1422,6 @@ Request<?, DebugWaitSlashingNodeList> req = platonWeb3j.getWaitSlashingNodeList(
 DebugWaitSlashingNodeList nodeList = req.send();
 ```
 
-### platonGetRawTransactionByHash
-
->    返回给定Hash的交易字节数
-
-* **参数**
-
-    - String :  hash : 交易hash 
-
-* **返回值**
-
-```java
-Request<?, PlatonRawTransaction>
-```
-
-PlatonRawTransaction属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonRawTransaction send = platonWeb3j.platonGetRawTransactionByHash("0x5b99...").send();
-```
-
-### platonGetRawTransactionByBlockHashAndIndex
-
->   返回给定区块哈希和索引的交易
-
-* **参数**
-
-    - String :  hash : 块hash 
-    - String :  index : 索引 
-
-* **返回值**
-
-```java
-Request<?, PlatonRawTransaction>
-```
-
-PlatonRawTransaction属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonRawTransaction send = platonWeb3j.platonGetRawTransactionByBlockHashAndIndex("0xa34...", "0x1").send();
-```
-
-### platonGetRawTransactionByBlockNumberAndIndex
-
->    返回给定区块号和索引的交易
-
-* **参数**
-
-    - String :  blockNumber : 块号
-    - String :  index : 索引 
-
-* **返回值**
-
-```java
-Request<?, PlatonRawTransaction>
-```
-
-PlatonRawTransaction属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonRawTransaction send = platonWeb3j.platonGetRawTransactionByBlockNumberAndIndex("0x1", "0x1").send();
-```
-
-### platonGetAddressHrp
-
->    获取链Hrp
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, PlatonGetAddressHrp>
-```
-
-PlatonGetAddressHrp属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-PlatonGetAddressHrp send = platonWeb3j.platonGetAddressHrp().send();
-```
-
-### platonSignTransaction
-
->    将使用 from 帐户签署给定的交易。节点需要有给定的发件人地址对应的账户私钥，并且需要解锁
-
-* **参数**
-
-      - Transaction :  transaction : 交易对象
-
-* **返回值**
-
-```java
-Request<?, PlatonSignTransaction>
-```
-
-PlatonSignTransaction属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Transaction transaction = new Transaction("lat1xxx",nonce,gasPrice,gasLimit,toAddress,value,data);
-PlatonSignTransaction send = platonWeb3j.platonSignTransaction(transaction).send();
-```
-
-### minerSetGasPrice
-
->    设置矿工可接受的最低gas price
-
-* **参数**
-
-      - String :  minGasPrice : 最低gas price
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse send = platonWeb3j.minerSetGasPrice("0x1").send();
-```
-
-### adminPeerEvents
-
->   创建一个 RPC 订阅，它从节点的 p2p服务器接收 peer 事件
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, AdminPeerEvents>
-```
-
-AdminPeerEvents属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-AdminPeerEvents send = web3j.adminPeerEvents().send();
-```
-
-### personalImportRawKey
-
->  将给定的十六进制编码密钥存储到密钥目录中，并使用密码对其进行加密
-
-* **参数**
-
-      - String :  keydata : 私钥
-      - String :  password : 密码
-
-* **返回值**
-
-```java
-Request<?, PersonalImportRawKey>
-```
-
-PersonalImportRawKey属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalImportRawKey key = admin.personalImportRawKey("03axxx", "000000").send();
-```
-
-### personalLockAccount
-
->   锁定与给定地址关联的帐户
-
-* **参数**
-
-      - String :  address : 账户地址
-
-* **返回值**
-
-```java
-Request<?, BooleanResponse>
-```
-
-BooleanResponse属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-BooleanResponse response = admin.personalLockAccount("lat1cxxx").send();
-```
-
-### personalSign
-
->    使用给定的账户对交易进行签名，账户需要存在于节点的账户库中
-
-* **参数**
-
-      - String :  message : 交易的16进制编码字符串
-      - String :  accountId : 账户地址
-      - String :  password : 账户地址密码
-
-* **返回值**
-
-```java
-Request<?, PersonalSign>
-```
-
-PersonalSign属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-RawTransaction transaction = RawTransaction.createTransaction(nonce,gasPrice,gasLimit,toAddress,value,data);
-byte[] encode = TransactionEncoder.encode(transaction);
-String hexSignedTransaction = Numeric.toHexString(encode);
-PersonalSign send = admin.personalSign(hexSignedTransaction, "lat1xxx","000000").send();
-```
-
-### personalSignAndSendTransaction
-
->    使用交易的from地址进行签名并发送交易，from账户需要存在于节点的账户库中
-
-* **参数**
-
-      - Transaction :  transaction : 交易对象
-      - String :  password : 账户地址密码
-
-* **返回值**
-
-```java
-Request<?, PersonalSign>
-```
-
-PersonalSign属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-Transaction transaction = new Transaction("lat1xxx",nonce,gasPrice,gasLimit,toAddress,value,data);
-PersonalSign send = admin.personalSignAndSendTransaction(transaction, "000000").send();
-```
-
-### personalSignTransaction
-
->    使用交易的from地址进行签名，from账户需要存在于节点的账户库中
-
-* **参数**
-
-      - Transaction :  transaction : 交易对象
-      - String :  password : from账户地址密码
-
-* **返回值**
-
-```java
-Request<?, PlatonSignTransaction>
-```
-
-PlatonSignTransaction属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-Transaction transaction = new Transaction("lat1xxx",nonce,gasPrice,gasLimit,toAddress,value,data);
-PlatonSignTransaction send = admin.personalSignTransaction(transaction,"000000").send();
-```
-
-### personalEcRecover
-
->   返回用于创建签名的帐户的地址
-
-* **参数**
-
-      - String :  message : 原始数据
-      - String :  signiture : 签名后的数据
-
-* **返回值**
-
-```java
-Request<?, PersonalEcRecover>
-```
-
-PersonalEcRecover属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalEcRecover send = admin.personalEcRecover("0xebxxx","0xa4f5xxx").send();
-```
-
-### personalListWallets
-
->   返回此节点管理的钱包列表
-
-* **参数**
-
-  无
-
-* **返回值**
-
-```java
-Request<?, PersonalListWallets>
-```
-
-PersonalListWallets属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalListWallets send = admin.personalListWallets().send();
-```
-
-### personalOpenWallet
-
->  启动硬件钱包打开程序，建立 USB 连接并尝试通过提供的密码进行身份验证。请注意，该方法可能会返回一个需要第二次打开的额外质询（例如，Trezor PIN 矩阵质询）
-
-* **参数**
-
-      - String :  url : 网址
-      - String :  passphrase : 密码
-
-* **返回值**
-
-```java
-Request<?, VoidResponse>
-```
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-VoidResponse send = admin.personalOpenWallet("http://localhost:8080", "000000").send();
-```
-
-### personalUnlockAccount
-
->  使用给定密码解锁与给定地址关联的帐户持续时间秒。默认 300 秒。如果帐户已解锁，它会返回一个指示
-
-* **参数**
-
-      - String :  address : 地址
-      - String :  passphrase : 密码
-
-* **返回值**
-
-```java
-Request<?, PersonalUnlockAccount>
-```
-
-PersonalUnlockAccount属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalUnlockAccount response = admin.personalUnlockAccount("lat1xxx", "111111").send();
-```
-
-### personalListAccounts
-
->  返回此节点管理的帐户的地址列表
-
-* **参数**
-
-    无
-
-* **返回值**
-
-```java
-Request<?, PersonalListAccounts>
-```
-
-PersonalListAccounts属性中的result即为对应存储数据
-
-* **示例**
-
-```java
-Admin admin = Admin.build(new HttpService("http://127.0.0.1:6789"));
-PersonalListAccounts send = admin.personalListAccounts().send();
-```
-
 ## 系统合约调用
 
 系统接口主要包含经济模型和治理相关的合约接口：
@@ -2165,9 +1445,9 @@ PersonalListAccounts send = admin.personalListAccounts().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract stakingContract = StakingContract.load(web3j, credentials);
+StakingContract stakingContract = StakingContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
@@ -2206,9 +1486,9 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("1000000", Convert.Unit.KPVON);
+BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
+String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
@@ -2274,7 +1554,7 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
   - String：webSite   节点的第三方主页(有长度限制，表示该节点的主页)
   - String：details   节点的描述(有长度限制，表示该节点的描述)
   - BigInteger：rewardPer   委托所得到的奖励分成比例，1=0.01%   10000=100%
-  
+
 * **返回值**
 
 ```java
@@ -2290,7 +1570,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
+String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
@@ -2335,7 +1615,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal addStakingAmount = Convert.toVon("4000000", Convert.Unit.KPVON);
+BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -2355,11 +1635,11 @@ TransactionResponse baseResponse = stakingContract.getTransactionResponse(platon
 CallResponse<Node> baseRespons
 ```
 
-- CallResponse<Node>描述
+- CallResponse&lt;Node&gt;描述
 	- int： code   结果标识，0为成功
 	- Node：data   Node对象数据
 	- String：errMsg   错误信息，失败时存在
-	
+
 * **Node**：保存当前节点质押信息的对象
 
   - String：benifitAddress	收益账户，用于接收出块奖励和质押奖励的收益账户。
@@ -2395,17 +1675,17 @@ CallResponse<Node> baseRespons
   - BigInteger：validatorTerm   验证人的任期
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
-  
+
   - BigInteger：delegateEpoch  节点最后一次被委托的结算周期
-  
+
   - BigInteger：delegateTotal  节点被委托的生效总数量
-  
+
   - BigInteger：delegateTotalHes  节点被委托的未生效总数量
-  
+
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
-  
+
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例，1=0.01%   10000=100%
-  
+
   - BigInteger：rewardPer 当前结算周期奖励分成比例，1=0.01%   10000=100%
 
 * **Java SDK合约使用**
@@ -2429,7 +1709,7 @@ CallResponse<Node> baseResponse = stakingContract.getStakingInfo(nodeId).send();
 CallResponse<BigInteger> baseResponse
 ```
 
-- CallResponse<BigInteger>描述
+- CallResponse&lt;BigInteger&gt;描述
 	- int：code   结果标识，0为成功
 	- BigInteger：reward   当前结算周期的区块奖励
 	- String：errMsg   错误信息，失败时存在
@@ -2454,7 +1734,7 @@ CallResponse<BigInteger> response = stakingContract.getPackageReward().send();
 CallResponse<BigInteger> baseResponse
 ```
 
-- CallResponse<List<Node>>描述
+- CallResponse&lt;List&lt;Node&gt;&gt;描述
 	- int：code   结果标识，0为成功
 	- BigInteger：reward   当前结算周期的质押奖励
 	- String：errMsg   错误信息，失败时存在
@@ -2479,7 +1759,7 @@ CallResponse<BigInteger> response = stakingContract.getStakingReward().send();
 CallResponse<BigInteger> baseResponse
 ```
 
-- CallResponse<BigInteger>描述
+- CallResponse&lt;BigInteger&gt;描述
 	- int：code   结果标识，0为成功
 	- BigInteger：data   打包区块的平均时间（单位为毫秒）
 	- String：errMsg   错误信息，失败时存在
@@ -2499,16 +1779,16 @@ CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-DelegateContract delegateContract = DelegateContract.load(web3j, credentials);
+DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
 
 ##### **delegate**
 
-> 发起委托，委托已质押节点，委托给某个节点增加节点权重来获取收入 
+> 发起委托，委托已质押节点，委托给某个节点增加节点权重来获取收入
 
 * **入参**
 
@@ -2532,7 +1812,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal amount = Convert.toVon("500000", Convert.Unit.KPVON);
+BigDecimal amount = Convert.toVon("500000", Unit.LAT);
 
 PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
@@ -2552,9 +1832,9 @@ TransactionResponse baseResponse = delegateContract.getTransactionResponse(plato
 CallResponse<List<DelegationIdInfo>> baseRespons
 ```
 
-- CallResponse<List<DelegationIdInfo>>描述
+- CallResponse&lt;List&lt;DelegationIdInfo&gt;&gt;描述
 	- int：code   结果标识，0为成功
-	- List<DelegationIdInfo>：data   DelegationIdInfo对象列表
+	- List&lt;DelegationIdInfo&gt;：data   DelegationIdInfo对象列表
 	- String：errMsg   错误信息，失败时存在
 
 * **DelegationIdInfo**：保存当前账户地址所委托的节点的NodeID和质押区块高度的对象
@@ -2584,7 +1864,7 @@ CallResponse<List<DelegationIdInfo>> baseResponse = delegateContract.getRelatedL
 CallResponse<Delegation>
 ```
 
-- CallResponse<Delegation>描述
+- CallResponse&lt;Delegation&gt;描述
 	- int：code   结果标识，0为成功
 	- Delegation：data   Delegation对象数据
 	- String：errMsg   错误信息，失败时存在
@@ -2604,7 +1884,7 @@ CallResponse<Delegation>
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String address = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat";
+String address = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 BigInteger stakingBlockNum = new BigInteger("10888");
 
 CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
@@ -2630,22 +1910,22 @@ TransactionResponse
 	- int：code   结果标识，0为成功
 	- String：errMsg   错误信息，失败时存在
 	- TransactionReceipt：transactionReceipt  交易的回执
-	
+
 * **解交易回执**
 
    - BigInteger：reward   获得解除委托时所提取的委托收益
 
 * **合约使用**
-  
+
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Convert.Unit.KPVON);
+BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
 BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 
-if(baseResponse.isStatusOk()){ 
+if(baseResponse.isStatusOk()){
     BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
 }
 ```
@@ -2659,16 +1939,16 @@ if(baseResponse.isStatusOk()){
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials);
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
 ```
 
 #### 接口说明
 
 ##### **withdrawDelegateReward**
 
-> 提取账户当前所有的可提取的委托奖励 
+> 提取账户当前所有的可提取的委托奖励
 
 * **入参**
 
@@ -2684,7 +1964,7 @@ TransactionResponse
 	- int：code   结果标识，0为成功
 	- String：errMsg   错误信息，失败时存在
 	- TransactionReceipt：transactionReceipt  交易的回执
-	
+
 * **解交易回执**
    - String：nodeId    节点ID
    - BigInteger：stakingNum  节点的质押块高
@@ -2706,7 +1986,7 @@ if(baseResponse.isStatusOk()){
 
 * **入参**
   - String：address   委托人的账户地址
-  - List<String>： nodeList  节点列表，如果为空查全部
+  - List&lt;String&gt;： nodeList  节点列表，如果为空查全部
 
 * **返回值**
 
@@ -2714,9 +1994,9 @@ if(baseResponse.isStatusOk()){
 CallResponse<List<Reward>> baseRespons
 ```
 
-- CallResponse<List<Reward>>描述
+- CallResponse&lt;List&lt;Reward&gt;&gt;描述
 	- int：code   结果标识，0为成功
-	- List<Reward>：data   Reward对象列表
+	- List&lt;Reward&gt;：data   Reward对象列表
 	- String：errMsg   错误信息，失败时存在
 
 * **Reward**：奖励明细
@@ -2741,9 +2021,9 @@ CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(deleg
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-NodeContract nodeContract = NodeContract.load(web3j, credentials);
+NodeContract nodeContract = NodeContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
@@ -2762,9 +2042,9 @@ NodeContract nodeContract = NodeContract.load(web3j, credentials);
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node>>描述
+- CallResponse&lt;List&lt;Node&gt;&gt;描述
 	- int：code   结果标识，0为成功
-	- List<Node>：data   nodeList对象数据
+	- List&lt;Node&gt;：data   nodeList对象数据
 	- String：errMsg   错误信息，失败时存在
 
 * **Node**：保存单个当前结算周期验证节点信息的对象
@@ -2779,13 +2059,13 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
 
-  - BigInteger：stakingTxIndex   发起质押时的交易索引 
+  - BigInteger：stakingTxIndex   发起质押时的交易索引
 
   - BigInteger：programVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
-  - BigInteger：stakingBlockNum    发起质押时的区块高度 
+  - BigInteger：stakingBlockNum    发起质押时的区块高度
 
-  - BigInteger：shares   当前候选人总共质押加被委托的VON数目  
+  - BigInteger：shares   当前候选人总共质押加被委托的VON数目
 
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥，节点图标是通过该公钥获取。
 
@@ -2793,12 +2073,12 @@ CallResponse<List<Node>> baseResponse
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
 
-  - String：details   节点的描述(有长度限制，表示该节点的描述) 
+  - String：details   节点的描述(有长度限制，表示该节点的描述)
 
   - BigInteger：validatorTerm   验证人的任期
-  
+
   - BigInteger：delegateTotal  节点被委托的生效总数量
-  
+
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
 
 * **Java SDK合约使用**
@@ -2820,9 +2100,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getVerifierList().send();
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node>>描述
+- CallResponse&lt;List&lt;Node&gt;&gt;描述
 	- int：code   结果标识，0为成功
-	- List<Node>：data   nodeList对象数据
+	- List&lt;Node&gt;：data   nodeList对象数据
 	- String：errMsg   错误信息，失败时存在
 
 * **Node**：保存单个当前共识周期验证节点信息的对象
@@ -2837,13 +2117,13 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
 
-  - BigInteger：stakingTxIndex   发起质押时的交易索引 
+  - BigInteger：stakingTxIndex   发起质押时的交易索引
 
   - BigInteger：programVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
-  - BigInteger：stakingBlockNum    发起质押时的区块高度 
+  - BigInteger：stakingBlockNum    发起质押时的区块高度
 
-  - BigInteger：shares   当前候选人总共质押加被委托的VON数目  
+  - BigInteger：shares   当前候选人总共质押加被委托的VON数目
 
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥，节点图标是通过该公钥获取。
 
@@ -2851,10 +2131,10 @@ CallResponse<List<Node>> baseResponse
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
 
-  - String：details   节点的描述(有长度限制，表示该节点的描述) 
+  - String：details   节点的描述(有长度限制，表示该节点的描述)
 
   - BigInteger：validatorTerm   验证人的任期
-  
+
   - BigInteger：delegateTotal  节点被委托的生效总数量
 
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
@@ -2883,9 +2163,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getValidatorList().send();
 CallResponse<List<Node>> baseResponse
 ```
 
-- CallResponse<List<Node>>描述
+- CallResponse&lt;List&lt;Node&gt;&gt;描述
 	- int：code   结果标识，0为成功
-	- List<Node>：data   nodeList对象数据
+	- List&lt;Node&gt;：data   nodeList对象数据
 	- String：errMsg   错误信息，失败时存在
 
 * **Node**：保存单个候选节点信息对象
@@ -2900,7 +2180,7 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger：nextRewardPer 下一个结算周期奖励分成比例
 
-  - BigInteger：stakingTxIndex   发起质押时的交易索引 
+  - BigInteger：stakingTxIndex   发起质押时的交易索引
 
   - BigInteger：programVersion  被质押节点的PlatON进程的真实版本号(获取版本号的接口由治理提供)
 
@@ -2908,9 +2188,9 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger：stakingEpoch   当前变更质押金额时的结算周期
 
-  - BigInteger：stakingBlockNum    发起质押时的区块高度 
+  - BigInteger：stakingBlockNum    发起质押时的区块高度
 
-  - BigInteger：shares   当前候选人总共质押加被委托的VON数目  
+  - BigInteger：shares   当前候选人总共质押加被委托的VON数目
 
   - BigInteger：released   发起质押账户的自由金额的锁定期质押的VON
 
@@ -2918,7 +2198,7 @@ CallResponse<List<Node>> baseResponse
 
   - BigInteger：restrictingPlan   发起质押账户的锁仓金额的锁定期质押的VON
 
-  - BigInteger：restrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的VON  
+  - BigInteger：restrictingPlanHes   发起质押账户的锁仓金额的犹豫期质押的VON
 
   - String：externalId   外部Id(有长度限制，给第三方拉取节点描述的Id)，目前为keybase账户公钥，节点图标是通过该公钥获取。
 
@@ -2926,12 +2206,12 @@ CallResponse<List<Node>> baseResponse
 
   - String：website   节点的第三方主页(有长度限制，表示该节点的主页)
 
-  - String：details   节点的描述(有长度限制，表示该节点的描述) 
+  - String：details   节点的描述(有长度限制，表示该节点的描述)
 
   - BigInteger：delegateEpoch  节点最后一次被委托的结算周期
-  
+
   - BigInteger：delegateTotal  节点被委托的生效总数量
-  
+
   - BigInteger：delegateTotalHes  节点被委托的未生效总数量
 
   - BigInteger：delegateRewardTotal  候选人当前发放的总委托奖励
@@ -2951,9 +2231,9 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
+ProposalContract proposalContract = ProposalContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
@@ -2982,7 +2262,7 @@ ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
   - String：module  参数模块
   - String：name  参数名称
   - String：newValue 参数新值
-  
+
 * **取消提案 Proposal.createSubmitCancelProposalParam()**
   - String：verifier 提交提案的验证人
   - String：pIDID  PIPID
@@ -3057,7 +2337,7 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
 CallResponse<Proposal>
 ```
 
-- CallResponse<Proposal>描述
+- CallResponse&lt;Proposal&gt;描述
 	- int：code   结果标识，0为成功
 	- Proposal：data   Proposal对象数据
 	- String：errMsg   错误信息，失败时存在
@@ -3096,7 +2376,7 @@ CallResponse<Proposal> baseResponse = proposalContract.getProposal(proposalID).s
 CallResponse<TallyResult>
 ```
 
-- CallResponse<TallyResult>描述
+- CallResponse&lt;TallyResult&gt;描述
   - int：code   结果标识，0为成功
   - TallyResult：data   TallyResult对象数据
   - String：errMsg   错误信息，失败时存在
@@ -3107,8 +2387,8 @@ CallResponse<TallyResult>
   - BigInteger:   nays   反对票票数
   - BigInteger:   abstentions   弃权票票数
   - BigInteger:   accuVerifiers   在整个投票期内有投票资格的验证人总数
-  - int:   status   提案状态  
-  
+  - int:   status   提案状态
+
 * **status**
   - 1  投票中
   - 2  投票通过
@@ -3139,9 +2419,9 @@ CallResponse<TallyResult> baseResponse = proposalContract.getTallyResult(proposa
 CallResponse<List<Proposal>>
 ```
 
-- CallResponse<List<Proposal>>描述
+- CallResponse&lt;List&lt;Proposal&gt;&gt;描述
 	- int：code   结果标识，0为成功
-	- List<Proposal>：data   ProposalList对象数据
+	- List&lt;Proposal&gt;：data   ProposalList对象数据
 	- String：errMsg   错误信息，失败时存在
 
 * **Proposal**：保存单个提案的对象
@@ -3206,7 +2486,7 @@ TransactionResponse baseResponse = proposalContract.getTransactionResponse(plato
 CallResponse
 ```
 
-- CallResponse<BigInteger>： 通用应答包
+- CallResponse&lt;BigInteger&gt;： 通用应答包
 	- int：code   结果标识，0为成功
 	- BigInteger：data   版本信息
 	- String：errMsg   错误信息，失败时存在
@@ -3227,9 +2507,9 @@ ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "103";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-SlashContract contract = SlashContract.load(web3j, credentials);
+SlashContract contract = SlashContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
@@ -3271,7 +2551,7 @@ TransactionResponse baseResponse = slashContract.getTransactionResponse(platonSe
 
   - DuplicateSignType：DuplicateSignType   枚举，代表双签类型：prepareBlock，EprepareVote，viewChange
   - String：address   举报的节点地址
-  - BigInteger：blockNumber   多签的块高 
+  - BigInteger：blockNumber   多签的块高
 
 * **返回值**
 
@@ -3287,21 +2567,21 @@ CallResponse
 * **合约使用**
 
 ```java
-CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq560vrat", BigInteger.valueOf(500L)).send();
+CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignType.PREPARE_BLOCK, "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt", BigInteger.valueOf(500L)).send();
 ```
 
 ###  锁仓相关接口
 
-> PlatON举报惩罚相关的合约接口
+> PlatON锁仓相关接口
 
 #### 加载锁仓合约
 
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-
+String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials);
+RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
 ```
 
 #### 接口说明
@@ -3313,7 +2593,7 @@ RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentia
 * **入参**
 
   - String：address   锁仓释放到账账户
-  - List<RestrictingPlan>：plan   锁仓计划列表（数组）
+  - List&lt;RestrictingPlan&gt;：plan   锁仓计划列表（数组）
     - epoch：锁仓的周期，表示结算周期的倍数
     - amount：表示目标区块上待释放的金额。
 
@@ -3353,7 +2633,7 @@ TransactionResponse baseResponse = restrictingPlanContract.getTransactionRespons
 CallResponse<RestrictingItem> baseResponse
 ```
 
-- CallResponse<RestrictingItem>描述
+- CallResponse&lt;RestrictingItem&gt;描述
 	- int：code   结果标识，0为成功
 	- RestrictingItem：Data   RestrictingItem对象数据
 	- String：errMsg   错误信息，失败时存在
@@ -3362,7 +2642,7 @@ CallResponse<RestrictingItem> baseResponse
   - BigInteger：balance    锁仓余额
   - BigInteger：pledge   质押/抵押金额
   - BigInteger：debt   欠释放金额
-  - List<RestrictingInfo>：info   锁仓分录信息
+  - List&lt;RestrictingInfo&gt;：info   锁仓分录信息
 * **RestrictingInfo**：保存单个锁仓分录信息的对象
   - BigInteger：blockNumber    释放区块高度
   - BigInteger：amount   释放金额
@@ -3388,7 +2668,7 @@ $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 `bin`，输出包含十六进制编码的solidity二进制文件以提供交易请求。
 `abi`，输出一个solidity的应用程序二进制接口（`ABI`）文件，它详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成solidity智能合约对应的Java包装类。
 
-* 使用`platon-truffle`编译solidity源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.2/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.2/))：
+* 使用`platon-truffle`编译solidity源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v1.0.0/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v1.0.0/))：
 
 > **step1.** 使用platon-truffle初始化项目
 
@@ -3469,7 +2749,7 @@ Warning: This is a pre-release compiler version, please do not use it in product
 
 Java SDK支持从`abi`文件中自动生成Solidity智能合约对应的Java包装类。
 
-* 通过命令行工具生成Java包装类（[web3j下载](http://download.alaya.network/alaya/sdk/0.13.2/platon-web3j-0.13.2.1.zip)）：
+* 通过命令行工具生成Java包装类（[platon-web3j下载](https://download.platon.network/platon/sdk/1.1.0/platon-web3j-1.1.0.0.zip)）：
 
 ```shell
 $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
@@ -3479,10 +2759,10 @@ $ platon-web3j solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-c
 
 ```java
 // 通过maven或gradle导入console模块
-compile "com.platon.client:console:{version}"
+compile "com.platon.sdk:console:{version}"
 
 String args[] = {"generate", "/path/to/<smart-contract>.bin", "/path/to/<smart-contract>.abi", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-SolidityFunctionWrapperGenerator.run(args);
+org.web3j.codegen.SolidityFunctionWrapperGenerator.run(args);
 ```
 
 其中`bin`和`abi`文件是编译solidity源代码以后生成的。
@@ -3499,30 +2779,30 @@ Solidity智能合约对应的Java包装类支持的主要功能：
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider
+        <web3j>, <transactionManager>, contractGasProvider, chainId
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider
+        <web3j>, <Credentials>, contractGasProvider, chainId
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
 这个方法将在区块链上部署智能合约。部署成功以后，它将会返回一个智能合约的包装类实例，包含智能合约的地址。
 
-如果你的智能合约在构造上接受LAT转账，则需要初始化参数值<initialValue>。
+如果你的智能合约在构造上接受LAT转账，则需要初始化参数值&lt;initialValue&gt;。
 
 通过智能合约的地址也可以创建智能合约对应的Java包装类的实例：
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider);
+        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
 ```
 
 #### 智能合约有效性
@@ -3539,7 +2819,7 @@ Java SDK提供了一个交易管理器`TransactionManager`来控制你连接到P
 `RawTransactionManager`需要指定链ID。防止一个链的交易被重新广播到另一个链上：
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
 ```
 
 除了`RawTransactionManager`之外，Java SDK还提供了一个客户端交易管理器`ClientTransactionManager`，它将你的交易签名工作交给你正在连接的PlatON客户端。
@@ -3593,7 +2873,7 @@ Type result = contract.someMethod(<param1>, ...).send();
 CDT安装成功以后，可通过如下命令编译Wasm合约源代码：
 
 ```shell
-$ platon-cpp <contract>.cpp 
+$ platon-cpp <contract>.cpp
 ```
 
 编译成功以后，会生成`<contract>.wasm`和`<contract>.abi.json`文件
@@ -3601,7 +2881,7 @@ $ platon-cpp <contract>.cpp
 `wasm`，输出Wasm合约的二进制文件以提供交易请求。
 `abi.json`，详细描述了所有可公开访问的合约方法及其相关参数。`abi`文件也用于生成Wasm智能合约对应的Java包装类。
 
-* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v0.13.2/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v0.13.2/))
+* 使用`platon-truffle`编译Wasm合约源代码([platon-truffle开发工具安装参考](https://platon-truffle.readthedocs.io/en/v1.0.0/getting-started/installation.html#)|[platon-truffle开发工具使用手册](https://platon-truffle.readthedocs.io/en/v1.0.0/))
 
 ### Wasm智能合约Java包装类
 
@@ -3617,7 +2897,7 @@ $ platon-web3j wasm generate /path/to/<smart-contract>.wasm /path/to/<smart-cont
 
 ```java
 String args[] = {"generate", "/path/to/<smart-contract>.wasm", "/path/to/<smart-contract>.abi.json", "-o", "/path/to/src/main/java", "-p" , "com.your.organisation.name"};
-WasmFunctionWrapperGenerator.run(args);
+org.web3j.codegen.WasmFunctionWrapperGenerator.run(args);
 ```
 
 其中`wasm`和`abi.json`文件是编译wasm源代码以后生成的。
@@ -3634,30 +2914,30 @@ Wasm智能合约对应的Java包装类支持的主要功能：
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider,
+        <web3j>, <transactionManager>, contractGasProvider, chainId,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, 
+        <web3j>, <Credentials>, contractGasProvider, chainId,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
 这个方法将在区块链上部署智能合约。部署成功以后，它将会返回一个智能合约的包装类实例，包含智能合约的地址。
 
-如果你的智能合约在构造上接受LAT转账，则需要初始化参数值<initialValue>。
+如果你的智能合约在构造上接受LAT转账，则需要初始化参数值&lt;initialValue&gt;。
 
 通过智能合约的地址也可以创建智能合约对应的Java包装类的实例：
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider);
+        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
 ```
 
 #### 智能合约有效性
