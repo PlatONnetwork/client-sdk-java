@@ -11,10 +11,7 @@ import com.platon.contracts.ppos.dto.TransactionResponse;
 import com.platon.contracts.ppos.dto.common.FunctionType;
 import com.platon.contracts.ppos.dto.enums.DelegateAmountType;
 import com.platon.contracts.ppos.dto.enums.StakingAmountType;
-import com.platon.contracts.ppos.dto.resp.Delegation;
-import com.platon.contracts.ppos.dto.resp.DelegationIdInfo;
-import com.platon.contracts.ppos.dto.resp.RedeemDelegation;
-import com.platon.contracts.ppos.dto.resp.UnDelegation;
+import com.platon.contracts.ppos.dto.resp.*;
 import com.platon.contracts.ppos.exception.EstimateGasException;
 import com.platon.contracts.ppos.exception.NoSupportFunctionType;
 import com.platon.crypto.Credentials;
@@ -448,5 +445,17 @@ public class DelegateContract extends BaseContract {
         Function function = new Function(FunctionType.GET_DELEGATELIST_BYADDR_FUNC_TYPE,
                 Arrays.asList(new BytesType(Bech32.addressDecode(address))));
         return executeRemoteCallListValueReturn(function, DelegationIdInfo.class);
+    }
+
+    /**
+     * 查询账户处于锁定期与解锁期的委托信息
+     *
+     * @param delAddr         委托人账户地址
+     * @return
+     */
+    public RemoteCall<CallResponse<DelegationLockInfo>> getDelegationLockInfo(String delAddr) {
+        Function function = new Function(FunctionType.GET_DELEGATIONLOCKINFO_FUNC_TYPE,
+                Arrays.asList(new BytesType(Bech32.addressDecode(delAddr))));
+        return executeRemoteCallObjectValueReturn(function, DelegationLockInfo.class);
     }
 }

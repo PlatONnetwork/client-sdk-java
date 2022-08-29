@@ -55,6 +55,10 @@ public class FunctionType {
      */
     public static final int GET_STAKINGINFO_FUNC_TYPE = 1105;
     /**
+     * 查询账户处于锁定期与解锁期的委托信息
+     */
+    public static final int GET_DELEGATIONLOCKINFO_FUNC_TYPE = 1106;
+    /**
      * 查询当前结算周期的区块奖励
      */
     public static final int GET_PACKAGEREWARD_FUNC_TYPE = 1200;

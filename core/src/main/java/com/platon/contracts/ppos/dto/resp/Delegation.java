@@ -191,6 +191,8 @@ public class Delegation {
                 ", delegateLocked=" + delegateLocked +
                 ", delegateLockedHes=" + delegateLockedHes +
                 ", cumulativeIncome=" + cumulativeIncome +
+                ", lockHes=" + lockHes +
+                ", lockRestrictingHes=" + lockRestrictingHes +
                 '}';
     }
 }
