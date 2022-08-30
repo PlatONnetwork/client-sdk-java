@@ -1916,10 +1916,10 @@ TransactionResponse
 * **解交易回执**
 
   - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
-  - Optional<BigInteger>：released 撤销的委托金退回用户余额
-  - Optional<BigInteger>：restrictingPlan 撤销的委托金退回用户锁仓账户
-  - Optional<BigInteger>：lockReleased 撤销的委托金转到锁定期,来自余额
-  - Optional<BigInteger>：lockRestrictingPlan 撤销的委托金转到锁定期,来自锁仓账户
+  - Optional&lt;BigInteger&gt;：released 撤销的委托金退回用户余额
+  - Optional&lt;BigInteger&gt;：restrictingPlan 撤销的委托金退回用户锁仓账户
+  - Optional&lt;BigInteger&gt;：lockReleased 撤销的委托金转到锁定期,来自余额
+  - Optional&lt;BigInteger&gt;：lockRestrictingPlan 撤销的委托金转到锁定期,来自锁仓账户
 
 * **Java SDK合约使用**
 

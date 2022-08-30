@@ -1916,10 +1916,10 @@ TransactionResponse
 * **Decode transaction receipt**
 
   - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
-  - Optional<BigInteger>：released The revoked commission money will be returned to the user's balance
-  - Optional<BigInteger>：restrictingPlan The revoked commission money will be returned to the user's lock-up account
-  - Optional<BigInteger>：lockReleased The revoked commission money is transferred to the lock-up period, from the balance
-  - Optional<BigInteger>：lockRestrictingPlan The revoked commission money is transferred to the lock-up period, from the lock-up account
+  - Optional&lt;BigInteger&gt;：released The revoked commission money will be returned to the user's balance
+  - Optional&lt;BigInteger&gt;：restrictingPlan The revoked commission money will be returned to the user's lock-up account
+  - Optional&lt;BigInteger&gt;：lockReleased The revoked commission money is transferred to the lock-up period, from the balance
+  - Optional&lt;BigInteger&gt;：lockRestrictingPlan The revoked commission money is transferred to the lock-up period, from the lock-up account
 
 - **Contract use**
 
