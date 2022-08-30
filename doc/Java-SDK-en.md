@@ -1447,9 +1447,8 @@ For the introduction and use of the above system contract, please refer to the f
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "210425";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract stakingContract = StakingContract.load(web3j, credentials, chainId);
+StakingContract stakingContract = StakingContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2853,13 +2852,13 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, chainId
+        <web3j>, <transactionManager>, contractGasProvider
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, chainId
+        <web3j>, <Credentials>, contractGasProvider
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2871,12 +2870,12 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
+        "<bech32Address>", web3j, credentials, contractGasProvider);
 ```
 
 #### Smart Contract Validity
@@ -2988,13 +2987,13 @@ The construction and deployment of smart contracts use the deploy method in the 
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, chainId,
+        <web3j>, <transactionManager>, contractGasProvider,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, chainId,
+        <web3j>, <Credentials>, contractGasProvider,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -3006,12 +3005,12 @@ You can also create an instance of the Java wrapper class corresponding to the s
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
+        "<bech32Address>", web3j, credentials, contractGasProvider);
 ```
 
 #### Smart Contract Validity

@@ -1447,9 +1447,8 @@ DebugWaitSlashingNodeList nodeList = req.send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "210425";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract stakingContract = StakingContract.load(web3j, credentials, chainId);
+StakingContract stakingContract = StakingContract.load(web3j, credentials);
 ```
 
 #### 接口说明
@@ -2853,13 +2852,13 @@ Solidity智能合约对应的Java包装类支持的主要功能：
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, chainId
+        <web3j>, <transactionManager>, contractGasProvider
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, chainId
+        <web3j>, <Credentials>, contractGasProvider
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -2871,12 +2870,12 @@ YourSmartContract contract = YourSmartContract.deploy(
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider, chainId);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider, chainId);
+        "<bech32Address>", web3j, credentials, contractGasProvider);
 ```
 
 #### 智能合约有效性
@@ -2988,13 +2987,13 @@ Wasm智能合约对应的Java包装类支持的主要功能：
 
 ```java
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <transactionManager>, contractGasProvider, chainId,
+        <web3j>, <transactionManager>, contractGasProvider,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 
 or
 
 YourSmartContract contract = YourSmartContract.deploy(
-        <web3j>, <Credentials>, contractGasProvider, chainId,
+        <web3j>, <Credentials>, contractGasProvider,
         [<initialValue>,] <param1>, ..., <paramN>).send();
 ```
 
@@ -3006,12 +3005,12 @@ YourSmartContract contract = YourSmartContract.deploy(
 
 ```java
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, transactionManager, contractGasProvider,chainId);
+        "<bech32Address>", web3j, transactionManager, contractGasProvider);
 
 or
 
 YourSmartContract contract = YourSmartContract.load(
-        "<bech32Address>", web3j, credentials, contractGasProvider,chainId);
+        "<bech32Address>", web3j, credentials, contractGasProvider);
 ```
 
 #### 智能合约有效性
