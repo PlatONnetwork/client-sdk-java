@@ -11,6 +11,7 @@ Depending on the build tool, use the following methods to add related dependenci
 
 - Use requirements above jdk1.8.
 
+
 ### maven
 
 > Project configuration:
@@ -20,17 +21,17 @@ Depending on the build tool, use the following methods to add related dependenci
 	<url>https://sdk.platon.network/nexus/content/groups/public/</url>
 </repository>
 ```
-NOTE： the latest version is 1.1.0.0
+NOTE： the latest version is 1.3.0.0
 
 > maven reference:
 ```xml
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0.0</version>
+    <version>1.3.0.0</version>
 </dependency>
 ```
-NOTE： the latest version is 1.1.0.0
+NOTE： the latest version is 1.3.0.0
 
 
 ### gradle
@@ -44,7 +45,7 @@ repositories {
 
 > gradle way of reference:
 ```
-compile "com.platon.sdk:core:1.1.0.0"
+compile "com.platon.sdk:core:1.3.0.0"
 ```
 
 ## Basic API Usage
@@ -154,8 +155,8 @@ The string in the Web3ClientVersion property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, Web3ClientVersion> request = currentValidWeb3j.web3ClientVersion();
-String version = request.send(). GetWeb3ClientVersion();
+Request <?, Web3ClientVersion> request = platonWeb3j.web3ClientVersion();
+String version = request.send().getWeb3ClientVersion();
 ```
 
 ### web3Sha3
@@ -179,8 +180,8 @@ The string in the Web3Sha3 attribute is the corresponding stored data
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String date = "";
-Request <?, Web3Sha3> request = currentValidWeb3j.web3Sha3(date);
-String resDate = request.send().getWeb3ClientVersion();
+Request <?, Web3Sha3> request = platonWeb3j.web3Sha3(date);
+String resDate = request.send().getResult();
 ```
 
 ### netVersion
@@ -203,7 +204,7 @@ The string in the NetVersion attribute is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, NetVersion> request = currentValidWeb3j.netVersion();
+Request <?, NetVersion> request = platonWeb3j.netVersion();
 String version = request.send().getNetVersion();
 ```
 
@@ -227,7 +228,7 @@ The boolean in the NetListening property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, NetListening> request = currentValidWeb3j.netListening();
+Request <?, NetListening> request = platonWeb3j.netListening();
 boolean req = request.send().isListening();
 ```
 
@@ -251,7 +252,7 @@ The BigInteger in the NetPeerCount property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, NetPeerCount> request = currentValidWeb3j.netPeerCount();
+Request <?, NetPeerCount> request = platonWeb3j.netPeerCount();
 BigInteger req = request.send().getQuantity();
 ```
 
@@ -275,7 +276,7 @@ The String in the PlatonProtocolVersion property is the corresponding stored dat
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonProtocolVersion> request = currentValidWeb3j.platonProtocolVersion();
+Request <?, PlatonProtocolVersion> request = platonWeb3j.platonProtocolVersion();
 String req = request.send().getProtocolVersion();
 ```
 
@@ -299,7 +300,7 @@ The String in the PlatonSyncing property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonSyncing> request = currentValidWeb3j.platonSyncing();
+Request <?, PlatonSyncing> request = platonWeb3j.platonSyncing();
 boolean req = request.send().isSyncing();
 ```
 
@@ -323,7 +324,7 @@ The BigInteger in the PlatonGasPrice property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonGasPrice> request = currentValidWeb3j.platonGasPrice();
+Request <?, PlatonGasPrice> request = platonWeb3j.platonGasPrice();
 BigInteger req = request.send().getGasPrice();
 ```
 
@@ -347,7 +348,7 @@ The String array in the PlatonAccounts property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonAccounts> request = currentValidWeb3j.platonAccounts();
+Request <?, PlatonAccounts> request = platonWeb3j.platonAccounts();
 List<String> req = request.send().getAccounts();
 ```
 
@@ -371,7 +372,7 @@ The BigInteger in the PlatonBlockNumber property is the corresponding stored dat
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonBlockNumber> request = currentValidWeb3j.platonBlockNumber();
+Request <?, PlatonBlockNumber> request = platonWeb3j.platonBlockNumber();
 BigInteger req = request.send().getBlockNumber();
 ```
 
@@ -483,8 +484,8 @@ The BigInteger in the PlatonGetTransactionCount property is the corresponding st
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
-Request<?, PlatonGetTransactionCount> request = currentValidWeb3j.platonGetTransactionCount(address, DefaultBlockParameterName.LATEST);
-BigInteger req = request.send(). GetTransactionCount();
+Request <?, PlatonGetTransactionCount> request = platonWeb3j.platonGetTransactionCount(address,DefaultBlockParameterName.LATEST);
+BigInteger req = request.send().getTransactionCount();
 ```
 
 ### platonGetBlockTransactionCountByNumber
@@ -510,7 +511,7 @@ The BigInteger in the PlatonGetBlockTransactionCountByNumber property is the cor
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonGetBlockTransactionCountByNumber> request = currentValidWeb3j.platonGetBlockTransactionCountByNumber(DefaultBlockParameterName.LATEST);
+Request <?, PlatonGetBlockTransactionCountByNumber> request = platonWeb3j.platonGetBlockTransactionCountByNumber(DefaultBlockParameterName.LATEST);
 BigInteger req = request.send().getTransactionCount();
 ```
 
@@ -540,7 +541,7 @@ The String in the PlatonGetCode property is the corresponding stored data
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
-Request <?, PlatonGetCode> request = currentValidWeb3j.platonGetCode(address,DefaultBlockParameterName.LATEST);
+Request <?, PlatonGetCode> request = platonWeb3j.platonGetCode(address,DefaultBlockParameterName.LATEST);
 String req = request.send().getCode();
 ```
 
@@ -566,7 +567,7 @@ The String in the PlatonSign property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String address = "";
 String sha3HashOfDataToSign   = "";
-Request <?, PlatonSign> request = currentValidWeb3j.platonSign(address,DefaultBlockParameterName.LATEST);
+Request <?, PlatonSign> request = platonWeb3j.platonSign(address,DefaultBlockParameterName.LATEST);
 String req = request.send().getSignature();
 ```
 
@@ -601,7 +602,7 @@ The String in the PlatonSendTransaction property is the corresponding stored dat
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Transaction transaction = new Transaction("from","to",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO,"data ",BigInteger.ONE);
-Request <?, PlatonSendTransaction> request = currentValidWeb3j.platonSendTransaction(transaction);
+Request <?, PlatonSendTransaction> request = platonWeb3j.platonSendTransaction(transaction);
 String req = request.send().getTransactionHash();
 ```
 
@@ -625,7 +626,7 @@ The String in the PlatonSendTransaction property is the corresponding stored dat
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String  data = "";
-Request <?, PlatonSendTransaction> request = currentValidWeb3j.platonSendRawTransaction(data);
+Request <?, PlatonSendTransaction> request = platonWeb3j.platonSendRawTransaction(data);
 String req = request.send().getTransactionHash();
 ```
 
@@ -658,7 +659,7 @@ The String in the PlatonCall property is the corresponding stored data
 ```javas
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Transaction transaction = new Transaction("from","to",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO,"data ",BigInteger.ONE);
-Request <?, PlatonSendTransaction> request = currentValidWeb3j.platonCall(transaction);
+Request <?, PlatonSendTransaction> request = platonWeb3j.platonCall(transaction);
 String req = request.send().getValue();
 ```
 
@@ -691,7 +692,7 @@ The BigInteger in the PlatonEstimateGas property is the corresponding stored dat
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 Transaction transaction = new Transaction("from","to",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO,"data ",BigInteger.ONE);
-Request <?, PlatonEstimateGas> request = currentValidWeb3j.platonEstimateGas(transaction);
+Request <?, PlatonEstimateGas> request = platonWeb3j.platonEstimateGas(transaction);
 BigInteger req = request.send().getAmountUsed();
 ```
 
@@ -719,7 +720,7 @@ The block in the PlatonBlock property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockHash  = "";
 
-Request <?, PlatonBlock> request = currentValidWeb3j.platonGetBlockByHash(blockHash,true);
+Request <?, PlatonBlock> request = platonWeb3j.platonGetBlockByHash(blockHash,true);
 Block req = request.send().getBlock();
 ```
 
@@ -749,7 +750,7 @@ The block in the PlatonBlock property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonBlock> request = currentValidWeb3j.platonGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,true);
+Request <?, PlatonBlock> request = platonWeb3j.platonGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,true);
 Block req = request.send().getBlock();
 ```
 
@@ -774,7 +775,7 @@ The transaction in the PlatonTransaction property is the corresponding stored da
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockHash    = "";
-Request <?, PlatonTransaction> request = currentValidWeb3j.platonGetTransactionByHash(blockHash,BigInteger.ZERO);
+Request <?, PlatonTransaction> request = platonWeb3j.platonGetTransactionByHash(blockHash,BigInteger.ZERO);
 Optional<Transaction> req = request.send().getTransaction();
 ```
 
@@ -802,9 +803,9 @@ The transaction in the PlatonTransaction property is the corresponding stored da
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-String blockHash = "";
-Request<?, PlatonTransaction> request = currentValidWeb3j.platonGetTransactionByHash(DefaultBlockParameter.valueOf(BigInteger.ZERO), BigInteger.ZERO);
-Optional<Transaction> req = request.send(). GetTransaction();
+String blockHash    = "";
+Request <?, PlatonTransaction> request = platonWeb3j.platonGetTransactionByHash(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,BigInteger.ZERO);
+Optional<Transaction> req = request.send().getTransaction();
 ```
 
 ### platonGetTransactionReceipt
@@ -826,9 +827,9 @@ The transaction in the PlatonGetTransactionReceipt property is the corresponding
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-String blockHash = "";
-Request<?, PlatonGetTransactionReceipt> request = currentValidWeb3j.platonGetTransactionReceipt(DefaultBlockParameter.valueOf(BigInteger.ZERO), BigInteger.ZERO);
-Optional<TransactionReceipt> req = request.send(). GetTransactionReceipt();
+String blockHash    = "";
+Request <?, PlatonGetTransactionReceipt> request = platonWeb3j.platonGetTransactionReceipt(DefaultBlockParameter.valueOf(BigInteger.ZERO) ,BigInteger.ZERO);
+Optional<TransactionReceipt> req = request.send().getTransactionReceipt();
 ```
 
 ### platonNewFilter
@@ -853,7 +854,7 @@ The BigInteger in the PlatonFilter property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
 filter.addSingleTopic("");
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewFilter(filter);
+Request <?, PlatonFilter> request = platonWeb3j.platonNewFilter(filter);
 BigInteger req = request.send().getFilterId();
 ```
 
@@ -877,7 +878,7 @@ The BigInteger in the PlatonFilter property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewBlockFilter();
+Request <?, PlatonFilter> request = platonWeb3j.platonNewBlockFilter();
 BigInteger req = request.send().getFilterId();
 ```
 
@@ -901,7 +902,7 @@ The BigInteger in the PlatonFilter property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewPendingTransactionFilter();
+Request <?, PlatonFilter> request = platonWeb3j.platonNewPendingTransactionFilter();
 BigInteger req = request.send().getFilterId();
 ```
 
@@ -925,7 +926,7 @@ The BigInteger in the PlatonFilter property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonFilter> request = currentValidWeb3j.platonNewPendingTransactionFilter();
+Request <?, PlatonFilter> request = platonWeb3j.platonNewPendingTransactionFilter();
 BigInteger req = request.send().getFilterId();
 ```
 
@@ -948,7 +949,7 @@ The boolean in the PlatonUninstallFilter attribute is the corresponding stored d
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonUninstallFilter> request = currentValidWeb3j.platonNewPendingTransactionFilter(BigInteger.ZERO);
+Request <?, PlatonUninstallFilter> request = platonWeb3j.platonNewPendingTransactionFilter(BigInteger.ZERO);
 boolean req = request.send().isUninstalled();
 ```
 
@@ -971,7 +972,7 @@ The LogResult array in the PlatonLog property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonLog> request = currentValidWeb3j.platonGetFilterChanges(BigInteger.ZERO);
+Request <?, PlatonLog> request = platonWeb3j.platonGetFilterChanges(BigInteger.ZERO);
 List<PlatonLog.LogResult> req = request.send().getLogs();
 ```
 
@@ -994,7 +995,7 @@ The LogResult array in the PlatonLog property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request <?, PlatonLog> request = currentValidWeb3j.platonGetFilterLogs(BigInteger.ZERO);
+Request <?, PlatonLog> request = platonWeb3j.platonGetFilterLogs(BigInteger.ZERO);
 List<PlatonLog.LogResult> req = request.send().getLogs();
 ```
 
@@ -1020,8 +1021,8 @@ The BigInteger in the PlatonLog property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 org.web3j.protocol.core.methods.request.PlatonFilter filter = new org.web3j.protocol.core.methods.request.PlatonFilter();
 filter.addSingleTopic("");
-Request<?, PlatonLog> request = currentValidWeb3j.platonGetLogs(filter);
-List<LogResult> = request.send(). GetLogs();
+Request <?, PlatonLog> request = platonWeb3j.platonGetLogs(filter);
+List<LogResult> = request.send().getLogs();
 ```
 
 ### platonPendingTransactions
@@ -1043,7 +1044,7 @@ The transactions in the PlatonPendingTransactions property are the corresponding
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, PlatonPendingTransactions> req = currentValidWeb3j.platonPendingTx();
+Request<?, PlatonPendingTransactions> req = platonWeb3j.platonPendingTx();
 EthPendingTransactions res = req.send();
 List<Transaction> transactions = res.getTransactions();
 ```
@@ -1072,7 +1073,7 @@ Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
 String stringToStore;
-Request <?, DbPutString> request = currentValidWeb3j.dbPutString(databaseName,keyName,stringToStore);
+Request <?, DbPutString> request = platonWeb3j.dbPutString(databaseName,keyName,stringToStore);
 List<DbPutString> = request.send().valueStored();
 ```
 
@@ -1098,7 +1099,7 @@ The String in the DbGetString property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
-Request <?, DbGetString> request = currentValidWeb3j.dbGetString(databaseName,keyName);
+Request <?, DbGetString> request = platonWeb3j.dbGetString(databaseName,keyName);
 String req  = request.send().getStoredValue();
 ```
 
@@ -1126,8 +1127,8 @@ Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
 String dataToStore;
-Request<?, DbPutHex> request = currentValidWeb3j.dbPutHex(databaseName, keyName, dataToStore);
-boolean req = request.send(). valueStored();
+Request <?, DbPutHex> request = platonWeb3j.dbPutHex(databaseName,keyName,dataToStore);
+boolean req  = request.send().valueStored();
 ```
 
 ### dbGetHex
@@ -1152,8 +1153,8 @@ The String in the DbGetHex property is the corresponding stored data
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String databaseName;
 String keyName;
-Request<?, DbGetHex> request = currentValidWeb3j.dbGetHex(databaseName, keyName);
-String req = request.send(). GetStoredValue();
+Request <?, DbGetHex> request = platonWeb3j.dbGetHex(databaseName,keyName);
+String req  = request.send().getStoredValue();
 ```
 
 ### platonEvidences
@@ -1296,8 +1297,8 @@ The Evidences object in the PlatonEvidences property is the corresponding stored
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, PlatonEvidences> req = currentValidWeb3j.platonEvidences();
-Evidences evidences = req.send(). GetEvidences();
+Request<?, PlatonEvidences> req = platonWeb3j.platonEvidences();
+Evidences evidences = req.send().getEvidences();
 ```
 
 ### getProgramVersion
@@ -1320,8 +1321,8 @@ The ProgramVersion object in the AdminProgramVersion property is the correspondi
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, AdminProgramVersion> req = currentValidWeb3j.getProgramVersion();
-ProgramVersion programVersion = req.send(). GetAdminProgramVersion();
+Request<?, AdminProgramVersion> req = platonWeb3j.getProgramVersion();
+ProgramVersion programVersion = req.send().getAdminProgramVersion();
 ```
 
 - **ProgramVersion Object Parsing**
@@ -1348,8 +1349,8 @@ The String in the AdminSchnorrNIZKProve property is the corresponding stored dat
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, AdminProgramVersion> req = currentValidWeb3j.getSchnorrNIZKProve();
-String res = req.send(). GetAdminSchnorrNIZKProve();
+Request<?, AdminProgramVersion> req = platonWeb3j.getSchnorrNIZKProve();
+String res = req.send().getAdminSchnorrNIZKProve();
 ```
 
 ### getEconomicConfig
@@ -1372,7 +1373,7 @@ The String in the DebugEconomicConfig property is the corresponding stored data
 
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
-Request<?, DebugEconomicConfig> req = currentValidWeb3j.getEconomicConfig();
+Request<?, DebugEconomicConfig> req = platonWeb3j.getEconomicConfig();
 String debugEconomicConfig = req.send().getEconomicConfigStr();
 ```
 
@@ -1423,7 +1424,6 @@ Request<?, DebugWaitSlashingNodeList> req = platonWeb3j.getWaitSlashingNodeList(
 DebugWaitSlashingNodeList nodeList = req.send();
 ```
 
-
 ## System Contract Call
 
 System contracts mainly include economic model and governance related contracts：
@@ -1447,9 +1447,9 @@ For the introduction and use of the above system contract, please refer to the f
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+String chainId = "210425";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-StakingContract contract = StakingContract.load(web3j, credentials, chainId);
+StakingContract stakingContract = StakingContract.load(web3j, credentials, chainId);
 ```
 
 #### Interface Description
@@ -1488,9 +1488,9 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
+BigDecimal stakingAmount = Convert.toVon("1000000", Unit.KPVON);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
+String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1";
 String webSite = "https://www.platon.network/#/";
@@ -1572,7 +1572,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String benifitAddress = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
+String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
 String nodeName = "integration-node1-u";
 String webSite = "https://www.platon.network/#/";
@@ -1617,7 +1617,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT);
+BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.KPVON);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -1781,9 +1781,8 @@ CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
+DelegateContract delegateContract = DelegateContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -1813,10 +1812,10 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal amount = Convert.toVon("500000", Unit.LAT);
+DelegateAmountType delegateAmountType = DelegateAmountType.FREE_AMOUNT_TYPE;
+BigDecimal amot = Counnvert.toVon("500000", Unit.KPVON);
 
-PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
+PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, delegateAmountType, amount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
@@ -1880,13 +1879,15 @@ CallResponse<Delegation>
   - BigInteger: delegateReleasedHes initiated the free amount of the hesitation period commissioned by the commissioned account von
   - BigInteger: delegateLocked initiates a lock-in period of the entrusted account
   - BigInteger: delegateLockedHes initiated the hedging period of the locked account of the entrusted account
-  - BigInteger：cumulativeIncome  Delegate income to be received
+  - BigInteger: cumulativeIncome  Delegate income to be received
+  - BigInteger: lockReleasedHes  Entrustment fee for hesitation period, free amount from lock-up period
+  - BigInteger: lockRestrictingPlanHes  The entrustment fee during the hesitation period, and the self-locking amount from the lock-up period
 
 - **Java SDK contract use**
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-String address = "lax1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
+String address = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 BigInteger stakingBlockNum = new BigInteger("10888");
 
 CallResponse<Delegation> baseResponse = delegateContract.getDelegateInfo(nodeId, address, stakingBlockNum).send();
@@ -1915,22 +1916,98 @@ TransactionResponse
 
 * **Decode transaction receipt**
 
-   - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
+  - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
+  - Optional<BigInteger>：released The revoked commission money will be returned to the user's balance
+  - Optional<BigInteger>：restrictingPlan The revoked commission money will be returned to the user's lock-up account
+  - Optional<BigInteger>：lockReleased The revoked commission money is transferred to the lock-up period, from the balance
+  - Optional<BigInteger>：lockRestrictingPlan The revoked commission money is transferred to the lock-up period, from the lock-up account
 
 - **Contract use**
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
+BigDecimal stakingAmount = Convert.toVon("500000", Unit.KPVON);
 BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 
 if(baseResponse.isStatusOk()){
-       BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+    UnDelegation unDelegation = delegateContract.decodeUnDelegateLogOfNew(baseResponse.getTransactionReceipt());
 }
 ```
+
+##### **redeemDelegation**
+
+> Receive unlocked orders
+
+- **Introduction**
+
+  no
+
+- **return value**
+
+```java
+TransactionResponse
+```
+
+- TransactionResponse： General Response Packet
+    - int：code   Code result identification, 0 is success
+    - String：errMsg   ErrMsg error message, exists on failure
+    - TransactionReceipt：transactionReceipt  Receipt of the transaction
+
+* **Decode transaction receipt**
+
+    - BigInteger：released   The commission money successfully received will be returned to the balance
+    - BigInteger：restrictingPlan The commission money successfully received will be returned to the lock-up account
+
+- **Contract use**
+
+```java
+PlatonSendTransaction platonSendTransaction = delegateContract.redeemDelegationReturnTransaction().send();
+TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+
+if(baseResponse.isStatusOk()){
+    RedeemDelegation redeemDelegation = delegateContract.decodeRedeemDelegateLog(baseResponse.getTransactionReceipt());
+    System.out.println(redeemDelegation);
+}
+```
+
+##### **getDelegationLockInfo**
+
+> Query the delegation information of the account in the lock period and the unlock period
+
+- **Introduction**
+
+    - String：address   Principal's account address
+
+- **return value**
+
+```java
+CallResponse<DelegationLockInfo>
+```
+
+- CallResponse&lt;DelegationLockInfo&gt;描述
+  - int：code   General Response Packet
+  - DelegationLockInfo：data   DelegationLockInfo object data
+  - String：errMsg  ErrMsg error message, exists on failure
+
+* **DelegationLockInfo**：Delegate information for lock and unlock periods
+  - BigInteger：released   The entrusted funds in the unlocking period will be returned to the user's balance after the user receives it.
+  - BigInteger：restrictingPlan   The entrusted funds in the unlocking period will be returned to the user's lock-up account after the user receives it.
+  - List&lt;DelegationLockItem&gt;：locks   Delegated money in lock-up period
+
+* **DelegationLockItem**：Entrustment information during the lock-up period
+  - BigInteger：epoch   unlock cycle
+  - BigInteger：released   Locked Amount, Free Account
+  - BigInteger：restrictingPlan  Locked Amount, Locked Account
+
+- **Contract use**
+
+```java
+CallResponse<DelegationLockInfo> baseResponse = delegateContract.getDelegationLockInfo(deleteCredentials.getAddress()).send();
+```
+
 
 ### Reward Related Interface
 
@@ -1941,9 +2018,8 @@ if(baseResponse.isStatusOk()){
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials);
 ```
 
 #### Interface Description
@@ -2023,9 +2099,8 @@ CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(deleg
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-NodeContract contract = NodeContract.load(web3j, credentials, chainId);
+NodeContract nodeContract = NodeContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2233,9 +2308,8 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-ProposalContract contract = ProposalContract.load(web3j, credentials, chainId);
+ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2509,9 +2583,8 @@ ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "103";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-SlashContract contract = SlashContract.load(web3j, credentials, chainId);
+SlashContract contract = SlashContract.load(web3j, credentials);
 ```
 
 #### Interface Description
@@ -2581,9 +2654,8 @@ CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignT
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
+RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials);
 ```
 
 #### Interface Description

@@ -11,7 +11,6 @@ sidebar_label: Java SDK
 
 - 使用要求jdk1.8以上.
 
-注：最新版本是1.1.0.0
 
 ### maven
 
@@ -22,15 +21,18 @@ sidebar_label: Java SDK
 	<url>https://sdk.platon.network/nexus/content/groups/public/</url>
 </repository>
 ```
+注：最新版本是1.3.0.0
 
 > maven引用方式:
 ```xml
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.1.0.0</version>
+    <version>1.3.0.0</version>
 </dependency>
 ```
+注：最新版本是1.3.0.0
+
 
 ### gradle
 
@@ -43,7 +45,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.sdk:core:1.1.0.0"
+compile "com.platon.sdk:core:1.3.0.0"
 ```
 
 ## 基础api使用
@@ -178,7 +180,7 @@ Web3Sha3属性中的string即为对应存储数据
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String date = "";
-Request <?, Web3Sha3> request = currentValidWeb3j.web3Sha3(date);
+Request <?, Web3Sha3> request = platonWeb3j.web3Sha3(date);
 String resDate = request.send().getResult();
 ```
 
@@ -453,7 +455,7 @@ PlatonGetBlockTransactionCountByHash属性中的BigInteger即为对应存储数�
 ```java
 Web3j platonWeb3j = Web3j.build(new HttpService("http://127.0.0.1:6789"));
 String blockhash = "";
-Request <?, PlatonGetBlockTransactionCountByHash> request = platonWeb3j.platonGetBlockTransactionCountByHash(blockhash);
+Request <?, PlatonGetBlockTransactionCountByHash> request = currentValidWeb3j.platonGetBlockTransactionCountByHash(blockhash);
 BigInteger req = request.send().getTransactionCount();
 ```
 
@@ -1445,7 +1447,7 @@ DebugWaitSlashingNodeList nodeList = req.send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
+String chainId = "210425";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 StakingContract stakingContract = StakingContract.load(web3j, credentials, chainId);
 ```
@@ -1486,7 +1488,7 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("1000000", Unit.LAT);
+BigDecimal stakingAmount = Convert.toVon("1000000", Unit.KPVON);
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
 String benifitAddress = "lat1qtp5fqtmudzge9aqt9rnzgdxv729pdq5vug5vt";
 String externalId = "";
@@ -1615,7 +1617,7 @@ TransactionResponse
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
 StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.LAT);
+BigDecimal addStakingAmount = Convert.toVon("4000000", Unit.KPVON);
 
 PlatonSendTransaction platonSendTransaction = stakingContract.addStakingReturnTransaction(nodeId, stakingAmountType, addStakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = stakingContract.getTransactionResponse(platonSendTransaction).send();
@@ -1779,9 +1781,8 @@ CallResponse<BigInteger> response = stakingContract.getAvgPackTime().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-DelegateContract delegateContract = DelegateContract.load(web3j, credentials, chainId);
+DelegateContract delegateContract = DelegateContract.load(web3j, credentials);
 ```
 
 #### 接口说明
@@ -1793,7 +1794,7 @@ DelegateContract delegateContract = DelegateContract.load(web3j, credentials, ch
 * **入参**
 
   - String：nodeId   节点id，16进制格式，即节点公钥，可以通过管理台查询（platon attach http://127.0.0.1:6789 --exec "admin.nodeInfo.id"）。
-  - StakingAmountType：stakingAmountType   表示使用账户自由金额还是账户的锁仓金额做质押，StakingAmountType.FREE_AMOUNT_TYPE：自由金额，StakingAmountType.RESTRICTING_AMOUNT_TYPE：锁仓金额
+  - DelegateAmountType：delegateAmountType   委托金额的类型，DelegateAmountType.FREE_AMOUNT_TYPE：自由金额，DelegateAmountType.RESTRICTING_AMOUNT_TYPE：锁仓金额，DelegateAmountType.DELEGATE_LOCK_AMOUNT_TYPE：委托锁定金额
   - BigInteger：amount   委托的金额，单位VON，默认委托金额必须大于等于10LAT，该大小限制可以通过治理参数动态调整，可通过治理接口获得当前值（proposalContract.getGovernParamValue("staking", "operatingThreshold")）。
 
 * **返回值**
@@ -1811,10 +1812,10 @@ TransactionResponse
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-StakingAmountType stakingAmountType = StakingAmountType.FREE_AMOUNT_TYPE;
-BigDecimal amount = Convert.toVon("500000", Unit.LAT);
+DelegateAmountType delegateAmountType = DelegateAmountType.FREE_AMOUNT_TYPE;
+BigDecimal amot = Counnvert.toVon("500000", Unit.KPVON);
 
-PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, stakingAmountType, amount.toBigInteger()).send();
+PlatonSendTransaction platonSendTransaction = delegateContract.delegateReturnTransaction(nodeId, delegateAmountType, amount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 ```
 
@@ -1879,6 +1880,8 @@ CallResponse<Delegation>
   - BigInteger：delegateLocked   发起委托账户的锁仓金额的锁定期委托的VON
   - BigInteger：delegateLockedHes   发起委托账户的锁仓金额的犹豫期质押的VON
   - BigInteger：cumulativeIncome  待领取的委托收益
+  - BigInteger：lockReleasedHes  犹豫期的委托金,来自锁定期的自由金额
+  - BigInteger：lockRestrictingPlanHes  犹豫期的委托金,来自锁定期的自锁仓金额
 
 * **Java SDK合约使用**
 
@@ -1913,22 +1916,98 @@ TransactionResponse
 
 * **解交易回执**
 
-   - BigInteger：reward   获得解除委托时所提取的委托收益
+  - BigInteger：reward   Obtain the delegate income drawn when the commission is cancelled
+  - Optional<BigInteger>：released 撤销的委托金退回用户余额
+  - Optional<BigInteger>：restrictingPlan 撤销的委托金退回用户锁仓账户
+  - Optional<BigInteger>：lockReleased 撤销的委托金转到锁定期,来自余额
+  - Optional<BigInteger>：lockRestrictingPlan 撤销的委托金转到锁定期,来自锁仓账户
 
-* **合约使用**
+* **Java SDK合约使用**
 
 ```java
 String nodeId = "77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050";
-BigDecimal stakingAmount = Convert.toVon("500000", Unit.LAT);
+BigDecimal stakingAmount = Convert.toVon("500000", Unit.KPVON);
 BigInteger stakingBlockNum = new BigInteger("12134");
 
 PlatonSendTransaction platonSendTransaction = delegateContract.unDelegateReturnTransaction(nodeId, stakingBlockNum, stakingAmount.toBigInteger()).send();
 TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
 
 if(baseResponse.isStatusOk()){
-    BigInteger reward = delegateContract.decodeUnDelegateLog(baseResponse.getTransactionReceipt());
+    UnDelegation unDelegation = delegateContract.decodeUnDelegateLogOfNew(baseResponse.getTransactionReceipt());
 }
 ```
+
+##### **redeemDelegation**
+
+> 领取解锁的委托
+
+* **入参**
+
+  无
+
+* **返回值**
+
+```java
+TransactionResponse
+```
+
+- TransactionResponse： 通用应答包
+    - int：code   结果标识，0为成功
+    - String：errMsg   错误信息，失败时存在
+    - TransactionReceipt：transactionReceipt  交易的回执
+
+* **解交易回执**
+
+    - BigInteger：released   成功领取的委托金,回到余额
+    - BigInteger：restrictingPlan 成功领取的委托金,回到锁仓账户
+
+* **Java SDK合约使用**
+
+```java
+PlatonSendTransaction platonSendTransaction = delegateContract.redeemDelegationReturnTransaction().send();
+TransactionResponse baseResponse = delegateContract.getTransactionResponse(platonSendTransaction).send();
+
+if(baseResponse.isStatusOk()){
+    RedeemDelegation redeemDelegation = delegateContract.decodeRedeemDelegateLog(baseResponse.getTransactionReceipt());
+    System.out.println(redeemDelegation);
+}
+```
+
+##### **getDelegationLockInfo**
+
+> 查询账户处于锁定期与解锁期的委托信息
+
+* **入参**
+
+    - String：address   委托人的账户地址
+
+* **返回值**
+
+```java
+CallResponse<DelegationLockInfo>
+```
+
+- CallResponse&lt;DelegationLockInfo&gt;描述
+    - int：code   结果标识，0为成功
+    - DelegationLockInfo：data   DelegationLockInfo对象数据
+    - String：errMsg   错误信息，失败时存在
+
+* **DelegationLockInfo**：锁定期与解锁期的委托信息
+    - BigInteger：released   处于解锁期的委托金,待用户领取后返回到用户余额
+    - BigInteger：restrictingPlan   处于解锁期的委托金,待用户领取后返回到用户锁仓账户
+    - List&lt;DelegationLockItem&gt;：locks   处于锁定期的委托金
+
+* **DelegationLockItem**：锁定期的委托金信息
+    - BigInteger：epoch   解锁的周期
+    - BigInteger：released   锁定的金额,自由账户
+    - BigInteger：restrictingPlan   锁定的金额,锁仓账户
+
+* **Java SDK合约使用**
+
+```java
+CallResponse<DelegationLockInfo> baseResponse = delegateContract.getDelegationLockInfo(deleteCredentials.getAddress()).send();
+```
+
 
 ### 奖励相关接口
 
@@ -1939,9 +2018,8 @@ if(baseResponse.isStatusOk()){
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials, chainId);
+RewardContract rewardContract = RewardContract.load(web3j, deleteCredentials);
 ```
 
 #### 接口说明
@@ -2021,9 +2099,8 @@ CallResponse<List<Reward>> baseResponse = rewardContract.getDelegateReward(deleg
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-NodeContract nodeContract = NodeContract.load(web3j, credentials, chainId);
+NodeContract nodeContract = NodeContract.load(web3j, credentials);
 ```
 
 #### 接口说明
@@ -2231,9 +2308,8 @@ CallResponse<List<Node>> baseResponse = nodeContract.getCandidateList().send();
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-ProposalContract proposalContract = ProposalContract.load(web3j, credentials, chainId);
+ProposalContract proposalContract = ProposalContract.load(web3j, credentials);
 ```
 
 #### 接口说明
@@ -2507,9 +2583,8 @@ ProposalUtils.versionInterToStr(baseResponse.getData());
 ```
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "103";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-SlashContract contract = SlashContract.load(web3j, credentials, chainId);
+SlashContract contract = SlashContract.load(web3j, credentials);
 ```
 
 #### 接口说明
@@ -2579,9 +2654,8 @@ CallResponse<String> baseResponse = slashContract.checkDoubleSign(DuplicateSignT
 ```java
 //Java 8
 Web3j web3j = Web3j.build(new HttpService("http://localhost:6789"));
-String chainId = "100";
 Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
-RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials, chainId);
+RestrictingPlanContract contract = RestrictingPlanContract.load(web3j, credentials);
 ```
 
 #### 接口说明
@@ -2819,7 +2893,7 @@ Java SDK提供了一个交易管理器`TransactionManager`来控制你连接到P
 `RawTransactionManager`需要指定链ID。防止一个链的交易被重新广播到另一个链上：
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
 ```
 
 除了`RawTransactionManager`之外，Java SDK还提供了一个客户端交易管理器`ClientTransactionManager`，它将你的交易签名工作交给你正在连接的PlatON客户端。
@@ -2954,7 +3028,7 @@ Java SDK提供了一个交易管理器`TransactionManager`来控制你连接到P
 `RawTransactionManager`需要指定链ID。防止一个链的交易被重新广播到另一个链上：
 
 ```java
-TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 100L);
+TransactionManager transactionManager = new RawTransactionManager(web3j, credentials);
 ```
 
 除了`RawTransactionManager`之外，Java SDK还提供了一个客户端交易管理器`ClientTransactionManager`，它将你的交易签名工作交给你正在连接的PlatON客户端。
