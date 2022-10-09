@@ -21,17 +21,17 @@ sidebar_label: Java SDK
 	<url>https://sdk.platon.network/nexus/content/groups/public/</url>
 </repository>
 ```
-注：最新版本是1.3.0.0
+注：最新版本是1.3.0.2
 
 > maven引用方式:
 ```xml
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.3.0.0</version>
+    <version>1.3.0.2</version>
 </dependency>
 ```
-注：最新版本是1.3.0.0
+注：最新版本是1.3.0.2
 
 
 ### gradle
@@ -45,7 +45,7 @@ repositories {
 
 > gradle引用方式:
 ```
-compile "com.platon.sdk:core:1.3.0.0"
+compile "com.platon.sdk:core:1.3.0.2"
 ```
 
 ## 基础api使用

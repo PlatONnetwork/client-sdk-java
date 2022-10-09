@@ -20,14 +20,14 @@ cd client-sdk-java/
 <dependency>
     <groupId>com.platon.sdk</groupId>
     <artifactId>core</artifactId>
-    <version>1.3.0.0</version>
+    <version>1.3.0.2</version>
 </dependency>
 ```
 
 or
 
 ```
-compile "com.platon.sdk:core:1.3.0.0"
+compile "com.platon.sdk:core:1.3.0.2"
 ```
 
 * use in project
