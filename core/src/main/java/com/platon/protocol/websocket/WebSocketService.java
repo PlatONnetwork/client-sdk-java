@@ -17,12 +17,12 @@ import rx.subjects.BehaviorSubject;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 /**
  * Web socket service that allows to interact with JSON-RPC via WebSocket protocol.
@@ -81,9 +81,14 @@ public class WebSocketService implements Web3jService {
      * @throws ConnectException thrown if failed to connect to the server via WebSocket protocol
      */
     public void connect() throws ConnectException {
+        connect(s -> {}, t -> {}, () -> {});
+    }
+
+    public void connect(Consumer<String> onMessage, Consumer<Throwable> onError, Runnable onClose)
+            throws ConnectException {
         try {
-            setWebSocketListener();
             connectToWebSocket();
+            setWebSocketListener(onMessage, onError, onClose);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.warn("Interrupted while connecting via WebSocket protocol");
@@ -97,23 +102,28 @@ public class WebSocketService implements Web3jService {
         }
     }
 
-    private void setWebSocketListener() {
-        webSocketClient.setListener(new WebSocketListener() {
-            @Override
-            public void onMessage(String message) throws IOException {
-                onWebSocketMessage(message);
-            }
+    private void setWebSocketListener(
+            Consumer<String> onMessage, Consumer<Throwable> onError, Runnable onClose) {
+        webSocketClient.setListener(
+                new WebSocketListener() {
+                    @Override
+                    public void onMessage(String message) throws IOException {
+                        onWebSocketMessage(message);
+                        onMessage.accept(message);
+                    }
 
-            @Override
-            public void onError(Exception e) {
-                log.error("Received error from a WebSocket connection", e);
-            }
+                    @Override
+                    public void onError(Exception e) {
+                        log.error("Received error from a WebSocket connection", e);
+                        onError.accept(e);
+                    }
 
-            @Override
-            public void onClose() {
-                onWebSocketClose();
-            }
-        });
+                    @Override
+                    public void onClose() {
+                        onWebSocketClose();
+                        onClose.run();
+                    }
+                });
     }
 
 
