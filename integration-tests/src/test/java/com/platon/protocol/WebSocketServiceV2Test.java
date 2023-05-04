@@ -4,14 +4,14 @@ import com.platon.protocol.websocket.WebSocketService;
 import org.junit.Test;
 
 import java.net.ConnectException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
-public class WebSocketServiceTest {
+public class WebSocketServiceV2Test {
 
 	private WebSocketService webSocketService = new WebSocketService("ws://192.168.120.146:7789", false);
+	private Web3j web3j = Web3j.build(webSocketService);
+
 	private Consumer<String> onMessage = message -> {
 		System.out.println("----------------------------------   on message = " + message);
 	};
@@ -20,14 +20,30 @@ public class WebSocketServiceTest {
 	};
 	private Runnable onClose = () -> {
 		System.out.println("----------------------------------   on close");
+		try {
+			createConnect();
+		} catch (ConnectException e) {
+			throw new RuntimeException(e);
+		}
 	};
+
+	private CompletableFuture<Void> createConnect() throws ConnectException {
+		CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+			try {
+				TimeUnit.SECONDS.sleep(5);
+				webSocketService.connect(onMessage, onError, onClose);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
+		return future;
+	}
 
 
 	@Test
     public void connect() throws Exception {
-		Web3j web3j = Web3j.build(webSocketService);
-		webSocketService.connect(onMessage, onError, onClose);
 
+		createConnect().get();
 
 		ExecutorService executorService = Executors.newCachedThreadPool();
 		for (int i = 0; i < 1; i++) {
@@ -37,11 +53,7 @@ public class WebSocketServiceTest {
 					   TimeUnit.SECONDS.sleep(1);
 					   System.out.println(Thread.currentThread().getName() + " cur block number" + web3j.platonBlockNumber().send().getBlockNumber());
 				   } catch (Exception e) {
-					   try {
-						   webSocketService.connect(onMessage, onError, onClose);
-					   } catch (ConnectException ex) {
-						   throw new RuntimeException(ex);
-					   }
+						e.printStackTrace();
 				   }
 			   }
 		   });
@@ -49,6 +61,4 @@ public class WebSocketServiceTest {
 
 		executorService.awaitTermination(1000, TimeUnit.HOURS);
     }
-
-
 }
