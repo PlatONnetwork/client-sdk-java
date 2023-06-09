@@ -131,7 +131,7 @@ public class JsonRpc2_0Web3j implements Web3j {
             cors = "";
         }
         if(Strings.isBlank(apis)){
-            apis = "platon,net,web3,debug,admin";
+            apis = "hskchain,net,web3,debug,admin";
         }
         return new Request<>(
                 "admin_startRPC", Arrays.asList(host,port,cors,apis), web3jService, BooleanResponse.class);
@@ -146,7 +146,7 @@ public class JsonRpc2_0Web3j implements Web3j {
             cors = "";
         }
         if(Strings.isBlank(apis)){
-            apis = "platon,net,web3,debug,admin";
+            apis = "hskchain,net,web3,debug,admin";
         }
         return new Request<>(
                 "admin_startWS", Arrays.asList(host,port,cors,apis), web3jService, BooleanResponse.class);
@@ -179,7 +179,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonProtocolVersion> platonProtocolVersion() {
         return new Request<>(
-                "platon_protocolVersion",
+                "hskchain_protocolVersion",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonProtocolVersion.class);
@@ -188,7 +188,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonSyncing> platonSyncing() {
         return new Request<>(
-                "platon_syncing",
+                "hskchain_syncing",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonSyncing.class);
@@ -197,7 +197,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonGasPrice> platonGasPrice() {
         return new Request<>(
-                "platon_gasPrice",
+                "hskchain_gasPrice",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonGasPrice.class);
@@ -206,7 +206,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonAccounts> platonAccounts() {
         return new Request<>(
-                "platon_accounts",
+                "hskchain_accounts",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonAccounts.class);
@@ -215,7 +215,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonBlockNumber> platonBlockNumber() {
         return new Request<>(
-                "platon_blockNumber",
+                "hskchain_blockNumber",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonBlockNumber.class);
@@ -225,7 +225,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonGetBalance> platonGetBalance(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "platon_getBalance",
+                "hskchain_getBalance",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 web3jService,
                 PlatonGetBalance.class);
@@ -235,7 +235,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonGetStorageAt> platonGetStorageAt(
             String address, BigInteger position, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "platon_getStorageAt",
+                "hskchain_getStorageAt",
                 Arrays.asList(
                         address,
                         Numeric.encodeQuantity(position),
@@ -248,7 +248,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonGetTransactionCount> platonGetTransactionCount(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "platon_getTransactionCount",
+                "hskchain_getTransactionCount",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 web3jService,
                 PlatonGetTransactionCount.class);
@@ -258,7 +258,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonGetBlockTransactionCountByHash> platonGetBlockTransactionCountByHash(
             String blockHash) {
         return new Request<>(
-                "platon_getBlockTransactionCountByHash",
+                "hskchain_getBlockTransactionCountByHash",
                 Arrays.asList(blockHash),
                 web3jService,
                 PlatonGetBlockTransactionCountByHash.class);
@@ -268,7 +268,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonGetBlockTransactionCountByNumber> platonGetBlockTransactionCountByNumber(
             DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "platon_getBlockTransactionCountByNumber",
+                "hskchain_getBlockTransactionCountByNumber",
                 Arrays.asList(defaultBlockParameter.getValue()),
                 web3jService,
                 PlatonGetBlockTransactionCountByNumber.class);
@@ -278,7 +278,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonGetCode> platonGetCode(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "platon_getCode",
+                "hskchain_getCode",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 web3jService,
                 PlatonGetCode.class);
@@ -287,7 +287,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonSign> platonSign(String address, String sha3HashOfDataToSign) {
         return new Request<>(
-                "platon_sign",
+                "hskchain_sign",
                 Arrays.asList(address, sha3HashOfDataToSign),
                 web3jService,
                 PlatonSign.class);
@@ -298,7 +298,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     platonSendTransaction(
             com.platon.protocol.core.methods.request.Transaction transaction) {
         return new Request<>(
-                "platon_sendTransaction",
+                "hskchain_sendTransaction",
                 Arrays.asList(transaction),
                 web3jService,
                 PlatonSendTransaction.class);
@@ -309,7 +309,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     platonSendRawTransaction(
             String signedTransactionData) {
         return new Request<>(
-                "platon_sendRawTransaction",
+                "hskchain_sendRawTransaction",
                 Arrays.asList(signedTransactionData),
                 web3jService,
                 PlatonSendTransaction.class);
@@ -319,7 +319,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonCall> platonCall(
             com.platon.protocol.core.methods.request.Transaction transaction, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "platon_call",
+                "hskchain_call",
                 Arrays.asList(transaction, defaultBlockParameter),
                 web3jService,
                 PlatonCall.class);
@@ -328,7 +328,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonEstimateGas> platonEstimateGas(com.platon.protocol.core.methods.request.Transaction transaction) {
         return new Request<>(
-                "platon_estimateGas",
+                "hskchain_estimateGas",
                 Arrays.asList(transaction),
                 web3jService,
                 PlatonEstimateGas.class);
@@ -338,7 +338,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonBlock> platonGetBlockByHash(
             String blockHash, boolean returnFullTransactionObjects) {
         return new Request<>(
-                "platon_getBlockByHash",
+                "hskchain_getBlockByHash",
                 Arrays.asList(
                         blockHash,
                         returnFullTransactionObjects),
@@ -351,7 +351,7 @@ public class JsonRpc2_0Web3j implements Web3j {
             DefaultBlockParameter defaultBlockParameter,
             boolean returnFullTransactionObjects) {
         return new Request<>(
-                "platon_getBlockByNumber",
+                "hskchain_getBlockByNumber",
                 Arrays.asList(
                         defaultBlockParameter.getValue(),
                         returnFullTransactionObjects),
@@ -362,7 +362,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonTransaction> platonGetTransactionByHash(String transactionHash) {
         return new Request<>(
-                "platon_getTransactionByHash",
+                "hskchain_getTransactionByHash",
                 Arrays.asList(transactionHash),
                 web3jService,
                 PlatonTransaction.class);
@@ -372,7 +372,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonPendingTransactions> platonPendingTx() {
         return new Request<>(
-                "platon_pendingTransactions",
+                "hskchain_pendingTransactions",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonPendingTransactions.class);
@@ -383,7 +383,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonTransaction> platonGetTransactionByBlockHashAndIndex(
             String blockHash, BigInteger transactionIndex) {
         return new Request<>(
-                "platon_getTransactionByBlockHashAndIndex",
+                "hskchain_getTransactionByBlockHashAndIndex",
                 Arrays.asList(
                         blockHash,
                         Numeric.encodeQuantity(transactionIndex)),
@@ -395,7 +395,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonTransaction> platonGetTransactionByBlockNumberAndIndex(
             DefaultBlockParameter defaultBlockParameter, BigInteger transactionIndex) {
         return new Request<>(
-                "platon_getTransactionByBlockNumberAndIndex",
+                "hskchain_getTransactionByBlockNumberAndIndex",
                 Arrays.asList(
                         defaultBlockParameter.getValue(),
                         Numeric.encodeQuantity(transactionIndex)),
@@ -406,7 +406,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonGetTransactionReceipt> platonGetTransactionReceipt(String transactionHash) {
         return new Request<>(
-                "platon_getTransactionReceipt",
+                "hskchain_getTransactionReceipt",
                 Arrays.asList(transactionHash),
                 web3jService,
                 PlatonGetTransactionReceipt.class);
@@ -416,7 +416,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonFilter> platonNewFilter(
             com.platon.protocol.core.methods.request.PlatonFilter platonFilter) {
         return new Request<>(
-                "platon_newFilter",
+                "hskchain_newFilter",
                 Arrays.asList(platonFilter),
                 web3jService,
                 PlatonFilter.class);
@@ -425,7 +425,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonFilter> platonNewBlockFilter() {
         return new Request<>(
-                "platon_newBlockFilter",
+                "hskchain_newBlockFilter",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonFilter.class);
@@ -434,7 +434,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonFilter> platonNewPendingTransactionFilter() {
         return new Request<>(
-                "platon_newPendingTransactionFilter",
+                "hskchain_newPendingTransactionFilter",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonFilter.class);
@@ -443,7 +443,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonUninstallFilter> platonUninstallFilter(BigInteger filterId) {
         return new Request<>(
-                "platon_uninstallFilter",
+                "hskchain_uninstallFilter",
                 Arrays.asList(Numeric.toHexStringWithPrefixSafe(filterId)),
                 web3jService,
                 PlatonUninstallFilter.class);
@@ -452,7 +452,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonLog> platonGetFilterChanges(BigInteger filterId) {
         return new Request<>(
-                "platon_getFilterChanges",
+                "hskchain_getFilterChanges",
                 Arrays.asList(Numeric.toHexStringWithPrefixSafe(filterId)),
                 web3jService,
                 PlatonLog.class);
@@ -461,7 +461,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonLog> platonGetFilterLogs(BigInteger filterId) {
         return new Request<>(
-                "platon_getFilterLogs",
+                "hskchain_getFilterLogs",
                 Arrays.asList(Numeric.toHexStringWithPrefixSafe(filterId)),
                 web3jService,
                 PlatonLog.class);
@@ -471,7 +471,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, PlatonLog> platonGetLogs(
             com.platon.protocol.core.methods.request.PlatonFilter platonFilter) {
         return new Request<>(
-                "platon_getLogs",
+                "hskchain_getLogs",
                 Arrays.asList(platonFilter),
                 web3jService,
                 PlatonLog.class);
@@ -614,11 +614,11 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Observable<NewHeadsNotification> newHeadsNotifications() {
         return web3jService.subscribe(
                 new Request<>(
-                        "platon_subscribe",
+                        "hskchain_subscribe",
                         Collections.singletonList("newHeads"),
                         web3jService,
                         PlatonSubscribe.class),
-                "platon_unsubscribe",
+                "hskchain_unsubscribe",
                 NewHeadsNotification.class
         );
     }
@@ -631,11 +631,11 @@ public class JsonRpc2_0Web3j implements Web3j {
 
         return web3jService.subscribe(
                 new Request<>(
-                        "platon_subscribe",
+                        "hskchain_subscribe",
                         Arrays.asList("logs", params),
                         web3jService,
                         PlatonSubscribe.class),
-                "platon_unsubscribe",
+                "hskchain_unsubscribe",
                 LogNotification.class
         );
     }
@@ -754,7 +754,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonEvidences> platonEvidences() {
         return new Request<>(
-                "platon_evidences",
+                "hskchain_evidences",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonEvidences.class);
@@ -790,7 +790,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonChainId> getChainId() {
         return new Request<>(
-                "platon_chainId",
+                "hskchain_chainId",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonChainId.class);
@@ -808,7 +808,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonRawTransaction> platonGetRawTransactionByHash(String transactionHash) {
         return new Request<>(
-                "platon_getRawTransactionByHash",
+                "hskchain_getRawTransactionByHash",
                 Arrays.asList(transactionHash),
                 web3jService,
                 PlatonRawTransaction.class);
@@ -817,7 +817,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonRawTransaction> platonGetRawTransactionByBlockHashAndIndex(String blockHash, String index) {
         return new Request<>(
-                "platon_getRawTransactionByBlockHashAndIndex",
+                "hskchain_getRawTransactionByBlockHashAndIndex",
                 Arrays.asList(blockHash,index),
                 web3jService,
                 PlatonRawTransaction.class);
@@ -826,7 +826,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonRawTransaction> platonGetRawTransactionByBlockNumberAndIndex(String blockNumber, String index) {
         return new Request<>(
-                "platon_getRawTransactionByBlockNumberAndIndex",
+                "hskchain_getRawTransactionByBlockNumberAndIndex",
                 Arrays.asList(blockNumber,index),
                 web3jService,
                 PlatonRawTransaction.class);
@@ -835,7 +835,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonGetAddressHrp> platonGetAddressHrp() {
         return new Request<>(
-                "platon_getAddressHrp",
+                "hskchain_getAddressHrp",
                 Collections.<String>emptyList(),
                 web3jService,
                 PlatonGetAddressHrp.class);
@@ -844,7 +844,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, PlatonSignTransaction> platonSignTransaction(com.platon.protocol.core.methods.request.Transaction transaction) {
         return new Request<>(
-                "platon_signTransaction",
+                "hskchain_signTransaction",
                 Arrays.asList(transaction),
                 web3jService,
                 PlatonSignTransaction.class);

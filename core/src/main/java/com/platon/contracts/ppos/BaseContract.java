@@ -37,7 +37,6 @@ import com.platon.tx.gas.GasProvider;
 import com.platon.utils.JSONUtil;
 import com.platon.utils.Numeric;
 import com.platon.utils.Strings;
-import com.sun.org.apache.regexp.internal.RE;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
