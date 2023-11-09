@@ -147,7 +147,7 @@ public class JSONUtil {
     public static Map<String, Object> jsonToMap(String json) {
         Map<String, Object> result = new HashMap<>();
         try {
-            result = (Map<String, Object>) JSON.parse(json);
+            result = (Map<String, Object>) JSON.parseObject(json);
         } catch (Exception e) {
             e.printStackTrace();
         }
