@@ -3,6 +3,8 @@ package com.platon.protocol.core.methods.response;
 import com.platon.utils.Numeric;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Transaction object used by both {@link PlatonTransaction} and {@link PlatonBlock}.
@@ -19,7 +21,7 @@ public class Transaction {
     private String from;
     private String to;
     private String value;
-    private String gasPrice;
+    private String gasPrice;    // platon中，等于maxFeePerGas
     private String gas;
     private String input;
     private String creates;
@@ -28,6 +30,11 @@ public class Transaction {
     private String r;
     private String s;
     private long v;  // see https://github.com/web3j/web3j/issues/44
+    private String  chainId;    //"0x1"
+    private List<String> accessList; //地址列表
+    private String type;   // "0x2" 0 - 传统交易（旧） 1 - AccessList交易 2 - DynamicFee交易
+    private String maxFeePerGas;            // "0x247da5b94"
+    private String maxPriorityFeePerGas;    // "0x0"， platon固定是0
 
     public Transaction() {
     }
@@ -35,7 +42,8 @@ public class Transaction {
     public Transaction(String hash, String nonce, String blockHash, String blockNumber,
                        String transactionIndex, String from, String to, String value,
                        String gas, String gasPrice, String input, String creates,
-                       String publicKey, String raw, String r, String s, long v) {
+                       String publicKey, String raw, String r, String s, long v,
+                       String chainId, List<String> accessList, String type, String maxFeePerGas, String maxPriorityFeePerGas) {
         this.hash = hash;
         this.nonce = nonce;
         this.blockHash = blockHash;
@@ -53,6 +61,12 @@ public class Transaction {
         this.r = r;
         this.s = s;
         this.v = v;
+
+        this.chainId = chainId;
+        this.accessList = accessList;
+        this.type = type;
+        this.maxFeePerGas = maxFeePerGas;
+        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
     }
 
     public String getHash() {
@@ -211,12 +225,19 @@ public class Transaction {
         return v;
     }
 
-    public Long getChainId() {
-        if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
+    public long getChainId() {
+        /*if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
             return null;
         }
         Long chainId = (v - CHAIN_ID_INC) / 2;
-        return chainId;
+        return chainId;*/
+        return Numeric.decodeQuantity(type).longValue();
+    }
+    public String getChainIdRaw() {
+        return this.chainId;
+    }
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
     }
 
     // public void setV(byte v) {
@@ -236,99 +257,107 @@ public class Transaction {
         }
     }
 
+    public List<String> getAccessList() {
+        return accessList;
+    }
+
+    public void setAccessList(List<String> accessList) {
+        this.accessList = accessList;
+    }
+
+    public int getType() {
+        return Numeric.decodeQuantity(type).intValue();
+    }
+
+    public String getTypeRaw() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public BigInteger getMaxFeePerGas() {
+        return Numeric.decodeQuantity(maxFeePerGas);
+    }
+
+    public String getMaxFeePerGasRaw() {
+        return maxFeePerGas;
+    }
+
+    public void setMaxFeePerGas(String maxFeePerGas) {
+        this.maxFeePerGas = maxFeePerGas;
+    }
+
+
+    public BigInteger getMaxPriorityFeePerGas() {
+        return Numeric.decodeQuantity(maxPriorityFeePerGas);
+    }
+
+    public String getMaxPriorityFeePerGasRaw() {
+        return maxPriorityFeePerGas;
+    }
+
+    public void setMaxPriorityFeePerGas(String maxPriorityFeePerGas) {
+        this.maxPriorityFeePerGas = maxPriorityFeePerGas;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Transaction)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Transaction that = (Transaction) o;
 
-        if (getV() != that.getV()) {
+        if (v != that.v) return false;
+        if (!Objects.equals(hash, that.hash)) return false;
+        if (!Objects.equals(nonce, that.nonce)) return false;
+        if (!Objects.equals(blockHash, that.blockHash)) return false;
+        if (!Objects.equals(blockNumber, that.blockNumber)) return false;
+        if (!Objects.equals(transactionIndex, that.transactionIndex))
             return false;
-        }
-        if (getHash() != null ? !getHash().equals(that.getHash()) : that.getHash() != null) {
-            return false;
-        }
-        if (getNonceRaw() != null
-                ? !getNonceRaw().equals(that.getNonceRaw()) : that.getNonceRaw() != null) {
-            return false;
-        }
-        if (getBlockHash() != null
-                ? !getBlockHash().equals(that.getBlockHash()) : that.getBlockHash() != null) {
-            return false;
-        }
-        if (getBlockNumberRaw() != null
-                ? !getBlockNumberRaw().equals(that.getBlockNumberRaw())
-                : that.getBlockNumberRaw() != null) {
-            return false;
-        }
-        if (getTransactionIndexRaw() != null
-                ? !getTransactionIndexRaw().equals(that.getTransactionIndexRaw())
-                : that.getTransactionIndexRaw() != null) {
-            return false;
-        }
-        if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null) {
-            return false;
-        }
-        if (getTo() != null ? !getTo().equals(that.getTo()) : that.getTo() != null) {
-            return false;
-        }
-        if (getValueRaw() != null
-                ? !getValueRaw().equals(that.getValueRaw()) : that.getValueRaw() != null) {
-            return false;
-        }
-        if (getGasPriceRaw() != null
-                ? !getGasPriceRaw().equals(that.getGasPriceRaw()) : that.getGasPriceRaw() != null) {
-            return false;
-        }
-        if (getGasRaw() != null
-                ? !getGasRaw().equals(that.getGasRaw()) : that.getGasRaw() != null) {
-            return false;
-        }
-        if (getInput() != null ? !getInput().equals(that.getInput()) : that.getInput() != null) {
-            return false;
-        }
-        if (getCreates() != null
-                ? !getCreates().equals(that.getCreates()) : that.getCreates() != null) {
-            return false;
-        }
-        if (getPublicKey() != null
-                ? !getPublicKey().equals(that.getPublicKey()) : that.getPublicKey() != null) {
-            return false;
-        }
-        if (getRaw() != null ? !getRaw().equals(that.getRaw()) : that.getRaw() != null) {
-            return false;
-        }
-        if (getR() != null ? !getR().equals(that.getR()) : that.getR() != null) {
-            return false;
-        }
-        return getS() != null ? getS().equals(that.getS()) : that.getS() == null;
+        if (!Objects.equals(from, that.from)) return false;
+        if (!Objects.equals(to, that.to)) return false;
+        if (!Objects.equals(value, that.value)) return false;
+        if (!Objects.equals(gasPrice, that.gasPrice)) return false;
+        if (!Objects.equals(gas, that.gas)) return false;
+        if (!Objects.equals(input, that.input)) return false;
+        if (!Objects.equals(creates, that.creates)) return false;
+        if (!Objects.equals(publicKey, that.publicKey)) return false;
+        if (!Objects.equals(raw, that.raw)) return false;
+        if (!Objects.equals(r, that.r)) return false;
+        if (!Objects.equals(s, that.s)) return false;
+        if (!Objects.equals(chainId, that.chainId)) return false;
+        if (!Objects.equals(accessList, that.accessList)) return false;
+        if (!Objects.equals(type, that.type)) return false;
+        if (!Objects.equals(maxFeePerGas, that.maxFeePerGas)) return false;
+        return Objects.equals(maxPriorityFeePerGas, that.maxPriorityFeePerGas);
     }
 
     @Override
     public int hashCode() {
-        int result = getHash() != null ? getHash().hashCode() : 0;
-        result = 31 * result + (getNonceRaw() != null ? getNonceRaw().hashCode() : 0);
-        result = 31 * result + (getBlockHash() != null ? getBlockHash().hashCode() : 0);
-        result = 31 * result + (getBlockNumberRaw() != null ? getBlockNumberRaw().hashCode() : 0);
-        result = 31 * result
-                + (getTransactionIndexRaw() != null ? getTransactionIndexRaw().hashCode() : 0);
-        result = 31 * result + (getFrom() != null ? getFrom().hashCode() : 0);
-        result = 31 * result + (getTo() != null ? getTo().hashCode() : 0);
-        result = 31 * result + (getValueRaw() != null ? getValueRaw().hashCode() : 0);
-        result = 31 * result + (getGasPriceRaw() != null ? getGasPriceRaw().hashCode() : 0);
-        result = 31 * result + (getGasRaw() != null ? getGasRaw().hashCode() : 0);
-        result = 31 * result + (getInput() != null ? getInput().hashCode() : 0);
-        result = 31 * result + (getCreates() != null ? getCreates().hashCode() : 0);
-        result = 31 * result + (getPublicKey() != null ? getPublicKey().hashCode() : 0);
-        result = 31 * result + (getRaw() != null ? getRaw().hashCode() : 0);
-        result = 31 * result + (getR() != null ? getR().hashCode() : 0);
-        result = 31 * result + (getS() != null ? getS().hashCode() : 0);
-        result = 31 * result + BigInteger.valueOf(getV()).hashCode();
+        int result = hash != null ? hash.hashCode() : 0;
+        result = 31 * result + (nonce != null ? nonce.hashCode() : 0);
+        result = 31 * result + (blockHash != null ? blockHash.hashCode() : 0);
+        result = 31 * result + (blockNumber != null ? blockNumber.hashCode() : 0);
+        result = 31 * result + (transactionIndex != null ? transactionIndex.hashCode() : 0);
+        result = 31 * result + (from != null ? from.hashCode() : 0);
+        result = 31 * result + (to != null ? to.hashCode() : 0);
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (gasPrice != null ? gasPrice.hashCode() : 0);
+        result = 31 * result + (gas != null ? gas.hashCode() : 0);
+        result = 31 * result + (input != null ? input.hashCode() : 0);
+        result = 31 * result + (creates != null ? creates.hashCode() : 0);
+        result = 31 * result + (publicKey != null ? publicKey.hashCode() : 0);
+        result = 31 * result + (raw != null ? raw.hashCode() : 0);
+        result = 31 * result + (r != null ? r.hashCode() : 0);
+        result = 31 * result + (s != null ? s.hashCode() : 0);
+        result = 31 * result + (int) (v ^ (v >>> 32));
+        result = 31 * result + (chainId != null ? chainId.hashCode() : 0);
+        result = 31 * result + (accessList != null ? accessList.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (maxFeePerGas != null ? maxFeePerGas.hashCode() : 0);
+        result = 31 * result + (maxPriorityFeePerGas != null ? maxPriorityFeePerGas.hashCode() : 0);
         return result;
     }
 }

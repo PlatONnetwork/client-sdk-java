@@ -10,6 +10,7 @@ import com.platon.protocol.ObjectMapperFactory;
 import com.platon.protocol.core.Response;
 import com.platon.utils.NodeIdTool;
 import com.platon.utils.Numeric;
+import com.platon.utils.Strings;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -68,17 +69,18 @@ public class PlatonBlock extends Response<PlatonBlock.Block> {
         private List<TransactionResult> transactions;
         private List<String> uncles;
         private List<String> sealFields;
+        private String baseFeePerGas;
 
         public Block() {
         }
 
         public Block(String number, String hash, String parentHash, String nonce,
                      String sha3Uncles, String logsBloom, String transactionsRoot,
-                     String stateRoot, String receiptsRoot, String author, String miner, 
-                     String mixHash, String difficulty, String totalDifficulty, String extraData, 
+                     String stateRoot, String receiptsRoot, String author, String miner,
+                     String mixHash, String difficulty, String totalDifficulty, String extraData,
                      String size, String gasLimit, String gasUsed, String timestamp,
                      List<TransactionResult> transactions, List<String> uncles,
-                     List<String> sealFields) {
+                     List<String> sealFields, String baseFeePerGas) {
             this.number = number;
             this.hash = hash;
             this.parentHash = parentHash;
@@ -101,6 +103,7 @@ public class PlatonBlock extends Response<PlatonBlock.Block> {
             this.transactions = transactions;
             this.uncles = uncles;
             this.sealFields = sealFields;
+            this.baseFeePerGas = baseFeePerGas;
         }
 
         public BigInteger getNumber() {
@@ -311,149 +314,90 @@ public class PlatonBlock extends Response<PlatonBlock.Block> {
         public void setSealFields(List<String> sealFields) {
             this.sealFields = sealFields;
         }
-        
+
         public String getNodeId() {
         	return NodeIdTool.getPublicKey(this);
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
+        public BigInteger getBaseFeePerGas() {
+            if(Strings.isBlank(baseFeePerGas)){
+                return null;
             }
-            if (!(o instanceof Block)) {
-                return false;
-            }
-
-            Block block = (Block) o;
-
-            if (getNumberRaw() != null
-                    ? !getNumberRaw().equals(block.getNumberRaw()) : block.getNumberRaw() != null) {
-                return false;
-            }
-            if (getHash() != null ? !getHash().equals(block.getHash()) : block.getHash() != null) {
-                return false;
-            }
-            if (getParentHash() != null
-                    ? !getParentHash().equals(block.getParentHash())
-                    : block.getParentHash() != null) {
-                return false;
-            }
-            if (getNonceRaw() != null
-                    ? !getNonceRaw().equals(block.getNonceRaw()) : block.getNonceRaw() != null) {
-                return false;
-            }
-            if (getSha3Uncles() != null
-                    ? !getSha3Uncles().equals(block.getSha3Uncles())
-                    : block.getSha3Uncles() != null) {
-                return false;
-            }
-            if (getLogsBloom() != null
-                    ? !getLogsBloom().equals(block.getLogsBloom())
-                    : block.getLogsBloom() != null) {
-                return false;
-            }
-            if (getTransactionsRoot() != null
-                    ? !getTransactionsRoot().equals(block.getTransactionsRoot())
-                    : block.getTransactionsRoot() != null) {
-                return false;
-            }
-            if (getStateRoot() != null
-                    ? !getStateRoot().equals(block.getStateRoot())
-                    : block.getStateRoot() != null) {
-                return false;
-            }
-            if (getReceiptsRoot() != null
-                    ? !getReceiptsRoot().equals(block.getReceiptsRoot())
-                    : block.getReceiptsRoot() != null) {
-                return false;
-            }
-            if (getAuthor() != null
-                    ? !getAuthor().equals(block.getAuthor()) : block.getAuthor() != null) {
-                return false;
-            }
-            if (getMiner() != null
-                    ? !getMiner().equals(block.getMiner()) : block.getMiner() != null) {
-                return false;
-            }
-            if (getMixHash() != null
-                    ? !getMixHash().equals(block.getMixHash()) : block.getMixHash() != null) {
-                return false;
-            }
-            if (getDifficultyRaw() != null
-                    ? !getDifficultyRaw().equals(block.getDifficultyRaw())
-                    : block.getDifficultyRaw() != null) {
-                return false;
-            }
-            if (getTotalDifficultyRaw() != null
-                    ? !getTotalDifficultyRaw().equals(block.getTotalDifficultyRaw())
-                    : block.getTotalDifficultyRaw() != null) {
-                return false;
-            }
-            if (getExtraData() != null
-                    ? !getExtraData().equals(block.getExtraData())
-                    : block.getExtraData() != null) {
-                return false;
-            }
-            if (getSizeRaw() != null
-                    ? !getSizeRaw().equals(block.getSizeRaw())
-                    : block.getSizeRaw() != null) {
-                return false;
-            }
-            if (getGasLimitRaw() != null
-                    ? !getGasLimitRaw().equals(block.getGasLimitRaw())
-                    : block.getGasLimitRaw() != null) {
-                return false;
-            }
-            if (getGasUsedRaw() != null
-                    ? !getGasUsedRaw().equals(block.getGasUsedRaw())
-                    : block.getGasUsedRaw() != null) {
-                return false;
-            }
-            if (getTimestampRaw() != null
-                    ? !getTimestampRaw().equals(block.getTimestampRaw())
-                    : block.getTimestampRaw() != null) {
-                return false;
-            }
-            if (getTransactions() != null
-                    ? !getTransactions().equals(block.getTransactions())
-                    : block.getTransactions() != null) {
-                return false;
-            }
-            if (getUncles() != null
-                    ? !getUncles().equals(block.getUncles()) : block.getUncles() != null) {
-                return false;
-            }
-            return getSealFields() != null
-                    ? getSealFields().equals(block.getSealFields()) : block.getSealFields() == null;
+            return Numeric.decodeQuantity(this.baseFeePerGas);
         }
 
-        @Override
+        public String getBaseFeePerGasRaw() {
+            return this.baseFeePerGas;
+        }
+
+        public void setBaseFeePerGas(String baseFeePerGas) {
+            this.baseFeePerGas = baseFeePerGas;
+        }
+
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (object == null || getClass() != object.getClass()) return false;
+            if (!super.equals(object)) return false;
+
+            Block block = (Block) object;
+
+            if (number != null ? !number.equals(block.number) : block.number != null) return false;
+            if (hash != null ? !hash.equals(block.hash) : block.hash != null) return false;
+            if (parentHash != null ? !parentHash.equals(block.parentHash) : block.parentHash != null) return false;
+            if (nonce != null ? !nonce.equals(block.nonce) : block.nonce != null) return false;
+            if (sha3Uncles != null ? !sha3Uncles.equals(block.sha3Uncles) : block.sha3Uncles != null) return false;
+            if (logsBloom != null ? !logsBloom.equals(block.logsBloom) : block.logsBloom != null) return false;
+            if (transactionsRoot != null ? !transactionsRoot.equals(block.transactionsRoot) : block.transactionsRoot != null)
+                return false;
+            if (stateRoot != null ? !stateRoot.equals(block.stateRoot) : block.stateRoot != null) return false;
+            if (receiptsRoot != null ? !receiptsRoot.equals(block.receiptsRoot) : block.receiptsRoot != null)
+                return false;
+            if (author != null ? !author.equals(block.author) : block.author != null) return false;
+            if (miner != null ? !miner.equals(block.miner) : block.miner != null) return false;
+            if (mixHash != null ? !mixHash.equals(block.mixHash) : block.mixHash != null) return false;
+            if (difficulty != null ? !difficulty.equals(block.difficulty) : block.difficulty != null) return false;
+            if (totalDifficulty != null ? !totalDifficulty.equals(block.totalDifficulty) : block.totalDifficulty != null)
+                return false;
+            if (extraData != null ? !extraData.equals(block.extraData) : block.extraData != null) return false;
+            if (size != null ? !size.equals(block.size) : block.size != null) return false;
+            if (gasLimit != null ? !gasLimit.equals(block.gasLimit) : block.gasLimit != null) return false;
+            if (gasUsed != null ? !gasUsed.equals(block.gasUsed) : block.gasUsed != null) return false;
+            if (timestamp != null ? !timestamp.equals(block.timestamp) : block.timestamp != null) return false;
+            if (transactions != null ? !transactions.equals(block.transactions) : block.transactions != null)
+                return false;
+            if (uncles != null ? !uncles.equals(block.uncles) : block.uncles != null) return false;
+            if (sealFields != null ? !sealFields.equals(block.sealFields) : block.sealFields != null) return false;
+            if (baseFeePerGas != null ? !baseFeePerGas.equals(block.baseFeePerGas) : block.baseFeePerGas != null)
+                return false;
+
+            return true;
+        }
+
         public int hashCode() {
-            int result = getNumberRaw() != null ? getNumberRaw().hashCode() : 0;
-            result = 31 * result + (getHash() != null ? getHash().hashCode() : 0);
-            result = 31 * result + (getParentHash() != null ? getParentHash().hashCode() : 0);
-            result = 31 * result + (getNonceRaw() != null ? getNonceRaw().hashCode() : 0);
-            result = 31 * result + (getSha3Uncles() != null ? getSha3Uncles().hashCode() : 0);
-            result = 31 * result + (getLogsBloom() != null ? getLogsBloom().hashCode() : 0);
-            result = 31 * result
-                    + (getTransactionsRoot() != null ? getTransactionsRoot().hashCode() : 0);
-            result = 31 * result + (getStateRoot() != null ? getStateRoot().hashCode() : 0);
-            result = 31 * result + (getReceiptsRoot() != null ? getReceiptsRoot().hashCode() : 0);
-            result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
-            result = 31 * result + (getMiner() != null ? getMiner().hashCode() : 0);
-            result = 31 * result + (getMixHash() != null ? getMixHash().hashCode() : 0);
-            result = 31 * result + (getDifficultyRaw() != null ? getDifficultyRaw().hashCode() : 0);
-            result = 31 * result
-                    + (getTotalDifficultyRaw() != null ? getTotalDifficultyRaw().hashCode() : 0);
-            result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
-            result = 31 * result + (getSizeRaw() != null ? getSizeRaw().hashCode() : 0);
-            result = 31 * result + (getGasLimitRaw() != null ? getGasLimitRaw().hashCode() : 0);
-            result = 31 * result + (getGasUsedRaw() != null ? getGasUsedRaw().hashCode() : 0);
-            result = 31 * result + (getTimestampRaw() != null ? getTimestampRaw().hashCode() : 0);
-            result = 31 * result + (getTransactions() != null ? getTransactions().hashCode() : 0);
-            result = 31 * result + (getUncles() != null ? getUncles().hashCode() : 0);
-            result = 31 * result + (getSealFields() != null ? getSealFields().hashCode() : 0);
+            int result = super.hashCode();
+            result = 31 * result + (number != null ? number.hashCode() : 0);
+            result = 31 * result + (hash != null ? hash.hashCode() : 0);
+            result = 31 * result + (parentHash != null ? parentHash.hashCode() : 0);
+            result = 31 * result + (nonce != null ? nonce.hashCode() : 0);
+            result = 31 * result + (sha3Uncles != null ? sha3Uncles.hashCode() : 0);
+            result = 31 * result + (logsBloom != null ? logsBloom.hashCode() : 0);
+            result = 31 * result + (transactionsRoot != null ? transactionsRoot.hashCode() : 0);
+            result = 31 * result + (stateRoot != null ? stateRoot.hashCode() : 0);
+            result = 31 * result + (receiptsRoot != null ? receiptsRoot.hashCode() : 0);
+            result = 31 * result + (author != null ? author.hashCode() : 0);
+            result = 31 * result + (miner != null ? miner.hashCode() : 0);
+            result = 31 * result + (mixHash != null ? mixHash.hashCode() : 0);
+            result = 31 * result + (difficulty != null ? difficulty.hashCode() : 0);
+            result = 31 * result + (totalDifficulty != null ? totalDifficulty.hashCode() : 0);
+            result = 31 * result + (extraData != null ? extraData.hashCode() : 0);
+            result = 31 * result + (size != null ? size.hashCode() : 0);
+            result = 31 * result + (gasLimit != null ? gasLimit.hashCode() : 0);
+            result = 31 * result + (gasUsed != null ? gasUsed.hashCode() : 0);
+            result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+            result = 31 * result + (transactions != null ? transactions.hashCode() : 0);
+            result = 31 * result + (uncles != null ? uncles.hashCode() : 0);
+            result = 31 * result + (sealFields != null ? sealFields.hashCode() : 0);
+            result = 31 * result + (baseFeePerGas != null ? baseFeePerGas.hashCode() : 0);
             return result;
         }
     }
@@ -509,9 +453,11 @@ public class PlatonBlock extends Response<PlatonBlock.Block> {
         public TransactionObject(String hash, String nonce, String blockHash, String blockNumber,
                                  String transactionIndex, String from, String to, String value,
                                  String gasPrice, String gas, String input, String creates,
-                                 String publicKey, String raw, String r, String s, int v) {
+                                 String publicKey, String raw, String r, String s, int v,
+                                 String chainId, List<String> accessList, String type, String maxFeePerGas, String maxPriorityFeePerGas) {
             super(hash, nonce, blockHash, blockNumber, transactionIndex, from, to, value,
-                    gasPrice, gas, input, creates, publicKey, raw, r, s, v);
+                    gasPrice, gas, input, creates, publicKey, raw, r, s, v,
+                    chainId, accessList, type, maxFeePerGas, maxPriorityFeePerGas);
         }
 
         @Override

@@ -483,7 +483,8 @@ public class ResponseTest extends ResponseTester {
                 Arrays.asList(
                         "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
                         "0x39a3eb432fbef1fc"
-                )
+                ),
+                "0x247da5b94"
         );
         assertThat(ethBlock.getBlock(), equalTo(block));
     }
@@ -586,7 +587,12 @@ public class ResponseTest extends ResponseTester {
                                 "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
                                 "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
                                 "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                                (byte) 0
+                                (byte) 0,
+                            "0x22131",
+                        null,
+                        "0x2",
+                        "0x247da5b94",
+                        "0x0"
                         )
                 ),
                 //CHECKSTYLE:ON
@@ -597,7 +603,8 @@ public class ResponseTest extends ResponseTester {
                 Arrays.asList(
                         "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
                         "0x39a3eb432fbef1fc"
-                )
+                ),
+                "0x247da5b94"
         );
         assertThat(ethBlock.getBlock(), equalTo(block));
     }
@@ -701,7 +708,12 @@ public class ResponseTest extends ResponseTester {
                                 "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
                                 "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
                                 "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                                0x9d
+                                0x9d,
+                                "0x22131",
+                        null,
+                                "0x2",
+                                "0x247da5b94",
+                                "0x0"
                         )
                 ),
                 //CHECKSTYLE:ON
@@ -712,7 +724,8 @@ public class ResponseTest extends ResponseTester {
                 Arrays.asList(
                         "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
                         "0x39a3eb432fbef1fc"
-                )
+                ),
+                "0x247da5b94"
         );
         assertThat(ethBlock.getBlock(), equalTo(block));
     }
@@ -774,7 +787,12 @@ public class ResponseTest extends ResponseTester {
                 "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
                 "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
                 "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                (byte) 0
+                (byte) 0,
+                "0x22131",
+                null,
+                "0x2",
+                "0x247da5b94",
+                "0x0"
         );
         //CHECKSTYLE:ON
 
