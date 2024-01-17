@@ -33,6 +33,7 @@ public final class Numeric {
         }
 
         if (!isValidHexQuantity(value)) {
+            System.out.println("decode quantity value error:" + value);
             throw new MessageDecodingException("Value must be in format 0x[1-9]+[0-9]* or 0x0");
         }
         try {
@@ -131,7 +132,7 @@ public final class Numeric {
     public static String toHexStringWithPrefixZeroPadded(BigInteger value, int size) {
         return toHexStringZeroPadded(value, size, true);
     }
-    
+
     public static String toHexStringWithPrefixSafe(BigInteger value) {
         String result = toHexStringNoPrefix(value);
         if (result.length() < 2) {

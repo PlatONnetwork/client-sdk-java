@@ -33,8 +33,8 @@ public class Transaction {
     private String  chainId;    //"0x1"
     private List<String> accessList; //地址列表
     private String type;   // "0x2" 0 - 传统交易（旧） 1 - AccessList交易 2 - DynamicFee交易
-    private String maxFeePerGas;            // "0x247da5b94"
-    private String maxPriorityFeePerGas;    // "0x0"， platon固定是0
+    private String maxFeePerGas;            // "0x247da5b94", type = 2 - DynamicFee交易传统交易，才有这个值
+    private String maxPriorityFeePerGas;    // "0x0"， , type = 2 - DynamicFee交易传统交易，才有这个值。platon固定是0
 
     public Transaction() {
     }
@@ -278,7 +278,12 @@ public class Transaction {
     }
 
     public BigInteger getMaxFeePerGas() {
-        return Numeric.decodeQuantity(maxFeePerGas);
+        //type = 2 - DynamicFee交易传统交易，才有这个值
+        if (this.getType() == 2) {
+            return Numeric.decodeQuantity(maxFeePerGas);
+        }else{
+            return BigInteger.ZERO;
+        }
     }
 
     public String getMaxFeePerGasRaw() {
@@ -291,7 +296,12 @@ public class Transaction {
 
 
     public BigInteger getMaxPriorityFeePerGas() {
-        return Numeric.decodeQuantity(maxPriorityFeePerGas);
+        //type = 2 - DynamicFee交易传统交易，才有这个值
+        if (this.getType() == 2) {
+            return Numeric.decodeQuantity(maxPriorityFeePerGas);
+        }else{
+            return BigInteger.ZERO;
+        }
     }
 
     public String getMaxPriorityFeePerGasRaw() {
